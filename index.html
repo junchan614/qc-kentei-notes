@@ -35,7 +35,7 @@
 body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
 .sheet{max-width:900px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
 h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
-p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p{margin:0;color:var(--ink-soft);}
 p b{color:var(--ink);}
 a{color:var(--reg-ink);}
 a:focus-visible{outline:2px solid var(--reg);outline-offset:3px;border-radius:4px;}
@@ -43,7 +43,7 @@ a:focus-visible{outline:2px solid var(--reg);outline-offset:3px;border-radius:4p
 .kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
 header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
 header.hero h1{font-size:clamp(30px,4.4vw,42px);font-weight:600;}
-header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:62ch;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;}
 .meta-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:6px;}
 .meta{display:flex;flex-direction:column;gap:2px;}
 .meta .v{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--ink);line-height:1.2;}
@@ -151,20 +151,49 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
     <p class="no-results" id="noResults">該当する資料がありません。回・問の番号を確認するか、クリアで全件表示に戻ってください。</p>
 
     <div class="group">
-      <div class="group-label"><h3>相関分析・回帰分析</h3><span class="rule"></span><span class="count">10件</span></div>
+      <div class="group-label"><h3>分野別まとめ — まずはここから</h3><span class="rule"></span><span class="count">3/6件</span></div>
       <div class="cards">
-        <a class="card" href="summary-regression-correlation.html" target="_blank" rel="noopener">
-          <div class="chips"><span class="chip">分野別まとめ</span><span class="chip">3/6</span></div>
-          <h4>相関分析・回帰分析まとめ</h4>
-          <div class="desc">S(xx)・S(yy)・S(xy)の3つの平方和から相関係数・回帰直線・分散分析表・寄与率・信頼区間まで芋づる式に求まる「一本道」を図解。第35〜40回全回で確認できた出題傾向・暗記項目・誤答パターンを整理。</div>
+        <a class="card" href="summary-basic-statistics.html" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">分野別まとめ</span><span class="chip">1/6</span></div>
+          <h4>統計的方法の基礎まとめ</h4>
+          <div class="desc">生データ→平均・分散で要約→標準誤差/正規分布/確率の3方向に分岐という地図から、出題傾向・暗記項目・誤答パターンまで。他の全分野の土台。</div>
           <div class="keys">
-            <span>3つの平方和からの一本道</span>
+            <span>この分野の地図(階層図)</span>
+            <span>論点×出題回のヒートマップ</span>
             <span>暗記 vs 導出の切り分け</span>
-            <span>r/β1混同・xy取り違えなどの誤答パターン</span>
           </div>
           <div class="go">開く →</div>
         </a>
 
+        <a class="card" href="summary-test-estimation.html" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">分野別まとめ</span><span class="chip">2/6</span></div>
+          <h4>検定と推定まとめ</h4>
+          <div class="desc">そもそもt分布・χ²分布・F分布とは何かという基礎から、「何を検定したいか→使う分布」の対応表、出題傾向・暗記項目・誤答パターンまで。</div>
+          <div class="keys">
+            <span>4つの分布の正体・親戚関係</span>
+            <span>検定対象→使う分布の対応表</span>
+            <span>暗記 vs 導出の切り分け</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="summary-regression-correlation.html" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">分野別まとめ</span><span class="chip">3/6</span></div>
+          <h4>相関分析・回帰分析まとめ</h4>
+          <div class="desc">散布図で相関の強弱を見るところから、相関分析・回帰分析の役割の違い、S(xx)・S(yy)・S(xy)から全部が求まる「一本道」、出題傾向・誤答パターンまで。</div>
+          <div class="keys">
+            <span>相関分析 vs 回帰分析の地図</span>
+            <span>3つの平方和からの一本道</span>
+            <span>暗記 vs 導出の切り分け</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-label"><h3>相関分析・回帰分析</h3><span class="rule"></span><span class="count">9件</span></div>
+      <div class="cards">
         <a class="card" href="correlation-coefficient.html" data-round="35" data-q="3" target="_blank" rel="noopener">
           <div class="chips"><span class="chip">概念の掘り下げ</span><span class="chip src">第35回 問3</span></div>
           <h4>相関係数はなぜこの式になるのか</h4>
@@ -329,20 +358,8 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
     </div>
 
     <div class="group">
-      <div class="group-label"><h3>検定と推定</h3><span class="rule"></span><span class="count">8件</span></div>
+      <div class="group-label"><h3>検定と推定</h3><span class="rule"></span><span class="count">7件</span></div>
       <div class="cards">
-        <a class="card" href="summary-test-estimation.html" target="_blank" rel="noopener">
-          <div class="chips"><span class="chip">分野別まとめ</span><span class="chip">2/6</span></div>
-          <h4>検定と推定まとめ</h4>
-          <div class="desc">「何を検定したいか」で使う分布が決まる対応表(母平均→t分布、母分散→χ²分布、2群比較→F分布、分割表→χ²分布)を軸に、第35〜40回全回で確認できたこの分野の出題傾向・暗記項目・誤答パターンを整理。</div>
-          <div class="keys">
-            <span>検定対象→使う分布の対応表</span>
-            <span>暗記 vs 導出の切り分け</span>
-            <span>片側/両側・上側/下側の取り違えパターン</span>
-          </div>
-          <div class="go">開く →</div>
-        </a>
-
         <a class="card" href="38th-chi-square.html" data-round="38" data-q="3" target="_blank" rel="noopener">
           <div class="chips"><span class="chip src">第38回 問3</span><span class="chip">(14)〜(21)</span></div>
           <h4>分割表のカイ二乗検定</h4>
@@ -519,20 +536,8 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
     </div>
 
     <div class="group">
-      <div class="group-label"><h3>統計的方法の基礎</h3><span class="rule"></span><span class="count">8件</span></div>
+      <div class="group-label"><h3>統計的方法の基礎</h3><span class="rule"></span><span class="count">7件</span></div>
       <div class="cards">
-        <a class="card" href="summary-basic-statistics.html" target="_blank" rel="noopener">
-          <div class="chips"><span class="chip">分野別まとめ</span><span class="chip">1/6</span></div>
-          <h4>統計的方法の基礎まとめ</h4>
-          <div class="desc">正規分布・標準誤差・確率分布・変数変換など、他の全分野の土台になる論点を横断整理。論点×出題回(第35〜40回)のヒートマップで頻出度を可視化し、暗記が必要な項目と理解すれば導ける項目を切り分け、誤答選択肢の典型パターンまでまとめた分野別サマリー。</div>
-          <div class="keys">
-            <span>論点×出題回のヒートマップ</span>
-            <span>暗記 vs 導出の切り分け</span>
-            <span>誤答選択肢の典型パターン</span>
-          </div>
-          <div class="go">開く →</div>
-        </a>
-
         <a class="card" href="38th-normal-cp.html" data-round="38" data-q="2" target="_blank" rel="noopener">
           <div class="chips"><span class="chip src">第38回 問2</span><span class="chip">(9)〜(13)</span></div>
           <h4>部品合成の正規分布とCp</h4>
