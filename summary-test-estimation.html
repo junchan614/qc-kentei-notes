@@ -133,6 +133,77 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
   </header>
 
   <section>
+    <div class="sec-head"><span class="sec-num">基礎</span><h2>そもそもt分布・χ²分布・F分布とは何か</h2></div>
+    <p>検定の公式を暗記する前に、まず<b>4つの分布がそれぞれ何者で、どういう形をしているか</b>を押さえる。これが分かると「なぜこの検定はこの分布を使うのか」が公式を見ただけで判断できるようになる。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 210" role="img" aria-label="4つの分布の形を示す図。正規分布とt分布は原点対称の山型、t分布は正規分布より裾が重い。χ²分布とF分布は0以上の範囲で右に長く裾を引く非対称な形で、自由度によって形が変わる">
+          <line x1="20" y1="168" x2="150" y2="168" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+          <path d="M20,166 C40,166 45,48 80,44 C115,48 120,166 140,166" fill="none" stroke="var(--reg)" stroke-width="2.2"/>
+          <text x="80" y="190" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">正規分布 (Z)</text>
+          <text x="80" y="205" font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.6">左右対称・自由度なし</text>
+
+          <line x1="180" y1="168" x2="310" y2="168" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+          <path d="M180,166 C200,166 205,48 245,44 C285,48 290,166 310,166" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3" opacity="0.45"/>
+          <path d="M180,166 C195,150 205,60 245,56 C285,60 295,150 310,166" fill="none" stroke="var(--reg)" stroke-width="2.2"/>
+          <text x="245" y="190" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">t分布</text>
+          <text x="245" y="205" font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.6">正規分布(点線)より裾が重い</text>
+
+          <line x1="340" y1="168" x2="470" y2="168" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+          <path d="M340,166 C365,148 380,90 400,86 C430,92 455,140 470,158" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3" opacity="0.45"/>
+          <path d="M340,166 C348,100 358,58 372,56 C395,60 425,120 468,164" fill="none" stroke="var(--res)" stroke-width="2.2"/>
+          <text x="405" y="190" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">χ²分布</text>
+          <text x="405" y="205" font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.6">0以上・自由度大(点線)ほど対称に</text>
+
+          <line x1="500" y1="168" x2="630" y2="168" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+          <path d="M500,166 C512,138 528,70 548,68 C575,72 605,132 630,163" fill="none" stroke="var(--res)" stroke-width="2.2"/>
+          <text x="565" y="190" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">F分布</text>
+          <text x="565" y="205" font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.6">0以上・自由度が2つ(分子/分母)</text>
+        </svg>
+      </div>
+      <figcaption><b>見た目の違いだけでも当てられる:</b> 「マイナスの値も取りうる左右対称の山型」ならZかt。「0未満にはならず右に裾を引く形」ならχ²かF。この一次判定だけで選択肢は半分に絞れる。</figcaption>
+    </figure>
+
+    <div class="table-wrap">
+      <table>
+        <caption>4つの分布の正体・特徴・使いどころ</caption>
+        <thead><tr><th>分布</th><th>正体(何の集まりか)</th><th>形の特徴</th><th>主な使いどころ</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="mono">正規分布 Z</td>
+            <td>平均μ・分散σ²で決まる連続分布。標準化するとN(0,1²)になる</td>
+            <td>左右対称の山型。裾は指数的に薄く、自由度というパラメータを持たない(形が1種類だけ)</td>
+            <td>母平均の検定(<b>σ²が既知</b>のとき)。個々のデータの標準化(規格外れ確率など)</td>
+          </tr>
+          <tr>
+            <td class="mono">t分布</td>
+            <td>標準正規分布を、独立なχ²分布(自由度φ)の平方根で割った比</td>
+            <td>正規分布と同じく左右対称の山型だが<b>裾が重い(太い)</b>。自由度φが小さいほど裾が重く、φ→∞で正規分布に一致する</td>
+            <td>母平均の検定(<b>σ²が未知</b>で不偏分散Vを代わりに使うとき)。実務ではσが分かっていることは稀なので、母平均の検定はほぼ常にこちら</td>
+          </tr>
+          <tr>
+            <td class="mono">χ²(カイ二乗)分布</td>
+            <td>標準正規分布に従う変数をk個集めて、それぞれ2乗して足し合わせたもの(Z1²+Z2²+…+Zk²)</td>
+            <td>2乗の和なので<b>必ず0以上</b>。自由度が小さいと0付近に偏った非対称な形、自由度が大きくなるにつれ徐々に左右対称の山型に近づく</td>
+            <td>母分散の検定・推定(S/σ²~χ²(n−1))。分割表の独立性の検定(Σ(実測−期待)²/期待)</td>
+          </tr>
+          <tr>
+            <td class="mono">F分布</td>
+            <td>2つの独立なχ²分布を、それぞれの自由度で割ってから比を取ったもの(分散どうしの比)</td>
+            <td>χ²と同じく<b>必ず0以上</b>で右に裾を引く非対称な形。<b>自由度を2つ持つ</b>(分子側・分母側)のが最大の特徴</td>
+            <td>2つの母分散が等しいかどうかの検定(F検定)。分散分析の分散比F(0)=V(A)/V(E)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><b>4つはバラバラではなく親戚関係:</b> χ²は標準正規分布(Z)の2乗和、tはZをχ²の平方根で割ったもの、Fは2つのχ²の比。<b>すべての出発点は標準正規分布Z</b>で、そこから「2乗して足す」「割る」という操作を加えるたびに新しい分布が生まれている。この関係が分かれば、4つを別々の暗記物として覚える必要はなくなる(なぜ2乗なのかは<a href="chi-square-why-squared.html" target="_blank" rel="noopener">こちらの概念資料</a>でさらに掘り下げている)。</div>
+
+    <div class="callout warn"><b>自由度は「何個の独立な情報が残っているか」の数:</b> t分布・χ²分布は自由度が1つ、F分布は2つ(分子・分母それぞれ)。自由度が小さいほど「少ないデータから無理に推定している」ことを意味し、その分布の形は正規分布から離れる(t分布なら裾が重く、χ²分布なら0付近に偏る)。自由度が大きくなるほど、たくさんのデータで安定した推定ができるので、直感的な形(t→正規分布、χ²→対称な山型)に近づいていく。</div>
+  </section>
+
+  <section>
     <div class="sec-head"><span class="sec-num">傾向</span><h2>出題傾向 — 論点 × 出題回</h2></div>
     <p>計量値(母平均・母分散)と計数値(分割表)の検定を合わせて1ページにまとめている。<b>この分野だけは第35〜40回のすべての回で出題を確認できた</b>唯一の分野で、QC検定2級のいわば「毎回出る」核。</p>
 
