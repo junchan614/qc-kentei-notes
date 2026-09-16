@@ -1,0 +1,397 @@
+<title>相関分析・回帰分析まとめ</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+  --shadow-lift: 0 2px 4px rgba(22,35,42,0.08), 0 14px 32px -14px rgba(22,35,42,0.22);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:900px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:52px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+a:focus-visible{outline:2px solid var(--reg);outline-offset:3px;border-radius:4px;}
+
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:26px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4.2vw,40px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:64ch;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+.meta-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:4px;}
+.meta{display:flex;flex-direction:column;gap:2px;}
+.meta .v{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--ink);line-height:1.2;}
+.meta .k{font-size:11.5px;color:var(--ink-faint);letter-spacing:0.04em;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:56px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:middle;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .mono{font-family:'JetBrains Mono',monospace;}
+
+.heat-table th.rc,.heat-table td.rc{text-align:center;width:44px;}
+.heat-table td.rc.hit{background:var(--reg-soft);}
+.heat-table td.rc.hit span{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--reg);}
+.heat-table td.rc.miss span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--border-strong);opacity:0.6;}
+.heat-table td.topic{font-size:13.5px;}
+.heat-table td.cnt{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--reg-ink);text-align:center;}
+
+.callout{background:var(--reg-soft);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+.callout.warn b{color:var(--wrong);}
+
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;}
+.panel{border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);background:var(--surface);overflow:hidden;display:flex;flex-direction:column;}
+.panel .ph{padding:14px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:0.06em;font-weight:700;display:flex;align-items:center;gap:8px;}
+.panel.memo .ph{background:var(--res-soft);color:var(--res-ink);border-bottom:1px solid var(--res);}
+.panel.under .ph{background:var(--reg-soft);color:var(--reg-ink);border-bottom:1px solid var(--reg);}
+.panel ul{margin:0;padding:16px 20px 18px 34px;display:flex;flex-direction:column;gap:10px;}
+.panel li{font-size:14.5px;color:var(--ink-soft);}
+.panel li b{color:var(--ink);}
+.panel li .mono{font-family:'JetBrains Mono',monospace;font-size:13.5px;}
+
+.trap-table td.tag{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--wrong);font-weight:700;white-space:nowrap;}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
+.card{
+  display:flex;flex-direction:column;gap:10px;
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:18px 20px;box-shadow:var(--shadow);
+  text-decoration:none;color:inherit;
+  transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+}
+.card:hover{box-shadow:var(--shadow-lift);border-color:var(--border-strong);transform:translateY(-2px);}
+@media (prefers-reduced-motion: reduce){.card{transition:none;} .card:hover{transform:none;}}
+.card .chips{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.04em;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--ink-faint);border:1px solid var(--border);}
+.chip.src{background:var(--reg-soft);color:var(--reg-ink);border-color:var(--reg);}
+.card h4{font-family:'Zen Old Mincho',serif;font-size:17px;font-weight:600;margin:0;color:var(--ink);line-height:1.5;}
+.card .desc{font-size:13.5px;color:var(--ink-soft);line-height:1.7;}
+.card .go{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--reg-ink);font-weight:600;margin-top:2px;}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 手法編 ／ 分野別まとめ 3/6</span>
+    <h1>相関分析・回帰分析</h1>
+    <p class="lede">S(xx)・S(yy)・S(xy)という3つの平方和さえ手元にあれば、相関係数・回帰直線・分散分析表・寄与率・信頼区間まで芋づる式に求まる。第35〜40回<b>全回で出題を確認できた</b>頻出分野で、9件の資料と最多。式は多いが、実は3つの平方和からの「一本道」であることを押さえれば暗記量は見た目より少ない。</p>
+    <div class="meta-row">
+      <div class="meta"><span class="v">9</span><span class="k">元資料</span></div>
+      <div class="meta"><span class="v">6/6</span><span class="k">出題を確認できた回</span></div>
+      <div class="meta"><span class="v">8</span><span class="k">論点の出現回数(延べ)</span></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">傾向</span><h2>出題傾向 — 論点 × 出題回</h2></div>
+    <p>「検定と推定」と並んで、この分野も<b>第35〜40回すべてで出題を確認できた</b>。特に問4に置かれることが多く、<b>相関係数→回帰直線→分散分析表→点推定/区間推定</b>という一連の流れを一つの大問で通しで解かせるパターンが繰り返されている。</p>
+
+    <div class="table-wrap">
+      <table class="heat-table">
+        <caption>論点別の出題確認状況(第35〜40回)</caption>
+        <thead>
+          <tr>
+            <th>論点</th>
+            <th class="rc">35</th><th class="rc">36</th><th class="rc">37</th>
+            <th class="rc">38</th><th class="rc">39</th><th class="rc">40</th>
+            <th class="rc">回数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="topic">相関係数→回帰直線→平方和の分解</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">3</td>
+          </tr>
+          <tr>
+            <td class="topic">相関係数の定義・導出(概念)</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">平方和の分解・残差の見分け方</td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">回帰による変動S(R)の複数の求め方</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">寄与率R²・SE(b)の由来</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">符号検定(散布図でノンパラ判定)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 210" role="img" aria-label="論点別の出現回数を示す横棒グラフ。相関係数から回帰直線・平方和の分解までの一連の流れが3回で最頻出、残り5論点は1回ずつ">
+          <line x1="300" y1="10" x2="300" y2="188" stroke="currentColor" stroke-width="1" opacity="0.25"/>
+          <g font-size="12" fill="currentColor" opacity="0.55">
+            <text x="20" y="34" text-anchor="start">相関→回帰直線→平方和分解</text>
+            <text x="20" y="72" text-anchor="start">相関係数の定義・導出</text>
+            <text x="20" y="110" text-anchor="start">平方和の分解・残差の見分け</text>
+            <text x="20" y="148" text-anchor="start">S(R)の複数の求め方</text>
+            <text x="20" y="186" text-anchor="start">寄与率R²・SE(b)の由来</text>
+          </g>
+          <g>
+            <rect x="300" y="22" width="180" height="18" rx="4" fill="var(--reg)"/>
+            <text x="488" y="35" font-size="13" fill="var(--reg-ink)" font-weight="700">3</text>
+
+            <rect x="300" y="60" width="60" height="18" rx="4" fill="var(--reg)"/>
+            <text x="368" y="73" font-size="13" fill="var(--reg-ink)" font-weight="700">1</text>
+
+            <rect x="300" y="98" width="60" height="18" rx="4" fill="var(--reg)"/>
+            <text x="368" y="111" font-size="13" fill="var(--reg-ink)" font-weight="700">1</text>
+
+            <rect x="300" y="136" width="60" height="18" rx="4" fill="var(--reg)"/>
+            <text x="368" y="149" font-size="13" fill="var(--reg-ink)" font-weight="700">1</text>
+
+            <rect x="300" y="174" width="60" height="18" rx="4" fill="var(--reg)"/>
+            <text x="368" y="187" font-size="13" fill="var(--reg-ink)" font-weight="700">1</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption><b>読み方:</b> 「符号検定」1論点(39回)を除く5論点はすべて同じ土台(S(xx)・S(yy)・S(xy)からの平方和分解)の上に乗っている。土台さえ固めれば残りは応用にすぎない。</figcaption>
+    </figure>
+
+    <div class="callout"><b>この分野にも抜けは無い:</b> 「検定と推定」と同じく第35〜40回すべてで出題を確認できた。QC検定2級の2大頻出分野と言える。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">一本道</span><h2>3つの平方和から全部が求まる</h2></div>
+    <p>この分野の式は数が多く見えるが、出発点は<b>S(xx)・S(yy)・S(xy)</b>という3つの値だけ。そこから一直線に以下の値が芋づる式に求まる。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>S(xx)・S(yy)・S(xy)から求まる値の一覧</caption>
+        <thead><tr><th>求めたい値</th><th>式</th></tr></thead>
+        <tbody>
+          <tr><td>相関係数 r</td><td class="mono">S(xy) / √(S(xx)·S(yy))</td></tr>
+          <tr><td>回帰係数(傾き) β̂1</td><td class="mono">S(xy) / S(xx)</td></tr>
+          <tr><td>回帰係数(切片) β̂0</td><td class="mono">ȳ − β̂1·x̄</td></tr>
+          <tr><td>回帰による平方和 S(R)</td><td class="mono">S(xy)² / S(xx)　(= b²S(xx) = b·S(xy) とも書ける)</td></tr>
+          <tr><td>残差平方和 S(e)</td><td class="mono">S(yy) − S(R)</td></tr>
+          <tr><td>寄与率 R²</td><td class="mono">S(R) / S(yy)</td></tr>
+          <tr><td>分散比 F(0)</td><td class="mono">V(R) / V(e)　(φ(R)=1, φ(e)=n−2)</td></tr>
+          <tr><td>回帰係数の信頼区間</td><td class="mono">b ± t(n−2)·√(V(e)/S(xx))</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 220" role="img" aria-label="Sxx・Syy・Sxyの3つの値から相関係数・回帰係数・分散分析表・寄与率・信頼区間が枝分かれして求まる図">
+          <rect x="230" y="14" width="180" height="44" rx="10" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.8"/>
+          <text x="320" y="41" font-size="13" text-anchor="middle" fill="var(--res-ink)" font-weight="600">S(xx)・S(yy)・S(xy)</text>
+
+          <defs>
+            <marker id="dn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor" opacity="0.5"/>
+            </marker>
+          </defs>
+
+          <line x1="280" y1="58" x2="130" y2="96" stroke="currentColor" stroke-width="1.3" marker-end="url(#dn)" opacity="0.5"/>
+          <line x1="310" y1="58" x2="260" y2="96" stroke="currentColor" stroke-width="1.3" marker-end="url(#dn)" opacity="0.5"/>
+          <line x1="340" y1="58" x2="400" y2="96" stroke="currentColor" stroke-width="1.3" marker-end="url(#dn)" opacity="0.5"/>
+          <line x1="370" y1="58" x2="530" y2="96" stroke="currentColor" stroke-width="1.3" marker-end="url(#dn)" opacity="0.5"/>
+
+          <rect x="40" y="98" width="180" height="46" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.3" opacity="0.85"/>
+          <text x="130" y="126" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">相関係数 r</text>
+
+          <rect x="180" y="98" width="160" height="46" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.3" opacity="0.85"/>
+          <text x="260" y="126" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">回帰係数 β̂0,β̂1</text>
+
+          <rect x="320" y="98" width="160" height="46" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.3" opacity="0.85"/>
+          <text x="400" y="126" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">分散分析表(S(R),F0)</text>
+
+          <rect x="450" y="98" width="150" height="46" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.3" opacity="0.85"/>
+          <text x="525" y="126" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">寄与率 R²</text>
+
+          <line x1="400" y1="144" x2="400" y2="180" stroke="var(--reg)" stroke-width="1.4" marker-end="url(#dn)"/>
+          <rect x="300" y="182" width="200" height="34" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+          <text x="400" y="204" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">bの信頼区間・点推定</text>
+        </svg>
+      </div>
+      <figcaption><b>図.</b> 出発点は同じ3つの平方和。どれか1つの計算でつまずいたら、まずS(xx)・S(yy)・S(xy)が正しく求められているかに戻る。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">暗記</span><h2>暗記が必要な項目 vs 理解すれば導ける項目</h2></div>
+
+    <div class="split">
+      <div class="panel memo">
+        <div class="ph">⚠ 暗記(丸暗記するしかない)</div>
+        <ul>
+          <li><b>相関係数</b>: <span class="mono">r = S(xy) / √(S(xx)·S(yy))</span></li>
+          <li><b>回帰係数</b>: <span class="mono">β̂1 = S(xy)/S(xx)</span>、<span class="mono">β̂0 = ȳ−β̂1x̄</span></li>
+          <li><b>回帰による平方和</b>: <span class="mono">S(R) = S(xy)²/S(xx)</span></li>
+          <li><b>分散分析表の自由度</b>: <span class="mono">φ(R)=1</span>(説明変数1個)、<span class="mono">φ(e)=n−2</span></li>
+          <li><b>寄与率</b>: <span class="mono">R² = S(R)/S(yy)</span></li>
+          <li><b>回帰係数の信頼区間</b>: <span class="mono">b ± t(n−2)·√(V(e)/S(xx))</span></li>
+          <li><b>符号検定の判定</b>: 少数派の打点数が符号検定表の値<b>より小さければ</b>有意(相関あり)</li>
+        </ul>
+      </div>
+      <div class="panel under">
+        <div class="ph">◎ 理解して導く(暗記不要)</div>
+        <ul>
+          <li><b>なぜ相関係数がこの式になるか</b>: 残差平方和Se(t)=Syy−2tSxy+t²Sxx≥0という事実だけから、分母の形と−1〜1の範囲が導かれる(幾何的には偏差ベクトルのなす角のコサイン)。</li>
+          <li><b>なぜS(R)が4通りの式で同じ値になるか</b>: 回帰直線が必ず(x̄,ȳ)を通るという性質から、ŷ−ȳ=b(x−x̄)を経由してどの式変形でも同じ値に辿り着く。</li>
+          <li><b>なぜ0≤R²≤1が自動的に出るか</b>: 平方和の分解S(yy)=S(R)+S(e)で両方とも0以上の量だから、比を取れば自動的にこの範囲に収まる。</li>
+          <li><b>残差と回帰による平方和の見分け方</b>: 矢印がデータ点に触れていれば残差、平均線から回帰直線に伸びていれば回帰による平方和。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">誤答</span><h2>誤答選択肢の典型パターン</h2></div>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>誤答選択肢が生まれるパターン</caption>
+        <thead><tr><th>パターン</th><th>具体例</th><th>回避策</th></tr></thead>
+        <tbody>
+          <tr><td class="tag">rとβ1の混同</td><td>相関係数rの式と回帰係数β1=Sxy/Sxxの式を取り違える(rには√(Syy)が分母に入る点が違い)</td><td>rは「向きと強さの指標」、βは「実際の傾きの値」と役割で区別する</td></tr>
+          <tr><td class="tag">xとyの取り違え</td><td>説明変数xと目的変数yを入れ替えて計算してしまう</td><td>「何によって何を予測したいか」を先に文章で確認</td></tr>
+          <tr><td class="tag">自由度の取り違え</td><td>φ(e)をn−1やn−2で迷い、片方の選択肢に紛れ込む</td><td>回帰は「説明変数の分だけ引く」→n−(説明変数の数+1)=n−2と覚える</td></tr>
+          <tr><td class="tag">表の別マスの値の流用</td><td>信頼区間の計算で分散分析表の別のマス(S(R)やF(0))の値を誤って使う</td><td>どの記号がどの行・列の値かを式を書きながら確認する</td></tr>
+          <tr><td class="tag">問題文そのままの値</td><td>与えられた生の数値をそのまま計算結果として選んでしまう罠選択肢</td><td>必ず自分で計算し、問題文の数値と一致していないか検算する</td></tr>
+          <tr><td class="tag">符号検定の象限の付け方ミス</td><td>反時計回りに象限番号を付けるルールを見落とし、右肩上がり/下がりの判定を逆にする</td><td>第Ⅰ・Ⅲ象限=右肩上がり側、第Ⅱ・Ⅳ象限=右肩下がり側と定型で覚える</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">資料</span><h2>元の解説を読む</h2></div>
+    <div class="cards">
+      <a class="card" href="regression-anova.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip">基礎解説</span></div>
+        <h4>単回帰分析の分散分析表</h4>
+        <div class="desc">平方和・自由度・平均平方・分散比の4用語を、全変動の分解から順に理解する。ここから読むと以降が楽になる。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="correlation-coefficient.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第35回 問3</span><span class="chip">概念</span></div>
+        <h4>相関係数はなぜこの式になるのか</h4>
+        <div class="desc">Se(t)≥0という事実だけから式の形を導き、幾何的には偏差ベクトルのなす角のコサインであることまで掘り下げる。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="35th-regression.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第35回 問3</span></div>
+        <h4>相関係数から回帰直線、平方和の分解まで</h4>
+        <div class="desc">相関係数・回帰直線・散布図への当てはめ判定・平方和の分解までを一直線に解く。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="36th-regression.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第36回 問4</span></div>
+        <h4>平方和の分解から回帰係数・分散分析表まで</h4>
+        <div class="desc">残差と回帰による平方和を図で見分ける知識問題と、回帰係数・分散分析表の計算。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="regression-sr.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第37回 問4</span><span class="chip">概念</span></div>
+        <h4>回帰による変動の求め方</h4>
+        <div class="desc">S(R)が4通りの式で書けてどれも同じ値になる理由を、回帰直線が(x̄,ȳ)を通る性質から解く。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="38th-regression-anova.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第38回 問4</span></div>
+        <h4>単回帰の分散分析表〜信頼区間</h4>
+        <div class="desc">分散分析表・寄与率・有意性判定・回帰係数の95%信頼区間まで、単回帰の一連の流れを通す。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="regression-r2-se.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第38回 問4</span><span class="chip">概念</span></div>
+        <h4>寄与率R²とSE(b)の由来</h4>
+        <div class="desc">R²は平方和の分解から0≤R²≤1が自動的に出ることを示し、SE(b)は重み付き和とみなして導く。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="39th-sign-test.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第39回 問5</span></div>
+        <h4>散布図の符号検定</h4>
+        <div class="desc">メディアン線で4象限に分け、少数派の打点数を符号検定表と比較する手順。二項検定としての正体まで。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="40th-regression-anova.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第40回 問4</span></div>
+        <h4>分散分析表から回帰直線、点推定まで</h4>
+        <div class="desc">分散分析表→回帰係数(傾き・切片)→x=25.0での点推定まで一直線に解く。</div>
+        <div class="go">開く →</div>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 分野別まとめ「相関分析・回帰分析」</span>
+    <span>元資料9件 / 手法編まとめ 3/6</span>
+  </footer>
+
+</div>
