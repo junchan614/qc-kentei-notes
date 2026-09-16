@@ -1,0 +1,353 @@
+<title>実験計画法まとめ</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+  --shadow-lift: 0 2px 4px rgba(22,35,42,0.08), 0 14px 32px -14px rgba(22,35,42,0.22);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:900px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:52px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+p{margin:0;color:var(--ink-soft);}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+a:focus-visible{outline:2px solid var(--reg);outline-offset:3px;border-radius:4px;}
+
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:26px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4.2vw,40px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+.meta-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:4px;}
+.meta{display:flex;flex-direction:column;gap:2px;}
+.meta .v{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--ink);line-height:1.2;}
+.meta .k{font-size:11.5px;color:var(--ink-faint);letter-spacing:0.04em;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:56px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:middle;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .mono{font-family:'JetBrains Mono',monospace;}
+
+.heat-table th.rc,.heat-table td.rc{text-align:center;width:44px;}
+.heat-table td.rc.hit{background:var(--reg-soft);}
+.heat-table td.rc.hit span{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--reg);}
+.heat-table td.rc.miss span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--border-strong);opacity:0.6;}
+.heat-table td.topic{font-size:13.5px;}
+.heat-table td.cnt{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--reg-ink);text-align:center;}
+
+.callout{background:var(--reg-soft);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+.callout.warn b{color:var(--wrong);}
+
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;}
+.panel{border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);background:var(--surface);overflow:hidden;display:flex;flex-direction:column;}
+.panel .ph{padding:14px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:0.06em;font-weight:700;display:flex;align-items:center;gap:8px;}
+.panel.memo .ph{background:var(--res-soft);color:var(--res-ink);border-bottom:1px solid var(--res);}
+.panel.under .ph{background:var(--reg-soft);color:var(--reg-ink);border-bottom:1px solid var(--reg);}
+.panel ul{margin:0;padding:16px 20px 18px 34px;display:flex;flex-direction:column;gap:10px;}
+.panel li{font-size:14.5px;color:var(--ink-soft);}
+.panel li b{color:var(--ink);}
+.panel li .mono{font-family:'JetBrains Mono',monospace;font-size:13.5px;}
+
+.trap-table td.tag{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--wrong);font-weight:700;white-space:nowrap;}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
+.card{
+  display:flex;flex-direction:column;gap:10px;
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:18px 20px;box-shadow:var(--shadow);
+  text-decoration:none;color:inherit;
+  transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+}
+.card:hover{box-shadow:var(--shadow-lift);border-color:var(--border-strong);transform:translateY(-2px);}
+@media (prefers-reduced-motion: reduce){.card{transition:none;} .card:hover{transform:none;}}
+.card .chips{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.04em;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--ink-faint);border:1px solid var(--border);}
+.chip.src{background:var(--reg-soft);color:var(--reg-ink);border-color:var(--reg);}
+.card h4{font-family:'Zen Old Mincho',serif;font-size:17px;font-weight:600;margin:0;color:var(--ink);line-height:1.5;}
+.card .desc{font-size:13.5px;color:var(--ink-soft);line-height:1.7;}
+.card .go{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--reg-ink);font-weight:600;margin-top:2px;}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 手法編 ／ 分野別まとめ 4/6</span>
+    <h1>実験計画法</h1>
+    <p class="lede">「いくつかのやり方(水準)を試して、どれが一番良いか・その差は本当に意味があるのかを統計的に判定する」のがこの分野の仕事。やっていることは相関分析・回帰分析とまったく同じ発想(全体のばらつきを「要因で説明できる部分」と「誤差」に分ける)で、対象がグループ分けされたデータに変わっただけ。第35〜40回<b>全回で出題を確認できた</b>頻出分野。</p>
+    <div class="meta-row">
+      <div class="meta"><span class="v">7</span><span class="k">元資料</span></div>
+      <div class="meta"><span class="v">6/6</span><span class="k">出題を確認できた回</span></div>
+      <div class="meta"><span class="v">7</span><span class="k">論点の出現回数(延べ)</span></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">地図</span><h2>そもそも実験計画法とは何をする道具か</h2></div>
+    <p>ある特性(たとえば製品の強度)に影響を与えそうな要因(たとえば「温度」)がある。温度を<b>いくつかの水準(例: 低温・中温・高温)</b>に変えて実験し、測定値を比較する。ここで聞きたいことは1つ:<b>水準による差は、単なる測定のばらつきでは説明できないほど大きいか</b>。これに答えるのが分散分析(ANOVA)。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 220" role="img" aria-label="生データを水準ごとに分け、全体のばらつきを水準間の変動と水準内(誤差)の変動に分解し、F検定で有意性を判定し、有意なら点推定・区間推定に進む一連の流れを示す図">
+          <rect x="20" y="20" width="600" height="46" rx="10" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.3" opacity="0.85"/>
+          <text x="320" y="48" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">生データ(水準A1・A2・A3…ごとの測定値)</text>
+
+          <defs>
+            <marker id="expDn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor" opacity="0.55"/>
+            </marker>
+          </defs>
+          <line x1="320" y1="68" x2="320" y2="94" stroke="currentColor" stroke-width="1.4" marker-end="url(#expDn)" opacity="0.6"/>
+
+          <rect x="70" y="96" width="240" height="46" rx="10" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.8"/>
+          <text x="190" y="119" font-size="12.5" text-anchor="middle" fill="var(--res-ink)" font-weight="600">水準間の変動 S(A)</text>
+          <text x="190" y="135" font-size="10.5" text-anchor="middle" fill="var(--res-ink)" opacity="0.85">水準による差(要因で説明できる部分)</text>
+
+          <rect x="330" y="96" width="240" height="46" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.3" opacity="0.85"/>
+          <text x="450" y="119" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">誤差 S(E)</text>
+          <text x="450" y="135" font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.7">同じ水準内でもデータがばらつく分</text>
+
+          <line x1="190" y1="144" x2="320" y2="172" stroke="currentColor" stroke-width="1.4" marker-end="url(#expDn)" opacity="0.6"/>
+          <line x1="450" y1="144" x2="380" y2="172" stroke="currentColor" stroke-width="1.4" marker-end="url(#expDn)" opacity="0.6"/>
+
+          <rect x="220" y="174" width="200" height="40" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.8"/>
+          <text x="320" y="199" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">F(0)=V(A)/V(E) で有意性判定</text>
+        </svg>
+      </div>
+      <figcaption><b>回帰分析(相関分析・回帰分析まとめ参照)とまったく同じ構造:</b> あちらはS(yy)=S(R)+S(e)、こちらはS(T)=S(A)+S(E)。「説明できる部分」と「誤差」に分けてFの比を取る、という考え方は分野をまたいで共通している。</figcaption>
+    </figure>
+
+    <p>有意だと分かったら、次に<b>「では具体的にどの水準が一番良いのか」「その水準の母平均はどれくらいか」</b>を点推定・区間推定で求める。因子が2つ(例: 温度×圧力)になると二元配置になり、2つの要因が組み合わさって効果を強めたり弱めたりする<b>交互作用</b>も調べられるようになる。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>一元配置 と 二元配置 の違い</caption>
+        <thead><tr><th></th><th>一元配置</th><th>二元配置</th></tr></thead>
+        <tbody>
+          <tr><td>調べる要因の数</td><td>1つ(例: 温度)</td><td>2つ(例: 温度×圧力)</td></tr>
+          <tr><td>平方和の分解</td><td class="mono">S(T)=S(A)+S(E)</td><td class="mono">S(T)=S(A)+S(B)+S(A×B)+S(E)</td></tr>
+          <tr><td>追加で調べられること</td><td>—</td><td><b>交互作用</b>: Aの効き方がBの水準によって変わるか</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><b>交互作用とは何か:</b> 「温度を上げると強度が上がる」という効果が、圧力が高いときと低いときで<b>違う効き方をする</b>なら、それが交互作用。交互作用が有意なら、最適な組み合わせは「温度の効果+圧力の効果」を単純に足し算(加法モデル)しては求まらず、実際にそのセルで測定した平均をそのまま使う必要がある。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">傾向</span><h2>出題傾向 — 論点 × 出題回</h2></div>
+    <p>7つの論点それぞれが、第35〜40回のどの回で確認できたかを一覧にした。<b>実験計画法もこの分野に抜けは無く</b>、第35〜40回すべてで出題を確認できた。</p>
+
+    <div class="table-wrap">
+      <table class="heat-table">
+        <caption>論点別の出題確認状況(第35〜40回)</caption>
+        <thead>
+          <tr>
+            <th>論点</th>
+            <th class="rc">35</th><th class="rc">36</th><th class="rc">37</th>
+            <th class="rc">38</th><th class="rc">39</th><th class="rc">40</th>
+            <th class="rc">回数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="topic">不揃い一元配置+交互作用のある二元配置</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">一元配置と母平均の推定</td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">母平均の点推定と区間推定(差の推定)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">グラフの見た目と有意性は別物</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">打ち切られた一元配置実験</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">繰返しのある二元配置実験</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">φ(A×B)とφ(E)の由来(概念)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><b>実験計画法もこの分野に抜けは無い:</b> 「検定と推定」「相関分析・回帰分析」と同じく第35〜40回すべてで出題を確認できた。QC検定2級の3大頻出分野の1つと言える。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">暗記</span><h2>暗記が必要な項目 vs 理解すれば導ける項目</h2></div>
+
+    <div class="split">
+      <div class="panel memo">
+        <div class="ph">⚠ 暗記(丸暗記するしかない)</div>
+        <ul>
+          <li><b>一元配置の要因平方和</b>: <span class="mono">S(A) = Σ(T(i)²/n(i)) − CT</span>(T(i)=水準iの合計、CT=修正項)</li>
+          <li><b>一元配置の自由度</b>: <span class="mono">φ(A)=a−1</span>、<span class="mono">φ(E)=N−a=Σ(n(i)−1)</span></li>
+          <li><b>分散比</b>: <span class="mono">F(0) = V(A)/V(E)</span></li>
+          <li><b>1つの母平均の区間推定</b>: <span class="mono">x̄(i) ± t(φ(E))·√(V(E)/n(i))</span></li>
+          <li><b>2つの母平均の差の区間推定</b>: <span class="mono">(x̄(i)−x̄(j)) ± t(φ(E))·√{V(E)(1/n(i)+1/n(j))}</span></li>
+          <li><b>二元配置の自由度</b>: <span class="mono">φ(A×B)=(a−1)(b−1)</span>、<span class="mono">φ(E)=ab(r−1)</span></li>
+          <li><b>交互作用が有意なときの点推定</b>: 加法モデルではなく、そのセルの<b>実測平均</b>をそのまま使う</li>
+        </ul>
+      </div>
+      <div class="panel under">
+        <div class="ph">◎ 理解して導く(暗記不要)</div>
+        <ul>
+          <li><b>なぜS(T)=S(A)+S(E)に分解できるか</b>: 全体のばらつきを「水準による差」と「水準内でのばらつき(誤差)」に分ける発想。回帰分析のS(yy)=S(R)+S(e)とまったく同じ構造。</li>
+          <li><b>なぜφ(E)=N−aになるか</b>: 各水準内でn(i)個のデータからn(i)−1個の自由な情報が残り、それをa水準分足し合わせるとN−aになる。</li>
+          <li><b>なぜφ(A×B)=(a−1)(b−1)になるか</b>: 全体の自由度をまず「セル間」と「セル内・誤差」に分け、セル間をさらにA・B・余り(交互作用)に配分する2段階の引き算(下記の概念資料で図解)。</li>
+          <li><b>差の区間推定の幅が1つの幅の√2倍になる理由</b>: 独立な2つの推定値の差を取ると、分散は足し算になる(統計的方法の基礎まとめ参照)ため、幅もその分だけ広がる。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">誤答</span><h2>誤答選択肢の典型パターン</h2></div>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>誤答選択肢が生まれるパターン</caption>
+        <thead><tr><th>パターン</th><th>具体例</th><th>回避策</th></tr></thead>
+        <tbody>
+          <tr><td class="tag">合計とnで平均を混同</td><td>繰返し数が水準ごとに違うのに、合計だけで比較して最適水準を誤る</td><td>必ず「水準ごとの合計 ÷ その水準のn」で平均を出し直す</td></tr>
+          <tr><td class="tag">SS表の合計一致を検算と誤解</td><td>選択肢のSS表がどれも合計だけ一致しているため、それだけで正解と判断してしまう</td><td>合計の一致は必要条件にすぎない。実際に配分計算をして中身を検算する</td></tr>
+          <tr><td class="tag">交互作用が有意なのに加法モデルを使う</td><td>最適水準の点推定で、A単独の効果+B単独の効果を単純に足してしまう</td><td>交互作用が有意だったら、必ずそのセルの実測平均に戻る</td></tr>
+          <tr><td class="tag">1つの推定と差の推定の式の混同</td><td>2水準の差を推定する問題で、1つの母平均の区間推定の式(1/n(i)のみ)を使ってしまう</td><td>「1つの値」か「2つの差」かを先に確認し、分散の項が1/n(i)か1/n(i)+1/n(j)かを選ぶ</td></tr>
+          <tr><td class="tag">見た目とF検定結果の混同</td><td>グラフで水準間のばらつきが大きく見える図を、そのまま「有意」と判断してしまう</td><td>誤差(水準内のばらつき)も同時に大きければ有意にならない。必ずF0を計算して確認する</td></tr>
+          <tr><td class="tag">自由度の取り違え</td><td>φ(E)の計算でa(水準数)を引き忘れる、または二元配置でφ(A×B)とφ(E)を混同する</td><td>「何から何を引いているか」を式を書きながら確認する</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">資料</span><h2>元の解説を読む</h2></div>
+    <div class="cards">
+      <a class="card" href="35th-anova-experiment.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第35回 問4</span></div>
+        <h4>不揃い一元配置と交互作用のある二元配置</h4>
+        <div class="desc">合計でなく実際のnで比較しないと最適水準を誤る罠と、交互作用が有意なら実測セル平均を使う理由。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="36th-anova-oneway.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第36回 問5</span></div>
+        <h4>一元配置実験と母平均の推定</h4>
+        <div class="desc">繰り返し数が不揃いな一元配置実験。平方和の作り方、F表の引き方、区間推定まで。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="37th-anova-ci.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第37回 問5</span></div>
+        <h4>母平均の点推定と区間推定</h4>
+        <div class="desc">最良水準の選び方と、1つの母平均・2つの母平均の差の区間推定の式の違い。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="38th-anova-graphs.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第38回 問5</span></div>
+        <h4>グラフの見た目と有意性は別物</h4>
+        <div class="desc">6パターンのグラフから水準効果・実験誤差を読み取り、実際にF検定を行うと見た目と結果が食い違うことを確認する。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="39th-anova-unequal.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第39回 問4</span></div>
+        <h4>打ち切られた一元配置実験</h4>
+        <div class="desc">計画16回が15回で打ち切られた実験。分散分析表・有意性判定・区間推定の幅の広がりまで。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="40th-two-way-anova.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第40回 問6</span></div>
+        <h4>繰返しのある二元配置実験</h4>
+        <div class="desc">S(B)とS(A×B)がほぼ同じ値なのに自由度の違いで有意性判定が分かれる理由を掘り下げる。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="two-way-anova-df.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第40回 問6</span><span class="chip">概念</span></div>
+        <h4>φ(A×B)とφ(E)はどこから出てくるのか</h4>
+        <div class="desc">全体の自由度を「セル間」と「セル内・誤差」に分け、セル間をさらにA・B・余りに配分する2段階の引き算で導く。</div>
+        <div class="go">開く →</div>
+      </a>
+    </div>
+    <div class="callout"><b>あわせて読むと理解が深まる:</b> <a href="anova-ve-then-n.html" target="_blank" rel="noopener">Ve=S(E)/φ(E)とVe/nの違い</a>、<a href="t-table-anova-estimate.html" target="_blank" rel="noopener">なぜt表で最適水準を推定するのか</a>の2つの概念資料は、この分野の区間推定でつまずいたときに戻る場所。</div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 分野別まとめ「実験計画法」</span>
+    <span>元資料7件 / 手法編まとめ 4/6</span>
+  </footer>
+
+</div>

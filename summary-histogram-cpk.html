@@ -1,0 +1,281 @@
+<title>ヒストグラム・工程能力指数まとめ</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+  --shadow-lift: 0 2px 4px rgba(22,35,42,0.08), 0 14px 32px -14px rgba(22,35,42,0.22);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:900px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:52px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+p{margin:0;color:var(--ink-soft);}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+a:focus-visible{outline:2px solid var(--reg);outline-offset:3px;border-radius:4px;}
+
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:26px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4.2vw,40px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+.meta-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:4px;}
+.meta{display:flex;flex-direction:column;gap:2px;}
+.meta .v{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--ink);line-height:1.2;}
+.meta .k{font-size:11.5px;color:var(--ink-faint);letter-spacing:0.04em;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:56px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:middle;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .mono{font-family:'JetBrains Mono',monospace;}
+
+.heat-table th.rc,.heat-table td.rc{text-align:center;width:44px;}
+.heat-table td.rc.hit{background:var(--reg-soft);}
+.heat-table td.rc.hit span{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--reg);}
+.heat-table td.rc.miss span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--border-strong);opacity:0.6;}
+.heat-table td.topic{font-size:13.5px;}
+.heat-table td.cnt{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--reg-ink);text-align:center;}
+
+.callout{background:var(--reg-soft);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+.callout.warn b{color:var(--wrong);}
+
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;}
+.panel{border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);background:var(--surface);overflow:hidden;display:flex;flex-direction:column;}
+.panel .ph{padding:14px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:0.06em;font-weight:700;display:flex;align-items:center;gap:8px;}
+.panel.memo .ph{background:var(--res-soft);color:var(--res-ink);border-bottom:1px solid var(--res);}
+.panel.under .ph{background:var(--reg-soft);color:var(--reg-ink);border-bottom:1px solid var(--reg);}
+.panel ul{margin:0;padding:16px 20px 18px 34px;display:flex;flex-direction:column;gap:10px;}
+.panel li{font-size:14.5px;color:var(--ink-soft);}
+.panel li b{color:var(--ink);}
+.panel li .mono{font-family:'JetBrains Mono',monospace;font-size:13.5px;}
+
+.trap-table td.tag{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--wrong);font-weight:700;white-space:nowrap;}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
+.card{
+  display:flex;flex-direction:column;gap:10px;
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:18px 20px;box-shadow:var(--shadow);
+  text-decoration:none;color:inherit;
+  transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+}
+.card:hover{box-shadow:var(--shadow-lift);border-color:var(--border-strong);transform:translateY(-2px);}
+@media (prefers-reduced-motion: reduce){.card{transition:none;} .card:hover{transform:none;}}
+.card .chips{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.04em;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--ink-faint);border:1px solid var(--border);}
+.chip.src{background:var(--reg-soft);color:var(--reg-ink);border-color:var(--reg);}
+.card h4{font-family:'Zen Old Mincho',serif;font-size:17px;font-weight:600;margin:0;color:var(--ink);line-height:1.5;}
+.card .desc{font-size:13.5px;color:var(--ink-soft);line-height:1.7;}
+.card .go{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--reg-ink);font-weight:600;margin-top:2px;}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 手法編 ／ 分野別まとめ 6/6</span>
+    <h1>ヒストグラム・工程能力指数</h1>
+    <p class="lede">ヒストグラムでデータの「形」を目で見て、工程能力指数(Cp・Cpk)で「その形が規格に対して十分狭いか、かつ中心が規格の真ん中に寄っているか」を数値で判定する。手法編まとめの最終ページで、これまでの<b>正規分布・標準化</b>(統計的方法の基礎)の応用にあたる。現時点では資料が第37・40回の2件のみと薄い分野。</p>
+    <div class="meta-row">
+      <div class="meta"><span class="v">2</span><span class="k">元資料</span></div>
+      <div class="meta"><span class="v">2/6</span><span class="k">出題を確認できた回</span></div>
+      <div class="meta"><span class="v">2</span><span class="k">論点の出現回数(延べ)</span></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">地図</span><h2>そもそもヒストグラム・工程能力指数とは何をする道具か</h2></div>
+    <p>製品を測定して集めたデータを区間ごとの度数(棒の高さ)で表したものが<b>ヒストグラム</b>。これを見ると、データが正規分布に近い形をしているか、規格の中に収まっているか、中心がずれていないかが一目で分かる。<b>工程能力指数</b>は、この「見た目の判断」を1つの数値に置き換えたもの。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 220" role="img" aria-label="規格の下限と上限の間に正規分布に近いヒストグラムが収まっている図と、6シグマの幅が規格幅より狭い(Cpが大きい)場合と広い(Cpが小さい)場合を対比させた図">
+          <line x1="40" y1="180" x2="600" y2="180" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+          <line x1="120" y1="20" x2="120" y2="185" stroke="var(--wrong)" stroke-width="1.6" stroke-dasharray="4 3"/>
+          <text x="120" y="14" font-size="11" text-anchor="middle" fill="var(--wrong)">規格下限 SL</text>
+          <line x1="520" y1="20" x2="520" y2="185" stroke="var(--wrong)" stroke-width="1.6" stroke-dasharray="4 3"/>
+          <text x="520" y="14" font-size="11" text-anchor="middle" fill="var(--wrong)">規格上限 SU</text>
+
+          <g fill="var(--reg)" opacity="0.85">
+            <rect x="200" y="150" width="24" height="30"/><rect x="228" y="120" width="24" height="60"/>
+            <rect x="256" y="90" width="24" height="90"/><rect x="284" y="70" width="24" height="110"/>
+            <rect x="312" y="90" width="24" height="90"/><rect x="340" y="120" width="24" height="60"/>
+            <rect x="368" y="150" width="24" height="30"/>
+          </g>
+          <text x="296" y="200" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">ヒストグラム(データの形)</text>
+
+          <line x1="230" y1="60" x2="365" y2="60" stroke="var(--reg-ink)" stroke-width="1.4"/>
+          <text x="296" y="50" font-size="11" text-anchor="middle" fill="var(--reg-ink)">6σ(工程の実際のばらつき幅)</text>
+        </svg>
+      </div>
+      <figcaption><b>工程能力指数が測っているもの:</b> 「工程が実際に持つばらつきの幅(6σ)」が「規格の幅(SU−SL)」に対してどれだけ余裕を持って収まっているか、という比。</figcaption>
+    </figure>
+
+    <p>ヒストグラムを作るときの最初の判断は<b>区間の幅hをいくつにするか</b>(h=R/kを測定単位mの整数倍に切り上げる)。工程能力指数は、その先の話として<b>Cp(規格幅と6σの比、中心のズレは考えない)</b>と<b>Cpk(中心のズレも考慮した実質的な能力)</b>の2種類がある。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Cp・CpU・CpL・Cpkの違い</caption>
+        <thead><tr><th>指標</th><th>式</th><th>何を測るか</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">Cp</td><td class="mono">(SU−SL) / 6σ</td><td>規格幅に対する工程のばらつきの余裕(中心のズレは<b>考えない</b>)</td></tr>
+          <tr><td class="mono">CpU</td><td class="mono">(SU−x̄) / 3σ</td><td>上限規格側だけを見た余裕</td></tr>
+          <tr><td class="mono">CpL</td><td class="mono">(x̄−SL) / 3σ</td><td>下限規格側だけを見た余裕</td></tr>
+          <tr><td class="mono">Cpk</td><td class="mono">min(CpU, CpL)</td><td>中心のズレも考慮した<b>実質的な</b>工程能力(狭い方に合わせる)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><b>CpとCpkが乖離するとき何が分かるか:</b> Cpは大きいのにCpkだけ小さい場合、工程のばらつきそのものは十分小さいのに<b>平均が規格の中心からズレている</b>ことを意味する。CpU・CpLを個別に見れば、どちら側にズレているかまで特定できる(片方だけ極端に小さい)。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">傾向</span><h2>出題傾向 — 論点 × 出題回</h2></div>
+    <p>過去問資料は第37回・第40回の2件のみ。他の4回にこの分野の問題が無かったのか、単に写真が未取得なのかは判別できていない。手法編6分野の中で最も資料が薄いカテゴリ。</p>
+
+    <div class="table-wrap">
+      <table class="heat-table">
+        <caption>論点別の出題確認状況(第35〜40回)</caption>
+        <thead>
+          <tr>
+            <th>論点</th>
+            <th class="rc">35</th><th class="rc">36</th><th class="rc">37</th>
+            <th class="rc">38</th><th class="rc">39</th><th class="rc">40</th>
+            <th class="rc">回数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="topic">区間幅からCp・不適合率まで</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">Cp・CpU・CpL・Cpkの読み分け</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn"><b>資料の抜けの疑い(手法編で最も薄い分野):</b> 第35・36・38・39回に、この分野の資料が無い。ヒストグラム・工程能力指数は問6の問題解決事例の中で部分的に問われることもあるため(例: 第36回問6でCpkの計算が一部登場)、独立した大問としては出題されなかった回がある可能性もある。もし該当回の過去問写真があれば追加を検討したい。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">暗記</span><h2>暗記が必要な項目 vs 理解すれば導ける項目</h2></div>
+
+    <div class="split">
+      <div class="panel memo">
+        <div class="ph">⚠ 暗記(丸暗記するしかない)</div>
+        <ul>
+          <li><b>区間幅</b>: <span class="mono">h = R/k</span>を、測定単位mの<b>整数倍に切り上げ</b>る</li>
+          <li><b>Cp</b>: <span class="mono">Cp = (SU−SL) / 6σ</span>(両側規格、中心のズレは考えない)</li>
+          <li><b>CpU・CpL</b>: <span class="mono">CpU=(SU−x̄)/3σ</span>、<span class="mono">CpL=(x̄−SL)/3σ</span>(片側規格、または中心のズレを見る)</li>
+          <li><b>Cpk</b>: <span class="mono">Cpk = min(CpU, CpL)</span>(狭い方=悪い方に合わせる)</li>
+          <li><b>判断の目安</b>: 一般に<b>Cp(Cpk)≥1.33で十分</b>、1.00〜1.33で不足気味、1.00未満で不足と判断されることが多い</li>
+        </ul>
+      </div>
+      <div class="panel under">
+        <div class="ph">◎ 理解して導く(暗記不要)</div>
+        <ul>
+          <li><b>なぜ6σ・3σという幅を使うか</b>: 正規分布では平均±3σの範囲に約99.7%のデータが収まる(統計的方法の基礎まとめ)、という性質をそのまま「工程のばらつきの実質的な幅」とみなしている。</li>
+          <li><b>CpとCpkがなぜ違う値になるか</b>: Cpは中心のズレを考えない「潜在能力」、Cpkは実際の中心のズレも織り込んだ「実質的な能力」。中心が規格の真ん中にあればCp=Cpkになる。</li>
+          <li><b>片側だけ極端に小さいCpU/CpLから何が分かるか</b>: 平均がその規格側に偏っていることを意味し、工程調整の方向性(どちらへ平均をずらすべきか)がそのまま分かる。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">誤答</span><h2>誤答選択肢の典型パターン</h2></div>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>誤答選択肢が生まれるパターン</caption>
+        <thead><tr><th>パターン</th><th>具体例</th><th>回避策</th></tr></thead>
+        <tbody>
+          <tr><td class="tag">6σと3σの取り違え</td><td>Cpの計算で分母を3σにしてしまう(CpU/CpLは3σ、Cpは6σ)</td><td>両側規格の全体を見るCpは6σ、片側だけ見るCpU/CpLは3σと役割で区別する</td></tr>
+          <tr><td class="tag">前設問の答えの紛れ込み</td><td>不適合率や区間幅など、直前の設問で求めた別の数値が選択肢に混ざる</td><td>今求めている量が「区間幅」「Cp」「不適合率」のどれかを常に確認する</td></tr>
+          <tr><td class="tag">CpとCpkの混同</td><td>中心がズレている工程でCpを計算し、それをそのまま実質的な能力(Cpk)として扱う</td><td>中心のズレが疑われる問題文では必ずCpkまで計算し、Cpとの差を確認する</td></tr>
+          <tr><td class="tag">区間幅の切り上げ忘れ</td><td>h=R/kを測定単位の整数倍に切り上げず、計算値そのまま使ってしまう</td><td>測定単位m(最小目盛)を確認し、hをmの整数倍になるよう必ず切り上げる</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">資料</span><h2>元の解説を読む</h2></div>
+    <div class="cards">
+      <a class="card" href="37th-histogram-cp.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第37回 問6</span></div>
+        <h4>区間幅からCp、不適合率まで</h4>
+        <div class="desc">ヒストグラムの区間幅の決め方、平均の偏り・標準偏差の推定、工程能力指数Cp、上限規格超え確率まで一直線に解く。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="40th-process-capability.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第40回 問2</span></div>
+        <h4>Cp・CpU・CpL・Cpkの読み分け</h4>
+        <div class="desc">Cp・CpU・CpL・Cpkを並べて計算し、CpUだけが極端に小さいことから平均のズレを読み取る。</div>
+        <div class="go">開く →</div>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 分野別まとめ「ヒストグラム・工程能力指数」</span>
+    <span>元資料2件 / 手法編まとめ 6/6</span>
+  </footer>
+
+</div>
