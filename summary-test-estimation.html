@@ -1,0 +1,341 @@
+<title>検定と推定まとめ</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+  --shadow-lift: 0 2px 4px rgba(22,35,42,0.08), 0 14px 32px -14px rgba(22,35,42,0.22);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:900px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:52px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+a:focus-visible{outline:2px solid var(--reg);outline-offset:3px;border-radius:4px;}
+
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:26px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4.2vw,40px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:64ch;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+.meta-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:4px;}
+.meta{display:flex;flex-direction:column;gap:2px;}
+.meta .v{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--ink);line-height:1.2;}
+.meta .k{font-size:11.5px;color:var(--ink-faint);letter-spacing:0.04em;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:56px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:middle;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .mono{font-family:'JetBrains Mono',monospace;}
+
+.heat-table th.rc,.heat-table td.rc{text-align:center;width:44px;}
+.heat-table td.rc.hit{background:var(--reg-soft);}
+.heat-table td.rc.hit span{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--reg);}
+.heat-table td.rc.miss span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--border-strong);opacity:0.6;}
+.heat-table td.topic{font-size:13.5px;}
+.heat-table td.cnt{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--reg-ink);text-align:center;}
+
+.callout{background:var(--reg-soft);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+.callout.warn b{color:var(--wrong);}
+
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;}
+.panel{border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);background:var(--surface);overflow:hidden;display:flex;flex-direction:column;}
+.panel .ph{padding:14px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:0.06em;font-weight:700;display:flex;align-items:center;gap:8px;}
+.panel.memo .ph{background:var(--res-soft);color:var(--res-ink);border-bottom:1px solid var(--res);}
+.panel.under .ph{background:var(--reg-soft);color:var(--reg-ink);border-bottom:1px solid var(--reg);}
+.panel ul{margin:0;padding:16px 20px 18px 34px;display:flex;flex-direction:column;gap:10px;}
+.panel li{font-size:14.5px;color:var(--ink-soft);}
+.panel li b{color:var(--ink);}
+.panel li .mono{font-family:'JetBrains Mono',monospace;font-size:13.5px;}
+
+.trap-table td.tag{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--wrong);font-weight:700;white-space:nowrap;}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
+.card{
+  display:flex;flex-direction:column;gap:10px;
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:18px 20px;box-shadow:var(--shadow);
+  text-decoration:none;color:inherit;
+  transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+}
+.card:hover{box-shadow:var(--shadow-lift);border-color:var(--border-strong);transform:translateY(-2px);}
+@media (prefers-reduced-motion: reduce){.card{transition:none;} .card:hover{transform:none;}}
+.card .chips{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.04em;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--ink-faint);border:1px solid var(--border);}
+.chip.src{background:var(--reg-soft);color:var(--reg-ink);border-color:var(--reg);}
+.card h4{font-family:'Zen Old Mincho',serif;font-size:17px;font-weight:600;margin:0;color:var(--ink);line-height:1.5;}
+.card .desc{font-size:13.5px;color:var(--ink-soft);line-height:1.7;}
+.card .go{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--reg-ink);font-weight:600;margin-top:2px;}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 手法編 ／ 分野別まとめ 2/6</span>
+    <h1>検定と推定</h1>
+    <p class="lede">「何を検定したいか」で使う分布が変わるだけで、手順の骨格(仮説を立てる→検定統計量を計算→棄却限界と比べる→結論)は共通している。過去問(第35〜40回)では<b>ほぼ毎回、問1か問3のどちらかが必ずこの分野</b>から出題されており、6回中6回で確認できた最も安定した出題分野。</p>
+    <div class="meta-row">
+      <div class="meta"><span class="v">7</span><span class="k">元資料</span></div>
+      <div class="meta"><span class="v">6/6</span><span class="k">出題を確認できた回</span></div>
+      <div class="meta"><span class="v">8</span><span class="k">論点の出現回数(延べ)</span></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">傾向</span><h2>出題傾向 — 論点 × 出題回</h2></div>
+    <p>計量値(母平均・母分散)と計数値(分割表)の検定を合わせて1ページにまとめている。<b>この分野だけは第35〜40回のすべての回で出題を確認できた</b>唯一の分野で、QC検定2級のいわば「毎回出る」核。</p>
+
+    <div class="table-wrap">
+      <table class="heat-table">
+        <caption>論点別の出題確認状況(第35〜40回)</caption>
+        <thead>
+          <tr>
+            <th>論点</th>
+            <th class="rc">35</th><th class="rc">36</th><th class="rc">37</th>
+            <th class="rc">38</th><th class="rc">39</th><th class="rc">40</th>
+            <th class="rc">回数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="topic">母平均のt検定(σ未知)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">2</td>
+          </tr>
+          <tr>
+            <td class="topic">母分散の片側χ²検定</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">2</td>
+          </tr>
+          <tr>
+            <td class="topic">母分散の両側χ²検定・分布対応表</td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">2群の分散比(F検定)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">分割表のχ²検定(計数値・独立性)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 210" role="img" aria-label="論点別の出現回数を示す横棒グラフ。母平均のt検定と母分散の片側χ二乗検定が2回、残り3論点は1回ずつ">
+          <line x1="260" y1="10" x2="260" y2="188" stroke="currentColor" stroke-width="1" opacity="0.25"/>
+          <g font-size="12" fill="currentColor" opacity="0.55">
+            <text x="20" y="34" text-anchor="start">母平均のt検定</text>
+            <text x="20" y="72" text-anchor="start">母分散の片側χ²検定</text>
+            <text x="20" y="110" text-anchor="start">母分散の両側χ²・対応表</text>
+            <text x="20" y="148" text-anchor="start">2群の分散比(F検定)</text>
+            <text x="20" y="186" text-anchor="start">分割表のχ²検定</text>
+          </g>
+          <g>
+            <rect x="260" y="22" width="120" height="18" rx="4" fill="var(--reg)"/>
+            <text x="388" y="35" font-size="13" fill="var(--reg-ink)" font-weight="700">2</text>
+
+            <rect x="260" y="60" width="120" height="18" rx="4" fill="var(--reg)"/>
+            <text x="388" y="73" font-size="13" fill="var(--reg-ink)" font-weight="700">2</text>
+
+            <rect x="260" y="98" width="60" height="18" rx="4" fill="var(--reg)"/>
+            <text x="328" y="111" font-size="13" fill="var(--reg-ink)" font-weight="700">1</text>
+
+            <rect x="260" y="136" width="60" height="18" rx="4" fill="var(--reg)"/>
+            <text x="328" y="149" font-size="13" fill="var(--reg-ink)" font-weight="700">1</text>
+
+            <rect x="260" y="174" width="60" height="18" rx="4" fill="var(--reg)"/>
+            <text x="328" y="187" font-size="13" fill="var(--reg-ink)" font-weight="700">1</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption><b>読み方:</b> 母平均のt検定と母分散のχ²検定(片側)が最も頻出。片側検定の向き(上側/下側)を問題文の言い回しから判断する力が繰り返し問われている。</figcaption>
+    </figure>
+
+    <div class="callout"><b>この分野に抜けは無い:</b> 第35〜40回すべてで検定・推定の問題を確認できた。他分野のまとめで見つかった「ある回だけ資料が無い」という空白は、この分野には当てはまらない。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">対応表</span><h2>「何を検定したいか」で使う分布が決まる</h2></div>
+    <p>検定・推定の問題でまず迷うのは公式ではなく<b>どの分布を使うか</b>。これさえ即答できれば、あとは棄却限界表を引くだけの機械的な作業になる。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>検定対象と使用する分布の対応</caption>
+        <thead><tr><th>検定したいもの</th><th>条件</th><th>使う分布</th><th>検定統計量</th></tr></thead>
+        <tbody>
+          <tr><td>母平均</td><td>σ²既知</td><td class="mono">正規分布(Z)</td><td class="mono">Z0=(x̄−μ0)/√(σ²/n)</td></tr>
+          <tr><td>母平均</td><td>σ²未知(実務ではほぼ常にこちら)</td><td class="mono">t分布</td><td class="mono">t0=(x̄−μ0)/√(V/n)</td></tr>
+          <tr><td>母分散(1つ)</td><td>—</td><td class="mono">χ²分布</td><td class="mono">χ0²=S/σ0²</td></tr>
+          <tr><td>2つの母分散の比</td><td>—</td><td class="mono">F分布</td><td class="mono">F0=大きい方のV/小さい方のV</td></tr>
+          <tr><td>分割表の独立性・母不適合品率の違い</td><td>計数値</td><td class="mono">χ²分布</td><td class="mono">χ0²=Σ(実測−期待)²/期待</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout"><b>覚え方の軸:</b> 「平均」の話なら正規分布かt分布(σが分かっているかどうかで分岐)。「分散・ばらつき」の話ならχ²分布。「2つの分散を比べる」ならF分布。「計数値の表」ならχ²分布、という4分岐だけ押さえればよい。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">暗記</span><h2>暗記が必要な項目 vs 理解すれば導ける項目</h2></div>
+
+    <div class="split">
+      <div class="panel memo">
+        <div class="ph">⚠ 暗記(丸暗記するしかない)</div>
+        <ul>
+          <li><b>母平均のt検定</b>: <span class="mono">t(0) = (x̄−μ0) / √(V/n)</span>。σ²ではなく不偏分散Vを使う。</li>
+          <li><b>母分散のχ²検定</b>: <span class="mono">χ(0)² = S / σ0²</span>。Sは偏差平方和(分散ではない)。</li>
+          <li><b>F検定は大きい方を分子にする</b>: <span class="mono">F(0) = 大きい方のV / 小さい方のV</span>。こうすると常にF0≥1になり棄却域が上側だけで済む。</li>
+          <li><b>分割表の期待度数</b>: <span class="mono">E = 行計×列計 / 総計</span>。</li>
+          <li><b>分割表の検定統計量</b>: <span class="mono">χ(0)² = Σ(実測−期待)²/期待</span>、自由度は<span class="mono">(行数−1)(列数−1)</span>。</li>
+          <li><b>片側/両側の判断</b>: 対立仮説が<span class="mono">&lt;</span>か<span class="mono">&gt;</span>なら片側(向きは不等号の方向)、<span class="mono">≠</span>なら両側でα/2を使う。</li>
+          <li><b>あわてもの/ぼんやりもの</b>: あわてもの=第一種の過誤(αを引き起こす、無いのに「ある」と言う)、ぼんやりもの=第二種の過誤(βを引き起こす、あるのに「ない」と言う)。</li>
+        </ul>
+      </div>
+      <div class="panel under">
+        <div class="ph">◎ 理解して導く(暗記不要)</div>
+        <ul>
+          <li><b>なぜσ未知だとt分布を使うのか</b>: 母分散の代わりに不偏分散Vという「推定値」を使う分だけ、正規分布より裾が重いt分布で誤差を補う(統計的方法の基礎まとめのχ0²の由来と地続き)。</li>
+          <li><b>なぜ両側検定は「差がある」までしか言えないのか</b>: 棄却域を上下2つのα/2に分けて割り当てるため、どちら側で棄却されたかの情報だけでは方向を断定する検出力が片側検定より弱い。</li>
+          <li><b>なぜF検定は大きい方を分子にすると片側で済むのか</b>: 分子と分母を入れ替えるとF0の値も1/F0にひっくり返る対称性があり、大きい方を分子に固定すれば必ずF0≥1側だけを見ればよくなる。</li>
+          <li><b>「有意でない」≠「等しい」</b>: 検定は「差がある証拠を積極的に示す」仕組みで、有意にならなかったのは単に「差があるとまでは言い切れなかった」だけ。等しいことの証明にはならない。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">誤答</span><h2>誤答選択肢の典型パターン</h2></div>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>誤答選択肢が生まれるパターン</caption>
+        <thead><tr><th>パターン</th><th>具体例</th><th>回避策</th></tr></thead>
+        <tbody>
+          <tr><td class="tag">片側/両側の取り違え</td><td>「向上したか」(片側)を両側検定の棄却限界(α/2)で計算してしまう、あるいはその逆</td><td>対立仮説を先に文章で書き出し、不等号の向きを確認してから表を引く</td></tr>
+          <tr><td class="tag">上側/下側の取り違え</td><td>「増えた」=上側検定、「(ばらつきが)向上した=減った」=下側検定、を逆にする</td><td>「大きくなったことを示したい」のか「小さくなったことを示したい」のかを言い換えて確認</td></tr>
+          <tr><td class="tag">正しい値と逆数のペア</td><td>χ(0)²や1/χ(0)²のように、正しい値とその逆数の両方が選択肢に用意されている</td><td>単位・大小関係が問題文の文脈と合っているかで検算する</td></tr>
+          <tr><td class="tag">あわてもの/ぼんやりものの混同</td><td>「無いものをあると言う」(第一種)と「あるものを無いと言う」(第二種)を逆に覚える</td><td>「あわてもの」は早とちりして「ある!」と騒ぐ人、で第一種と結びつけて覚える</td></tr>
+          <tr><td class="tag">与えられた実測値の横流し</td><td>分割表の問題で、すでに表にある実測度数をそのまま期待度数の選択肢として紛れ込ませる</td><td>期待度数は必ずE=行計×列計/総計で計算し直す。表の値をそのまま転記しない</td></tr>
+          <tr><td class="tag">F検定の分子分母の逆転</td><td>小さい方の分散を分子にしてF0&lt;1にしてしまい、棄却域を両側で探してしまう</td><td>F0を計算する前に「どちらが大きいか」を確認し、大きい方を分子に固定する</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">資料</span><h2>元の解説を読む</h2></div>
+    <div class="cards">
+      <a class="card" href="35th-variance-test.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第35回 問1</span></div>
+        <h4>母分散の片側(下側)χ²検定</h4>
+        <div class="desc">「小さくなったか」を調べる検定は棄却域が左裾に来る下側検定になる。選択肢が正しい値とその逆数のペアで作られていることまで見抜く。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="36th-chi-square-variance.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第36回 問3</span></div>
+        <h4>分布対応表と母分散の両側χ²検定</h4>
+        <div class="desc">t・χ²・F・正規分布の対応表と、両側検定でα/2を使う理由。対立仮説≠のとき結論は「差がある」までで方向は言えないことを解説。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="37th-onesided-t-test.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第37回 問1</span></div>
+        <h4>片側t検定とあわてもの・ぼんやりものの誤り</h4>
+        <div class="desc">σ未知でV/nを使う式の選び方と、第一種・第二種の過誤の見分け方を2×2表で整理。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="38th-chi-square.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第38回 問3</span></div>
+        <h4>分割表のカイ二乗検定</h4>
+        <div class="desc">4×2分割表の独立性の検定。期待度数の求め方から検定統計量χ0²、棄却域の判定まで。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="39th-f-test.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第39回 問2</span></div>
+        <h4>二群の母分散の比較(F検定)</h4>
+        <div class="desc">両側検定で「大きい方の分散を分子にする」棄却域の作り方のトリックを図解。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="40th-mean-variance-test.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第40回 問1</span></div>
+        <h4>母平均のt検定と母分散のχ²検定</h4>
+        <div class="desc">「増えたか」=上側検定・「向上したか」=下側検定と、棄却域の向きが逆になる理由を対比。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="40th-chi-square-meaning.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">第40回 問1</span><span class="chip">概念の掘り下げ</span></div>
+        <h4>χ0²=S/σ0²は何を測っているのか</h4>
+        <div class="desc">χ²分布は「標準化した誤差の2乗和」。分散の点推定V=S/(n−1)が不偏になる理由まで掘り下げる。</div>
+        <div class="go">開く →</div>
+      </a>
+    </div>
+    <div class="callout"><b>あわせて読むと理解が深まる:</b> なぜカイ二乗が「2乗」なのかを2乗を選ぶ理由から掘り下げた <a href="chi-square-why-squared.html" target="_blank" rel="noopener">分野横断の概念資料</a> は、この分野の土台になっている。</div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 分野別まとめ「検定と推定」</span>
+    <span>元資料7件 / 手法編まとめ 2/6</span>
+  </footer>
+
+</div>
