@@ -1,0 +1,323 @@
+<title>第35回 問4 一元配置と二元配置(交互作用)の分散分析</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(26px,4vw,36px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第35回 問4</span>
+    <h1>実験計画法 — 不揃いな繰返し数の一元配置と、交互作用のある二元配置</h1>
+    <p class="lede">①は繰返し数が水準ごとに違う一元配置(A₃だけ3回)。点推定・区間推定で使う「n」を水準ごとの実際の繰返し数にしないと数値がズレる。②は交互作用A×Bが効く二元配置。SS表は<b>合計が一致していても中の配分計算をしないと選べない</b>罠つきで、最適水準の点推定も「加法モデル」ではなく<b>実際のセル平均</b>を使う必要がある。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">①</span><h2>添加剤Aの一元配置実験(繰返し数が不揃い) — (18)〜(21)</h2></div>
+    <p>寝具マットレスの弾力を高める目的で添加剤Aを4水準設定し一元配置実験を行った。各水準4回繰返す予定が、データ欠損によりA₃水準のみ3回になった。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>表4.1 ①のデータ表</caption>
+        <thead><tr><th>水準</th><th colspan="4">データ</th><th>合計 Tᵢ</th><th>繰返し n</th></tr></thead>
+        <tbody>
+          <tr><td>A1</td><td colspan="4" class="num">11, 12, 14, 9</td><td class="num">46</td><td class="num">4</td></tr>
+          <tr><td>A2</td><td colspan="4" class="num">18, 16, 19, 15</td><td class="num">68</td><td class="num">4</td></tr>
+          <tr class="row-res"><td>A3</td><td colspan="4" class="num">22, 19, 24</td><td class="num">65</td><td class="num hit">3</td></tr>
+          <tr><td>A4</td><td colspan="4" class="num">14, 13, 12, 10</td><td class="num">49</td><td class="num">4</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="calc">
+      <span class="label">各水準平均(合計 ÷ 実際の繰返し数)</span>
+      <span class="line">x̄(A1) = 46/4 = 11.5　x̄(A2) = 68/4 = 17.0　x̄(A3) = 65/3 = 21.67　x̄(A4) = 49/4 = 12.25</span>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 480 220" role="img" aria-label="A1からA4までの各水準平均を結んだ折れ線グラフ。A3で最大値21.67をとる山型">
+          <line x1="50" y1="180" x2="440" y2="180" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <line x1="50" y1="180" x2="50" y2="20" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <polyline points="90,146 190,88 290,34 390,132" fill="none" stroke="var(--reg)" stroke-width="2.4"/>
+          <circle cx="90" cy="146" r="4" fill="var(--reg)"/><circle cx="190" cy="88" r="4" fill="var(--reg)"/>
+          <circle cx="290" cy="34" r="4" fill="var(--reg)"/><circle cx="390" cy="132" r="4" fill="var(--reg)"/>
+          <text x="90" y="166" font-size="12" text-anchor="middle" fill="currentColor">A1</text>
+          <text x="190" y="166" font-size="12" text-anchor="middle" fill="currentColor">A2</text>
+          <text x="290" y="166" font-size="12" text-anchor="middle" fill="currentColor">A3</text>
+          <text x="390" y="166" font-size="12" text-anchor="middle" fill="currentColor">A4</text>
+          <text x="90" y="160" font-size="11" text-anchor="middle" fill="var(--reg-ink)">11.5</text>
+          <text x="190" y="102" font-size="11" text-anchor="middle" fill="var(--reg-ink)">17.0</text>
+          <text x="290" y="22" font-size="11" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">21.7</text>
+          <text x="390" y="146" font-size="11" text-anchor="middle" fill="var(--reg-ink)">12.3</text>
+        </svg>
+      </div>
+      <figcaption><b>図1(18の正解の形).</b> 山はA2ではなくA3で最大になる。選択肢イがこの形。<b>ア</b>はA3をA2より低く描いた誤り、<b>ウ</b>は縦軸が30〜70で<b>各水準の合計(46,68,65,49)をそのままプロットした</b>もの — 繰返し数が違う水準を「合計」で比べてしまう典型的な罠。</figcaption>
+    </figure>
+    <span class="answer"><span class="qno">(18)</span> イ</span>
+
+    <div class="calc">
+      <span class="label">分散分析表 — CT(修正項)から実際に計算する</span>
+      <span class="line">CT = T²/N = 228² / 15 = 3465.6　(N=4+4+3+4=15, T=46+68+65+49=228)</span>
+      <span class="line">S(T) = Σx² − CT = 3738 − 3465.6 = 272.4</span>
+      <span class="line">S(A) = Σ(Tᵢ²/nᵢ) − CT = (46²/4 + 68²/4 + 65²/3 + 49²/4) − CT = 3693.58 − 3465.6 = 228.0</span>
+      <span class="line">S(E) = S(T) − S(A) = 272.4 − 228.0 = 44.4</span>
+      <span class="line">φ(A) = a−1 = 3　φ(E) = N−a = 15−4 = <b>11</b>　φ(T) = N−1 = 14</span>
+    </div>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>(19)の選択肢 — 合計272.4は共通、φ(E)の取り方で分かれる</caption>
+        <thead><tr><th>選択肢</th><th>要因</th><th>平方和</th><th>自由度</th><th>平均平方</th><th>判定</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="2">ア</td><td>A</td><td class="num">228.0</td><td class="num">3</td><td class="num">76.00</td><td rowspan="2" class="bad">誤(N=16と誤認)</td></tr>
+          <tr><td>E</td><td class="num">44.4</td><td class="num">12</td><td class="num">3.70</td></tr>
+          <tr><td rowspan="2">イ</td><td>A</td><td class="num">228.0</td><td class="num">3</td><td class="num">76.00</td><td rowspan="2" class="good">正解</td></tr>
+          <tr><td>E</td><td class="num">44.4</td><td class="num">11</td><td class="num">4.04</td></tr>
+          <tr><td rowspan="2">ウ</td><td>A</td><td class="num">167.0</td><td class="num">3</td><td class="num">55.67</td><td rowspan="2" class="bad">誤(S(A)自体の計算違い)</td></tr>
+          <tr><td>E</td><td class="num">105.4</td><td class="num">11</td><td class="num">9.58</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout warn"><b>アの罠:</b> A3水準の欠損(3回)を見落とし、全水準4回・N=16のまま計算すると φ(E)=N−a=12、φ(T)=15になる。合計のS(T)=272.4自体は変わらないので、<b>自由度の列だけ</b>で見抜く必要がある。F0 = 76.00/4.04 ≒ <b>18.8</b>(F(3,11;0.05)≒3.59を大きく上回り、添加剤Aの効果は高度に有意)。</div>
+    <span class="answer"><span class="qno">(19)</span> イ</span>
+
+    <div class="calc">
+      <span class="label">最適水準の点推定と95%信頼区間の幅</span>
+      <span class="line">「弾力を高める」ため最大平均の水準を選ぶ → A3(x̄=21.67)が最適水準</span>
+      <span class="line">点推定値 = x̄(A3) = 65/3 = 21.67 ≒ 21.7</span>
+      <span class="line">± t(φ(E), 0.025) × √(Ve/n₃) = ±2.201 × √(4.04/3) = ±2.201 × 1.160 ≒ ±2.55</span>
+    </div>
+    <div class="callout info"><b>「Veはもうφ(E)=11で割ったのに、なぜまたn₃=3で割るのか」と迷ったら:</b> この2つの割り算は別の問いに答えている。φ(E)で割るのは<b>1個のデータの分散</b>を見積もるため、n₃で割るのは<b>3個を平均したx̄(A3)の分散</b>を求めるため。<a href="anova-ve-then-n.html" target="_blank" rel="noopener">自由度で割ったのに、なぜまたnで割るのか</a>で図解している。</div>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>(20)(21)の選択肢トレース</caption>
+        <thead><tr><th>値</th><th>判定</th><th>原因の候補</th></tr></thead>
+        <tbody>
+          <tr><td class="bad">ア. 2.10</td><td>誤</td><td>(19)の誤答アの表(φ(E)=12, Ve=3.70)を使い、さらにnも4のまま計算</td></tr>
+          <tr><td class="bad">イ. 2.21</td><td>誤</td><td>正しい表(Ve=4.04)は使えたが、<b>A3の繰返しが3回であることを見落とし</b>n=4のまま計算</td></tr>
+          <tr><td class="good">ウ. 2.55</td><td>正解</td><td>正しいVe=4.04・正しいn=3</td></tr>
+          <tr><td class="bad">エ. 3.93</td><td>誤</td><td>(19)の誤答ウの表(Ve=9.58)を使い、nは正しく3で計算</td></tr>
+          <tr><td class="bad">オ. 17.0</td><td>誤</td><td>表4.1の「合計」だけを見てA2(合計68が最大)を最適水準と誤認した場合のx̄(A2)</td></tr>
+          <tr><td class="good">カ. 21.7</td><td>正解</td><td>x̄(A3) = 65/3</td></tr>
+          <tr><td class="bad">キ. 22.7</td><td>誤</td><td>21.7に近い紛らわしい値。書き間違い・読み間違いを誘う位置に置かれた数字と考えられる</td></tr>
+          <tr><td class="bad">ク. 68.0</td><td>誤</td><td>「オ」と同じくA2を最適と誤認した上、平均に直さずA2の合計T₂そのものを答えてしまう</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout"><b>合計と平均を取り違えない:</b> 表4.1の「合計」列だけを見るとA2(68)が一番大きいが、A2は4回・A3は3回の繰返しなので合計のままでは比較できない。必ず<b>水準ごとの実際のnで割った平均</b>で比較する。オ・クはこの取り違えを起点にした一貫した誤答系列になっている。</div>
+    <span class="answer-row">
+      <span class="answer"><span class="qno">(20)</span> カ. 21.7</span>
+      <span class="answer"><span class="qno">(21)</span> ウ. 2.55</span>
+    </span>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">②</span><h2>材料A×電流値Bの二元配置実験(交互作用あり) — (22)〜(24)</h2></div>
+    <p>溶接強度を高める目的で材料Aを3水準、電流値Bを2水準設定し、繰返し2回の二元配置実験を行った。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>表4.2 ②のデータ表</caption>
+        <thead><tr><th></th><th>B1</th><th>B2</th><th>合計</th></tr></thead>
+        <tbody>
+          <tr><td>A1</td><td class="num">9, 11</td><td class="num">14, 12</td><td class="num">46</td></tr>
+          <tr><td>A2</td><td class="num">7, 9</td><td class="num">16, 14</td><td class="num">46</td></tr>
+          <tr><td>A3</td><td class="num">5, 7</td><td class="num">15, 18</td><td class="num">45</td></tr>
+          <tr><td>合計</td><td class="num">48</td><td class="num">89</td><td class="num">137</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="calc">
+      <span class="label">水準平均とセル平均</span>
+      <span class="line">A水準平均: x̄(A1)=11.5　x̄(A2)=11.5　x̄(A3)=11.25　→ ほぼ同じ(Aの主効果は小さいはず)</span>
+      <span class="line">B水準平均: x̄(B1)=48/6=8.0　x̄(B2)=89/6=14.83　→ 差が大きい(Bの主効果は大きいはず)</span>
+      <span class="line">セル平均: A1B1=10.0 A1B2=13.0 / A2B1=8.0 A2B2=15.0 / A3B1=6.0 A3B2=16.5</span>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 420 220" role="img" aria-label="A1からA3までのB1・B2セル平均を結んだ2本の折れ線。B1は10から6へ下降、B2は13から16.5へ上昇し、交差せずに開いていく">
+          <line x1="50" y1="180" x2="380" y2="180" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <line x1="50" y1="180" x2="50" y2="20" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <polyline points="80,108 220,136 340,158" fill="none" stroke="var(--res)" stroke-width="2.4"/>
+          <polyline points="80,72 220,50 340,30" fill="none" stroke="var(--reg)" stroke-width="2.4"/>
+          <circle cx="80" cy="108" r="4" fill="var(--res)"/><circle cx="220" cy="136" r="4" fill="var(--res)"/><circle cx="340" cy="158" r="4" fill="var(--res)"/>
+          <circle cx="80" cy="72" r="4" fill="var(--reg)"/><circle cx="220" cy="50" r="4" fill="var(--reg)"/><circle cx="340" cy="30" r="4" fill="var(--reg)"/>
+          <text x="80" y="198" font-size="12" text-anchor="middle" fill="currentColor">A1</text>
+          <text x="220" y="198" font-size="12" text-anchor="middle" fill="currentColor">A2</text>
+          <text x="340" y="198" font-size="12" text-anchor="middle" fill="currentColor">A3</text>
+          <text x="355" y="158" font-size="12" fill="var(--res-ink)" font-weight="700">B1</text>
+          <text x="355" y="30" font-size="12" fill="var(--reg-ink)" font-weight="700">B2</text>
+        </svg>
+      </div>
+      <figcaption><b>図2(22の正解の形=選択肢エ).</b> B1は10.0→8.0→6.0と下降、B2は13.0→15.0→16.5と上昇し、2本は交差せず開いていく(交互作用の典型的な現れ方)。<b>オ</b>はB1・B2が入れ替わって交差する形、<b>カ</b>は縦軸が5〜35で<b>セルの合計(20,16,12 / 26,30,33)をそのままプロットした</b>もの — ①のウと同じ「合計と平均の取り違え」の罠。</figcaption>
+    </figure>
+    <span class="answer"><span class="qno">(22)</span> エ</span>
+
+    <div class="calc">
+      <span class="label">分散分析表 — CTから実際に計算する(合計183.0が一致するだけでは選べない)</span>
+      <span class="line">CT = 137² / 12 = 1564.08　　S(T) = Σx² − CT = 1747 − 1564.08 = 182.92 ≒ 183.0</span>
+      <span class="line">S(A) = (46²+46²+45²)/4 − CT = 1564.25 − 1564.08 = 0.17 ≒ 0.2</span>
+      <span class="line">S(B) = (48²+89²)/6 − CT = 1704.17 − 1564.08 = 140.08 ≒ 140.1</span>
+      <span class="line">S(cells) = Σ(Tᵢⱼ²/r) − CT = (20²+26²+16²+30²+12²+33²)/2 − CT = 1732.5 − 1564.08 = 168.42</span>
+      <span class="line">S(A×B) = S(cells) − S(A) − S(B) = 168.42 − 0.17 − 140.08 = <b>28.17 ≒ 28.2</b></span>
+      <span class="line">S(E) = S(T) − S(cells) = 182.92 − 168.42 = <b>14.5</b></span>
+    </div>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>(23)の選択肢 — A・B・合計は3つとも同じ数値。A×BとEの配分だけが違う</caption>
+        <thead><tr><th>選択肢</th><th>要因</th><th>平方和</th><th>自由度</th><th>平均平方</th><th>判定</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="4">エ</td><td>A</td><td class="num">0.2</td><td class="num">2</td><td class="num">0.10</td><td rowspan="4" class="bad">誤(A×B/Eの配分が違う)</td></tr>
+          <tr><td>B</td><td class="num">140.1</td><td class="num">1</td><td class="num">140.10</td></tr>
+          <tr><td>A×B</td><td class="num">28.0</td><td class="num">2</td><td class="num">14.00</td></tr>
+          <tr><td>E</td><td class="num">14.7</td><td class="num">6</td><td class="num">2.45</td></tr>
+          <tr><td rowspan="4">オ</td><td>A</td><td class="num">0.2</td><td class="num">2</td><td class="num">0.10</td><td rowspan="4" class="good">正解</td></tr>
+          <tr><td>B</td><td class="num">140.1</td><td class="num">1</td><td class="num">140.10</td></tr>
+          <tr><td>A×B</td><td class="num">28.2</td><td class="num">2</td><td class="num">14.10</td></tr>
+          <tr><td>E</td><td class="num">14.5</td><td class="num">6</td><td class="num">2.42</td></tr>
+          <tr><td rowspan="4">カ</td><td>A</td><td class="num">0.2</td><td class="num">2</td><td class="num">0.10</td><td rowspan="4" class="bad">誤(A×B/Eの配分が違う)</td></tr>
+          <tr><td>B</td><td class="num">140.1</td><td class="num">1</td><td class="num">140.10</td></tr>
+          <tr><td>A×B</td><td class="num">23.2</td><td class="num">2</td><td class="num">11.60</td></tr>
+          <tr><td>E</td><td class="num">19.5</td><td class="num">6</td><td class="num">3.25</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout warn"><b>3択とも「合計183.0」は一致する:</b> エ(0.2+140.1+28.0+14.7)・オ(0.2+140.1+28.2+14.5)・カ(0.2+140.1+23.2+19.5)はどれも足すと183.0になるため、<b>検算として合計だけを確認しても正解を絞り込めない</b>。S(A×B)はS(cells)−S(A)−S(B)で個別に計算して初めて28.2と確定する。</div>
+    <span class="answer"><span class="qno">(23)</span> オ</span>
+
+    <div class="table-wrap">
+      <table>
+        <caption>有意性の判定(オの表で計算)</caption>
+        <thead><tr><th>要因</th><th>F0</th><th>判定基準</th><th>結果</th></tr></thead>
+        <tbody>
+          <tr><td>A</td><td class="num">0.10/2.42 ≒ 0.04</td><td class="num">F(2,6;0.05)=5.14</td><td>有意でない</td></tr>
+          <tr><td>B</td><td class="num">140.10/2.42 ≒ 57.9</td><td class="num">F(1,6;0.01)=13.75</td><td class="hit">1%で有意</td></tr>
+          <tr class="row-res"><td>A×B</td><td class="num">14.10/2.42 ≒ 5.83</td><td class="num">F(2,6;0.05)=5.14</td><td class="hit">5%で有意(1%では非有意)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout info"><b>Aの主効果は有意でないのにA×Bは有意になる理由:</b> A水準の合計(46, 46, 45)はほぼ同じでAの効果自体はごく小さい。しかし電流値Bを変えたときのAの効きかたはA3で最も強く出る(B1では最小・B2では最大になる)。この「Bの水準によってAの効きかたが変わる」こと自体がA×Bの正体であり、A単独の効果の大小とは別の話になる。同じ構図は<b>第40回問6</b>でも扱った。</div>
+
+    <div class="calc">
+      <span class="label">最適水準の点推定 — 交互作用が有意なので加法モデルではなく実際のセル平均を使う</span>
+      <span class="line">「強度を高める」ため6つのセル平均を比較 → A1B2=13.0, A2B2=15.0, <b>A3B2=16.5(最大)</b></span>
+      <span class="line">点推定値 = セル平均 A3B2 = (15+18)/2 = 16.5</span>
+    </div>
+    <div class="callout warn"><b>加法モデルの推定値(参考・誤り):</b> もしA×Bが有意でなければ「x̄(A3)+x̄(B2)−x̄(全体)=11.25+14.83−11.42≒14.7」のような加法モデルの推定値(選択肢カ.14.8)を使ってよい。だが本問はA×Bが5%で有意なので、この加法モデルは使えず、<b>実測のセル平均16.5をそのまま使う</b>のが正しい。選択肢ク.33.0はA3B2の「合計」(15+18)を2で割り忘れた値。</div>
+    <span class="answer"><span class="qno">(24)</span> キ. 16.5</span>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">補足</span><h2>関連する過去問との関係</h2></div>
+    <p>①の「繰返し数が不揃いな一元配置」は<b>第39回問4</b>と同じ型(計画16回が15回で打ち切られたケース)で、点推定・区間推定に使うnを間違えないという教訓も共通する。②の「主効果は小さいのに交互作用は有意」という構図は<b>第40回問6</b>(S(B)とS(A×B)がほぼ同じ値でも有意性判定が分かれる話)と表裏の関係にある。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>繰返し数が水準ごとに違うとき、点推定・区間推定・グラフの比較は必ず<b>各水準の実際のn</b>で平均してから行う。「合計」の大小で比べない。</span></div>
+      <div class="step"><span class="mark">2</span><span>二元配置のSS表は<b>合計が一致していても中身が正しいとは限らない</b>。S(A×B)・S(E)はS(cells)から個別に計算して検算する。</span></div>
+      <div class="step"><span class="mark">3</span><span>交互作用A×Bが有意なときは、最適水準の点推定に加法モデル(x̄ᵢ+x̄ⱼ−x̄)を使わず、<b>実測のセル平均</b>を使う。</span></div>
+      <div class="step"><span class="mark">4</span><span>ある要因の主効果が非有意でも、その要因が絡む交互作用は有意になりうる。両者は別の判定として扱う。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第35回 問4 / 実験計画法(不揃い一元配置・交互作用のある二元配置)</span>
+    <span>①最適点推定21.7±2.55 ・ ②最適セル平均16.5(A3B2)</span>
+  </footer>
+
+</div>

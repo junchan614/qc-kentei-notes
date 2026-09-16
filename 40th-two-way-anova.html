@@ -1,0 +1,321 @@
+<title>第40回 問6 繰返しのある二元配置実験</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第40回 問6</span>
+    <h1>S(B)とS(A×B)はほぼ同じ値なのに、判定が分かれる理由</h1>
+    <p class="lede">要因B(平方和12.60)と交互作用A×B(平方和12.29)は、平方和だけを見ればほとんど同じ大きさ。ところが検定の結果は<b>Bは有意水準1%で有意、A×Bは5%でようやく有意</b>と分かれる。答えは平方和の大きさではなく、<b>その平方和が何個の自由度に分配されているか</b>にある。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>与えられたデータ</h2></div>
+    <p>製品の耐食性を向上させるため、因子A(4水準)×因子B(2水準)、繰返し数2回の<b>繰返しのある二元配置実験</b>を行った(全16個のデータ)。個々のデータは伏せられ、水準ごとの合計だけが与えられている。</p>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <caption>表6.1 データ表（水準ごとの合計）</caption>
+        <thead><tr><th></th><th>B1</th><th>B2</th><th>合計</th></tr></thead>
+        <tbody>
+          <tr><td>A1</td><td>x111, x112</td><td>x121, x122</td><td class="sum">T1.. = 8.5</td></tr>
+          <tr><td>A2</td><td>x211, x212</td><td>x221, x222</td><td class="sum">T2.. = 33.7</td></tr>
+          <tr><td>A3</td><td>x311, x312</td><td>x321, x322</td><td class="sum">T3.. = 61.1</td></tr>
+          <tr><td>A4</td><td>x411, x412</td><td>x421, x422</td><td class="sum">T4.. = 83.7</td></tr>
+          <tr><td>合計</td><td class="sum">T.1. = 100.6</td><td class="sum">T.2. = 86.4</td><td class="sum">T... = 187.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>さらに <span class="mono">CT = T...²/N = 187.0²/16 = 2185.56</span>、交互作用の平方和 <span class="mono">S(A×B) = 12.29</span>、誤差の平均平方 <span class="mono">V(E) = 0.9325</span> が与えられている。水準数 a=4、b=2、繰返し r=2 なので、全データ数 N = a×b×r = 16。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 280" role="img" aria-label="要因Aの4水準の合計はT1..=8.5からT4..=83.7まで大きく右肩上がりに変化する一方、要因Bの2水準の合計はT.1.=100.6とT.2.=86.4で差は小さい">
+          <text x="150" y="24" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">要因A: 水準ごとの合計 T(i..)</text>
+          <line x1="45" y1="230" x2="250" y2="230" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <rect x="60" y="215" width="34" height="15" fill="var(--reg)" opacity="0.85"/>
+          <rect x="104" y="170" width="34" height="60" fill="var(--reg)" opacity="0.85"/>
+          <rect x="148" y="121" width="34" height="109" fill="var(--reg)" opacity="0.85"/>
+          <rect x="192" y="81" width="34" height="149" fill="var(--reg)" opacity="0.85"/>
+          <g font-size="11" text-anchor="middle" fill="currentColor" opacity="0.75">
+            <text x="77" y="210">8.5</text>
+            <text x="121" y="164">33.7</text>
+            <text x="165" y="115">61.1</text>
+            <text x="209" y="75">83.7</text>
+            <text x="77" y="246">A1</text><text x="121" y="246">A2</text><text x="165" y="246">A3</text><text x="209" y="246">A4</text>
+          </g>
+
+          <text x="450" y="24" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">要因B: 水準ごとの合計 T(.j.)</text>
+          <line x1="325" y1="230" x2="500" y2="230" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <rect x="345" y="84" width="46" height="146" fill="var(--res)" opacity="0.85"/>
+          <rect x="415" y="104" width="46" height="126" fill="var(--res)" opacity="0.85"/>
+          <g font-size="11" text-anchor="middle" fill="currentColor" opacity="0.75">
+            <text x="368" y="78">100.6</text>
+            <text x="438" y="98">86.4</text>
+            <text x="368" y="246">B1</text><text x="438" y="246">B2</text>
+          </g>
+
+          <text x="320" y="264" font-size="11.5" text-anchor="middle" fill="var(--ink-faint, currentColor)" opacity="0.7">見た目の差は全然違うのに、どちらも有意水準1%で有意になる</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 要因Aは水準間で10倍近い開きがあるのに対し、要因Bの2水準の差は相対的に小さい。それでも後述の検定では<b>両方とも1%で有意</b>という結果になる。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>自由度を数える — (31)(32)</h2></div>
+    <p>二元配置(繰返しあり)の自由度は、水準数だけで機械的に決まる。データの中身を見る必要はない。φ(A×B)とφ(E)がなぜこの形になるかを「セル間/セル内」の2段階に分けて導出した補足は「<a href="two-way-anova-df.html" target="_blank" rel="noopener">φ(A×B)とφ(E)はどこから出てくるのか</a>」を参照。</p>
+
+    <div class="calc">
+      <span class="label">各要因の自由度</span>
+      <span class="line">φ(A) = a − 1 = 4 − 1 = 3</span>
+      <span class="line">φ(B) = b − 1 = 2 − 1 = 1</span>
+      <span class="line">φ(A×B) = (a−1)(b−1) = 3 × 1 = 3</span>
+      <span class="line">φ(E) = ab(r−1) = 4×2×(2−1) = 8</span>
+      <span class="line">φ(T) = N − 1 = 16 − 1 = 15　（検算: 3+1+3+8 = 15 ✓）</span>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(31)</span> ウ. 3　（φ(A)）</span>
+      <span class="answer"><span class="qno">(32)</span> ウ. 3　（φ(A×B)）</span>
+    </div>
+
+    <div class="callout info"><b>同じ答えが2回出てくるのは偶然ではない:</b> 4水準のAは「4－1」で3、2水準のBと組み合わせた交互作用A×Bは「(4－1)×(2－1)」でやはり3。<b>水準数の組み合わせ次第でφ(A)とφ(A×B)が同じ値になることは珍しくない</b>。「工程能力指数」の回でCpUとCpkの答えが一致した(空欄番号が使い回された)のと同じ構造の罠で、計算を端折って前の答えを使い回すと逆に事故る。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>要因Aの平均平方を求める — (33)</h2></div>
+    <p>要因Aの平方和は、<b>A水準ごとの合計T(i..)を2乗して足し、水準あたりの観測数(br=4)で割ってからCTを引く</b>。</p>
+
+    <div class="calc">
+      <span class="label">要因Aの平方和 S(A)</span>
+      <span class="line">S(A) = Σ(T(i..)²) / (br) − CT</span>
+      <span class="line">　　= (8.5² + 33.7² + 61.1² + 83.7²) / (2×2) − 2185.56</span>
+      <span class="line">　　= (72.25 + 1135.69 + 3733.21 + 7005.69) / 4 − 2185.56</span>
+      <span class="line">　　= 11946.84 / 4 − 2185.56 = 2986.71 − 2185.56</span>
+      <span class="result">S(A) = 801.15</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">要因Aの平均平方 V(A)</span>
+      <span class="line">V(A) = S(A) / φ(A) = 801.15 / 3</span>
+      <span class="result">V(A) = 267.05</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(33)</span> カ. 267.05</span></div>
+
+    <div class="callout warn"><b>選択肢ク「801.15」は罠:</b> これはS(A)そのもので、V(A)ではない。φ(A)=3で割る一手間を忘れるとこの値を選んでしまう。選択肢オ「200.29」も罠で、801.15を<b>φ(A)=3ではなくbr=4で割った</b>値(801.15/4=200.29)。「水準あたりの観測数」と「自由度」を取り違えるとここに落ちる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>交互作用A×Bの平均平方を求める — (34)</h2></div>
+    <p>S(A×B)=12.29はすでに与えられているので、STEP1で出したφ(A×B)=3で割るだけ。</p>
+
+    <div class="calc">
+      <span class="label">交互作用の平均平方 V(A×B)</span>
+      <span class="line">V(A×B) = S(A×B) / φ(A×B) = 12.29 / 3</span>
+      <span class="result">V(A×B) ≒ 4.10</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(34)</span> イ. 4.10</span></div>
+
+    <div class="callout warn"><b>選択肢ア「1.54」も罠:</b> 12.29を<b>φ(A×B)=3ではなくφ(E)=8で割った</b>値(12.29/8≒1.54)。「A×Bの行」を計算しているのに、下の「Eの行」の自由度を使ってしまう取り違えの罠。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 4</span><h2>有意性を判定する — (35)(36)</h2></div>
+    <p>ここからは表に空欄はないが、(35)(36)に答えるにはF<sub>0</sub>を自分で計算する必要がある。要因Bの平方和も同じ要領で求め、V(E)=0.9325と比較する。</p>
+
+    <div class="calc">
+      <span class="label">要因Bの平方和・平均平方</span>
+      <span class="line">S(B) = (T.1.² + T.2.²) / (ar) − CT = (100.6² + 86.4²) / (4×2) − 2185.56</span>
+      <span class="line">　　= (10120.36 + 7464.96) / 8 − 2185.56 = 2198.165 − 2185.56</span>
+      <span class="line">S(B) ≒ 12.60　→　V(B) = S(B) / φ(B) = 12.60 / 1 = 12.60</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">3つの分散比F(0)</span>
+      <span class="line">F(0)_A = V(A) / V(E) = 267.05 / 0.9325 ≒ 286.38</span>
+      <span class="line">F(0)_B = V(B) / V(E) = 12.60 / 0.9325 ≒ 13.51</span>
+      <span class="line">F(0)_A×B = V(A×B) / V(E) = 4.10 / 0.9325 ≒ 4.40</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>F表の臨界値との比較（φ(E)=8）</caption>
+        <thead><tr><th>要因</th><th>φ</th><th>F(0)</th><th>F(φ,8;0.05)</th><th>F(φ,8;0.01)</th><th>判定</th></tr></thead>
+        <tbody>
+          <tr class="row-reg"><td>A</td><td>3</td><td class="num hit">286.38</td><td>4.07</td><td>7.59</td><td>1%で有意</td></tr>
+          <tr class="row-reg"><td>B</td><td>1</td><td class="num hit">13.51</td><td>5.32</td><td>11.26</td><td>1%で有意</td></tr>
+          <tr class="row-res"><td>A×B</td><td>3</td><td class="num hit">4.40</td><td>4.07</td><td>7.59</td><td>5%でのみ有意</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>F(0)_Aも F(0)_Bも、それぞれのF(φ,8;0.01)を上回るので有意水準1%で有意。F(0)_A×Bは F(3,8;0.05)=4.07は上回るがF(3,8;0.01)=7.59には届かないので、5%でのみ有意。</p>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(35)</span> エ. AとB</span>
+      <span class="answer"><span class="qno">(36)</span> ウ. A×B</span>
+    </div>
+
+    <div class="callout info"><b>平方和が同じでも判定が割れる理由:</b> S(B)=12.60とS(A×B)=12.29はほぼ同じ大きさ。しかしBの自由度は1、A×Bの自由度は3。同じ量の「変動」でも、<b>自由度1本に集中するBの方が平均平方(=1本あたりの取り分)は大きくなり</b>、V(B)=12.60はV(A×B)=4.10の3倍以上になる。F検定は平方和そのものではなく平均平方の比で判定するので、見た目の平方和が近くても結論が逆転しうる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">完成形</span><h2>分散分析表（全体）</h2></div>
+    <div class="table-wrap">
+      <table>
+        <caption>表6.2 分散分析表（完成形）</caption>
+        <thead><tr><th>要因</th><th>平方和S</th><th>自由度φ</th><th>平均平方V</th><th>分散比F<sub>0</sub></th></tr></thead>
+        <tbody>
+          <tr class="row-reg"><td>A</td><td><div class="num">801.15</div></td><td><div class="num hit">3</div><div class="sub">…(31)</div></td><td><div class="num hit">267.05</div><div class="sub">…(33)</div></td><td><div class="num">286.38</div></td></tr>
+          <tr><td>B</td><td><div class="num">12.60</div></td><td><div class="num">1</div></td><td><div class="num">12.60</div></td><td><div class="num">13.51</div></td></tr>
+          <tr class="row-reg"><td>A×B</td><td><div class="num">12.29</div></td><td><div class="num hit">3</div><div class="sub">…(32)</div></td><td><div class="num hit">4.10</div><div class="sub">…(34)</div></td><td><div class="num">4.40</div></td></tr>
+          <tr class="row-res"><td>E</td><td><div class="num">7.46</div></td><td><div class="num">8</div></td><td><div class="num">0.9325</div></td><td></td></tr>
+          <tr class="row-total"><td>合計T</td><td><div class="num">833.51</div></td><td><div class="num">15</div></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:13px;color:var(--ink-faint);">S(E)=V(E)×φ(E)=0.9325×8=7.46、合計は各行のSを足して検算できる(801.15+12.60+12.29+7.46=833.51)。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">分析</span><h2>(31)〜(34)の選択肢の正体</h2></div>
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>選択肢が対応する「別の計算」</caption>
+        <thead><tr><th>選択肢</th><th>判定</th><th>正体</th></tr></thead>
+        <tbody>
+          <tr><td class="good">ウ. 3</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (31)(32)</span></td><td>φ(A) = a−1、φ(A×B) = (a−1)(b−1)　どちらも3</td></tr>
+          <tr><td class="bad">ア. 1</td><td>誤</td><td>φ(B) = b−1。BではなくAやA×Bの欄に置くと誤り</td></tr>
+          <tr><td class="bad">カ. 8</td><td>誤</td><td>φ(E) = ab(r−1)。誤差の自由度であって要因の自由度ではない</td></tr>
+          <tr><td class="bad">キ. 15</td><td>誤</td><td>φ(T) = N−1。全体の自由度で、個別の要因のものではない</td></tr>
+          <tr><td class="bad">オ. 7</td><td>誤</td><td>φ(A)+φ(B)+φ(A×B) = 3+1+3。「処理」全体の自由度で、A×Bだけの値ではない</td></tr>
+          <tr><td class="good">カ. 267.05</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (33)</span></td><td>V(A) = S(A)/φ(A)</td></tr>
+          <tr><td class="bad">ク. 801.15</td><td>誤</td><td>S(A)そのもの。φ(A)=3で割る前の値</td></tr>
+          <tr><td class="bad">オ. 200.29</td><td>誤</td><td>801.15 ÷ br(=4)。自由度でなく「水準あたりの観測数」で割った誤り</td></tr>
+          <tr><td class="bad">キ. 286.38</td><td>誤</td><td>F(0)_A = V(A)/V(E)。(33)ではなく検定統計量そのもの</td></tr>
+          <tr><td class="good">イ. 4.10</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (34)</span></td><td>V(A×B) = S(A×B)/φ(A×B)</td></tr>
+          <tr><td class="bad">ウ. 12.29</td><td>誤</td><td>S(A×B)そのもの。すでに与えられている値をそのまま置いた誤り</td></tr>
+          <tr><td class="bad">エ. 12.60</td><td>誤</td><td>S(B)(=V(B))。要因Bの値で、A×Bの欄ではない</td></tr>
+          <tr><td class="bad">ア. 1.54</td><td>誤</td><td>12.29 ÷ φ(E)(=8)。A×Bの行なのにEの自由度で割った誤り</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout warn"><b>選択肢のほとんどが「表のどこかの本物の値」:</b> このシリーズで繰り返し出てくる罠だが、今回は特に濃い。10個の選択肢のうち計算ミスの産物は実質ゼロで、<b>全部が分散分析表のどこかのマスの値か、別の割り算の答え</b>。「今どの行・どの列を埋めているか」を指差し確認しながら進める以外に事故を防ぐ方法はない。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>繰返しのある二元配置の自由度は水準数だけで決まる: <b>φ(A)=a−1、φ(B)=b−1、φ(A×B)=(a−1)(b−1)、φ(E)=ab(r−1)</b>。データを見なくても先に埋められる。</span></div>
+      <div class="step"><span class="mark">2</span><span>要因の平方和は<b>「水準ごとの合計T²の和 ÷ その水準の観測数」− CT</b>。Aなら br で割り、Bなら ar で割る。分母を自由度と取り違えない。</span></div>
+      <div class="step"><span class="mark">3</span><span>平均平方は<b>必ずS÷φ(自分の行の自由度)</b>。他の行の自由度(特にφ(E))で割る取り違えが典型的な罠。</span></div>
+      <div class="step"><span class="mark">4</span><span>有意性はF<sub>0</sub>=V/V(E)をF表の臨界値と比較して判定する。<b>平方和の大小だけでは判定できない</b> — 同じ平方和でも自由度が小さいほど平均平方は大きくなり、有意になりやすい。</span></div>
+      <div class="step"><span class="mark">5</span><span>選択肢には「表の別のマスの値」「隣の行の自由度で割った値」が紛れ込む。<b>今どの要因・どの列を計算しているかを都度確認する</b>。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第40回 問6 / 繰返しのある二元配置実験</span>
+    <span>F(0)_A=286.38 ・ F(0)_B=13.51 ・ F(0)_A×B=4.40</span>
+  </footer>
+
+</div>

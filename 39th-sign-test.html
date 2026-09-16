@@ -1,0 +1,258 @@
+<title>第39回 問5 散布図の符号検定</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+p a{color:var(--reg-ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第39回 問5</span>
+    <h1>散布図の相関を「点の数を数えるだけ」で検定する</h1>
+    <p class="lede">肥料配合xと収穫量yの散布図を見て「右肩上がりっぽい」と感じるのは主観にすぎない。この問題は、その主観を<b>符号検定(sign test)</b>という数え上げの手続きに変換し、統計的に「偶然ではこうならない」と言い切るまでの手順を扱う。计算は一切なく、<b>「数える」だけ</b>で検定できるのが最大の特徴。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>与えられたデータ</h2></div>
+    <p>肥料配合x(g)と収穫量y(kg)の関係を調べるため、散布図(図5.1)を作成した。全打点を上下・左右にそれぞれ2等分する線を引き、4区画に分けて打点数を数え、符号検定表(表5.1)と比較して有意性を判定する。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 560 420" role="img" aria-label="肥料配合xと収穫量yの散布図。左下から右上にかけて点が集中し、右肩上がりの傾向を示す。中央に引かれたメディアン線が4つの象限に分割している">
+          <line x1="60" y1="30" x2="60" y2="360" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+          <line x1="60" y1="360" x2="520" y2="360" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+          <text x="30" y="200" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.7" transform="rotate(-90 30 200)">y(収穫量kg)</text>
+          <text x="490" y="382" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.7">x(肥料配合g)</text>
+
+          <line x1="290" y1="30" x2="290" y2="360" stroke="var(--res)" stroke-width="2"/>
+          <line x1="60" y1="195" x2="520" y2="195" stroke="var(--res)" stroke-width="2"/>
+          <text x="330" y="52" font-size="12.5" fill="var(--res-ink)" font-weight="700">第Ⅰ象限</text>
+          <text x="90" y="52" font-size="12.5" fill="var(--ink-faint)">第Ⅱ象限</text>
+          <text x="90" y="345" font-size="12.5" fill="var(--reg-ink)" font-weight="700">第Ⅲ象限</text>
+          <text x="330" y="345" font-size="12.5" fill="var(--ink-faint)">第Ⅳ象限</text>
+
+          <g fill="var(--reg)">
+            <circle cx="95" cy="330" r="4.5"/><circle cx="100" cy="300" r="4.5"/><circle cx="115" cy="310" r="4.5"/>
+            <circle cx="125" cy="270" r="4.5"/><circle cx="140" cy="290" r="4.5"/><circle cx="150" cy="255" r="4.5"/>
+            <circle cx="160" cy="275" r="4.5"/><circle cx="175" cy="240" r="4.5"/><circle cx="185" cy="260" r="4.5"/>
+            <circle cx="200" cy="225" r="4.5"/><circle cx="215" cy="245" r="4.5"/><circle cx="230" cy="210" r="4.5"/>
+            <circle cx="250" cy="220" r="4.5"/><circle cx="265" cy="200" r="4.5"/>
+          </g>
+          <g fill="var(--res)">
+            <circle cx="310" cy="185" r="4.5"/><circle cx="325" cy="160" r="4.5"/><circle cx="340" cy="175" r="4.5"/>
+            <circle cx="350" cy="145" r="4.5"/><circle cx="365" cy="160" r="4.5"/><circle cx="380" cy="130" r="4.5"/>
+            <circle cx="395" cy="145" r="4.5"/><circle cx="405" cy="115" r="4.5"/><circle cx="420" cy="130" r="4.5"/>
+            <circle cx="435" cy="100" r="4.5"/><circle cx="450" cy="115" r="4.5"/><circle cx="465" cy="90" r="4.5"/>
+            <circle cx="480" cy="105" r="4.5"/><circle cx="495" cy="60" r="4.5"/>
+          </g>
+          <g fill="var(--wrong)">
+            <circle cx="270" cy="170" r="4.5"/><circle cx="310" cy="230" r="4.5"/><circle cx="235" cy="150" r="4.5"/>
+          </g>
+        </svg>
+      </div>
+      <figcaption><b>図1(再現図).</b> 実際の図5.1を模式的に再現したもの(打点位置は概略)。<span style="color:var(--reg-ink)">●第Ⅲ象限</span>と<span style="color:var(--res-ink)">●第Ⅰ象限</span>に大多数の点が集まり、<span style="color:var(--wrong)">●対角の第Ⅱ・第Ⅳ象限</span>にはごくわずかしか点がない——これが「右肩上がり」を数値で裏付ける形。実際の図5.1では、読者自身の手元の図で同じように数えてみてほしい。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">①</span><h2>散布図の下ごしらえ — (25)(26)</h2></div>
+    <p>点を数え始める前に、散布図そのものが「数えるに値するデータか」を確認する2つのチェックがある。</p>
+
+    <div class="calc">
+      <span class="label">2つの事前チェック</span>
+      <span class="line">(25) の点はないか  → 異常な点(外れ値)が紛れていないか</span>
+      <span class="line">(26) の必要はないか → 層別(データ群を分けて見る必要)はないか</span>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(25)</span> ク. 異常</span>
+      <span class="answer"><span class="qno">(26)</span> エ. 層別</span>
+    </div>
+
+    <div class="callout info"><b>なぜこの2つが先にくるのか:</b> 外れ値が1つ紛れているだけで、後の象限カウントは簡単に狂う——点の数を数えるだけの検定だからこそ、1点のノイズが結果を左右しやすい。また、<a href="36th-problem-solving.html" target="_blank" rel="noopener">層別で真因にたどり着く</a>で扱ったように、複数の集団が混ざったデータは、全体では相関があるように見えても層別すると消える(あるいは逆に、層別しないと相関が隠れる)ことがある。この2点は散布図を読むときの共通の下ごしらえ。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">②</span><h2>メディアン線と象限の付け方 — (27)(28)</h2></div>
+    <p>全打点を上下・左右にそれぞれ2等分する線を引く。平均値ではなく<b>メディアン(中央値)</b>で区切るのがポイント。</p>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(27)</span> ケ. メディアン線</span></div>
+
+    <div class="callout"><b>なぜ平均線ではなくメディアン線か:</b> 平均は外れ値1つで大きく引っ張られるが、メディアンは「ちょうど半分・半分」に分けることそのものが定義なので、外れ値があっても必ず打点を上下(左右)で均等に割れる。「4区画それぞれの点の数を数えて比較する」という後の手順が成立するために、まず<b>必ず半分ずつに割れる</b>メディアン線が必要になる。</div>
+
+    <p>次に、区切られた4区画に象限の番号を振る。右上を第Ⅰ象限として、そこからどちら向きに回るか。</p>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(28)</span> ア. 反時計方向</span></div>
+
+    <div class="callout info"><b>これは数学の座標平面と同じ約束事:</b> x軸・y軸で作る座標平面の第Ⅰ〜Ⅳ象限は、右上を第Ⅰ象限として反時計回りに第Ⅱ・第Ⅲ・第Ⅳと番号を振るのが数学の標準的な取り決め。符号検定はこれをそのまま流用しているだけで、QC特有の新しいルールを覚える必要はない。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">③</span><h2>どの対角が「正」でどの対角が「負」か — (29)(30)</h2></div>
+    <p>反時計回りに振った4象限は、対角線上の2つずつが同じ意味を持つ。</p>
+
+    <div class="calc">
+      <span class="label">対角の組み合わせと相関の向き</span>
+      <span class="line">第Ⅰ象限(右上: xが大・yが大) + 第Ⅲ象限(左下: xが小・yが小) → xとyが同じ向きに動く</span>
+      <span class="line">第Ⅱ象限(左上: xが小・yが大) + 第Ⅳ象限(右下: xが大・yが小) → xとyが逆に動く</span>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(29)</span> オ. 右肩上がり ← 第Ⅰ象限+第Ⅲ象限</span>
+      <span class="answer"><span class="qno">(30)</span> ウ. 右肩下がり ← 第Ⅱ象限+第Ⅳ象限</span>
+    </div>
+
+    <div class="callout"><b>なぜこの組み合わせになるのか:</b> メディアンより x が大きい($x>\tilde{x}$)ときに y も大きければ($y>\tilde{y}$)、その点は右上=第Ⅰ象限に落ちる。x が小さいときに y も小さければ左下=第Ⅲ象限。つまり<b>「xとyが同じ向きに動く(正の相関)」なら点は第Ⅰ・第Ⅲ象限に集まり</b>、逆に<b>「xが増えるとyが減る(負の相関)」なら点は第Ⅱ・第Ⅳ象限に集まる</b>。図5.1では第Ⅰ・第Ⅲ象限(右肩上がり側)に大多数の点が集まっていた。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">④</span><h2>符号検定表との比較 — (31)</h2></div>
+    <p>2つの対角の打点数の和をそれぞれ求めたら、<b>少ないほう</b>の数を符号検定表(表5.1)と比較する。</p>
+
+    <div class="calc">
+      <span class="label">判定のルール</span>
+      <span class="line">少数派(反対側の対角)の打点数 が 表5.1の値よりも (31) 場合 → 有意水準5%で相関ありと判定</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(31)</span> カ. 小さい</span></div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>表5.1 符号検定表(抜粋) — データ数Nに対する少数派の打点数の上限</caption>
+        <thead><tr><th>データ数 N</th><th>有意水準 α=0.01</th><th>有意水準 α=0.05</th></tr></thead>
+        <tbody>
+          <tr><td class="num">20</td><td class="num">3</td><td class="num">5</td></tr>
+          <tr><td class="num">30</td><td class="num">7</td><td class="num">9</td></tr>
+          <tr class="row-reg"><td class="num hit">40</td><td class="num hit">11</td><td class="num hit">13</td></tr>
+          <tr><td class="num">50</td><td class="num">15</td><td class="num">18</td></tr>
+          <tr><td class="num">60</td><td class="num">19</td><td class="num">22</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="calc">
+      <span class="label">例: 有効データ数N=40、少数派(対角側)の打点数が9個だったとする</span>
+      <span class="line">表5.1でN=40の行を見る → α=0.05の基準値は13</span>
+      <span class="line">少数派の打点数 9 &lt; 13(基準値) → 基準値より小さい</span>
+      <span class="line">∴ 有意水準5%で相関関係があるといえる(多数派側の向きが結論になる)</span>
+    </div>
+
+    <p>図5.1では、多数派が第Ⅰ・第Ⅲ象限(右肩上がり側)だったので、結論は<b>「正の相関がある」</b>となる。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">補足</span><h2>なぜ「少数派の数」を見るのか — 正体はコイン投げの検定</h2></div>
+    <p>この手順を数式なしで進められるのは、根っこにあるのが<b>二項検定(コインが公正かどうかの検定)</b>と全く同じ構造だから。</p>
+
+    <div class="callout info"><b>帰無仮説を「コイン投げ」に翻訳すると:</b> もしxとyに本当は何の関係もない(帰無仮説)なら、ある点が第Ⅰ・第Ⅲ象限(同じ向き)に落ちるか、第Ⅱ・第Ⅳ象限(逆の向き)に落ちるかは、<b>五分五分のコイン投げと同じ</b>になるはず。N個の点があれば、２つの対角にだいたい半分ずつ散らばるのが「無相関」の姿。<b>片方の対角に極端に偏り、もう片方(少数派)がごくわずかしかない</b>状態は、五分五分のコインで説明するには不自然なほど偏っている——これが「相関がある」と判定する根拠になる。</div>
+
+    <p>符号検定表(表5.1)の中身は、実は二項分布 $B(N, 0.5)$ で「これより少数派が少なくなる確率が5%(または1%)を下回る境界値」を、Nごとに計算して並べたもの。<a href="38th-chi-square.html" target="_blank" rel="noopener">カイ二乗検定</a>や<a href="39th-f-test.html" target="_blank" rel="noopener">F検定</a>のように分布の式を直接扱わなくても、表を引くだけで同じ論理の検定ができるように作られている。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>符号検定の下ごしらえは<b>異常点の確認</b>と<b>層別の要否確認</b>の2つ。点を数える前に、数えるに値するデータかを見る。</span></div>
+      <div class="step"><span class="mark">2</span><span>区切りには<b>メディアン線</b>を使う。平均と違い、外れ値があっても必ず打点を半分ずつに割れるから。</span></div>
+      <div class="step"><span class="mark">3</span><span>象限は数学の座標平面と同じ<b>反時計回り</b>(右上=Ⅰ→左上=Ⅱ→左下=Ⅲ→右下=Ⅳ)。第Ⅰ・第Ⅲ象限=正の相関(右肩上がり)、第Ⅱ・第Ⅳ象限=負の相関(右肩下がり)。</span></div>
+      <div class="step"><span class="mark">4</span><span>判定は<b>少数派(反対側の対角)の打点数</b>を符号検定表と比較し、表の値より<b>小さければ</b>有意。多数派側の向きが結論になる。</span></div>
+      <div class="step"><span class="mark">5</span><span>この検定の正体は<b>二項検定(コイン投げ)</b>。無相関なら2つの対角に五分五分で散らばるはずが、極端に偏っていれば「偶然ではない」と判定する——分布の数式を使わずに表だけで同じ結論に到達できるのがこの方法の利点。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第39回 問5 / 散布図の符号検定</span>
+    <span>(25)ク (26)エ (27)ケ (28)ア (29)オ (30)ウ (31)カ</span>
+  </footer>
+
+</div>

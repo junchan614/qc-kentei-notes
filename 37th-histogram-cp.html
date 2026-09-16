@@ -1,0 +1,351 @@
+<title>第37回 問6 ヒストグラムと工程能力指数</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+.trap-table td.reuse{color:var(--res-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第37回 問6</span>
+    <h1>ヒストグラムから工程能力指数、そして不適合率へ</h1>
+    <p class="lede">休止していたラインBを再稼働したら、平均は規格の中心から右にずれ、ばらつきも通常ラインより大きかった――という設定。<b>区間幅の決め方 → 平均のずれ・標準偏差の推定 → C<sub>p</sub> → 正規分布での不適合率</b>まで、1本の計算がそのままつながっている。最後の選択肢には「前の設問の答えがそのまま紛れ込んでいる」という、この問題ならではの罠がある。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>与えられたデータ</h2></div>
+
+    <p>特性Qの規格は <b>8.70 ± 0.30</b>（下限規格 S<sub>L</sub>=8.40、上限規格 S<sub>U</sub>=9.00）。通常ラインAと再稼働ラインBから、1日2サンプル×25日分＝各50個ずつ(合計n=100)のデータを取った。</p>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <caption>表6.1 特性Qのデータ表（集計値）</caption>
+        <thead>
+          <tr><th>ライン</th><th>例数 n</th><th>合計 Σx</th><th>2乗和 Σx²</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>通常ラインA</td><td class="sum">50</td><td class="sum">434.96</td><td class="sum">3784.2832</td></tr>
+          <tr class="row-reg"><td>再稼働ラインB</td><td class="sum">50</td><td class="sum">441.18</td><td class="sum">3893.6556</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>全体(n=100)の最大値 x<sub>max</sub>=9.08、最小値 x<sub>min</sub>=8.50。測定単位 m=0.02。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>ヒストグラムの区間幅を決める — (33)</h2></div>
+    <p>仮の区間数を <b>k = √n</b> として、区間幅の目安を出す。目安の値をそのまま使わず、<b>測定単位 m の整数倍に切り上げる</b>のが決まり――境界線がちょうどデータの値と重ならないようにするため。</p>
+
+    <div class="calc">
+      <span class="label">区間数と区間幅</span>
+      <span class="line">k = √n = √100 = 10</span>
+      <span class="line">範囲 R = x(max) − x(min) = 9.08 − 8.50 = 0.58</span>
+      <span class="line">目安の幅 = R / k = 0.58 / 10 = 0.058</span>
+      <span class="line">0.058 を m=0.02 の整数倍に切り上げ → 0.02 × 3 = 0.06</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(33)</span> h = 0.06</span></div>
+
+    <div class="callout info"><b>もし別の区間数の決め方(スタージェスの公式)を使うと:</b> k = 1 + 3.32×log₁₀(n) = 1 + 3.32×2 ≒ 7.64 ≒ 8。この場合は h = 0.58/8 = 0.0725 → 切り上げて <b>0.08</b> になり、選択肢のクに落ちる。<b>「区間数をどの式で決めたか」で答えが変わる</b>のがこの設問の面白いところ。QC検定では k=√n を基本として覚えておく。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>ラインBの偏り・ばらつき・工程能力 — (34)(35)(36)</h2></div>
+    <p>ヒストグラムを見比べると、ラインBの山は規格の中心よりも右に寄り、裾も広い。これを実際の数値で裏づける。</p>
+
+    <div class="calc">
+      <span class="label">(34) 規格の中心値からの偏り</span>
+      <span class="line">x̄(B) = Σx(B) / n = 441.18 / 50 = 8.8236</span>
+      <span class="line">偏り = x̄(B) − 8.70 = 8.8236 − 8.70</span>
+      <span class="result">偏り ≒ 0.124</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">(35) 標準偏差の推定値 s(B)</span>
+      <span class="line">S(B) = Σx(B)² − (Σx(B))²/n = 3893.6556 − 441.18²/50</span>
+      <span class="line">　　 = 3893.6556 − 3892.795848 = 0.859752</span>
+      <span class="line">s(B) = √{ S(B) / (n−1) } = √(0.859752 / 49) = √0.017546</span>
+      <span class="result">s(B) ≒ 0.132</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">(36) 工程能力指数 C(p)(B)</span>
+      <span class="line">C(p)(B) = (S(U) − S(L)) / (6 × s(B)) = (9.00 − 8.40) / (6 × 0.132)</span>
+      <span class="line">　　 = 0.60 / 0.792</span>
+      <span class="result">C(p)(B) ≒ 0.758</span>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(34)</span> 0.124</span>
+      <span class="answer"><span class="qno">(35)</span> 0.132</span>
+      <span class="answer"><span class="qno">(36)</span> 0.758</span>
+    </div>
+
+    <div class="callout warn"><b>C(p)=0.758 の意味:</b> 一般に C(p)&lt;1.0 は「規格の幅に対してばらつきが大きすぎる、工程能力不足」の目安とされる。しかも平均自体も右に偏っているので、実際に規格を外れるリスクは C(p) の数字が示す以上に高い――だからこそ次の設問で「実際どれだけ規格を超えるのか」を正規分布で直接確認する。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>上限規格を超える確率 — (37)</h2></div>
+    <p>ラインBの分布を N(x̄(B), s(B)²) の正規分布とみなし、上限規格 S(U)=9.00 を超える確率を求める。<b>標準化してZ表(正規分布表)を引く</b>、という統計の基本操作そのもの。</p>
+
+    <div class="calc">
+      <span class="label">標準化してZ値を求める</span>
+      <span class="line">Z = (S(U) − x̄(B)) / s(B) = (9.00 − 8.8236) / 0.132</span>
+      <span class="line">　 = 0.1764 / 0.132</span>
+      <span class="result">Z ≒ 1.33</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">正規分布表を引く</span>
+      <span class="line">Φ(1.33) = 0.9082　（Z=1.33以下の割合）</span>
+      <span class="line">上側の確率 = 1 − Φ(1.33) = 1 − 0.9082</span>
+      <span class="result">≒ 0.0918 → 9.18%</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(37)</span> 約 9.18%</span></div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 250" role="img" aria-label="ラインBの正規分布を表す釣鐘型の曲線。規格中心より平均が右に偏っており、上限規格を超える右端の裾が塗りつぶされて9.18%を示す">
+          <line x1="60" y1="210" x2="600" y2="210" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+
+          <path d="M210,210 C260,210 300,60 400,55 C500,60 540,210 590,210 Z" fill="none" stroke="var(--reg)" stroke-width="2.2"/>
+
+          <path d="M515,100 C532,138 560,188 590,210 L515,210 Z" fill="var(--wrong)" opacity="0.55"/>
+
+          <line x1="125" y1="210" x2="125" y2="220" stroke="currentColor" stroke-width="1.4"/>
+          <text x="125" y="238" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.7">S(L)</text>
+          <text x="125" y="252" font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.5">8.40</text>
+
+          <line x1="320" y1="60" x2="320" y2="220" stroke="currentColor" stroke-width="1.4" stroke-dasharray="4 3" opacity="0.55"/>
+          <text x="320" y="238" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.7">規格中心</text>
+          <text x="320" y="252" font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.5">8.70</text>
+
+          <line x1="400" y1="45" x2="400" y2="220" stroke="var(--reg)" stroke-width="1.6" stroke-dasharray="2 3"/>
+          <text x="400" y="34" font-size="12" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">x̄(B)</text>
+          <text x="400" y="20" font-size="10.5" text-anchor="middle" fill="var(--reg-ink)" opacity="0.85">8.8236</text>
+
+          <line x1="515" y1="210" x2="515" y2="220" stroke="var(--wrong)" stroke-width="1.8"/>
+          <text x="515" y="238" font-size="12" text-anchor="middle" fill="var(--wrong)" font-weight="600">S(U)</text>
+          <text x="515" y="252" font-size="10.5" text-anchor="middle" fill="var(--wrong)" opacity="0.85">9.00</text>
+
+          <text x="558" y="150" font-size="13" fill="var(--wrong)" font-weight="700">9.18%</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 分布の山（青緑）は規格中心(8.70)より右の x̄(B)=8.8236 にずれている。上限規格(9.00)を超える塗りつぶし部分の面積が、いま求めた <b>9.18%</b> にあたる。平均が右に寄っているぶん、この裾は左右対称な分布よりも大きくなる。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">補足</span><h2>Cpをもっと深く — 片側規格とC(pk)</h2></div>
+    <p>本問の C<sub>p</sub>(B)=0.758 は「規格が両側にあり、かつ工程は中心に来ている」という前提の指数にすぎない。実際にはラインBは中心からズレているので、<b>C<sub>p</sub> だけでは本当の余裕がわからない</b>。ここを掘り下げる。</p>
+
+    <div class="calc">
+      <span class="label">なぜ分母は「6σ」なのか — 両側規格の考え方</span>
+      <span class="line">C(p) = (S(U) − S(L)) / 6σ = 規格の幅 ÷ 工程のばらつきの幅</span>
+      <span class="line">「±3σの範囲にほぼ全データが収まる」という前提のもと、6σ(=3σ×2)を規格の幅と比べている</span>
+    </div>
+
+    <p><b>規格が片側にしかないとき</b>（例: 不純物は少ないほど良い→上限のみ、強度は高いほど良い→下限のみ）は、S<sub>L</sub>やS<sub>U</sub>の片方が存在しないので C<sub>p</sub> の式自体が使えない。この場合は<b>片側指数</b>を使う。</p>
+
+    <div class="calc">
+      <span class="label">片側規格のときの指数</span>
+      <span class="line">上限規格しかないとき: C(pu) = (S(U) − x̄) / 3σ</span>
+      <span class="line">下限規格しかないとき: C(pl) = (x̄ − S(L)) / 3σ</span>
+      <span class="line">分母が3σなのは、中心から<b>片方向だけ</b>を見ているから（両側なら3σ+3σ=6σ）</span>
+    </div>
+
+    <p>そして<b>規格が両側にあっても平均が中心からズレているとき</b>は、両側の片側指数を両方計算して、<b>厳しい方（規格に近い方）を採用する</b>。これが C<sub>pk</sub>。</p>
+
+    <div class="calc">
+      <span class="label">C(pk) — 偏りを考慮した「実力」の指数</span>
+      <span class="line">C(pk) = min{ C(pu), C(pl) }</span>
+      <span class="line">C(pu) = (9.00 − 8.8236) / (3 × 0.132) = 0.1764 / 0.396 = 0.4455</span>
+      <span class="line">C(pl) = (8.8236 − 8.40) / (3 × 0.132) = 0.4236 / 0.396 = 1.0697</span>
+      <span class="result">C(pk)(B) = min(0.4455, 1.0697) = 0.446　（上限側が支配的）</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>C(p) と C(pk) の見え方の違い</caption>
+        <thead><tr><th>指数</th><th>値</th><th>意味</th></tr></thead>
+        <tbody>
+          <tr><td>C(p)(B)</td><td class="num">0.758</td><td>「規格の幅」対「ばらつきの幅」だけを見た<b>潜在能力</b>。偏りは無視</td></tr>
+          <tr class="row-res"><td>C(pk)(B)</td><td class="num hit">0.446</td><td>偏りまで考慮した<b>実際の実力</b>。上限側にしか目を向けていないぶん、より厳しい数字になる</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 250" role="img" aria-label="平均が右に偏った分布に対して、上限規格までの短い矢印と下限規格までの長い矢印を示す図。短い方(Cpu)がCpkとして採用されることを示す">
+          <line x1="60" y1="210" x2="600" y2="210" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+          <path d="M210,210 C260,210 300,60 400,55 C500,60 540,210 590,210 Z" fill="none" stroke="var(--reg)" stroke-width="2.2"/>
+
+          <line x1="125" y1="210" x2="125" y2="220" stroke="var(--res)" stroke-width="1.8"/>
+          <text x="125" y="238" font-size="12" text-anchor="middle" fill="var(--res-ink)" font-weight="600">S(L)</text>
+
+          <line x1="400" y1="45" x2="400" y2="220" stroke="var(--reg)" stroke-width="1.6" stroke-dasharray="2 3"/>
+          <text x="400" y="34" font-size="12" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">x̄(B)</text>
+
+          <line x1="515" y1="210" x2="515" y2="220" stroke="var(--wrong)" stroke-width="1.8"/>
+          <text x="515" y="238" font-size="12" text-anchor="middle" fill="var(--wrong)" font-weight="600">S(U)</text>
+
+          <line x1="400" y1="196" x2="123" y2="196" stroke="var(--res)" stroke-width="2" marker-end="url(#a1)"/>
+          <text x="260" y="188" font-size="12" text-anchor="middle" fill="var(--res-ink)">3×C(pl)σ ＝長い（余裕あり）</text>
+
+          <line x1="400" y1="176" x2="513" y2="176" stroke="var(--wrong)" stroke-width="2.6" marker-end="url(#a2)"/>
+          <text x="458" y="168" font-size="12" text-anchor="middle" fill="var(--wrong)" font-weight="700">3×C(pu)σ ＝短い</text>
+
+          <text x="458" y="120" font-size="12.5" text-anchor="middle" fill="var(--wrong)" font-weight="700">C(pk)はこちらを採用</text>
+
+          <defs>
+            <marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--res)"/></marker>
+            <marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--wrong)"/></marker>
+          </defs>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> 平均 x̄(B) から下限規格までの距離(3×C(pl)σ)は長く余裕がある一方、上限規格までの距離(3×C(pu)σ)は短い。<b>C(pk)は「短い方＝より危険な方」を採用する</b>ので、平均のズレをそのまま数字に反映できる。</figcaption>
+    </figure>
+
+    <div class="callout warn"><b>C(pu)とZ値は同じものの言い換え:</b> C(pu) = (S(U)−x̄)/3σ を3倍すると (S(U)−x̄)/σ になり、これはSTEP3で使った<b>Z値そのもの</b>。実際 3×0.4455=1.337≒1.33=Z。<b>「片側指数を3倍すればZ値になる」</b>という関係を知っておくと、C(pu)やC(pl)が低いほど正規分布の裾の確率(不適合率)が大きくなる、というつながりが一直線に見える。C<sub>p</sub>系の指数と不適合率の計算は、実は同じ「規格までの距離をσ何個ぶんで測るか」という発想の裏表にすぎない。</div>
+
+    <div class="callout info"><b>目安（QC検定でよく使われる基準）:</b> C<sub>p</sub>・C<sub>pk</sub> ともに <b>1.33以上で十分</b>、<b>1.00〜1.33でまずまず(要注意)</b>、<b>1.00未満は工程能力不足で対策が必要</b>とされる。ラインBは C<sub>p</sub>=0.758 の時点ですでに不足気味だが、偏りを考慮した C<sub>pk</sub>=0.446 まで落ちると<b>「まずまず」の域からも大きく外れる、明らかに対策が必要な工程</b>だとわかる。C<sub>p</sub>だけを見て安心してはいけない理由がここにある。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">分析</span><h2>(37)の選択肢は「前の設問の答え」でできている</h2></div>
+    <p>(37)の選択肢8個を並べてみると、正解の9.18のほかに、<b>(34)(35)(36)で出した答えがそのまま紛れ込んでいる</b>ことがわかる。設問を取り違えて「前の計算結果をそのまま(37)の答えにしてしまう」受験者を想定した作りになっている。</p>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>(37) の選択肢</caption>
+        <thead><tr><th>選択肢</th><th>判定</th><th>この値が出る原因</th></tr></thead>
+        <tbody>
+          <tr><td class="bad">ア. 0.120</td><td>誤</td><td>(34)の偏り(0.124)に近いが、丸め方をやや粗くした値。単位を見誤ると迷い込む</td></tr>
+          <tr><td class="reuse">イ. 0.124</td><td>誤</td><td><b>これは(34)の正解そのもの。</b>「偏りの値」を(37)の答えと取り違えるとここに落ちる</td></tr>
+          <tr><td class="reuse">ウ. 0.132</td><td>誤</td><td><b>これは(35)の正解そのもの。</b>s(B)を(37)の答えと取り違えるとここに落ちる</td></tr>
+          <tr><td class="bad">エ. 0.140</td><td>誤</td><td>ア同様、近傍の丸め違い。%の値の大きさの感覚を掴む前に選ぶと迷いやすい</td></tr>
+          <tr><td class="bad">オ. 0.714</td><td>誤</td><td>C(p)(B)(0.758)に近いが異なる値。工程能力指数の計算過程でのわずかな取り違え</td></tr>
+          <tr><td class="reuse">カ. 0.758</td><td>誤</td><td><b>これは(36)の正解そのもの。</b>C(p)(B)を(37)の答えと取り違えるとここに落ちる</td></tr>
+          <tr><td class="good">キ. 9.18</td><td><span style="color:var(--reg-ink);font-weight:700;">正解</span></td><td>Z=1.33として正規分布表を正しく引いた値</td></tr>
+          <tr><td class="bad">ク. 9.85</td><td>誤</td><td>Z=1.29(1.33よりわずかに小さいZ)として表を引くとΦ(1.29)=0.9015→9.85%になる。s(B)やx̄(B)の丸め方が少しずれるとここに着地する</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><b>この選択肢セットの読み方:</b> 単位が%の桁(9台の2つ)と、単位が特性値そのものの桁(0.1台の6つ)が混在している。<b>まず「今求めているのは確率(%)であって、偏りやs(B)そのものではない」と自分に言い聞かせてから、9.18か9.85かの2択に絞る</b>のが速い。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>ヒストグラムの区間幅は <b>h = R/k</b> の目安値を出してから、<b>測定単位mの整数倍に切り上げる</b>。区間数kの決め方(√n かスタージェスの公式か)で答えが変わることを覚えておく。</span></div>
+      <div class="step"><span class="mark">2</span><span>標準偏差の推定値は <b>s = √{ (Σx² − (Σx)²/n) / (n−1) }</b>。分散分析の誤差分散と同じ「2乗和を自由度n−1で割る」計算。</span></div>
+      <div class="step"><span class="mark">3</span><span>工程能力指数 <b>C(p) = (S(U)−S(L)) / 6s</b>。C(p)&lt;1.0 は規格幅に対してばらつきが大きすぎるサイン。</span></div>
+      <div class="step"><span class="mark">4</span><span>正規分布で規格外れの確率を求めるときは <b>Z = (規格値 − 平均) / 標準偏差</b> と標準化してから正規分布表を引く。平均が規格の中心からずれているほど、片側の裾は大きくなる。</span></div>
+      <div class="step"><span class="mark">5</span><span><b>一連の計算でつながる問題では、選択肢に「前の設問の正解」がそのまま紛れ込む</b>ことがある。今どの単位・どの意味の値を求めているのかを毎回確認する癖をつける。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第37回 問6 / ヒストグラム・工程能力指数</span>
+    <span>C(p)(B)=0.758 ・ 上限超え確率=9.18%</span>
+  </footer>
+
+</div>

@@ -1,0 +1,276 @@
+<title>二元配置の自由度の正体</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .hit{color:var(--reg-ink);font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">概念の掘り下げ / 第40回 問6 関連</span>
+    <h1>φ(A×B)とφ(E)はどこから出てくるのか</h1>
+    <p class="lede">「<a href="40th-two-way-anova.html" target="_blank" rel="noopener">繰返しのある二元配置実験</a>」で使った φ(A×B)=(a−1)(b−1)、φ(E)=ab(r−1) という公式。これも暗記するものではなく、<b>「全体の自由度を、まず"セルの中"と"セルの間"に分け、"セルの間"をさらにA・B・余りに配分する」</b>という2段階の引き算をたどれば、自然に出てくる形になっている。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>データの単位を「セル」で見る</h2></div>
+    <p>因子A(4水準)×因子B(2水準)の組み合わせは、a×b=8通りある。この8通りの組み合わせひとつひとつを<b>「セル」</b>と呼ぶことにすると、各セルにr=2個ずつ観測値が入っている。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 460 300" role="img" aria-label="A4水準×B2水準の8個のセルからなる表。各セルの中に2個の観測値の点が入っている">
+          <g font-size="12.5" fill="currentColor">
+            <text x="205" y="24" text-anchor="middle" font-weight="700">B1</text>
+            <text x="345" y="24" text-anchor="middle" font-weight="700">B2</text>
+            <text x="60" y="66" text-anchor="middle" font-weight="700">A1</text>
+            <text x="60" y="126" text-anchor="middle" font-weight="700">A2</text>
+            <text x="60" y="186" text-anchor="middle" font-weight="700">A3</text>
+            <text x="60" y="246" text-anchor="middle" font-weight="700">A4</text>
+          </g>
+          <g stroke="currentColor" stroke-width="1.2" opacity="0.5">
+            <line x1="100" y1="35" x2="100" y2="270"/>
+            <line x1="270" y1="35" x2="270" y2="270"/>
+            <line x1="410" y1="35" x2="410" y2="270"/>
+            <line x1="100" y1="35" x2="410" y2="35"/>
+            <line x1="100" y1="95" x2="410" y2="95"/>
+            <line x1="100" y1="155" x2="410" y2="155"/>
+            <line x1="100" y1="215" x2="410" y2="215"/>
+            <line x1="100" y1="270" x2="410" y2="270"/>
+          </g>
+          <g fill="var(--reg)" opacity="0.9">
+            <circle cx="175" cy="58" r="4"/><circle cx="195" cy="72" r="4"/>
+            <circle cx="315" cy="58" r="4"/><circle cx="335" cy="72" r="4"/>
+            <circle cx="175" cy="118" r="4"/><circle cx="195" cy="132" r="4"/>
+            <circle cx="315" cy="118" r="4"/><circle cx="335" cy="132" r="4"/>
+            <circle cx="175" cy="178" r="4"/><circle cx="195" cy="192" r="4"/>
+            <circle cx="315" cy="178" r="4"/><circle cx="335" cy="192" r="4"/>
+            <circle cx="175" cy="238" r="4"/><circle cx="195" cy="252" r="4"/>
+            <circle cx="315" cy="238" r="4"/><circle cx="335" cy="252" r="4"/>
+          </g>
+          <line x1="165" y1="65" x2="205" y2="65" stroke="var(--res)" stroke-width="1.4" stroke-dasharray="3 3"/>
+          <text x="185" y="55" font-size="10.5" text-anchor="middle" fill="var(--res-ink)">セル平均</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> ab=8個のセルそれぞれにr=2個の観測値(●)。破線はセル平均の位置の例。まずはこの「8個のセル×2個の観測値」という構造だけを見る。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>全体を「セルの間」と「セルの中」に分ける</h2></div>
+    <p>N=16個のデータ全体の自由度はφ(T)=N−1=15。これを、<b>「8個のセル平均どうしがどれだけばらついているか」</b>(セル間)と、<b>「各セルの中でr個の観測値がセル平均からどれだけばらついているか」</b>(セル内=誤差)の2つにまず分ける。</p>
+
+    <div class="calc">
+      <span class="label">セル内（誤差）の自由度 — 1セルにつき(r−1)</span>
+      <span class="line">1つのセルにr=2個のデータがある。セル自身の平均を使うと、そのぶん自由度を1個失う</span>
+      <span class="line">→ 1セルあたりの自由な観測値は r−1 = 1個</span>
+      <span class="line">これがab=8セルぶんあるので φ(E) = ab(r−1) = 4×2×(2−1)</span>
+      <span class="result">φ(E) = 8</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">セル間の自由度 — 8個のセル平均自体のばらつき</span>
+      <span class="line">8個のセル平均を、8個の「データ」とみなして自由度を数えると</span>
+      <span class="line">φ(セル間) = ab − 1 = 8 − 1</span>
+      <span class="result">φ(セル間) = 7</span>
+    </div>
+
+    <div class="callout info"><b>検算:</b> φ(T) = φ(セル間) + φ(E) = 7 + 8 = 15 ✓ — 全体の自由度を「セル平均どうしの差」と「セルの中の生の誤差」に過不足なく分解できている。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>「セルの間」をA・B・余りに配分する</h2></div>
+    <p>セル間の7自由度は、要因Aの効果・要因Bの効果・<b>どちらでも説明しきれない残り</b>(交互作用A×B)の3つに配分される。</p>
+
+    <div class="calc">
+      <span class="label">まずAとBの取り分を確定させる</span>
+      <span class="line">φ(A) = a−1 = 4−1 = 3　（Aの4つの行平均のばらつき）</span>
+      <span class="line">φ(B) = b−1 = 2−1 = 1　（Bの2つの列平均のばらつき）</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">A×Bは「引き算の余り」</span>
+      <span class="line">φ(A×B) = φ(セル間) − φ(A) − φ(B) = 7 − 3 − 1</span>
+      <span class="result">φ(A×B) = 3</span>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer">φ(A) = 3</span>
+      <span class="answer">φ(B) = 1</span>
+      <span class="answer">φ(A×B) = 3</span>
+      <span class="answer">φ(E) = 8</span>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 660 300" role="img" aria-label="自由度の階層図。全体15が、セル間7とセル内誤差8に分かれ、さらにセル間7がAの3、Bの1、A×Bの3に分かれる">
+          <defs>
+            <marker id="up2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <rect x="230" y="14" width="200" height="46" rx="10" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.4" opacity="0.9"/>
+          <text x="330" y="37" font-size="13" text-anchor="middle" fill="currentColor" font-weight="700">全体 T</text>
+          <text x="330" y="52" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.7">φ = N−1 = 15</text>
+
+          <line x1="290" y1="60" x2="200" y2="94" stroke="currentColor" stroke-width="1.4" marker-end="url(#up2)" opacity="0.6" transform="rotate(180 245 77)"/>
+          <line x1="245" y1="60" x2="150" y2="96" stroke="currentColor" stroke-width="1.4" opacity="0.6"/>
+          <line x1="150" y1="96" x2="150" y2="96" opacity="0"/>
+          <line x1="370" y1="60" x2="470" y2="96" stroke="currentColor" stroke-width="1.4" opacity="0.6"/>
+
+          <rect x="30" y="96" width="240" height="56" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.8"/>
+          <text x="150" y="120" font-size="13" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">セル間（A・B・A×B）</text>
+          <text x="150" y="138" font-size="11" text-anchor="middle" fill="var(--reg-ink)" opacity="0.85">φ = ab−1 = 7</text>
+
+          <rect x="390" y="96" width="240" height="56" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.4" opacity="0.9"/>
+          <text x="510" y="120" font-size="13" text-anchor="middle" fill="currentColor" font-weight="700">セル内（誤差 E）</text>
+          <text x="510" y="138" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.75">φ = ab(r−1) = 8</text>
+
+          <line x1="70" y1="152" x2="55" y2="190" stroke="currentColor" stroke-width="1.4" marker-end="url(#up2)" opacity="0.6" transform="rotate(180 62 171)"/>
+          <line x1="150" y1="152" x2="55" y2="188" stroke="currentColor" stroke-width="1.4" opacity="0.6"/>
+          <line x1="150" y1="152" x2="150" y2="188" stroke="currentColor" stroke-width="1.4" opacity="0.6"/>
+          <line x1="150" y1="152" x2="255" y2="188" stroke="currentColor" stroke-width="1.4" opacity="0.6"/>
+
+          <rect x="10" y="190" width="110" height="56" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.4" opacity="0.9"/>
+          <text x="65" y="214" font-size="13" text-anchor="middle" fill="currentColor" font-weight="700">A</text>
+          <text x="65" y="232" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.75">φ = a−1 = 3</text>
+
+          <rect x="140" y="190" width="110" height="56" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.4" opacity="0.9"/>
+          <text x="195" y="214" font-size="13" text-anchor="middle" fill="currentColor" font-weight="700">B</text>
+          <text x="195" y="232" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.75">φ = b−1 = 1</text>
+
+          <rect x="270" y="190" width="150" height="56" rx="10" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.8"/>
+          <text x="345" y="212" font-size="13" text-anchor="middle" fill="var(--res-ink)" font-weight="700">A×B（余り）</text>
+          <text x="345" y="230" font-size="10.5" text-anchor="middle" fill="var(--res-ink)" opacity="0.9">φ = 7−3−1 = 3</text>
+          <text x="345" y="243" font-size="9.5" text-anchor="middle" fill="var(--res-ink)" opacity="0.75">= (a−1)(b−1)</text>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> 自由度は上から下へ、一度に全部ではなく<b>2段階で切り分けられる</b>。まず「セル間」と「セル内(誤差)」、次に「セル間」を「A」「B」「余り(A×B)」に分ける。A×Bは公式で覚えるより先に「7から3と1を引いた残り」として出す方が事故が少ない。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">確認</span><h2>「引き算の余り」と「(a−1)(b−1)」が一致することの確認</h2></div>
+    <p>(a−1)(b−1)という掛け算の形と、(ab−1)−(a−1)−(b−1)という引き算の形は、実は同じ式を展開しただけ。</p>
+
+    <div class="calc">
+      <span class="label">代数的に確認する</span>
+      <span class="line">(ab−1) − (a−1) − (b−1) = ab − 1 − a + 1 − b + 1 = ab − a − b + 1</span>
+      <span class="line">(a−1)(b−1) = ab − a − b + 1</span>
+      <span class="result">どちらも ab − a − b + 1 で一致</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>今回の数値(a=4, b=2)で両方の式を検算</caption>
+        <thead><tr><th>式</th><th>計算</th><th>結果</th></tr></thead>
+        <tbody>
+          <tr><td>引き算（セル間の余り）</td><td class="num">7 − 3 − 1</td><td class="num hit">3</td></tr>
+          <tr><td>掛け算（公式）</td><td class="num">(4−1)×(2−1) = 3×1</td><td class="num hit">3</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><b>「交互作用」の中身:</b> A×Bが表しているのは、「Aの効果とBの効果を足し合わせただけでは説明できない、AとBの組み合わせ特有のズレ」。もしAの効き方がBの水準によらず常に一定(=交互作用なし)なら、セル間の7自由度はA(3)とB(1)だけで説明がつき、余りは0になるはず。実際には余りが3あるということは、<b>Aの効果がBの水準によって変わる(またはその逆)部分が残っている</b>ことを意味する。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>自由度は一度に全部を計算しようとせず、<b>2段階</b>で切り分ける: まず「セル間(ab−1)」と「セル内・誤差(ab(r−1))」、次に「セル間」を「A・B・A×B」に配る。</span></div>
+      <div class="step"><span class="mark">2</span><span>φ(E)は<b>「1セルあたりr−1個の自由な観測値」×「セルの数ab」</b>。セルの中の繰り返し(r)だけが誤差の情報源。</span></div>
+      <div class="step"><span class="mark">3</span><span>φ(A×B)は<b>「セル間の全体からA・Bで説明できた分を引いた余り」</b>。(a−1)(b−1)という掛け算の形は、この引き算を展開した結果にすぎない。</span></div>
+      <div class="step"><span class="mark">4</span><span>この「全体を段階的に切り分ける」考え方は「<a href="degrees-of-freedom.html" target="_blank" rel="noopener">自由度の正体</a>」で見た「1本を切り分ける」パターンそのもの。二元配置ではそれが2階層になっているだけ。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 概念の掘り下げ / 二元配置実験の自由度</span>
+    <span>φ(T)=15 = φ(セル間)7 + φ(E)8 = {φ(A)3+φ(B)1+φ(A×B)3} + φ(E)8</span>
+  </footer>
+
+</div>

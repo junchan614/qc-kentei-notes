@@ -1,0 +1,293 @@
+<title>第40回 問4 単回帰分析の分散分析表と回帰直線</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第40回 問4</span>
+    <h1>分散分析表から回帰直線、そして点推定まで一直線に解く</h1>
+    <p class="lede">S<sub>xx</sub>・S<sub>yy</sub>・S<sub>xy</sub>が最初から与えられている単回帰の問題。<b>分散分析表で「関係があるか」を検定し→回帰係数で「どんな直線か」を求め→回帰直線で「その先を予測する」</b>という3段階の流れを、選択肢に紛れ込む「本物だが場違いな値」に注意しながら通す。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>与えられたデータ</h2></div>
+    <p>ある製品の強度yと、添加剤の量xとの間に直線的な関係があることが想定できる。20組(n=20)のデータから、偏差平方和と偏差積和はすでに計算済みで与えられている。</p>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <caption>表4.1 データの合計と偏差平方和・偏差積和（n=20）</caption>
+        <thead><tr><th>Σx</th><th>Σy</th><th>x̄</th><th>ȳ</th><th>S<sub>xx</sub></th><th>S<sub>yy</sub></th><th>S<sub>xy</sub></th></tr></thead>
+        <tbody>
+          <tr><td class="sum">480.0</td><td class="sum">4440</td><td class="sum">24.0</td><td class="sum">222.0</td><td class="sum">82.2</td><td class="sum">6650.0</td><td class="sum">729.1</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 300" role="img" aria-label="添加剤の量xと強度yの散布図。20個の打点と、あてはめた回帰直線、x=25.0における予測点を示す">
+          <line x1="50" y1="280" x2="620" y2="280" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+          <line x1="50" y1="20" x2="50" y2="280" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+          <g font-size="11" fill="currentColor" opacity="0.6">
+            <text x="113.3" y="296" text-anchor="middle">20</text>
+            <text x="240.0" y="296" text-anchor="middle">22</text>
+            <text x="366.7" y="296" text-anchor="middle">24</text>
+            <text x="493.3" y="296" text-anchor="middle">26</text>
+            <text x="330" y="298" text-anchor="middle" font-size="12" opacity="0.85">x（添加剤の量）</text>
+            <text x="262.7" y="266" text-anchor="end">180</text>
+            <text x="193.7" y="198" text-anchor="end">200</text>
+            <text x="124.7" y="129" text-anchor="end">220</text>
+            <text x="55.7" y="60" text-anchor="end">240</text>
+            <text x="18" y="150" text-anchor="middle" font-size="12" opacity="0.85" transform="rotate(-90 18 150)">y（強度）</text>
+          </g>
+
+          <g fill="var(--ink-faint)" opacity="0.85">
+            <circle cx="113.3" cy="259.2" r="3.4"/><circle cx="506.0" cy="47.7" r="3.4"/><circle cx="487.0" cy="75.5" r="3.4"/>
+            <circle cx="436.3" cy="82.4" r="3.4"/><circle cx="252.7" cy="179.5" r="3.4"/><circle cx="468.0" cy="65.0" r="3.4"/>
+            <circle cx="480.7" cy="65.0" r="3.4"/><circle cx="170.3" cy="214.1" r="3.4"/><circle cx="423.6" cy="78.9" r="3.4"/>
+            <circle cx="474.3" cy="78.9" r="3.4"/><circle cx="303.3" cy="137.9" r="3.4"/><circle cx="233.7" cy="172.5" r="3.4"/>
+            <circle cx="233.7" cy="186.4" r="3.4"/><circle cx="556.7" cy="37.3" r="3.4"/><circle cx="398.3" cy="92.8" r="3.4"/>
+            <circle cx="455.3" cy="78.9" r="3.4"/><circle cx="461.7" cy="61.6" r="3.4"/><circle cx="360.3" cy="113.6" r="3.4"/>
+            <circle cx="157.7" cy="217.6" r="3.4"/><circle cx="360.3" cy="96.3" r="3.4"/>
+          </g>
+
+          <line x1="50" y1="270.8" x2="567.4" y2="20" stroke="var(--reg)" stroke-width="2.4"/>
+          <text x="567.4" y="14" font-size="12" text-anchor="end" fill="var(--reg-ink)" font-weight="600">ŷ = 9.12 + 8.87x</text>
+
+          <line x1="430" y1="280" x2="430" y2="86.2" stroke="var(--res)" stroke-width="1.4" stroke-dasharray="4 3" opacity="0.8"/>
+          <line x1="50" y1="86.2" x2="430" y2="86.2" stroke="var(--res)" stroke-width="1.4" stroke-dasharray="4 3" opacity="0.8"/>
+          <circle cx="430" cy="86.2" r="6" fill="var(--res)"/>
+          <text x="430" y="76" font-size="12.5" text-anchor="middle" fill="var(--res-ink)" font-weight="700">x=25.0 → ŷ=230.9</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 20個の打点はほぼ一直線に近い右肩上がりの傾向を示す。回帰直線 ŷ=9.12+8.87x を伸ばして x=25.0 に対応する点を読むと、点推定値は230.9になる。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>分散分析表を埋める — (18)〜(21)</h2></div>
+    <p>回帰による変動S<sub>R</sub>は「<a href="regression-anova.html" target="_blank" rel="noopener">単回帰分析の分散分析表</a>」で見た通り、S<sub>xy</sub>²/S<sub>xx</sub>で最短に求まる。残差S<sub>e</sub>は合計S<sub>yy</sub>からの引き算。</p>
+
+    <div class="calc">
+      <span class="label">回帰による変動 S(R)</span>
+      <span class="line">S(R) = S(xy)² / S(xx) = 729.1² / 82.2 = 531586.81 / 82.2</span>
+      <span class="result">S(R) ≒ 6466.99</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">残差の変動 S(e)（引き算で求める）</span>
+      <span class="line">S(e) = S(yy) − S(R) = 6650.00 − 6466.99</span>
+      <span class="result">S(e) ≒ 183.01</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">平均平方と分散比F(0)</span>
+      <span class="line">φ(R) = 1、φ(e) = n − 2 = 20 − 2 = 18</span>
+      <span class="line">V(e) = S(e)/φ(e) = 183.01 / 18 ≒ 10.17</span>
+      <span class="line">V(R) = S(R)/φ(R) = 6466.99 / 1 = 6466.99</span>
+      <span class="line">F(0) = V(R) / V(e) = 6466.99 / 10.17</span>
+      <span class="result">F(0) ≒ 635.89</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>表4.2 分散分析表（完成形）</caption>
+        <thead><tr><th>要因</th><th>平方和S</th><th>自由度φ</th><th>平均平方V</th><th>分散比F<sub>0</sub></th></tr></thead>
+        <tbody>
+          <tr class="row-reg"><td>回帰R</td><td><div class="num hit">6466.99</div><div class="sub">…(18)</div></td><td><div class="num">1</div></td><td><div class="num">6466.99</div></td><td><div class="num hit">635.89</div><div class="sub">…(21)</div></td></tr>
+          <tr class="row-res"><td>残差e</td><td><div class="num hit">183.01</div><div class="sub">…(19)</div></td><td><div class="num">18</div><div class="sub">= n−2</div></td><td><div class="num hit">10.17</div><div class="sub">…(20)</div></td><td></td></tr>
+          <tr class="row-total"><td>合計T</td><td><div class="num">6650.00</div></td><td><div class="num">19</div><div class="sub">= n−1</div></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(18)</span> ケ. 6466.99</span>
+      <span class="answer"><span class="qno">(19)</span> エ. 183.01</span>
+      <span class="answer"><span class="qno">(20)</span> イ. 10.17</span>
+      <span class="answer"><span class="qno">(21)</span> カ. 635.89</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>選択肢の半分は「表とは無関係な本物の値」— (18)〜(21)の罠</h2></div>
+    <p>この設問の10個の選択肢のうち4つ(ウ・オ・ク・コ)は、実は<b>問題文に書いてある値をそのまま持ってきただけ</b>。計算せずに表と数字が似ているものを選ぶと引っかかる。</p>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>選択肢の正体 — どれが分散分析表の値で、どれが「元のデータそのもの」か</caption>
+        <thead><tr><th>選択肢</th><th>判定</th><th>正体</th></tr></thead>
+        <tbody>
+          <tr><td class="good">ケ. 6466.99</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (18)</span></td><td>S(R) = S(xy)²/S(xx)</td></tr>
+          <tr><td class="good">エ. 183.01</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (19)</span></td><td>S(e) = S(yy) − S(R)</td></tr>
+          <tr><td class="good">イ. 10.17</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (20)</span></td><td>V(e) = S(e)/φ(e) = 183.01/18</td></tr>
+          <tr><td class="good">カ. 635.89</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (21)</span></td><td>F(0) = V(R)/V(e)</td></tr>
+          <tr><td class="bad">ア. 9.63</td><td>誤</td><td>183.01を<b>φ(e)=18でなくφ(T)=19で割った</b>誤答。合計の自由度と残差の自由度を取り違えるミスの罠</td></tr>
+          <tr><td class="bad">ウ. 82.20</td><td>誤</td><td>S(xx)そのもの。<b>問題文にすでに書いてある値</b>で、この表のどのマスでもない</td></tr>
+          <tr><td class="bad">オ. 480.00</td><td>誤</td><td>Σxそのもの。表4.1の合計欄の値</td></tr>
+          <tr><td class="bad">ク. 729.10</td><td>誤</td><td>S(xy)そのもの。これも<b>問題文にすでに書いてある値</b></td></tr>
+          <tr><td class="bad">コ. 6650.00</td><td>誤</td><td>S(yy) = 合計Tの平方和。表にはもう書いてある数字</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn"><b>アの罠が一番危ない:</b> ウ・オ・ク・コは「表にすでに書いてある数字と同じ」なので見た目で気づきやすい。しかし<b>ア9.63は実際に計算した値</b>(183.01÷19)であり、自由度をφ(e)=18でなくφ(T)=19と間違えただけで出てくる。「表の一番下の行の19」を反射的に使ってしまうと、これに落ちる。</div>
+
+    <p>F(0)=635.89は、F(1,18;0.01)≒8.29を大きく上回る。よって帰無仮説H<sub>0</sub>: β<sub>1</sub>=0は有意水準1%で棄却され、添加剤の量xと強度yの間には直線的関係があるといえる。</p>
+    <div class="answer-row"><span class="answer"><span class="qno">(22)</span> イ. 棄却され、添加剤の量xと強度yとの間には直線的関係がある</span></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>回帰直線を求める — (23)(24)</h2></div>
+    <p>傾きβ<sub>1</sub>はS<sub>xy</sub>/S<sub>xx</sub>、切片β<sub>0</sub>は「回帰直線は必ず(x̄,ȳ)を通る」性質から、ȳ−β<sub>1</sub>x̄で求める。</p>
+
+    <div class="calc">
+      <span class="label">傾き β̂(1)</span>
+      <span class="line">β̂(1) = S(xy) / S(xx) = 729.1 / 82.2</span>
+      <span class="result">β̂(1) ≒ 8.87</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">切片 β̂(0)（回帰直線は必ず(x̄,ȳ)を通る）</span>
+      <span class="line">x̄ = 480.0/20 = 24.0、ȳ = 4440/20 = 222.0</span>
+      <span class="line">β̂(0) = ȳ − β̂(1)・x̄ = 222.0 − 8.87 × 24.0 = 222.0 − 212.88</span>
+      <span class="result">β̂(0) ≒ 9.12</span>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(23)</span> イ. 8.87</span>
+      <span class="answer"><span class="qno">(24)</span> ウ. 9.12</span>
+    </div>
+
+    <div class="callout info"><b>テンプレートの並び順に注意:</b> 問題文の式は「ŷ = (24) + (23)x」、つまり<b>先に切片(24)、後に傾き(23)</b>の順で書かれている。β̂(1)=8.87を先に出してしまうと、そのまま(23)欄に置きたくなるが、式の中での位置は逆。計算した後に「どちらが切片でどちらが傾きか」を式に当てはめ直す一手間が要る。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 4</span><h2>回帰直線で予測する — (25)</h2></div>
+    <p>求めた回帰直線に x=25.0 を代入するだけ。分散分析表・回帰係数のどちらも経由せず、<b>直接この式に数字を入れる</b>のが最短ルート。</p>
+
+    <div class="calc">
+      <span class="label">x=25.0のときのyの母平均の点推定値</span>
+      <span class="line">ŷ = β̂(0) + β̂(1)・x = 9.12 + 8.87 × 25.0 = 9.12 + 221.75</span>
+      <span class="result">ŷ ≒ 230.9</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(25)</span> オ. 230.9</span></div>
+
+    <div class="callout"><b>x=25.0は「ちょうどよい」値:</b> データのx̄=24.0に近い25.0での予測なので、外挿(データ範囲の外に無理に伸ばす予測)にはあたらない。実際x=20.0〜27.0の範囲内なので、この点推定は妥当な内挿にとどまる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>S(xx)・S(yy)・S(xy)がすでに与えられていても、分散分析表の作り方は変わらない: <b>S(R)=S(xy)²/S(xx)、S(e)=S(yy)−S(R)</b>。</span></div>
+      <div class="step"><span class="mark">2</span><span>選択肢に「問題文にすでに書いてある値」がそのまま紛れ込むことがある。<b>計算せずに数字が一致するものを選ばない</b>。</span></div>
+      <div class="step"><span class="mark">3</span><span>自由度の取り違え(φ(e)=18をφ(T)=19と誤る)は、見た目では気づきにくい罠。<b>表の行ごとの自由度を都度確認する</b>。</span></div>
+      <div class="step"><span class="mark">4</span><span>回帰係数は<b>β̂(1)=S(xy)/S(xx)（傾き）、β̂(0)=ȳ−β̂(1)x̄（切片、必ず(x̄,ȳ)を通る）</b>。式中の並び順(切片が先)にも注意。</span></div>
+      <div class="step"><span class="mark">5</span><span>点推定はできあがった回帰直線にxを代入するだけ。<b>分散分析表の検定結果とは独立した、別の計算</b>であることを意識する。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第40回 問4 / 単回帰分析の分散分析表と回帰直線</span>
+    <span>F(0)=635.89 ・ ŷ=9.12+8.87x ・ x=25.0でŷ=230.9</span>
+  </footer>
+
+</div>

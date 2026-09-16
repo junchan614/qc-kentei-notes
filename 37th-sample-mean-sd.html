@@ -1,0 +1,427 @@
+<title>なぜ√nで割るのか</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:56px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:30px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+.qbox{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 22px;font-size:15px;color:var(--ink-soft);}
+.qbox b{color:var(--ink);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 / 第37回 問2 (13)</span>
+    <h1>なぜ√nで割るのか</h1>
+    <p class="lede">「9個のサンプルの平均値の標準偏差」を聞かれている。答えは 1.414 ÷ 3 = 0.471 だが、<b>なぜ 9 ではなく √9 = 3 で割るのか</b>。ここが腑に落ちれば、区間推定も検定も同じ道具で読めるようになる。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>(13)は何を聞いているのか</h2></div>
+
+    <div class="qbox">
+      平板Cの厚みは <b>平均30mm、標準偏差 1.414mm</b> の正規分布に従う（これが(11)の答え）。<br>
+      この工程から <b>9個</b> サンプルを取り出して、それらの厚みの<b>平均値</b>を求めるとき、<br>
+      その<b>平均値の分布</b>は平均30mm、標準偏差 <span class="mono">(13)</span> mm の正規分布に従う。
+    </div>
+
+    <p>まず押さえたいのは、<b>「平均値」もばらつく</b>ということ。9個取って平均を出す、という作業をもう一度やれば、違う9個が取れて、平均値も違う値になる。何度も繰り返せば平均値そのものが分布を作る。(13)はその<b>分布の広がり</b>を聞いている。</p>
+
+    <div class="callout info"><b>用語:</b> この「平均値の標準偏差」を<b>標準誤差</b>と呼ぶ。個々のデータの標準偏差 σ とは別物なので、頭の中で区別しておく。記号で書くと σ<sub>x̄</sub> = σ / √n。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">図解</span><h2>1枚のばらつきと、9枚平均のばらつき</h2></div>
+    <p>同じ横軸に、①平板1枚の厚みの分布 と ②9枚の平均値の分布 を重ねて描くと、何が起きているかが一目でわかる。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 660 290" role="img" aria-label="平板1枚の厚みの分布と9枚の平均値の分布を同じ軸に重ねた図。平均値の分布は幅が3分の1に縮み、その分背が高くなる">
+          <line x1="60" y1="230" x2="600" y2="230" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+          <g font-size="11.5" fill="currentColor" opacity="0.6" text-anchor="middle">
+            <line x1="60" y1="230" x2="60" y2="236" stroke="currentColor"/><text x="60" y="250">27</text>
+            <line x1="150" y1="230" x2="150" y2="236" stroke="currentColor"/><text x="150" y="250">28</text>
+            <line x1="240" y1="230" x2="240" y2="236" stroke="currentColor"/><text x="240" y="250">29</text>
+            <line x1="330" y1="230" x2="330" y2="236" stroke="currentColor"/><text x="330" y="250">30</text>
+            <line x1="420" y1="230" x2="420" y2="236" stroke="currentColor"/><text x="420" y="250">31</text>
+            <line x1="510" y1="230" x2="510" y2="236" stroke="currentColor"/><text x="510" y="250">32</text>
+            <line x1="600" y1="230" x2="600" y2="236" stroke="currentColor"/><text x="600" y="250">33</text>
+          </g>
+          <text x="330" y="272" font-size="12.5" text-anchor="middle" fill="currentColor" opacity="0.7">厚み (mm)</text>
+
+          <line x1="330" y1="230" x2="330" y2="46" stroke="currentColor" stroke-width="1" stroke-dasharray="3 4" opacity="0.4"/>
+
+          <polyline fill="var(--res-soft)" stroke="var(--res)" stroke-width="2.2" points="60.0,223.9 76.2,222.0 92.4,219.8 108.6,217.2 124.8,214.1 141.0,210.6 157.2,206.8 173.4,202.7 189.6,198.3 205.8,193.8 222.0,189.3 238.2,185.1 254.4,181.1 270.6,177.7 286.8,175.0 303.0,173.0 319.2,171.9 330.0,171.7 340.8,171.9 357.0,173.0 373.2,175.0 389.4,177.7 405.6,181.1 421.8,185.1 438.0,189.3 454.2,193.8 470.4,198.3 486.6,202.7 502.8,206.8 519.0,210.6 535.2,214.1 551.4,217.2 567.6,219.8 583.8,222.0 600.0,223.9 600.0,230 60.0,230"/>
+
+          <polyline fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="2.4" points="200.4,228.4 211.2,226.5 222.0,223.2 232.8,217.3 243.6,208.0 254.4,194.3 265.2,175.5 276.0,152.2 286.8,125.9 297.6,99.4 308.4,76.4 319.2,60.7 330.0,55.2 340.8,60.7 351.6,76.4 362.4,99.4 373.2,125.9 384.0,152.2 394.8,175.5 405.6,194.3 416.4,208.0 427.2,217.3 438.0,223.2 448.8,226.5 459.6,228.4 459.6,230 200.4,230"/>
+
+          <line x1="330" y1="196" x2="457" y2="196" stroke="var(--res)" stroke-width="2.5"/>
+          <line x1="457" y1="190" x2="457" y2="202" stroke="var(--res)" stroke-width="2.5"/>
+          <text x="466" y="192" font-size="12" fill="var(--res-ink)" font-weight="600">σ = 1.414</text>
+          <text x="466" y="208" font-size="11" fill="var(--res-ink)">平板1枚ずつ</text>
+
+          <line x1="330" y1="100" x2="372" y2="100" stroke="var(--reg)" stroke-width="2.5"/>
+          <line x1="372" y1="94" x2="372" y2="106" stroke="var(--reg)" stroke-width="2.5"/>
+          <text x="381" y="96" font-size="12" fill="var(--reg-ink)" font-weight="600">σ = 0.471</text>
+          <text x="381" y="112" font-size="11" fill="var(--reg-ink)">9枚の平均値</text>
+
+          <text x="330" y="36" font-size="12.5" text-anchor="middle" fill="currentColor" opacity="0.7">どちらも中心は 30mm のまま</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 平均値をとると<b>中心はそのまま、広がりだけが縮む</b>。9枚の平均が28mmになるには9枚すべてが薄い側に偏る必要があり、そんなことは滅多に起きない。厚いものと薄いものが打ち消し合うぶん、平均値は真ん中に集まる。縮み方がちょうど <span class="mono">1/√9 = 1/3</span> になる。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">核心</span><h2>なぜ 9 ではなく √9 なのか</h2></div>
+    <p>鍵は<b>「足し算ができるのは標準偏差ではなく分散」</b>という一点。標準偏差のままでは足せないので、いったん分散に変換して計算し、最後に√を取って標準偏差に戻す。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 660 250" role="img" aria-label="9個の平均の標準偏差を導く流れ図。分散に直して9倍し、81で割り、最後に平方根を取ると元の標準偏差の3分の1になる">
+          <defs>
+            <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <rect x="16" y="66" width="132" height="62" rx="10" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.3" opacity="0.9"/>
+          <text x="82" y="90" font-size="12.5" text-anchor="middle" fill="currentColor">1枚の分散</text>
+          <text x="82" y="112" font-size="14" text-anchor="middle" fill="currentColor" font-weight="600">σ² = 2</text>
+
+          <line x1="152" y1="97" x2="182" y2="97" stroke="currentColor" stroke-width="1.4" marker-end="url(#a3)" opacity="0.7"/>
+          <text x="167" y="82" font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.6">9個</text>
+          <text x="167" y="70" font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.6">足す</text>
+
+          <rect x="186" y="66" width="150" height="62" rx="10" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.8"/>
+          <text x="261" y="90" font-size="12.5" text-anchor="middle" fill="var(--res-ink)">9個の合計の分散</text>
+          <text x="261" y="112" font-size="14" text-anchor="middle" fill="var(--res-ink)" font-weight="700">9 × 2 = 18</text>
+
+          <line x1="340" y1="97" x2="370" y2="97" stroke="currentColor" stroke-width="1.4" marker-end="url(#a3)" opacity="0.7"/>
+          <text x="355" y="82" font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.6">÷9して</text>
+          <text x="355" y="70" font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.6">平均に</text>
+
+          <rect x="374" y="66" width="160" height="62" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.8"/>
+          <text x="454" y="90" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)">平均値の分散</text>
+          <text x="454" y="112" font-size="14" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">18 ÷ 9² = 0.222</text>
+
+          <line x1="454" y1="132" x2="454" y2="162" stroke="var(--reg)" stroke-width="1.6" marker-end="url(#a3)"/>
+          <text x="500" y="152" font-size="11.5" fill="var(--reg-ink)">√を取って標準偏差に戻す</text>
+
+          <rect x="374" y="166" width="160" height="56" rx="10" fill="var(--reg)" stroke="var(--reg)" stroke-width="1.8"/>
+          <text x="454" y="199" font-size="15" text-anchor="middle" fill="#FFFFFF" font-weight="700">√0.222 = 0.471</text>
+
+          <text x="30" y="180" font-size="12" fill="currentColor" opacity="0.75">分散は 2 → 0.222 と</text>
+          <text x="30" y="198" font-size="12" fill="currentColor" opacity="0.75"><tspan font-weight="700">9分の1</tspan> になった</text>
+          <text x="30" y="220" font-size="12" fill="var(--reg-ink)" font-weight="600">√を取れば 3分の1</text>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> 分散は「9倍してから 9² で割る」ので、正味 <span class="mono">1/9</span> になる。標準偏差はその平方根なので <span class="mono">1/3</span>。<b>分散の世界では n 分の1、標準偏差の世界では √n 分の1</b> — これが「√で割る」の正体。</figcaption>
+    </figure>
+
+    <div class="calc">
+      <span class="label">式にすると</span>
+      <span class="line">V(x̄) = V(合計) / n² = n·σ² / n² = σ² / n</span>
+      <span class="line">σ(x̄) = √(σ²/n) = σ / √n</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">今回の値を代入 …(13)</span>
+      <span class="line">σ(x̄) = 1.414 / √9 = 1.414 / 3</span>
+      <span class="result">≒ 0.471</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(13)</span> 0.471</span></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">補足</span><h2>なぜ n ではなく n² で割るのか</h2></div>
+    <p>「合計を9で割って平均にするなら、分散も9で割ればいいのでは」と思うところ。ここでつまずくのは自然で、原因は<b>分散が「2乗した世界」の量である</b>という一点にある。</p>
+
+    <div class="calc">
+      <span class="label">覚えるべきルールはこれだけ</span>
+      <span class="line">データを c 倍すると … 標準偏差は <b>c 倍</b>、分散は <b>c² 倍</b></span>
+    </div>
+
+    <p>平均を出すという操作は「合計を <span class="mono">1/9</span> 倍する」こと。つまり c = 1/9 なので、<b>標準偏差は 1/9 倍、分散は (1/9)² = 1/81 倍</b>になる。分散の側だけ2乗が付くのは、分散が<b>ズレを2乗して測っている</b>量だから。ズレが 1/9 になれば、その2乗は 1/81 になる。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 660 290" role="img" aria-label="正方形のたとえ。一辺を3分の1にすると面積は9分の1になることで、標準偏差と分散の関係を示す図">
+          <defs>
+            <marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+          <text x="20" y="28" font-size="12.5" fill="currentColor" opacity="0.75">一辺 ＝ 標準偏差　　　面積 ＝ 分散（標準偏差の2乗）</text>
+
+          <rect x="60" y="60" width="180" height="180" fill="var(--res-soft)" stroke="var(--res)" stroke-width="2.2"/>
+          <line x1="120" y1="60" x2="120" y2="240" stroke="var(--res)" stroke-width="1" stroke-dasharray="4 3" opacity="0.6"/>
+          <line x1="180" y1="60" x2="180" y2="240" stroke="var(--res)" stroke-width="1" stroke-dasharray="4 3" opacity="0.6"/>
+          <line x1="60" y1="120" x2="240" y2="120" stroke="var(--res)" stroke-width="1" stroke-dasharray="4 3" opacity="0.6"/>
+          <line x1="60" y1="180" x2="240" y2="180" stroke="var(--res)" stroke-width="1" stroke-dasharray="4 3" opacity="0.6"/>
+          <rect x="60" y="180" width="60" height="60" fill="var(--reg)" opacity="0.85"/>
+
+          <line x1="60" y1="256" x2="240" y2="256" stroke="var(--res)" stroke-width="1.6"/>
+          <line x1="60" y1="250" x2="60" y2="262" stroke="var(--res)" stroke-width="1.6"/>
+          <line x1="240" y1="250" x2="240" y2="262" stroke="var(--res)" stroke-width="1.6"/>
+          <text x="150" y="278" font-size="12.5" text-anchor="middle" fill="var(--res-ink)" font-weight="600">一辺 ＝ σ</text>
+          <text x="150" y="150" font-size="14" text-anchor="middle" fill="var(--res-ink)" font-weight="700">面積 ＝ σ²</text>
+          <text x="150" y="48" font-size="12" text-anchor="middle" fill="var(--res-ink)">もとの分布</text>
+
+          <line x1="266" y1="150" x2="330" y2="150" stroke="currentColor" stroke-width="1.6" marker-end="url(#a4)" opacity="0.75"/>
+          <text x="298" y="134" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.75">一辺を</text>
+          <text x="298" y="120" font-size="13" text-anchor="middle" fill="currentColor" font-weight="700">1/3 に</text>
+
+          <rect x="360" y="180" width="60" height="60" fill="var(--reg)" opacity="0.85" stroke="var(--reg)" stroke-width="2.2"/>
+          <line x1="360" y1="256" x2="420" y2="256" stroke="var(--reg)" stroke-width="1.6"/>
+          <line x1="360" y1="250" x2="360" y2="262" stroke="var(--reg)" stroke-width="1.6"/>
+          <line x1="420" y1="250" x2="420" y2="262" stroke="var(--reg)" stroke-width="1.6"/>
+          <text x="390" y="278" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">σ / 3</text>
+          <text x="390" y="170" font-size="13" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">面積 ＝ σ²/ 9</text>
+
+          <text x="470" y="120" font-size="13" fill="currentColor" font-weight="600">一辺は 1/3 でも</text>
+          <text x="470" y="142" font-size="13" fill="var(--reg-ink)" font-weight="700">面積は 1/9 になる</text>
+          <text x="470" y="176" font-size="12" fill="currentColor" opacity="0.7">左の図の青いマス1個分</text>
+          <text x="470" y="194" font-size="12" fill="currentColor" opacity="0.7">＝ 全体の9分の1</text>
+          <text x="470" y="228" font-size="12" fill="var(--res-ink)">今回は一辺が 1/9 倍</text>
+          <text x="470" y="246" font-size="12" fill="var(--res-ink)" font-weight="600">→ 面積は 1/81 倍</text>
+        </svg>
+      </div>
+      <figcaption><b>図3.</b> 標準偏差を「一辺」、分散を「面積」だと思うと、2乗が付く理由がそのまま見える。一辺を 1/3 にしても面積は 1/3 にはならず 1/9 になる。<b>今回は合計を 1/9 倍するので、面積(分散)は (1/9)² = 1/81 倍</b>。だから式に n² が現れる。</figcaption>
+    </figure>
+
+    <p>数値でも確かめておく。データ全体を2倍すると何が起きるか。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>データを2倍したときの標準偏差と分散</caption>
+        <thead><tr><th></th><th>データ</th><th>平均</th><th>平均からのズレ</th><th>標準偏差</th><th>分散</th></tr></thead>
+        <tbody>
+          <tr><td>もとの値</td><td><div class="num">10, 12, 14</div></td><td><div class="num">12</div></td><td><div class="num">−2, 0, +2</div></td><td><div class="num">1.633</div></td><td><div class="num">2.667</div></td></tr>
+          <tr><td>2倍した値</td><td><div class="num">20, 24, 28</div></td><td><div class="num">24</div></td><td><div class="num">−4, 0, +4</div></td><td><div class="num">3.266</div></td><td><div class="num">10.667</div></td></tr>
+          <tr><td>変化</td><td><div class="num">2倍</div></td><td><div class="num">2倍</div></td><td><div class="num">2倍</div></td><td><div class="num hit">2倍</div></td><td><div class="num hit">4倍 ＝ 2²倍</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>ズレが2倍になれば、それを2乗した分散は4倍になる。この関係が <span class="mono">c</span> 倍のときは <span class="mono">c²</span> 倍、<span class="mono">1/9</span> 倍のときは <span class="mono">1/81</span> 倍として効いてくる。</p>
+
+    <div class="callout info"><b>単位で確認する方法:</b> 厚みの単位が mm なら、標準偏差の単位も <span class="mono">mm</span>、分散の単位は <span class="mono">mm²</span>。長さを 1/9 にすれば面積は 1/81 になる、という当たり前の話と同じこと。<b>分散の式に 2乗が出てきたら「面積の話をしている」と思い出す</b>とよい。</div>
+
+    <div class="callout"><b>n² を経由しない見方もある:</b> 平均を <span class="mono">x̄ = (1/9)X₁ + (1/9)X₂ + … + (1/9)X₉</span> と書き直すと、各項の分散は <span class="mono">(1/9)² × 2 = 2/81</span>。これを9個足して <span class="mono">9 × 2/81 = 2/9</span>。同じ答えにたどり着く。<b>どちらの道でも、1/9 倍のところで必ず2乗が出る</b>のがポイント。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">つながり</span><h2>(11)と(13)は同じ道具を使っている</h2></div>
+    <p>実はこの問題、<b>(11)でも(13)でも「分散で計算して最後に√を取る」という同じ手順</b>を踏んでいる。違うのは足すのか割るのかだけ。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>(11)と(13)の構造比較</caption>
+        <thead><tr><th></th><th>(11) AとBを重ねる</th><th>(13) 9枚の平均をとる</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>やること</td>
+            <td>厚みを<b>足す</b></td>
+            <td>厚みを足して<b>個数で割る</b></td>
+          </tr>
+          <tr>
+            <td>分散でどう動くか</td>
+            <td><div class="num">1² + 1² = 2</div><div class="sub">分散どうしを足す</div></td>
+            <td><div class="num">2 × 9 ÷ 9² = 2/9</div><div class="sub">足してから n² で割る</div></td>
+          </tr>
+          <tr>
+            <td>√を取って標準偏差に</td>
+            <td><div class="num hit">√2 = 1.414</div></td>
+            <td><div class="num hit">√(2/9) = 0.471</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><b>やってはいけないこと:</b> 標準偏差のまま <span class="mono">1 + 1 = 2</span> と足す((11)で 2mm と答えてしまう)。標準偏差は足せない。必ず<b>2乗して分散にしてから足す</b>。(13)で n で割ってしまうのも、同じ「標準偏差の世界で計算してしまった」誤りの一種。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">分析</span><h2>誤答選択肢の正体</h2></div>
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>(13)の選択肢</caption>
+        <thead><tr><th>選択肢</th><th>判定</th><th>この値が出る原因</th></tr></thead>
+        <tbody>
+          <tr><td class="good">0.471</td><td><span style="color:var(--reg-ink);font-weight:700;">正解</span></td><td>1.414 ÷ √9 = 1.414 ÷ 3</td></tr>
+          <tr><td class="bad">1.414</td><td>誤</td><td><b>√n で割り忘れた</b>。(11)の答えをそのまま書いてしまうパターン</td></tr>
+          <tr><td class="bad">0.333</td><td>誤</td><td>= 1 ÷ 3。<b>平板Cの標準偏差を1mm</b>(A・B単体の値)としてしまった</td></tr>
+          <tr><td class="bad">0.707</td><td>誤</td><td>= 1.414 ÷ 2。「<b>2枚の平均</b>」と「9枚の平均」を取り違えた形</td></tr>
+          <tr><td class="bad">1.732</td><td>誤</td><td>= √3。分散を3と数えた(3枚ぶん足してしまった)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout warn"><b>一番多いのは 1.414 をそのまま書く誤り。</b> (11)で求めた値が頭に残っているところに、(13)で「平均30mm、標準偏差□」と同じ形の空欄が出るので、つい同じ値を入れたくなる。<b>「1枚の話か、平均の話か」を読み分ける</b>のがこの設問の主眼。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">感覚</span><h2>√で効くとはどういうことか</h2></div>
+    <p>サンプル数を増やせば平均値のばらつきは小さくなる。ただし<b>√でしか効かない</b>ので、思ったより減らない。この感覚は実務でも試験でも効く。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 660 250" role="img" aria-label="サンプル数nを増やしたときの平均値の標準偏差の減り方のグラフ。nを4倍にしてようやく半分になる">
+          <line x1="70" y1="200" x2="610" y2="200" stroke="currentColor" stroke-width="1.3" opacity="0.55"/>
+          <line x1="70" y1="200" x2="70" y2="30" stroke="currentColor" stroke-width="1.3" opacity="0.55"/>
+          <text x="340" y="238" font-size="12.5" text-anchor="middle" fill="currentColor" opacity="0.7">サンプル数 n</text>
+          <text x="40" y="26" font-size="12" fill="currentColor" opacity="0.7">σ(x̄)</text>
+
+          <g font-size="11.5" fill="currentColor" opacity="0.6" text-anchor="middle">
+            <text x="85" y="218">1</text><text x="175" y="218">4</text><text x="265" y="218">9</text>
+            <text x="355" y="218">16</text><text x="445" y="218">25</text><text x="535" y="218">36</text>
+          </g>
+
+          <polyline fill="none" stroke="var(--reg)" stroke-width="2.4" points="85,52 175,126 265,151 355,163 445,170 535,175"/>
+
+          <g fill="var(--reg)">
+            <circle cx="85" cy="52" r="5"/><circle cx="175" cy="126" r="5"/><circle cx="265" cy="151" r="6.5"/>
+            <circle cx="355" cy="163" r="5"/><circle cx="445" cy="170" r="5"/><circle cx="535" cy="175" r="5"/>
+          </g>
+
+          <text x="85" y="42" font-size="11.5" text-anchor="middle" fill="var(--reg-ink)">1.414</text>
+          <text x="175" y="116" font-size="11.5" text-anchor="middle" fill="var(--reg-ink)">0.707</text>
+          <text x="265" y="138" font-size="13" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">0.471</text>
+          <text x="355" y="153" font-size="11.5" text-anchor="middle" fill="var(--reg-ink)">0.354</text>
+          <text x="445" y="160" font-size="11.5" text-anchor="middle" fill="var(--reg-ink)">0.283</text>
+          <text x="535" y="165" font-size="11.5" text-anchor="middle" fill="var(--reg-ink)">0.236</text>
+
+          <line x1="85" y1="52" x2="85" y2="200" stroke="var(--res)" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+          <line x1="175" y1="126" x2="175" y2="200" stroke="var(--res)" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+          <line x1="85" y1="126" x2="175" y2="126" stroke="var(--res)" stroke-width="1.6"/>
+          <text x="196" y="106" font-size="12" fill="var(--res-ink)" font-weight="600">n を4倍にして、やっと半分</text>
+
+          <circle cx="265" cy="151" r="11" fill="none" stroke="var(--reg)" stroke-width="2"/>
+          <text x="265" y="182" font-size="11.5" text-anchor="middle" fill="var(--reg-ink)">今回の設問</text>
+        </svg>
+      </div>
+      <figcaption><b>図4.</b> n を増やしても減り方はどんどん鈍る。n=1 のばらつきを半分にするには n=4、4分の1にするには n=16 必要。<b>精度を2倍にするコストは4倍</b>という関係が、この√から生まれている。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この設問から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span><b>平均値もばらつく。</b> サンプルを取り直せば平均値も変わる。その広がりが標準誤差 σ/√n。個々のデータの σ とは別物。</span></div>
+      <div class="step"><span class="mark">2</span><span><b>足せるのは分散だけ。</b> 標準偏差のまま足したり割ったりしない。分散に直す → 計算する → √を取って戻す、の3手順を固定する。</span></div>
+      <div class="step"><span class="mark">3</span><span><b>分散は 1/n、標準偏差は 1/√n。</b> どちらの世界の話をしているか意識すれば、n で割るか √n で割るかで迷わない。</span></div>
+      <div class="step"><span class="mark">3′</span><span><b>c 倍すると標準偏差は c 倍、分散は c² 倍。</b> 分散が「ズレを2乗した量」＝面積のような量だから。式に n² が出てくるのはこのルールの現れで、特別な決まりごとではない。</span></div>
+      <div class="step"><span class="mark">4</span><span><b>中心は動かない。</b> 平均値の分布の平均は、元の分布の平均と同じ30mm。動くのは広がりだけ。</span></div>
+      <div class="step"><span class="mark">5</span><span><b>この式は後の単元の土台。</b> 母平均の区間推定 <span class="mono">x̄ ± u(または t)×σ/√n</span> も、平均値の検定も、すべてこの σ/√n が中に入っている。ここが曖昧だと後半の単元が全部あやふやになる。</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">参考</span><h2>③④の他の設問</h2></div>
+    <p>(13)の前後も同じ考え方でつながっているので、あわせて確認しておく。</p>
+    <div class="table-wrap">
+      <table>
+        <caption>③④の解答</caption>
+        <thead><tr><th>設問</th><th>解答</th><th>計算</th></tr></thead>
+        <tbody>
+          <tr><td>(11) 平板Cの標準偏差</td><td><div class="num hit">1.414</div></td><td><div class="num">√(1² + 1²) = √2</div><div class="sub">分散を足してから√を取る</div></td></tr>
+          <tr><td>(12) 上限32mmでの不適合品率</td><td><div class="num hit">7.93 %</div></td><td><div class="num">u = (32−30)/1.414 = 1.41</div><div class="sub">正規分布表で u=1.41 → 0.0793</div></td></tr>
+          <tr><td>(13) 9個の平均値の標準偏差</td><td><div class="num hit">0.471</div></td><td><div class="num">1.414 / √9 = 1.414 / 3</div><div class="sub">分散は 1/9、標準偏差は 1/3</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第37回 問2 / 標準誤差</span>
+    <span>σ(x̄) = σ / √n = 1.414 / 3 = 0.471</span>
+  </footer>
+
+</div>

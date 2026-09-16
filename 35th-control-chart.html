@@ -1,0 +1,257 @@
+<title>第35回 問6 不適合数のc管理図</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(26px,4vw,36px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.data-table tr.peak td{background:var(--res-soft);}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第35回 問6</span>
+    <h1>管理図の使い分けと、不適合数のc管理図</h1>
+    <p class="lede">①は計量値・計数値の管理図の名前を語群から埋める知識問題。②は「表面のキズの数(不適合数)」を群の大きさ20個で一定のまま数えたデータから、c管理図の管理線CL・UCL・LCLを実際に計算し、工程が安定状態にあるかを判定する。<b>c管理図とnp管理図は式が似ているので混同しやすい</b> — 「品数」か「数」かの違いを軸に整理する。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">①</span><h2>管理図の名前を埋める — (31)〜(35)</h2></div>
+    <p>計量値の代表的な管理図のひとつに<b>(31)</b>(平均値と範囲の管理図)がある。群ごとの平均の変化とばらつきの変化を同時に管理する。計数値の管理図には<b>(32)</b>(不適合品数の管理図)、<b>(33)</b>(不適合品率の管理図)、<b>(34)</b>(不適合数の管理図)、<b>(35)</b>(単位あたりの不適合数の管理図)などがある。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>計数値管理図の使い分け(「品数」か「数」か × 群の大きさが一定か)</caption>
+        <thead><tr><th>空欄</th><th>意味</th><th>数えるもの</th><th>群の大きさ</th><th>管理図</th></tr></thead>
+        <tbody>
+          <tr><td class="num">(32)</td><td>不適合<b>品</b>数の管理図</td><td>不適合<b>品</b>数(1個ずつ良否が決まる)</td><td>一定が条件</td><td class="hit">ウ. np管理図</td></tr>
+          <tr><td class="num">(33)</td><td>不適合品<b>率</b>の管理図</td><td>不適合品率</td><td>ばらついてよい</td><td class="hit">イ. p管理図</td></tr>
+          <tr><td class="num">(34)</td><td>不適合<b>数</b>の管理図</td><td>1単位あたりの不適合<b>数</b>(きずの数など、1個に何個も付きうる)</td><td>一定が条件</td><td class="hit">ア. c管理図</td></tr>
+          <tr><td class="num">(35)</td><td>単位あたりの不適合数の<b>率</b>の管理図</td><td>単位あたりの不適合数</td><td>ばらついてよい</td><td class="hit">カ. u管理図</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout info"><b>「品数」と「数」の境目:</b> np・p管理図が数えるのは「不合格<b>品</b>」そのものの個数・割合で、1個の製品は良品か不良品かのどちらか一方。c・u管理図が数えるのは「きず」「不適合<b>点</b>」のような、1個の製品に複数付きうるものの個数・割合。今回の②で扱う「表面のキズの数」はまさに後者にあたる。</div>
+
+    <span class="answer-row">
+      <span class="answer"><span class="qno">(31)</span> オ. X̄-R管理図</span>
+      <span class="answer"><span class="qno">(32)</span> ウ. np管理図</span>
+      <span class="answer"><span class="qno">(33)</span> イ. p管理図</span>
+      <span class="answer"><span class="qno">(34)</span> ア. c管理図</span>
+      <span class="answer"><span class="qno">(35)</span> カ. u管理図</span>
+    </span>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">②</span><h2>c管理図を実際に作る — (36)〜(39)</h2></div>
+    <p>ある部品の製造工程が安定状態にあるかを調べるため、<b>(34)=c管理図</b>を作成する。この部品の表面のキズの数(不適合数)を検査したところ表6.1のデータを得た。群の大きさは製品20個で一定である。</p>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <caption>表6.1 各群の不適合数(各群の個数:20個)</caption>
+        <thead><tr><th>群番号</th><th>キズの数</th><th>群番号</th><th>キズの数</th><th>群番号</th><th>キズの数</th><th>群番号</th><th>キズの数</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>2</td><td>6</td><td>4</td><td>11</td><td>2</td><td>16</td><td>0</td></tr>
+          <tr class="peak"><td>2</td><td>6</td><td>7</td><td>3</td><td>12</td><td>2</td><td>17</td><td>1</td></tr>
+          <tr><td>3</td><td>2</td><td>8</td><td>2</td><td>13</td><td>3</td><td>18</td><td>5</td></tr>
+          <tr><td>4</td><td>0</td><td>9</td><td>2</td><td>14</td><td>0</td><td>19</td><td>3</td></tr>
+          <tr><td>5</td><td>1</td><td>10</td><td>0</td><td>15</td><td>3</td><td>20</td><td>1</td></tr>
+          <tr><td class="sum">合計</td><td class="sum" colspan="7">42</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:13px;color:var(--ink-faint);">背景色の付いた群2が、全20群中もっともキズの数が多い(6個)。</p>
+
+    <div class="calc">
+      <span class="label">中心線 CL</span>
+      <span class="line">c̄ = Σキズの数 / 群の数 = 42 / 20</span>
+      <span class="result">CL = c̄ = 2.1</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">上下の管理限界線 UCL・LCL — c管理図の3σは √c̄ (ポアソン分布は分散=平均)</span>
+      <span class="line">3σ = 3√c̄ = 3√2.1 = 3 × 1.449 ≒ 4.347</span>
+      <span class="line">UCL = c̄ + 3√c̄ = 2.1 + 4.347 ≒ 6.447</span>
+      <span class="line">LCL = c̄ − 3√c̄ = 2.1 − 4.347 ≒ −2.247 → マイナスなので<b>示されない</b></span>
+      <span class="result">CL=2.10　UCL≒6.45　LCL=示されない</span>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(36)</span> カ. 2.10</span>
+      <span class="answer"><span class="qno">(37)</span> ケ. 6.45</span>
+      <span class="answer"><span class="qno">(38)</span> ア. 示されない</span>
+    </div>
+
+    <div class="callout warn"><b>np管理図の式と混同しない:</b> np管理図の3σは√(np̄(1−p̄))で「不良品か良品か」の二項分布から来るのに対し、c管理図の3σは<b>√c̄だけ</b>(1−p̄に相当する項がない)。これはキズの数がポアソン分布に従うと考え、ポアソン分布では分散が平均c̄そのものになるため。(1−p̄)を書き足してしまうと別の管理図の式になる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP</span><h2>安定状態にあるか — (39)</h2></div>
+    <p>20群すべてのキズの数をUCL≒6.45と比べると、最大でも群2の6個で、<b>管理限界線を越える点は1つもない</b>。CL=2.1を基準にした片側連続(7点以上)も見当たらない。よってこの工程は安定状態にあると判定できる。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 700 320" role="img" aria-label="20群のキズの数の推移。CL=2.10、UCL=6.45の管理限界線の内側に全点が収まっており、LCLは負の値のため示されない">
+          <line x1="50" y1="280" x2="670" y2="280" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+
+          <line x1="50" y1="54.3" x2="670" y2="54.3" stroke="var(--res)" stroke-width="1.6" stroke-dasharray="5 4"/>
+          <text x="674" y="58" font-size="12" fill="var(--res-ink)" font-weight="600">UCL=6.45</text>
+
+          <line x1="50" y1="206.5" x2="670" y2="206.5" stroke="currentColor" stroke-width="1.6" opacity="0.75"/>
+          <text x="674" y="210" font-size="12" fill="currentColor" opacity="0.8" font-weight="600">CL=2.10</text>
+
+          <text x="674" y="280" font-size="11" fill="currentColor" opacity="0.55">LCL: 示されない</text>
+
+          <polyline points="50.0,210 82.6,70 115.3,210 147.9,280 180.5,245 213.2,140 245.8,175 278.4,210 311.1,210 343.7,280 376.3,210 408.9,210 441.6,175 474.2,280 506.8,175 539.5,280 572.1,245 604.7,105 637.4,175 670.0,245" fill="none" stroke="var(--reg)" stroke-width="1.6" opacity="0.85"/>
+
+          <g fill="var(--reg-ink)">
+            <circle cx="50.0" cy="210" r="3.2"/>
+            <circle cx="115.3" cy="210" r="3.2"/><circle cx="147.9" cy="280" r="3.2"/><circle cx="180.5" cy="245" r="3.2"/><circle cx="213.2" cy="140" r="3.2"/>
+            <circle cx="245.8" cy="175" r="3.2"/><circle cx="278.4" cy="210" r="3.2"/><circle cx="311.1" cy="210" r="3.2"/><circle cx="343.7" cy="280" r="3.2"/>
+            <circle cx="376.3" cy="210" r="3.2"/><circle cx="408.9" cy="210" r="3.2"/><circle cx="441.6" cy="175" r="3.2"/><circle cx="474.2" cy="280" r="3.2"/>
+            <circle cx="506.8" cy="175" r="3.2"/><circle cx="539.5" cy="280" r="3.2"/><circle cx="572.1" cy="245" r="3.2"/>
+            <circle cx="637.4" cy="175" r="3.2"/><circle cx="670.0" cy="245" r="3.2"/>
+          </g>
+          <circle cx="82.6" cy="70" r="3.8" fill="var(--res)"/>
+          <circle cx="604.7" cy="105" r="3.8" fill="var(--res)"/>
+
+          <g font-size="11" fill="currentColor" opacity="0.65">
+            <text x="50" y="296" text-anchor="middle">1</text>
+            <text x="311.1" y="296" text-anchor="middle">9</text>
+            <text x="376.3" y="296" text-anchor="middle">11</text>
+            <text x="670" y="296" text-anchor="middle">20</text>
+            <text x="360" y="312" text-anchor="middle" font-size="12" opacity="0.85">群番号</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 全20点がUCL≒6.45の内側に収まる(オレンジの2点は群2の6個・群18の5個で、値が大きい方の点)。LCLはマイナスになるため管理図上には引かれない。片側連続も見られないため、この工程は安定状態にあると判定する。</figcaption>
+    </figure>
+
+    <span class="answer-row"><span class="answer"><span class="qno">(39)</span> イ. 安定状態にある</span></span>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">比較</span><h2>c管理図とnp管理図 — 式のどこが同じでどこが違うか</h2></div>
+    <p>同じ「3σ管理図」でも、数えているものの確率分布が違うため3σの中身が変わる。<a href="40th-np-chart.html" target="_blank" rel="noopener">第40回問5(np管理図)</a>と並べて整理する。</p>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>c管理図(本問)とnp管理図(第40回問5)の対比</caption>
+        <thead><tr><th></th><th>c管理図</th><th>np管理図</th></tr></thead>
+        <tbody>
+          <tr><td>数えるもの</td><td>不適合<b>数</b>(1個に複数付きうる。例: キズの数)</td><td>不適合<b>品</b>数(1個ずつ良否が決まる)</td></tr>
+          <tr><td>前提分布</td><td>ポアソン分布</td><td>二項分布</td></tr>
+          <tr><td>分散</td><td class="good">c̄(平均そのもの)</td><td class="good">np̄(1−p̄)</td></tr>
+          <tr><td>CL</td><td class="num">c̄ = 42/20 = 2.1</td><td class="num">np̄ = 200×0.05 = 10.0</td></tr>
+          <tr><td>UCL・LCL</td><td class="num">c̄ ± 3√c̄</td><td class="num">np̄ ± 3√(np̄(1−p̄))</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout warn"><b>(1−p̄)の有無で迷ったら「品」か「数」か に立ち返る:</b> np管理図は「不良品か良品か」という二択の話なので(1−p̄)という「良品である確率」が式に残る。c管理図は「1個の製品に何個キズが付くか」という個数の話で、上限のない出来事の生起回数(ポアソン分布)を扱うため(1−p̄)に相当する項は登場しない。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>計数値の管理図は「品数か数か」×「群の大きさが一定かどうか」の組み合わせで決まる。<b>不適合数＋群の大きさ一定 → c管理図</b>。</span></div>
+      <div class="step"><span class="mark">2</span><span>c管理図の管理線: <b>CL=c̄、UCL/LCL=c̄±3√c̄</b>。np管理図と違い(1−p̄)の項は付かない。</span></div>
+      <div class="step"><span class="mark">3</span><span>LCLがマイナスになるときは「示されない」が正しく、無理に0にしたり式を変えたりしない。</span></div>
+      <div class="step"><span class="mark">4</span><span>安定状態の判定は「管理限界線を越えた点がないか」に加えて「CLの片側への連続(7点以上)がないか」もあわせて確認する。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第35回 問6 / 管理図の使い分けとc管理図</span>
+    <span>CL=2.10 ・ UCL≒6.45 ・ LCL=示されない ・ 安定状態にある</span>
+  </footer>
+
+</div>

@@ -1,0 +1,246 @@
+<title>第37回 問3 X̄-R管理図の管理線を求める</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.given{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 22px;display:flex;flex-direction:column;gap:12px;}
+.given-row{display:flex;flex-wrap:wrap;gap:10px;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:14px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--ink);}
+
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .num,td .mono{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.coef-table td{text-align:right;font-family:'JetBrains Mono',monospace;}
+.coef-table td:first-child{text-align:center;font-weight:700;color:var(--ink);}
+.coef-table th{text-align:right;}
+.coef-table th:first-child{text-align:center;}
+.coef-table tr.hl td{background:var(--reg-soft);}
+.none{color:var(--ink-faint);font-style:normal;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第37回 問3</span>
+    <h1>X̄-R管理図の管理線を計算する</h1>
+    <p class="lede">前半は「管理限界はなぜ ±3σ/√n の式から A₂R̄ の形に化けるのか」という<b>公式の成り立ち</b>を問う理論パート、後半は係数表を当てはめるだけの<b>数値計算</b>パート。理論を丸暗記していなくても、係数表の使い方さえ分かれば後半の(17)〜(21)は確実に得点できる構成になっている。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>設定</h2></div>
+    <p>① 管理図は工程の統計的管理状態(安定状態)を確保・維持するために使う。中心線とその上下の一対の管理限界線を合わせて何と呼ぶか、また3シグマ法による管理限界の式がどう変形されてA₂という係数に行き着くかが問われる。</p>
+    <p>② ある機械部品の製造工程で、外形寸法を用いた解析用のX̄-R管理図を作成する。1日を群として1日5個のデータを採取し、20日分のデータを収集した。</p>
+    <div class="given">
+      <div class="given-row">
+        <span class="chip">群の大きさ n = 5</span>
+        <span class="chip">群の数 k = 20</span>
+        <span class="chip">ΣX̄ = 1182.2</span>
+        <span class="chip">ΣR = 210</span>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="coef-table">
+        <caption>表3.1 管理限界線を計算するための係数表(問題文より抜粋)</caption>
+        <thead><tr><th>n</th><th>A₂</th><th>D₃</th><th>D₄</th></tr></thead>
+        <tbody>
+          <tr><td>3</td><td>1.023</td><td><span class="none">—</span></td><td>2.575</td></tr>
+          <tr><td>4</td><td>0.729</td><td><span class="none">—</span></td><td>2.282</td></tr>
+          <tr class="hl"><td>5</td><td>0.577</td><td><span class="none">—</span></td><td>2.114</td></tr>
+          <tr><td>6</td><td>0.483</td><td><span class="none">—</span></td><td>2.004</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>(14) 中心線と管理限界線をまとめて呼ぶ名前</h2></div>
+    <p>管理図の「打点する特性の平均的水準を表す中心線」と「その上下に管理外れを判定するための一対の管理限界線」。この2つをまとめて呼ぶ言葉が問われている。</p>
+    <div class="answer-row"><span class="answer"><span class="qno">(14)</span> イ. 管理線</span></div>
+    <div class="callout"><b>用語の整理:</b> 「異常線」「安定線」「合計線」はいずれも管理図の用語としては存在しない紛らわしい選択肢。「3シグマ線」は限界の引き方(3σ法)を指す言葉であって、CL・UCL・LCLをまとめた総称ではない点に注意。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>(15)(16) 3σ法の式がA₂R̄に化けるまで</h2></div>
+    <p>k個の群がすべて同じ正規分布N(μ,σ²)に従うと仮定すると、3シグマ法による管理限界は μ±3σ/√n。ここでμ・σはともに未知なので、標本から推定した値に置き換えていく。</p>
+
+    <div class="calc">
+      <span class="label">① μの推定値</span>
+      <span class="line">k個の群平均 x̄ᵢ の平均 X̄̄ = Σx̄ᵢ/k で μ を推定する</span>
+      <span class="label" style="margin-top:8px;">② σの推定値</span>
+      <span class="line">k個のRの平均 R̄ を使い、σ ≒ R̄/d₂ で推定する</span>
+      <span class="label" style="margin-top:8px;">③ ①②を3σ法の式に代入</span>
+      <span class="line">μ ± 3σ/√n　=　X̄̄ ± 3(R̄/d₂)/√n　=　X̄̄ ± <b>(15)</b></span>
+      <span class="label" style="margin-top:8px;">④ R̄以外をひとまとめにしてA₂と定義する</span>
+      <span class="line">A₂ = <b>(16)</b> とおくと UCL = X̄̄ + A₂R̄、LCL = X̄̄ − A₂R̄</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">(15)(16)の中身</span>
+      <span class="line">(15) = 3R̄ / (d₂√n)　　… A₂R̄ と同じ値になる項</span>
+      <span class="result">(16) = A₂ = 3 / (d₂√n)</span>
+    </div>
+
+    <div class="callout info">この式変形そのものは<a href="control-chart-coefficients.html" target="_blank" rel="noopener">管理図の係数の正体</a>で1段ずつ図解済み。「3σ法の3」「Rからσへの換算(d₂)」「標本平均のばらつき(√n)」という3部品がA₂の中身であることが分かれば、(15)(16)は暗記ではなく組み立てで答えられる。</div>
+    <div class="callout warn"><b>選択肢の文字について:</b> 元画像では(15)(16)の選択肢の文字が判読できなかったため式のみで収録していたが、基準解答で確認できた記号は<b>(15)=オ、(16)=ウ</b>。手元の問題冊子で確かめる際は、上の3ステップの式とA₂=3/(d₂√n)という結論が一致する選択肢を選べばよい。数値としてのA₂は次のSTEP3でも n=5 の場合として実際に使う。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>(17)〜(21) 管理線の計算</h2></div>
+    <p>係数表はn(群の大きさ)の行を見る。今回は<b>n=5</b>なので A₂=0.577、D₄=2.114(D₃はn≦6のため考えない)。</p>
+
+    <div class="calc">
+      <span class="label">a) X̄管理図の中心線 CL</span>
+      <span class="line">X̄̄ = ΣX̄ / k = 1182.2 / 20</span>
+      <span class="result">CL(X̄) = 59.11</span>
+    </div>
+    <div class="answer-row"><span class="answer"><span class="qno">(17)</span> 59.11</span></div>
+
+    <div class="calc">
+      <span class="label">b) R管理図の中心線 CL(先に求めておくと(18)(19)の計算に使える)</span>
+      <span class="line">R̄ = ΣR / k = 210 / 20</span>
+      <span class="result">CL(R) = 10.50</span>
+    </div>
+    <div class="answer-row"><span class="answer"><span class="qno">(20)</span> 10.50</span></div>
+
+    <div class="calc">
+      <span class="label">X̄管理図の UCL・LCL</span>
+      <span class="line">UCL/LCL = X̄̄ ± A₂R̄ = 59.11 ± 0.577 × 10.50 = 59.11 ± 6.0585</span>
+      <span class="line">UCL = 59.11 + 6.0585 = 65.1685 ≒ 65.17</span>
+      <span class="line">LCL = 59.11 − 6.0585 = 53.0515 ≒ 53.05</span>
+    </div>
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(18) UCL</span> 65.17</span>
+      <span class="answer"><span class="qno">(19) LCL</span> 53.05</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">R管理図の UCL</span>
+      <span class="line">UCL = D₄R̄ = 2.114 × 10.50 = 22.197 ≒ 22.2</span>
+      <span class="line">LCL = D₃R̄ … n=5 ≤ 6 のため<b>LCLは考えない</b></span>
+    </div>
+    <div class="answer-row"><span class="answer"><span class="qno">(21) UCL</span> 22.2</span></div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 660 260" role="img" aria-label="X管理図とR管理図を並べた模式図。X管理図は中心線59.11、上方管理限界65.17、下方管理限界53.05。R管理図は中心線10.50、上方管理限界22.2、下方管理限界は考えない">
+          <text x="170" y="24" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">X̄管理図</text>
+          <line x1="40" y1="110" x2="300" y2="110" stroke="var(--reg)" stroke-width="2"/>
+          <text x="306" y="114" font-size="11.5" fill="var(--reg-ink)">CL 59.11</text>
+          <line x1="40" y1="52" x2="300" y2="52" stroke="var(--wrong)" stroke-width="1.6" stroke-dasharray="5 4"/>
+          <text x="306" y="56" font-size="11.5" fill="var(--wrong)">UCL 65.17</text>
+          <line x1="40" y1="168" x2="300" y2="168" stroke="var(--wrong)" stroke-width="1.6" stroke-dasharray="5 4"/>
+          <text x="306" y="172" font-size="11.5" fill="var(--wrong)">LCL 53.05</text>
+
+          <text x="490" y="24" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">R管理図</text>
+          <line x1="360" y1="130" x2="620" y2="130" stroke="var(--reg)" stroke-width="2"/>
+          <text x="626" y="134" font-size="11.5" fill="var(--reg-ink)">CL 10.50</text>
+          <line x1="360" y1="60" x2="620" y2="60" stroke="var(--wrong)" stroke-width="1.6" stroke-dasharray="5 4"/>
+          <text x="626" y="64" font-size="11.5" fill="var(--wrong)">UCL 22.2</text>
+          <text x="490" y="200" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.65">LCLは考えない(n=5 ≦ 6)</text>
+
+          <line x1="330" y1="10" x2="330" y2="230" stroke="currentColor" stroke-width="1" opacity="0.25"/>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> X̄管理図はCLを挟んで上下対称にUCL/LCLが並ぶ(59.11±6.06)。R管理図はUCLだけで、LCLはn≦6のため考えない。左右で使う係数(A₂とD₄)も基準になる値(X̄̄とR̄)も違う点を混同しないこと。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>中心線+管理限界線をまとめて<b>「管理線」</b>と呼ぶ。異常線・安定線・合計線は存在しない紛らわしい選択肢。</span></div>
+      <div class="step"><span class="mark">2</span><span>A₂という係数は「3σ法の3」「Rからσへの換算(÷d₂)」「標本平均のばらつき(÷√n)」の3つを1つにまとめただけ。<span class="mono">A₂=3/(d₂√n)</span> という中身を知っていれば(15)(16)は導出できる。</span></div>
+      <div class="step"><span class="mark">3</span><span>ΣX̄=1182.2・ΣR=210は<b>20群それぞれの平均・範囲の合計</b>。全データ100個の合計ではない。÷kで割ることを忘れない。</span></div>
+      <div class="step"><span class="mark">4</span><span>X̄管理図はA₂、R管理図はD₃・D₄と<b>使う係数が別</b>。掛ける相手はどちらもR̄であって、σそのものではない。</span></div>
+      <div class="step"><span class="mark">5</span><span>n=5は6以下なので<b>R管理図のLCLは考えない</b>(D₃が負になるため)。空欄のままにする=解答漏れではなく正しい判断。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第37回 問3 / X̄-R管理図の管理線</span>
+    <span>CL(X̄)=59.11 UCL=65.17 LCL=53.05 ・ CL(R)=10.50 UCL=22.2</span>
+  </footer>
+
+</div>

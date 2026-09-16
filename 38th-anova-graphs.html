@@ -1,0 +1,380 @@
+<title>第38回 問5 一元配置実験とグラフの読み方</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第38回 問5</span>
+    <h1>一元配置実験 — グラフの見た目と、本当に有意かどうかは別物</h1>
+    <p class="lede">因子Aを4水準・繰返し4回で実験した6パターンのグラフを見比べて「一番差が大きそうな図」「一番ばらつきが大きそうな図」を目で判断したあと、実際にその<b>ばらつきが一番大きい図</b>のデータで分散分析をすると――結果は<b>有意ではない</b>。グラフの印象と統計的な判定が食い違うことを、実際の計算で体感できる問題。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>一元配置実験の前提</h2></div>
+
+    <div class="calc">
+      <span class="label">データの構造式</span>
+      <span class="line">x(ij) = μ + a(i) + ε(ij)</span>
+      <span class="line">制約式: Σa(i) = 0</span>
+      <span class="line">ε(ij) ~ N(0, σ(E)²)　（誤差は平均0・分散σ(E)²の正規分布に従う）</span>
+    </div>
+
+    <p>この前提のもとで、分散分析は「多数の母集団の <b>(30)</b> が一様に等しいかどうか」を検定する手法であり、完全ランダムな順序で実験することで誤差の <b>(31)</b> を保証できる、と問題文は続く。</p>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(30)</span> 母平均</span>
+      <span class="answer"><span class="qno">(31)</span> 独立性</span>
+    </div>
+
+    <div class="callout info"><b>(30)がなぜ「母平均」か:</b> 一元配置実験で比べているのは「水準ごとの平均値a(i)に差があるか」。分散分析という名前に反して、<b>調べているのは分散ではなく平均の違い</b>――分散(ばらつき)は、平均の違いを判定するための「モノサシ」として使われているだけ。</div>
+    <div class="callout info"><b>(31)がなぜ「独立性」か:</b> 実験の順序を固定してしまうと、時間帯や装置の温まり具合など「順序に伴う何か」が誤差に紛れ込み、誤差どうしが互いに関係を持ってしまう(独立でなくなる)。<b>ランダムな順序にすることで、この隠れた関連を断ち切る</b>のが目的。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>グラフを見比べる — (32)(33)</h2></div>
+    <p>図5.1の(a)〜(f)は、同じ「4水準×繰返し4回」のデータでも見た目が大きく異なる6パターン。判断基準は2つ、<b>まったく別の見どころ</b>であることに注意する。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>2つの判断基準</caption>
+        <thead><tr><th>問われていること</th><th>グラフのどこを見るか</th></tr></thead>
+        <tbody>
+          <tr><td>(32) 各水準の平均の違いの大きさ</td><td>4つの水準を結ぶ<b>折れ線の上下の振れ幅</b>（水準平均どうしがどれだけ離れているか）</td></tr>
+          <tr><td>(33) 実験誤差の大きさ</td><td>各水準の<b>点のばらつき(縦方向の散らばり)</b>（折れ線の形に関係なく、点がどれだけ散らばっているか）</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 260" role="img" aria-label="2つのグラフの比較。左は各点が大きく散らばっているが水準平均はあまり変わらない図、右は点は水準ごとに密集しているが水準平均が大きく右肩上がりに変化する図">
+          <text x="150" y="24" font-size="13" text-anchor="middle" fill="var(--wrong)" font-weight="600">(a) 点がバラバラ、平均線はあまり変化しない</text>
+          <line x1="60" y1="210" x2="260" y2="210" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <line x1="60" y1="210" x2="60" y2="50" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <g fill="var(--wrong)" opacity="0.85">
+            <circle cx="90" cy="130" r="3.5"/><circle cx="90" cy="150" r="3.5"/><circle cx="90" cy="170" r="3.5"/><circle cx="90" cy="90" r="3.5"/>
+            <circle cx="140" cy="110" r="3.5"/><circle cx="140" cy="130" r="3.5"/><circle cx="140" cy="150" r="3.5"/><circle cx="140" cy="80" r="3.5"/>
+            <circle cx="190" cy="120" r="3.5"/><circle cx="190" cy="150" r="3.5"/><circle cx="190" cy="170" r="3.5"/><circle cx="190" cy="95" r="3.5"/>
+            <circle cx="230" cy="115" r="3.5"/><circle cx="230" cy="140" r="3.5"/><circle cx="230" cy="160" r="3.5"/><circle cx="230" cy="95" r="3.5"/>
+          </g>
+          <polyline points="90,135 140,115 190,130 230,125" fill="none" stroke="var(--ink)" stroke-width="2"/>
+          <text x="90" y="228" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">A1</text>
+          <text x="140" y="228" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">A2</text>
+          <text x="190" y="228" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">A3</text>
+          <text x="230" y="228" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">A4</text>
+          <text x="150" y="246" font-size="12" text-anchor="middle" fill="var(--wrong)" font-weight="600">→ (33) 実験誤差が最大</text>
+
+          <line x1="330" y1="30" x2="330" y2="250" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+
+          <text x="490" y="24" font-size="13" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">(b) 点は密集、平均線が右肩上がりに大きく変化</text>
+          <line x1="400" y1="210" x2="600" y2="210" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <line x1="400" y1="210" x2="400" y2="50" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <g fill="var(--reg)" opacity="0.85">
+            <circle cx="430" cy="185" r="3.5"/><circle cx="430" cy="178" r="3.5"/><circle cx="430" cy="192" r="3.5"/><circle cx="430" cy="198" r="3.5"/>
+            <circle cx="480" cy="155" r="3.5"/><circle cx="480" cy="148" r="3.5"/><circle cx="480" cy="162" r="3.5"/><circle cx="480" cy="168" r="3.5"/>
+            <circle cx="530" cy="110" r="3.5"/><circle cx="530" cy="103" r="3.5"/><circle cx="530" cy="117" r="3.5"/><circle cx="530" cy="123" r="3.5"/>
+            <circle cx="570" cy="70" r="3.5"/><circle cx="570" cy="63" r="3.5"/><circle cx="570" cy="77" r="3.5"/><circle cx="570" cy="83" r="3.5"/>
+          </g>
+          <polyline points="430,188 480,158 530,113 570,73" fill="none" stroke="var(--reg-ink)" stroke-width="2.4"/>
+          <text x="430" y="228" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">A1</text>
+          <text x="480" y="228" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">A2</text>
+          <text x="530" y="228" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">A3</text>
+          <text x="570" y="228" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">A4</text>
+          <text x="490" y="246" font-size="12" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">→ (32) 水準平均の違いが最大</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 実際の図5.1のパターンを模した概念図（正確な数値の再現ではない）。左は点があちこちに散らばり、水準平均線はほとんど動かない＝<b>誤差が支配的</b>。右は各水準の4点がまとまっており、水準平均線ははっきり右肩上がり＝<b>水準の効果が支配的</b>。</figcaption>
+    </figure>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(32)</span> (b)</span>
+      <span class="answer"><span class="qno">(33)</span> (a)</span>
+    </div>
+
+    <div class="callout warn"><b>この2つの答えが、次のSTEPの伏線になっている:</b> (33)で「実験誤差が一番大きい」と判定した(a)のデータを使って、③では実際に分散分析を行う。見た目のグラフだけでは「A1〜A4で多少の違いがありそう」に見えても、<b>誤差がそれ以上に大きければ統計的には「差がある」と言い切れない</b>――これを実際の数値で確認する。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>図(a)のデータで分散分析を行う — (34)(35)</h2></div>
+    <p>与えられている統計量は3つだけ。水準数a=4、繰返しn<sub>i</sub>=4なので全データ数N=16。</p>
+
+    <div class="calc">
+      <span class="label">与えられた統計量</span>
+      <span class="line">Σx(ij) = 72.4　（合計）</span>
+      <span class="line">Σx(ij)² = 332.22　（2乗の合計）</span>
+      <span class="line">ΣT(i)² = 1318.8　（各水準の合計値T(i)を2乗して足したもの）</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">補正項と総平方和</span>
+      <span class="line">CT = (Σx)² / N = 72.4² / 16 = 5241.76 / 16</span>
+      <span class="line">CT = 327.61</span>
+      <span class="line">S(T) = Σx² − CT = 332.22 − 327.61</span>
+      <span class="result">S(T) = 4.61</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">要因Aの平方和</span>
+      <span class="line">S(A) = ΣT(i)² / n(i) − CT = 1318.8 / 4 − 327.61 = 329.7 − 327.61</span>
+      <span class="result">S(A) = 2.09</span>
+    </div>
+
+    <p>この「ΣT(i)²/n(i) − CT」という式は暗記するとすぐ抜けるが、<b>何を測っているか</b>から追うと崩れない。S(A)は本来「各水準の平均が全体平均からどれだけ離れているか」を、水準ごとのデータ数で重みづけして足したもの。</p>
+
+    <div class="calc">
+      <span class="label">定義式から計算式へ（なぜΣT(i)²/n(i) − CTになるか）</span>
+      <span class="line">定義: S(A) = Σ n(i)・(x̄(i) − x̄)²　　（水準平均と全体平均のズレの2乗を、データ数で重みづけて合計）</span>
+      <span class="line">展開: Σn(i)x̄(i)² − 2x̄・Σn(i)x̄(i) + Σn(i)x̄²</span>
+      <span class="line">n(i)x̄(i) = T(i)、Σn(i)x̄(i) = Σx(ij) = N・x̄ を代入して整理すると</span>
+      <span class="line">S(A) = ΣT(i)²/n(i) − 2N・x̄² + N・x̄² = ΣT(i)²/n(i) − N・x̄²</span>
+      <span class="line">CT = (Σx)²/N = N・x̄² なので</span>
+      <span class="result">S(A) = ΣT(i)²/n(i) − CT</span>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 260" role="img" aria-label="4つの水準の平均値が全体平均からどれだけ離れているかを表す図。破線が全体平均、各水準の点までの矢印が偏差を表し、この偏差を2乗してデータ数で重みづけたものを足し合わせるとS(A)になる">
+          <line x1="60" y1="130" x2="600" y2="130" stroke="var(--ink-faint)" stroke-width="1.4" stroke-dasharray="5 4"/>
+          <text x="605" y="134" font-size="12" fill="var(--ink-faint)">全体平均 x̄</text>
+
+          <line x1="120" y1="130" x2="120" y2="175" stroke="var(--wrong)" stroke-width="1.8"/>
+          <circle cx="120" cy="175" r="4.5" fill="var(--wrong)"/>
+          <text x="120" y="196" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">A1</text>
+          <text x="120" y="152" font-size="11.5" text-anchor="middle" fill="var(--wrong)" font-weight="600">-2.5</text>
+
+          <line x1="240" y1="130" x2="240" y2="145" stroke="var(--wrong)" stroke-width="1.8"/>
+          <circle cx="240" cy="145" r="4.5" fill="var(--wrong)"/>
+          <text x="240" y="196" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">A2</text>
+          <text x="256" y="140" font-size="11.5" text-anchor="middle" fill="var(--wrong)" font-weight="600">-0.5</text>
+
+          <line x1="360" y1="130" x2="360" y2="115" stroke="var(--reg)" stroke-width="1.8"/>
+          <circle cx="360" cy="115" r="4.5" fill="var(--reg-ink)"/>
+          <text x="360" y="196" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">A3</text>
+          <text x="376" y="120" font-size="11.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">+0.5</text>
+
+          <line x1="480" y1="130" x2="480" y2="60" stroke="var(--reg)" stroke-width="1.8"/>
+          <circle cx="480" cy="60" r="4.5" fill="var(--reg-ink)"/>
+          <text x="480" y="196" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">A4</text>
+          <text x="480" y="48" font-size="11.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">+2.5</text>
+
+          <line x1="60" y1="210" x2="600" y2="210" stroke="currentColor" stroke-width="1.2" opacity="0.4"/>
+
+          <text x="330" y="238" font-size="12.5" text-anchor="middle" fill="var(--ink-soft)">各矢印の長さ(偏差)を2乗し、水準のデータ数n(i)個ぶんの重みを掛けて4水準分を合計 → S(A)</text>
+        </svg>
+      </div>
+      <figcaption><b>図3.</b> 数値は仕組みを見るための仮の例（実際の図5.1(a)のデータではない）。水準平均が全体平均から離れているほど偏差(矢印)が長くなり、その2乗が大きくなる。<b>S(A)はこの「離れ具合」を各水準n(i)個ぶんの重みで合計した量</b>——だからこそ、水準平均どうしがあまり離れていない(a)ではS(A)=2.09と小さくなり、STEP3で有意にならなかった。</figcaption>
+    </figure>
+
+    <div class="callout info"><b>CTを引く理由:</b> ΣT(i)²/n(i)だけだと「全体平均そのものの大きさ」による底上げ分(N・x̄²)が混ざっている。これはどの水準にも共通する定数なので、水準間の違いを見たいS(A)には不要——だからCT(=N・x̄²)を引いて取り除く。同じCTがS(T)の計算にも登場するのはこのため。</div>
+
+    <div class="calc">
+      <span class="label">誤差の平方和（検算）</span>
+      <span class="line">S(E) = S(T) − S(A) = 4.61 − 2.09 = 2.52</span>
+      <span class="line">→ 表5.1にすでに与えられている S(E)=2.52 と一致。計算が合っている証拠</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>表5.1 分散分析表（完成形）</caption>
+        <thead><tr><th>要因</th><th>平方和S</th><th>自由度φ</th><th>平均平方V</th><th>分散比F<sub>0</sub></th></tr></thead>
+        <tbody>
+          <tr class="row-reg">
+            <td>要因A</td>
+            <td><div class="num hit">2.09</div><div class="sub">…(34)</div></td>
+            <td><div class="num">3</div><div class="sub">= 水準数4−1</div></td>
+            <td><div class="num">0.697</div><div class="sub">= 2.09/3</div></td>
+            <td><div class="num hit">3.32</div><div class="sub">…(35)</div></td>
+          </tr>
+          <tr class="row-res">
+            <td>誤差E</td>
+            <td><div class="num">2.52</div></td>
+            <td><div class="num">12</div><div class="sub">= N−水準数 = 16−4</div></td>
+            <td><div class="num">0.21</div><div class="sub">= 2.52/12</div></td>
+            <td></td>
+          </tr>
+          <tr class="row-total">
+            <td>計</td>
+            <td><div class="num">4.61</div></td>
+            <td><div class="num">15</div><div class="sub">= N−1</div></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(34)</span> S(A) = 2.09</span>
+      <span class="answer"><span class="qno">(35)</span> F(0) = 3.32</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>F表と比較して判定する — (36)</h2></div>
+    <p>F(3, 12) の付表を引く。分子(要因)の自由度3、分母(誤差)の自由度12。</p>
+
+    <div class="calc">
+      <span class="label">F表の値</span>
+      <span class="line">F(3, 12; 0.05) = 3.49　（有意水準5%）</span>
+      <span class="line">F(3, 12; 0.01) = 5.95　（有意水準1%）</span>
+      <span class="line">F(0) = 3.32 は 3.49 より小さい → 5%でも棄却できない</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(36)</span> 5%で有意でない</span></div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 220" role="img" aria-label="自由度(3,12)のF分布の図。有意水準5%の棄却域の境界3.49より、計算されたF0=3.32はわずかに左側(棄却域の外)にあることを示す">
+          <line x1="60" y1="180" x2="600" y2="180" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+          <path d="M60,180 C110,180 130,50 190,50 C260,50 280,140 380,168 C450,180 520,180 600,180 Z" fill="none" stroke="var(--reg)" stroke-width="2.2"/>
+
+          <line x1="340" y1="180" x2="340" y2="190" stroke="var(--res)" stroke-width="1.8"/>
+          <text x="340" y="206" font-size="12" text-anchor="middle" fill="var(--res-ink)" font-weight="600">F(3,12;0.05)</text>
+          <text x="340" y="220" font-size="10.5" text-anchor="middle" fill="var(--res-ink)" opacity="0.85">3.49</text>
+
+          <path d="M340,178 C360,178 375,170 380,168 C450,180 520,180 600,180 Z" fill="var(--wrong)" opacity="0.35"/>
+
+          <line x1="316" y1="180" x2="316" y2="190" stroke="var(--reg-ink)" stroke-width="2"/>
+          <text x="290" y="140" font-size="12" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">F(0)=3.32</text>
+          <text x="290" y="156" font-size="10.5" text-anchor="middle" fill="var(--reg-ink)" opacity="0.85">棄却域のすぐ手前</text>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> F<sub>0</sub>=3.32 は棄却域の境界3.49の<b>わずかに手前</b>で止まっている。図5.1(a)を見て「多少の違いはありそう」と感じたとしても、誤差の大きさを考慮すると<b>統計的には「差があるとは言えない」</b>という結論になる。</figcaption>
+    </figure>
+
+    <div class="callout warn"><b>この問題が伝えたいこと:</b> (33)で選んだ(a)は「誤差が一番大きい図」であり、実際に計算してもF<sub>0</sub>は棄却域にわずかに届かなかった。<b>グラフを目で見て「差がありそう」と感じることと、統計的検定で「有意」と判定されることは別物</b>。特に(a)のように点のばらつきが大きい実験では、この食い違いが起きやすい。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">分析</span><h2>(34)(35)の選択肢はどの値に対応しているか</h2></div>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>(34)(35) の選択肢</caption>
+        <thead><tr><th>選択肢</th><th>判定</th><th>この値が出る原因</th></tr></thead>
+        <tbody>
+          <tr><td class="good">ア. 2.09</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (34)</span></td><td>S(A) = ΣT(i)²/n(i) − CT で正しく計算</td></tr>
+          <tr><td class="good">イ. 3.32</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (35)</span></td><td>F(0) = V(A)/V(E) で正しく計算</td></tr>
+          <tr><td class="bad">ウ. 4.61</td><td>誤</td><td>これは表の別の行の値、<b>S(T)(総平方和)そのもの</b>。要因Aの行とT(計)の行を取り違えている</td></tr>
+          <tr><td class="bad">エ. 7.33</td><td>誤</td><td>桁の近い紛らわしい値</td></tr>
+          <tr><td class="bad">オ. 8.36</td><td>誤</td><td>桁の近い紛らわしい値</td></tr>
+          <tr><td class="bad">カ. 13.29</td><td>誤</td><td>桁の近い紛らわしい値</td></tr>
+          <tr><td class="bad">キ. 76.01</td><td>誤</td><td>CT(327.61)やΣT(i)²/n(i)(329.7)の計算途中でCTを引き忘れる、あるいは桁を誤ると生まれやすい大きな値</td></tr>
+          <tr><td class="bad">ク. 120.65</td><td>誤</td><td>同上、計算途中の値を最終解と取り違えると生まれる大きな値</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><b>ウ.4.61に注意:</b> この値は計算ミスではなく<b>正しく求まる別の量(S<sub>T</sub>)</b>。分散分析表の中で複数の行・列を埋める問題では、「今どの行の、どの列を求めているか」を必ず確認してから答える。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>分散分析が調べているのは<b>母平均が等しいかどうか</b>。「分散」分析という名前だが、分散はそのための道具にすぎない。</span></div>
+      <div class="step"><span class="mark">2</span><span>ランダムな実験順序は、誤差どうしの<b>独立性</b>を保証するために行う。</span></div>
+      <div class="step"><span class="mark">3</span><span>グラフを読むときは<b>「水準平均の振れ幅(効果)」と「各点の散らばり(誤差)」を別々に見る</b>。同じグラフでも問われている観点が違えば答えも違う。</span></div>
+      <div class="step"><span class="mark">4</span><span>平方和の基本形は毎回同じ: <b>S(T)=Σx²−CT、S(A)=ΣT(i)²/n(i)−CT、S(E)=S(T)−S(A)</b>。CT=(Σx)²/Nを最初に求める。</span></div>
+      <div class="step"><span class="mark">5</span><span><b>グラフの見た目と統計的な有意性は一致するとは限らない</b>。誤差が大きい実験では、多少の水準間の違いがあっても検定では「有意でない」となりうる。判断は必ず検定統計量とF表の比較で行う。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第38回 問5 / 一元配置実験とグラフの読み方</span>
+    <span>S(A)=2.09 ・ F(0)=3.32 &lt; F(3,12;0.05)=3.49 ・ 有意でない</span>
+  </footer>
+
+</div>

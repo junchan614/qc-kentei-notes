@@ -1,0 +1,268 @@
+<title>自由度の正体</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+td a{color:var(--reg-ink);}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 概念の掘り下げ</span>
+    <h1>自由度の正体 — なぜ問題によって引く数が違うのか</h1>
+    <p class="lede"><a href="39th-f-test.html" target="_blank" rel="noopener">2群の分散を比べるF検定</a>ではφ=n−1が2つ並ぶのに、<a href="regression-anova.html" target="_blank" rel="noopener">回帰分析の分散分析表</a>ではφ=1とn−2に分かれる——両方とも自由度のはずなのに引き算の中身が違って見えて混乱する。実はこの2つは<b>まったく別の2つのパターン</b>に属していて、パターンさえ見分ければ迷わなくなる。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">土台</span><h2>自由度の共通ルール — 「平均を使うと1個減る」</h2></div>
+    <p>自由度とは<b>「実際に自由に動ける数値の個数」</b>。n個のデータそのものはn個の自由度を持つが、そこから<b>自分自身の平均を計算して使った瞬間</b>、動ける個数は1個減ってn−1になる。</p>
+
+    <div class="calc">
+      <span class="label">具体例: 3個のデータ x1, x2, x3(平均10)</span>
+      <span class="line">偏差の合計は必ず0になる制約がある: (x1−10) + (x2−10) + (x3−10) = 0</span>
+      <span class="line">x1とx2を自由に決めれば(例: 8, 11)、x3は自動的に決まる(11) ← 3個中2個しか自由に選べない</span>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 560 160" role="img" aria-label="3個のデータのうち2個は自由に選べるが、平均を固定すると3個目は自動的に決まることを示す図">
+          <g font-size="13">
+            <rect x="40" y="50" width="90" height="50" rx="8" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.8"/>
+            <text x="85" y="80" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">x1 = 8</text>
+            <text x="85" y="118" text-anchor="middle" fill="var(--reg-ink)" font-size="11">自由に選べる</text>
+
+            <rect x="150" y="50" width="90" height="50" rx="8" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.8"/>
+            <text x="195" y="80" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">x2 = 11</text>
+            <text x="195" y="118" text-anchor="middle" fill="var(--reg-ink)" font-size="11">自由に選べる</text>
+
+            <rect x="260" y="50" width="90" height="50" rx="8" fill="var(--wrong-soft)" stroke="var(--wrong)" stroke-width="1.8"/>
+            <text x="305" y="80" text-anchor="middle" fill="var(--wrong)" font-weight="700">x3 = 11</text>
+            <text x="305" y="118" text-anchor="middle" fill="var(--wrong)" font-size="11">平均10から自動的に決まる</text>
+          </g>
+          <text x="440" y="82" font-size="14" text-anchor="middle" fill="currentColor" font-weight="600">自由度 = 3−1 = 2</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> n個のデータから自分の平均を計算した瞬間、「偏差の合計=0」という制約が1本生まれ、自由に動けるのはn−1個になる。<b>これがすべての「n−1」の出どころ</b>。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">パターンA</span><h2>「n−1」がそのまま複数個並ぶ場合</h2></div>
+    <p>比べたい相手が<b>最初から別々の集団</b>で、1つの「全体」にまとめる必要がないときは、それぞれの集団が独立に自分の「n−1」を持つ。<a href="39th-f-test.html" target="_blank" rel="noopener">2群の母分散を比べるF検定</a>がこれにあたる。</p>
+
+    <div class="calc">
+      <span class="label">第39回問2: AラインとBラインの分散比のF検定</span>
+      <span class="line">Aライン(n=8): 自分の平均だけを使って分散を推定 → φ(A) = 8−1 = 7</span>
+      <span class="line">Bライン(n=9): 自分の平均だけを使って分散を推定 → φ(B) = 9−1 = 8</span>
+      <span class="line">AとBを「1つの全体」にまとめる操作はどこにもない ── 2本の独立な「n−1」がそのまま並ぶだけ</span>
+    </div>
+
+    <div class="callout info"><b>一元配置実験の誤差項も実は同じ部品でできている:</b> <a href="36th-anova-oneway.html" target="_blank" rel="noopener">一元配置実験</a>の誤差の自由度 φ(E)=Σ(n(i)−1) は、<b>各水準が持つ「自分のn−1」を全部足し合わせたもの</b>。2群のF検定と同じ部品(n(i)−1)を使っているが、一元配置ではこれを他の水準と合算して1つの誤差項にまとめ、それを別の(a−1)と比べるところが違う(パターンBで後述)。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">パターンB</span><h2>1つの全体を「モデル」と「残り」に配分する場合</h2></div>
+    <p>データが<b>もともと1つの集まり</b>で、それを「要因で説明できる部分」と「説明できない部分(誤差)」に<b>切り分ける</b>ときは話が変わる。全体の自由度予算はいつもn−1(全体の平均を1回使った分)で決まっていて、この予算をモデル側と残り側で分け合う。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>「全体n−1」をモデルと残りに配分する2つの例</caption>
+        <thead><tr><th></th><th>全体の予算 φ(T)</th><th>モデル側</th><th>残り(誤差)側</th></tr></thead>
+        <tbody>
+          <tr class="row-reg">
+            <td><a href="regression-anova.html" target="_blank" rel="noopener">単回帰分析</a></td>
+            <td class="num">n−1</td>
+            <td class="num hit">φ(R) = 1<div class="sub">傾きbという説明変数が1個だけだから</div></td>
+            <td class="num">φ(e) = n−2<div class="sub">= (n−1) − 1</div></td>
+          </tr>
+          <tr class="row-res">
+            <td><a href="36th-anova-oneway.html" target="_blank" rel="noopener">一元配置実験(a水準)</a></td>
+            <td class="num">N−1</td>
+            <td class="num hit">φ(A) = a−1<div class="sub">a個の水準平均から、共有する全体平均の分1個引く</div></td>
+            <td class="num">φ(E) = N−a<div class="sub">= (N−1) − (a−1) = Σ(n(i)−1)</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><b>φ(R)=1とφ(A)=a−1は同じ役割:</b> 回帰の「説明変数の数」は常に1個(傾きb)なのでφ(R)は常に1。一元配置の「因子の水準」はa個あるが、<b>すでに全体平均で1個分を使っているので、水準が追加でもたらす自由度はa−1個だけ</b>。どちらも「モデルが全体の予算からどれだけ追加で使うか」を表している。</div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 260" role="img" aria-label="独立した2本の棒として並ぶ2群F検定の自由度と、1本の棒を2つに切り分ける回帰・分散分析の自由度の構造の違いを示す対比図">
+          <text x="150" y="24" font-size="13" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">パターンA: 独立な2本立て（2群のF検定）</text>
+          <g font-size="12.5">
+            <rect x="60" y="50" width="180" height="46" rx="8" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.8"/>
+            <text x="150" y="78" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">Aライン φ(A)=7</text>
+            <rect x="60" y="106" width="180" height="46" rx="8" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.8"/>
+            <text x="150" y="134" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">Bライン φ(B)=8</text>
+          </g>
+          <text x="150" y="176" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.7">「全体」を作らず、2本を直接比べる</text>
+
+          <line x1="320" y1="30" x2="320" y2="230" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+
+          <text x="480" y="24" font-size="13" text-anchor="middle" fill="var(--res-ink)" font-weight="600">パターンB: 1本を切り分ける（回帰・一元配置）</text>
+          <rect x="380" y="60" width="220" height="40" rx="8" fill="none" stroke="var(--border-strong)" stroke-width="1.6"/>
+          <text x="490" y="46" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.75">全体の予算 φ(T)=n−1</text>
+
+          <rect x="380" y="106" width="55" height="40" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+          <text x="407" y="130" text-anchor="middle" font-size="11.5" fill="var(--reg-ink)" font-weight="700">モデル</text>
+          <rect x="435" y="106" width="165" height="40" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.6"/>
+          <text x="517" y="130" text-anchor="middle" font-size="11.5" fill="var(--res-ink)" font-weight="700">残り(誤差)</text>
+
+          <line x1="380" y1="100" x2="380" y2="106" stroke="currentColor" opacity="0.4"/>
+          <line x1="600" y1="100" x2="600" y2="106" stroke="currentColor" opacity="0.4"/>
+
+          <text x="490" y="176" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.7">1つの全体を、モデルと残りに切り分ける</text>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> パターンAは最初から「全体」という発想がなく、独立な2本の自由度をそのまま比べる。パターンBは「全体の予算」がまずあり、それをモデル側と残り側に<b>足すと必ず元に戻る</b>ように配分する。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">見分け方</span><h2>目の前の問題がどちらのパターンか、3秒で判定する</h2></div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>判定チェック</caption>
+        <thead><tr><th>問い</th><th>Yesなら</th></tr></thead>
+        <tbody>
+          <tr><td>「全体の平方和 S(T)」という行が分散分析表に出てくるか？</td><td class="num hit">出てくる → パターンB(配分)</td></tr>
+          <tr><td>比べる相手どうしを1つの表にまとめず、それぞれ単独で自由度が決まっているか？</td><td class="num hit">そう → パターンA(独立)</td></tr>
+          <tr><td>「モデルの自由度 + 残りの自由度 = 全体の自由度」の検算ができるか？</td><td class="num hit">できる → パターンB(配分)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn"><b>紛らわしい点:</b> 一元配置実験の誤差項 φ(E)=Σ(n(i)−1) は、部品としては2群のF検定と同じ「n(i)−1」の積み重ねだが、<b>一元配置ではこれが単独では終わらず、必ずφ(A)=a−1とペアで全体φ(T)=N−1に足し合わさる</b>。2群のF検定にはこの「足し合わさる先の全体」が存在しない。「その自由度は何かと合計してn−1やN−1になるか？」を自分に問うのが一番確実な見分け方。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">一覧</span><h2>サイト内に出てくる自由度をこの2パターンで仕分ける</h2></div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>自由度の対応表</caption>
+        <thead><tr><th>資料</th><th>自由度</th><th>パターン</th></tr></thead>
+        <tbody>
+          <tr><td>1標本の標準偏差</td><td class="num">φ = n−1</td><td>A(単独)</td></tr>
+          <tr class="row-reg"><td><a href="39th-f-test.html" target="_blank" rel="noopener">第39回 問2: 2群のF検定</a></td><td class="num">φ(A)=n(A)−1, φ(B)=n(B)−1</td><td class="num hit">A(独立2本)</td></tr>
+          <tr class="row-res"><td><a href="regression-anova.html" target="_blank" rel="noopener">単回帰分析の分散分析表</a></td><td class="num">φ(T)=n−1 = φ(R)1 + φ(e)(n−2)</td><td class="num hit">B(配分)</td></tr>
+          <tr class="row-res"><td><a href="36th-anova-oneway.html" target="_blank" rel="noopener">一元配置実験(第36回問5など)</a></td><td class="num">φ(T)=N−1 = φ(A)(a−1) + φ(E)(N−a)</td><td class="num hit">B(配分)</td></tr>
+          <tr class="row-res"><td><a href="38th-chi-square.html" target="_blank" rel="noopener">分割表のカイ二乗検定(第38回問3)</a></td><td class="num">φ=(行数−1)(列数−1)</td><td class="num hit">B(配分の一種)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout info"><b>カイ二乗検定もB寄りの仲間:</b> 行の合計・列の合計という2方向の「全体の制約」を固定すると、自由に動けるマスは(行数−1)×(列数−1)個だけになる——これも「全体の制約を先に決めてから、残りの自由度を数える」という配分型の発想。<a href="38th-chi-square.html" target="_blank" rel="noopener">分割表のカイ二乗検定</a>の図3で図解済み。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この資料から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>自由度の出発点はいつも同じ: <b>自分自身の平均を使うと、そのぶん1個減る</b>(n−1)。</span></div>
+      <div class="step"><span class="mark">2</span><span><b>パターンA(独立)</b>: 比べる相手が最初から別集団で、全体を作らない。それぞれが自分の「n−1」を単独で持つ(2群のF検定)。</span></div>
+      <div class="step"><span class="mark">3</span><span><b>パターンB(配分)</b>: データが1つの全体で、それをモデルと残りに切り分ける。全体の予算φ(T)=n−1(またはN−1)を、モデル側と残り側で<b>足すと元に戻るように</b>配分する(回帰・一元配置・カイ二乗)。</span></div>
+      <div class="step"><span class="mark">4</span><span>迷ったら「この自由度は、何かと足し合わせて<b>n−1やN−1になる相手</b>を持っているか？」と自分に聞く。持っていればB、持っていなければA。</span></div>
+      <div class="step"><span class="mark">5</span><span>一元配置の誤差項φ(E)=Σ(n(i)−1)は<b>Aの部品(n(i)−1)を寄せ集めてBの中に組み込んだもの</b>——2つのパターンは全くの別物ではなく、Bの中にAの部品が使われていることもある。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 概念の掘り下げ / 自由度の正体</span>
+    <span>パターンA: 独立な n−1 ・ パターンB: n−1 を配分</span>
+  </footer>
+
+</div>

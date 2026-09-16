@@ -1,0 +1,206 @@
+<title>なぜ「カイ二乗」は二乗なのか</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(26px,4vw,36px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:62ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .hit{color:var(--reg-ink);font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 概念の掘り下げ</span>
+    <h1>なぜ「カイ二乗」は二乗なのか</h1>
+    <p class="lede">検定統計量にχ0²=S/σ0²のような式が出てくるたび、なぜ「2乗」がついているのかは素通りしがちな部分。答えは単純で、<b>カイ二乗分布はそもそも「標準正規分布に従う値をいくつか2乗して足したもの」として定義されている</b>から。ではなぜ足す前に絶対値ではなく2乗を選ぶのか——その理由をたどると、ばらつきの指標として2乗を使う理由そのものに行き着く。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">①</span><h2>そもそも「ただの偏差」ではダメな理由</h2></div>
+    <p>データのばらつきを測りたいとき、まず思いつくのは各データと平均の差(偏差)を全部足すこと。しかしこれは<b>必ず0になる</b>ので、ばらつきの指標として使えない。</p>
+
+    <div class="calc">
+      <span class="label">偏差の合計は常に0</span>
+      <span class="line">Σ(x(i) − x̄) = Σx(i) − n×x̄ = Σx(i) − Σx(i) = 0</span>
+      <span class="line">例: データ 2, 4, 9 → 平均5 → 偏差 −3, −1, +4 → 合計 = 0</span>
+    </div>
+
+    <div class="callout info"><b>平均の定義そのものが原因:</b> 平均x̄は「プラスの偏差とマイナスの偏差がちょうど釣り合う点」として定義されている。だから偏差をそのまま足すと、定義上必ず0に戻ってしまう。ばらつきを測るには、まずこの<b>符号の打ち消し合い</b>を防ぐ工夫が要る。</div>
+
+    <p>打ち消し合いを防ぐ方法は主に2つある: <b>絶対値</b>を取るか、<b>2乗</b>するか。どちらも負の値を消せるが、統計学ではほぼ例外なく2乗のほうが使われる。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">②</span><h2>絶対値ではなく2乗を選ぶ理由</h2></div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>符号を消す2つの方法の比較</caption>
+        <thead><tr><th></th><th>絶対値 |x(i)−x̄|</th><th>2乗 (x(i)−x̄)²</th></tr></thead>
+        <tbody>
+          <tr><td>符号の打ち消しを防げるか</td><td class="num">防げる</td><td class="num">防げる</td></tr>
+          <tr class="row-reg"><td>微分できるか</td><td class="num">x=x̄で微分不可能(尖っている)</td><td class="num hit">どこでも滑らかに微分できる</td></tr>
+          <tr class="row-reg"><td>独立な項を足したときの分布</td><td class="num">複雑で扱いにくい</td><td class="num hit">標準正規分布の2乗和はカイ二乗分布という名前と表がある</td></tr>
+          <tr><td>独立どうしを足す(加法性)</td><td class="num">単純には足せない</td><td class="num hit">χ²(m)+χ²(n)=χ²(m+n)がそのまま成り立つ</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>特に大きいのが3つ目・4つ目の性質。標準正規分布に従う値を2乗して足すと、その和が従う分布(=カイ二乗分布)が数学的にきれいに定まり、しかも<b>独立などうしを足すと自由度も単純に足し算できる</b>。これは<a href="degrees-of-freedom.html" target="_blank" rel="noopener">自由度の正体</a>で見た「平方和を足し算・引き算で分解する」操作(S(T)=S(A)+S(E)など)がそのまま成り立つ理由でもある。絶対値ではこの美しい加法性が成り立たず、実務で使うにはずっと不便になる。</p>
+
+    <div class="callout warn"><b>もう1つの利点(参考):</b> 最小二乗法(回帰分析でおなじみ)が「2乗の和を最小にする」という基準を採用しているのも同じ理由。2乗は微分がなめらかなので、最小値を数式で求めやすい。絶対値の和を最小にする方法(最小絶対値法)も存在するが、扱いが格段に難しくなる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">③</span><h2>「カイ二乗」という名前の正体</h2></div>
+    <p>カイ二乗分布は、標準正規分布N(0,1)に従う独立な確率変数 Z(1), Z(2), …, Z(k) を用意し、それぞれを2乗して足したものが従う分布として定義される。</p>
+
+    <div class="calc">
+      <span class="label">カイ二乗分布の定義</span>
+      <span class="line">Z(1), Z(2), …, Z(k) がそれぞれ独立に N(0,1) に従うとき</span>
+      <span class="line">χ² = Z(1)² + Z(2)² + … + Z(k)²</span>
+      <span class="result">この χ² が従う分布を「自由度kのカイ二乗分布 χ²(k)」と呼ぶ</span>
+    </div>
+
+    <p>ギリシャ文字の<b>χ(カイ)</b>は、20世紀初頭にこの統計量を考案したカール・ピアソンが採用した記号で、たまたま選ばれた文字にすぎない。しかし<b>「二乗」の部分は名前の飾りではなく、定義そのもの</b>——χ²は最初から「2乗の和」として定義されている量なので、2乗を外すと別の量(定義そのものが変わる)になってしまう。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 620 280" role="img" aria-label="直角三角形の図。2辺の長さがZ1・Z2で、斜辺の長さがχ。斜辺の2乗がZ1の2乗とZ2の2乗の和に等しいというピタゴラスの定理そのものであることを示す">
+          <line x1="80" y1="220" x2="380" y2="220" stroke="currentColor" stroke-width="2"/>
+          <line x1="80" y1="220" x2="80" y2="60" stroke="currentColor" stroke-width="2"/>
+          <line x1="80" y1="60" x2="380" y2="220" stroke="var(--reg)" stroke-width="2.6"/>
+
+          <text x="220" y="240" font-size="14" text-anchor="middle" fill="currentColor">Z(1)</text>
+          <text x="60" y="145" font-size="14" text-anchor="middle" fill="currentColor">Z(2)</text>
+          <text x="255" y="130" font-size="15" text-anchor="middle" fill="var(--reg-ink)" font-weight="700" transform="rotate(-30 255 130)">χ = √(Z1²+Z2²)</text>
+
+          <rect x="80" y="196" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.6"/>
+
+          <text x="470" y="90" font-size="13.5" fill="currentColor">ピタゴラスの定理:</text>
+          <text x="470" y="115" font-size="15" fill="var(--reg-ink)" font-weight="700">χ² = Z(1)² + Z(2)²</text>
+          <text x="470" y="140" font-size="12.5" fill="currentColor" opacity="0.75">(斜辺の2乗 = 2辺それぞれの</text>
+          <text x="470" y="158" font-size="12.5" fill="currentColor" opacity="0.75">　2乗の和)</text>
+
+          <text x="230" y="30" font-size="13" text-anchor="middle" fill="currentColor" opacity="0.8">2次元(k=2)の場合、χは原点からの「距離」そのもの</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> Z(1)・Z(2)を直交する2辺とみなすと、その組(Z(1), Z(2))は平面上の1点になり、原点からの距離がχ。ピタゴラスの定理より距離の2乗 χ² は Z(1)²+Z(2)² に等しい——これがカイ二乗の名前の由来そのもの。3個以上でも同じ考え方がk次元空間に拡張される。</figcaption>
+    </figure>
+
+    <div class="callout info"><b>「2乗を外したカイ分布」も実在する:</b> √(Z(1)²+…+Z(k)²)、つまり<b>2乗する前の「距離」そのもの</b>が従う分布は「カイ分布(χ分布)」と呼ばれ、実在する(k=3のときは気体分子の速さの分布として有名なマクスウェル分布と同じ形)。ただしQC検定を含む実務では、分散や平方和(すでに2乗された量)をそのまま扱うことがほとんどなので、根号を外す前の<b>χ²(カイ二乗)の方が圧倒的によく使われる</b>。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">④</span><h2>実務のχ0²=S/σ0²とどうつながるか</h2></div>
+    <p>QC検定で頻出する検定統計量 χ0² = S/σ0² も、この定義とまっすぐつながっている。</p>
+
+    <div class="calc">
+      <span class="label">Sをσで標準化すると、Z(i)の2乗和になる</span>
+      <span class="line">S = Σ(x(i) − x̄)² 　(まだ「2乗の和」の形をしている)</span>
+      <span class="line">S / σ² = Σ((x(i)−x̄)/σ)² = Σ Z(i)²</span>
+      <span class="result">これはZ(i)たちの2乗和なので、定義よりχ²分布に従う</span>
+    </div>
+
+    <p>つまり、平方和Sの時点ですでに「偏差の2乗の和」という<b>カイ二乗と同じ形</b>をしている。σ0²で割って標準化する操作は、Z(i)を「標準正規分布に従う単位」に揃えているだけで、2乗の由来自体はもっと手前の<b>Sを計算した瞬間</b>(平方和=2乗の和)にすでにある。母平均が未知でx̄を使う場合に自由度がn−1に1つ減る理由や、この統計量が実際に何を測っているかは、<a href="40th-chi-square-meaning.html" target="_blank" rel="noopener">χ0²=S/σ0²は何を測っているのか</a>で詳しく扱っている。</p>
+
+    <div class="callout"><b>この2乗はプロジェクト全体に顔を出している:</b> 分散分析の<b>平方和</b>(S(T)=S(A)+S(E)など)、単回帰分析の<b>偏差平方和</b>(S(xx)・S(yy)・S(xy))、管理図の<b>標準偏差の推定</b>——QC検定2級に出てくる「2乗して足す」計算はすべて、根っこをたどるとこの「符号を消しつつ、独立などうしをきれいに足し算できるようにする」という同じ理由に行き着く。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この資料から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>偏差をそのまま足すと<b>必ず0になる</b>(平均の定義より)。ばらつきを測るには符号を消す工夫が要る。</span></div>
+      <div class="step"><span class="mark">2</span><span>符号を消す方法には絶対値と2乗があるが、2乗は<b>微分がなめらか</b>で、<b>独立な項を足したときの分布(加法性)</b>がきれいに定まるため、統計学ではほぼ常に2乗が使われる。</span></div>
+      <div class="step"><span class="mark">3</span><span>カイ二乗分布は<b>「標準正規分布に従う値を2乗して足したもの」</b>として定義される。χという文字はピアソンが選んだ記号にすぎないが、「二乗」は定義そのものであり、飾りではない。</span></div>
+      <div class="step"><span class="mark">4</span><span>幾何的には、χはk次元空間での<b>原点からの距離</b>、χ²はその<b>距離の2乗</b>(ピタゴラスの定理の高次元版)。2乗を外した「カイ分布」も実在するが、実務では2乗の形(分散・平方和)のほうが自然に登場する。</span></div>
+      <div class="step"><span class="mark">5</span><span>QC検定のχ0²=S/σ0²は、平方和Sの段階ですでに「2乗の和」であり、σ0²で割るのはそれを標準正規分布の単位に揃える操作。2乗の由来はSそのものにある。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 概念の掘り下げ / なぜ「カイ二乗」は二乗なのか</span>
+    <span>χ² = Z1²+…+Zk² ・ 2乗=符号の打ち消し防止+加法性 ・ χ=距離、χ²=距離の2乗</span>
+  </footer>
+
+</div>

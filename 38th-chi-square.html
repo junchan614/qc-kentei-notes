@@ -1,0 +1,455 @@
+<title>第38回 問3 分割表のカイ二乗検定</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+.trap-table td.reuse{color:var(--res-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第38回 問3</span>
+    <h1>分割表の独立性の検定 — カイ二乗検定</h1>
+    <p class="lede">4つの製造ラインで不適合品率に違いがあるかを調べる問題。やることは<b>期待度数を出す → 実測との差を見る → 差を2乗して足し合わせる → 表と比べる</b>の4段階だけ。分散分析(F検定)と同じ「説明できるズレを寄せ集めて基準と比べる」という発想の、計数値版にあたる。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>与えられたデータと仮説</h2></div>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <caption>表3.1 実測度数</caption>
+        <thead><tr><th>製造ライン</th><th>適合品数</th><th>不適合品数</th><th>検査個数</th></tr></thead>
+        <tbody>
+          <tr><td>A</td><td>280</td><td>40</td><td class="sum">320</td></tr>
+          <tr><td>B</td><td>200</td><td>10</td><td class="sum">210</td></tr>
+          <tr><td>C</td><td>230</td><td>35</td><td class="sum">265</td></tr>
+          <tr><td>D</td><td>190</td><td>15</td><td class="sum">205</td></tr>
+          <tr class="row-total"><td>計</td><td class="sum">900</td><td class="sum">100</td><td class="sum">1000</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="calc">
+      <span class="label">仮説</span>
+      <span class="line">帰無仮説 H(0): 製造ラインによって母不適合品率に違いはない</span>
+      <span class="line">対立仮説 H(1): 製造ラインによって母不適合品率に違いがある</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>期待度数を求める — (14)(15)(16)</h2></div>
+    <p>「もしH<sub>0</sub>が正しい(=どのラインも不適合品率が同じ)なら、各セルはこの数字になるはず」という値が期待度数。<b>行計 × 列計 ÷ 総計</b>で求める。</p>
+
+    <div class="calc">
+      <span class="label">期待度数の式</span>
+      <span class="line">E(セル) = (その行の計) × (その列の計) / 総計</span>
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <caption>表3.2 期待度数</caption>
+        <thead><tr><th>製造ライン</th><th>適合品数</th><th>不適合品数</th><th>計</th></tr></thead>
+        <tbody>
+          <tr class="row-reg"><td>A</td><td><div class="num hit">288.0</div><div class="sub">…(14) = 320×900/1000</div></td><td class="num">32.0</td><td class="sum">320.0</td></tr>
+          <tr><td>B</td><td class="num">189.0</td><td><div class="num hit">21.0</div><div class="sub">…(16) = 210×100/1000</div></td><td class="sum">210.0</td></tr>
+          <tr class="row-reg"><td>C</td><td><div class="num hit">238.5</div><div class="sub">…(15) = 265×900/1000</div></td><td class="num">26.5</td><td class="sum">265.0</td></tr>
+          <tr><td>D</td><td class="num">184.5</td><td class="num">20.5</td><td class="sum">205.0</td></tr>
+          <tr class="row-total"><td>計</td><td class="sum">900.0</td><td class="sum">100.0</td><td class="sum">1000.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(14)</span> 288.0</span>
+      <span class="answer"><span class="qno">(15)</span> 238.5</span>
+      <span class="answer"><span class="qno">(16)</span> 21.0</span>
+    </div>
+
+    <div class="callout info"><b>「一部は省略している」の意味:</b> 問題文にある通り、表3.2は(14)(15)(16)の3マスしか問われていないが、②③で使うために<b>残り5マスも自分で計算しておく</b>必要がある。上表の色つき以外のセル(B適合189.0、A不適合32.0、C不適合26.5、D適合184.5、D不適合20.5)も同じ式で埋められる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>実測度数と期待度数の差 — (17)(18)(19)</h2></div>
+    <p>各セルで「実測 − 期待」を計算する。同じ行の中で適合品数と不適合品数の差は<b>符号違いの同じ絶対値</b>になる(行の合計は動かないので、片方が+ならもう片方は必ず同じ量だけ−になる)。</p>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <caption>表3.3 実測度数と期待度数の差（実測−期待）</caption>
+        <thead><tr><th>製造ライン</th><th>適合品数</th><th>不適合品数</th><th>計</th></tr></thead>
+        <tbody>
+          <tr><td>A（表に既知として示されている行）</td><td class="num">−8.0</td><td class="num">+8.0</td><td class="sum">0.0</td></tr>
+          <tr class="row-reg"><td>B</td><td><div class="num hit">+11.0</div><div class="sub">…(17) = 200−189.0</div></td><td class="num">−11.0</td><td class="sum">0.0</td></tr>
+          <tr class="row-reg"><td>C</td><td class="num">−8.5</td><td><div class="num hit">+8.5</div><div class="sub">…(18) = 35−26.5</div></td><td class="sum">0.0</td></tr>
+          <tr class="row-reg"><td>D</td><td class="num">+5.5</td><td><div class="num hit">−5.5</div><div class="sub">…(19) = 15−20.5</div></td><td class="sum">0.0</td></tr>
+          <tr class="row-total"><td>計</td><td class="sum">0.0</td><td class="sum">0.0</td><td class="sum">0.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(17)</span> +11.0</span>
+      <span class="answer"><span class="qno">(18)</span> +8.5</span>
+      <span class="answer"><span class="qno">(19)</span> −5.5</span>
+    </div>
+
+    <div class="callout warn"><b>訂正(模範解答との照合):</b> 当初この資料では(17)を「A・不適合の差 = +8.0」としていたが誤り。問題原本を確認したところ、表3.3で空欄になっているのは<b>A行ではなくB行の適合品数</b>で、(17)の正解は<b>+11.0</b>(=200−189.0)。A行の値(−8.0/+8.0)はもともと表に示されている行で、空欄には含まれない。(18)(19)の値と計算過程はもとから正しかった。</div>
+
+    <div class="callout"><b>検算のコツ:</b> 各行の合計、各列の合計は<b>必ず0.0になる</b>(期待度数は「実測の行計・列計をそのまま再現する」ように作られているため)。どこか1マスでも計算したら、行または列の他のセルが自動的に決まる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>検定統計量 χ<sub>0</sub>² を求める — (20)</h2></div>
+    <p>各セルの「差の2乗 ÷ 期待度数」を8マスぶんすべて足し合わせる。差を2乗するので、STEP2で符号違いだった適合・不適合の2マスは<b>同じ値</b>になる。</p>
+
+    <div class="calc">
+      <span class="label">検定統計量の式</span>
+      <span class="line">χ(0)² = Σ (実測−期待)² / 期待</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>8マスすべての (実測−期待)²/期待</caption>
+        <thead><tr><th>セル</th><th>実測</th><th>期待</th><th>差</th><th>(差)²/期待</th></tr></thead>
+        <tbody>
+          <tr><td>A・適合</td><td class="num">280</td><td class="num">288.0</td><td class="num">−8.0</td><td class="num">0.222</td></tr>
+          <tr><td>A・不適合</td><td class="num">40</td><td class="num">32.0</td><td class="num">+8.0</td><td class="num">2.000</td></tr>
+          <tr><td>B・適合</td><td class="num">200</td><td class="num">189.0</td><td class="num">+11.0</td><td class="num">0.640</td></tr>
+          <tr><td>B・不適合</td><td class="num">10</td><td class="num">21.0</td><td class="num">−11.0</td><td class="num hit">5.762</td></tr>
+          <tr><td>C・適合</td><td class="num">230</td><td class="num">238.5</td><td class="num">−8.5</td><td class="num">0.303</td></tr>
+          <tr><td>C・不適合</td><td class="num">35</td><td class="num">26.5</td><td class="num">+8.5</td><td class="num">2.726</td></tr>
+          <tr><td>D・適合</td><td class="num">190</td><td class="num">184.5</td><td class="num">+5.5</td><td class="num">0.164</td></tr>
+          <tr><td>D・不適合</td><td class="num">15</td><td class="num">20.5</td><td class="num">−5.5</td><td class="num">1.476</td></tr>
+          <tr class="row-total"><td>合計</td><td></td><td></td><td></td><td class="num hit">13.293</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(20)</span> χ(0)² = 13.293</span></div>
+
+    <div class="callout warn"><b>効いているのはどこか:</b> 8マスの寄与を見ると<b>B・不適合(5.762)とC・不適合(2.726)の2つだけで合計13.293の半分以上</b>を占めている。Bは不適合品率が際立って低く(10/210≒4.8%)、Cは際立って高い(35/265≒13.2%)ラインで、この2つの「外れ具合」がχ<sub>0</sub>²を押し上げている主犯だとわかる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">補足</span><h2>STEP3を図で理解する — なぜ「2乗して期待で割る」のか</h2></div>
+    <p><span class="mono">χ(0)² = Σ(実測−期待)²/期待</span> という式は、分解すると<b>2つの独立した工夫</b>でできている。それぞれ「なぜそうするのか」を図で見る。</p>
+
+    <div class="calc">
+      <span class="label">工夫1: 2乗するのは、プラスとマイナスを打ち消させないため</span>
+      <span class="line">表3.3で見た通り、同じ行の中で差はプラスとマイナスが必ずペアになる(合計0.0)</span>
+      <span class="line">2乗せずにそのまま全部足すと、必ず0になってしまい「ズレの大きさ」が測れない</span>
+    </div>
+
+    <p><b>工夫2の方が本質的:</b> 同じ「差の大きさ」でも、期待度数が小さいセルほど<b>相対的には遥かに大きな異常</b>にあたる。A(適合)とB(不適合)を比べると、これがよくわかる。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>「素の差」だけを見ると危険な理由</caption>
+        <thead><tr><th></th><th>実測</th><th>期待</th><th>差(絶対値)</th><th>期待に対する割合</th></tr></thead>
+        <tbody>
+          <tr><td>A・適合</td><td class="num">280</td><td class="num">288.0</td><td class="num">8.0</td><td class="num">2.8%</td></tr>
+          <tr class="row-res"><td>B・不適合</td><td class="num">10</td><td class="num">21.0</td><td class="num">11.0</td><td class="num hit">52.4%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>差の絶対値だけならA(8.0)とB(11.0)はそこまで違わない。しかし<b>期待に対する割合で見ると、Bは52%も期待から外れている</b>――ほぼ「期待の半分しか不適合品が出なかった」に等しい、とても大きな異常。これを正しく反映させるために、差を<b>期待度数で割って「相対的な外れ具合」に変換</b>してから2乗する。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 260" role="img" aria-label="Aの適合品数とBの不適合品数について、素の差の棒グラフではほぼ同じ高さなのに、期待で割った後の寄与の棒グラフではBが圧倒的に大きくなることを示す対比図">
+          <text x="150" y="26" font-size="13" text-anchor="middle" fill="currentColor" opacity="0.75">① 素の差だけを比べると…</text>
+          <line x1="60" y1="90" x2="260" y2="90" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+          <rect x="90" y="60" width="34" height="30" fill="var(--ink-faint)" opacity="0.55"/>
+          <text x="107" y="106" font-size="11.5" text-anchor="middle" fill="currentColor">A適合</text>
+          <text x="107" y="52" font-size="12" text-anchor="middle" fill="currentColor">8.0</text>
+          <rect x="180" y="52" width="34" height="38" fill="var(--ink-faint)" opacity="0.55"/>
+          <text x="197" y="106" font-size="11.5" text-anchor="middle" fill="currentColor">B不適合</text>
+          <text x="197" y="44" font-size="12" text-anchor="middle" fill="currentColor">11.0</text>
+          <text x="150" y="130" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.6">→ 高さはほぼ同じ。差がなさそうに見える</text>
+
+          <line x1="360" y1="40" x2="360" y2="220" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+
+          <text x="490" y="26" font-size="13" text-anchor="middle" fill="var(--wrong)" font-weight="600">② 期待で割った寄与 (差²/期待) で比べると…</text>
+          <line x1="400" y1="190" x2="600" y2="190" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+          <rect x="430" y="185" width="34" height="5" fill="var(--reg)" opacity="0.7"/>
+          <text x="447" y="206" font-size="11.5" text-anchor="middle" fill="currentColor">A適合</text>
+          <text x="447" y="178" font-size="12" text-anchor="middle" fill="var(--reg-ink)">0.22</text>
+          <rect x="520" y="70" width="34" height="120" fill="var(--wrong)" opacity="0.75"/>
+          <text x="537" y="206" font-size="11.5" text-anchor="middle" fill="currentColor">B不適合</text>
+          <text x="537" y="62" font-size="12" text-anchor="middle" fill="var(--wrong)" font-weight="700">5.76</text>
+          <text x="490" y="232" font-size="12" text-anchor="middle" fill="var(--wrong)" font-weight="600">→ Bの「異常さ」がはっきり浮かび上がる</text>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> 左は素の差、右は期待度数で割った後の寄与。<b>割り算を挟むことで、期待度数が小さいセルの異常が正しく強調される</b>。χ<sub>0</sub>²はこの「相対的な異常さ」の合計値。</figcaption>
+    </figure>
+
+    <div class="callout info"><b>これは「なぜ√nで割るのか」の考え方の親戚:</b> <a href="37th-sample-mean-sd.html" target="_blank" rel="noopener">別資料</a>で見た「ばらつきの大きさは母集団の性質に応じて変わる」という発想と同じで、<b>期待度数が大きいセルほど、実測値は元々ばらつきやすい</b>(280個中の8個のズレは誤差の範囲でも起きうるが、21個中の11個のズレはめったに起きない)。だから同じ「差」でも、期待度数というモノサシで正規化してから比べる必要がある。</div>
+
+    <p>もう1つの視点: なぜ自由度が <b>(行数−1)×(列数−1) = 3</b> になるのか。8マスすべてが自由に動けるわけではなく、<b>行の合計・列の合計を固定すると、実際に自由に決められるマスは限られる</b>。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 500 260" role="img" aria-label="4行2列の表で、行合計と列合計を固定すると自由に決められるセルは3つだけで、残り5つは合計から自動的に決まることを示す図">
+          <text x="250" y="24" font-size="12.5" text-anchor="middle" fill="currentColor" opacity="0.7">青緑＝自由に決められる　　橙＝合計から自動的に決まる</text>
+
+          <g font-size="13">
+            <rect x="120" y="50" width="80" height="36" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.8"/>
+            <text x="160" y="73" text-anchor="middle" fill="var(--reg-ink)">A・適合</text>
+            <rect x="210" y="50" width="80" height="36" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.6"/>
+            <text x="250" y="73" text-anchor="middle" fill="var(--res-ink)">A・不適合</text>
+
+            <rect x="120" y="90" width="80" height="36" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.8"/>
+            <text x="160" y="113" text-anchor="middle" fill="var(--reg-ink)">B・適合</text>
+            <rect x="210" y="90" width="80" height="36" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.6"/>
+            <text x="250" y="113" text-anchor="middle" fill="var(--res-ink)">B・不適合</text>
+
+            <rect x="120" y="130" width="80" height="36" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.8"/>
+            <text x="160" y="153" text-anchor="middle" fill="var(--reg-ink)">C・適合</text>
+            <rect x="210" y="130" width="80" height="36" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.6"/>
+            <text x="250" y="153" text-anchor="middle" fill="var(--res-ink)">C・不適合</text>
+
+            <rect x="120" y="170" width="80" height="36" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="4 3" opacity="0.55"/>
+            <text x="160" y="193" text-anchor="middle" fill="currentColor" opacity="0.6">D・適合</text>
+            <rect x="210" y="170" width="80" height="36" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="4 3" opacity="0.55"/>
+            <text x="250" y="193" text-anchor="middle" fill="currentColor" opacity="0.6">D・不適合</text>
+          </g>
+
+          <text x="330" y="73" font-size="12" fill="currentColor" opacity="0.7">← 行の合計で自動的に決まる</text>
+          <text x="160" y="222" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.7">↑ 列の合計で自動的に決まる</text>
+
+          <text x="160" y="246" font-size="14" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">自由に決まる: 3マス</text>
+        </svg>
+      </div>
+      <figcaption><b>図3.</b> A・B・Cの<b>適合品数(青緑)3マス</b>を自由に決めると、各行の不適合品数(橙)は「行の計」から、D行全体は「列の計」から、自動的に決まってしまう。<b>自由に動かせるのは3マスだけ</b>――これが自由度3の正体で、(行数−1)×(列数−1)という式はこの「行方向で1つ、列方向で1つずつ余白が消費される」ことをまとめて表している。</figcaption>
+    </figure>
+
+    <div class="callout"><b>まとめると:</b> χ<sub>0</sub>²は「<b>期待度数というモノサシで測った、相対的なズレの合計</b>」。自由度3は「<b>合計を固定した上で本当に自由に動けるマスの数</b>」。この2つがわかれば、STEP3の式は丸暗記しなくても、図を思い出すだけで再現できる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 4</span><h2>棄却域と判定 — (21)</h2></div>
+    <p>χ²分布の自由度は <b>(行数−1)×(列数−1)</b>。4ライン×2区分(適合/不適合)の表なので、自由度は (4−1)×(2−1)=3。</p>
+
+    <div class="calc">
+      <span class="label">自由度と棄却域</span>
+      <span class="line">φ = (4−1)(2−1) = 3</span>
+      <span class="line">有意水準 α=0.05 の棄却域: χ(0)² ≥ χ²(3, 0.05)</span>
+      <span class="line">付表より χ²(3, 0.05) ≒ 7.815</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(21)</span> χ(0)² ≥ χ²(3, 0.05)</span></div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 220" role="img" aria-label="自由度3のカイ二乗分布の図。棄却域の境界7.815より、計算された検定統計量13.293がはるかに右側にあり棄却域に入ることを示す">
+          <line x1="60" y1="180" x2="600" y2="180" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+          <path d="M60,180 C110,180 130,40 190,40 C260,40 280,150 380,172 C450,182 520,180 600,180 Z" fill="none" stroke="var(--reg)" stroke-width="2.2"/>
+
+          <line x1="310" y1="180" x2="310" y2="190" stroke="var(--res)" stroke-width="1.8"/>
+          <text x="310" y="206" font-size="12" text-anchor="middle" fill="var(--res-ink)" font-weight="600">χ²(3,0.05)</text>
+          <text x="310" y="220" font-size="10.5" text-anchor="middle" fill="var(--res-ink)" opacity="0.85">7.815</text>
+
+          <path d="M310,178 C340,178 365,166 380,172 C450,182 520,180 600,180 Z" fill="var(--wrong)" opacity="0.4"/>
+
+          <line x1="540" y1="180" x2="540" y2="190" stroke="var(--wrong)" stroke-width="2"/>
+          <text x="540" y="206" font-size="12" text-anchor="middle" fill="var(--wrong)" font-weight="700">χ(0)²</text>
+          <text x="540" y="220" font-size="10.5" text-anchor="middle" fill="var(--wrong)" opacity="0.9">13.293</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> χ<sub>0</sub>²=13.293 は棄却域の境界(7.815)を大きく超えている。有意水準5%で帰無仮説H<sub>0</sub>を棄却し、「製造ラインによって母不適合品率に違いがある」と判断する。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">分析</span><h2>選択肢はどの取り違えに対応しているか</h2></div>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>(17)〜(19) の選択肢</caption>
+        <thead><tr><th>選択肢</th><th>判定</th><th>この値が出る原因</th></tr></thead>
+        <tbody>
+          <tr><td class="bad">ア. -6.0</td><td>誤</td><td>正解の近傍値。差の計算を別のセルと混同すると迷い込む</td></tr>
+          <tr><td class="good">イ. -5.5</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (19)</span></td><td>D・不適合の差 = 15−20.5</td></tr>
+          <tr><td class="bad">ウ. -5.0</td><td>誤</td><td>近傍の丸め違い</td></tr>
+          <tr><td class="bad">エ. -4.5</td><td>誤</td><td>近傍の丸め違い</td></tr>
+          <tr><td class="bad">オ. 8.0</td><td>誤</td><td><b>これは表にすでに示されているA・不適合の差(+8.0)そのもの。</b>A行は空欄ではないので、この値を(17)に持ち込むと誤り</td></tr>
+          <tr class="row-reg"><td class="reuse">カ. 8.5</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (18)</span></td><td>C・不適合の差 = 35−26.5</td></tr>
+          <tr><td class="bad">キ. 9.0</td><td>誤</td><td>近傍の丸め違い</td></tr>
+          <tr><td class="bad">ク. 10.5</td><td>誤</td><td>近傍の丸め違い</td></tr>
+          <tr class="row-reg"><td class="reuse">ケ. 11.0</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (17)</span></td><td>B・適合の差 = 200−189.0</td></tr>
+          <tr><td class="bad">コ. 11.5</td><td>誤</td><td>近傍の丸め違い</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><b>選択肢セットの作り方から見える出題意図:</b> 10個の選択肢のうち実に半分(ア〜エ、キ〜コ)が正解値のすぐ近くの数字で埋められている。<b>桁や符号を1つ間違えるだけで別の選択肢に着地する</b>ように作られているので、暗算で済まさず、期待度数の表を最後まで正確に埋めてから差を取ることが大事。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">補足</span><h2>「χ<sub>0</sub>²」という記号は複数の検定に登場する</h2></div>
+    <p>QC検定2級では、<b>同じ「χ<sub>0</sub>²」という記号</b>が中身の違う3つの検定に出てくる。名前と式のセットを混同しないことが大事。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>QC検定2級に出てくる3つのχ²検定</caption>
+        <thead><tr><th>検定の種類</th><th>何を調べるか</th><th>式</th><th>自由度</th></tr></thead>
+        <tbody>
+          <tr><td>母分散の検定</td><td>1つの母集団の分散が指定値σ₀²と等しいか（計量値）</td><td class="num">(n−1)s² / σ₀²</td><td class="num">n−1</td></tr>
+          <tr><td>適合度の検定</td><td>1つの質的変数の比率が理論値と一致するか</td><td class="num">Σ(O−E)²/E</td><td class="num">k−1</td></tr>
+          <tr class="row-reg"><td>独立性の検定（本問）</td><td>2つの質的変数が関連しているか</td><td class="num">Σ(O−E)²/E</td><td class="num">(行−1)(列−1)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn"><b>母分散の検定はまったくの別物:</b> <span class="mono">(n−1)s²/σ₀²</span> には O(実測度数)もE(期待度数)も出てこない。<b>計量値(長さ・重さ・濃度など連続した数値)1つのばらつき</b>を、決められた基準σ₀²と比べるための式で、分割表とは発想が違う。「χ<sub>0</sub>²」という文字だけを見て同じ式だと早合点しないこと。</div>
+
+    <p>適合度の検定と独立性の検定は<b>同じ式</b>だが、表の形が違う。適合度は「1つの変数を複数カテゴリに分けた、横1列の表」、独立性は「2つの変数を掛け合わせた、行×列のマス目」。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 220" role="img" aria-label="適合度の検定は1行の表、独立性の検定は行と列を持つ表であることを対比する図">
+          <text x="150" y="26" font-size="13" text-anchor="middle" fill="currentColor" opacity="0.75">適合度の検定 — 1つの変数 × k個のカテゴリ</text>
+          <g font-size="12">
+            <rect x="60" y="50" width="60" height="40" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+            <text x="90" y="74" text-anchor="middle" fill="var(--reg-ink)">A</text>
+            <rect x="120" y="50" width="60" height="40" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+            <text x="150" y="74" text-anchor="middle" fill="var(--reg-ink)">B</text>
+            <rect x="180" y="50" width="60" height="40" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+            <text x="210" y="74" text-anchor="middle" fill="var(--reg-ink)">C</text>
+          </g>
+          <text x="150" y="112" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.6">横に1列だけ ／ 自由度 = k−1</text>
+
+          <line x1="330" y1="30" x2="330" y2="190" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+
+          <text x="480" y="26" font-size="13" text-anchor="middle" fill="var(--res-ink)" font-weight="600">独立性の検定 — 2つの変数を掛け合わせる（本問）</text>
+          <g font-size="12">
+            <rect x="400" y="50" width="60" height="34" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.6"/>
+            <text x="430" y="72" text-anchor="middle" fill="var(--res-ink)">A適</text>
+            <rect x="460" y="50" width="60" height="34" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.6"/>
+            <text x="490" y="72" text-anchor="middle" fill="var(--res-ink)">A不</text>
+            <rect x="400" y="84" width="60" height="34" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.6"/>
+            <text x="430" y="106" text-anchor="middle" fill="var(--res-ink)">B適</text>
+            <rect x="460" y="84" width="60" height="34" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.6"/>
+            <text x="490" y="106" text-anchor="middle" fill="var(--res-ink)">B不</text>
+          </g>
+          <text x="460" y="140" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.6">行×列のマス目 ／ 自由度 = (行−1)(列−1)</text>
+        </svg>
+      </div>
+      <figcaption><b>図4.</b> 式は同じΣ(O−E)²/Eでも、<b>表の形が「1列だけ」か「行×列」かで自由度の数え方が変わる</b>。適合度はk−1(カテゴリ数だけで決まる)、独立性は(行−1)(列−1)(2方向ぶん余白が消費される)。</figcaption>
+    </figure>
+
+    <div class="callout info"><b>見分け方のコツ:</b> 問題文に「〜と理論値(基準値)を比較する」と1つの変数しか出てこなければ適合度の検定、「〜と〜の間に関連があるか」と<b>2つの変数(今回なら「ライン」と「適合/不適合」)</b>が出てきたら独立性の検定。母分散の検定は、O・Eという言葉が一切出てこず、s²やσ₀²といった<b>分散そのもの</b>が主役になっているかどうかで見分けられる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>期待度数は <b>E = 行計×列計 / 総計</b>。分割表のどのセルでも同じ式で求められる。</span></div>
+      <div class="step"><span class="mark">2</span><span>行の合計・列の合計は不変なので、「実測−期待」の差は<b>行内で符号違いの同じ絶対値</b>になる。1マス計算すれば残りが自動的に決まる。</span></div>
+      <div class="step"><span class="mark">3</span><span>検定統計量は <b>χ<sub>0</sub>² = Σ(実測−期待)²/期待</b>。2乗するので適合・不適合どちらの列で計算しても同じ寄与になる。</span></div>
+      <div class="step"><span class="mark">4</span><span>自由度は <b>(行数−1)×(列数−1)</b>。今回は (4−1)(2−1)=3。分散分析の自由度の数え方(水準数−1)とは別物なので混同しない。</span></div>
+      <div class="step"><span class="mark">5</span><span>棄却域は<b>右片側だけ</b>(χ(0)²が大きいほど「期待とのズレが大きい」= 差がある証拠になるため)。χ(0)² ≥ χ²(φ,α) の形で必ず「≥」になる。</span></div>
+      <div class="step"><span class="mark">6</span><span>検算: 各セルの寄与を見比べると、<b>どのラインの何が原因でχ<sub>0</sub>²が大きくなったか</b>まで読み取れる(今回はB・C の不適合品数の乖離)。数値を出すだけで終わらせず、意味を確認する。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第38回 問3 / 分割表のカイ二乗検定</span>
+    <span>χ(0)²=13.293 ≥ χ²(3,0.05)=7.815 ・ 有意</span>
+  </footer>
+
+</div>

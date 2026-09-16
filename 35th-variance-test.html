@@ -1,0 +1,257 @@
+<title>第35回 問1 含有率のばらつきの検定</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(26px,4vw,36px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第35回 問1</span>
+    <h1>含有率のばらつきは小さくなったか — 母分散の片側(下側)χ²検定</h1>
+    <p class="lede">「小さくなったかどうか」を調べる検定は片側検定になり、しかも棄却域は分布の<b>小さい値側</b>に来る。10個のサンプルの含有率データからこの一問を解きながら、選択肢が「正しい値とその逆数」のペアで並べられていることまで見抜く。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>設定</h2></div>
+    <p>A社で生産している薬品に含まれる化学成分Qの、これまでの含有率x(%)の母分散はσ0²=0.32(基準値)だった。この基準値と比べて母分散σ²が小さくなったかどうかを検討するため、生産設備を変更した後、10個のサンプルをランダムに抜き取って含有率xを測定した。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>表1.1 設備変更後の含有率x(%)</caption>
+        <thead><tr><th>No.</th><th>含有率 x</th><th>x²</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td class="num">2.4</td><td class="num">5.76</td></tr>
+          <tr><td>2</td><td class="num">1.8</td><td class="num">3.24</td></tr>
+          <tr><td>3</td><td class="num">2.0</td><td class="num">4.00</td></tr>
+          <tr><td>4</td><td class="num">2.2</td><td class="num">4.84</td></tr>
+          <tr><td>5</td><td class="num">1.9</td><td class="num">3.61</td></tr>
+          <tr><td>6</td><td class="num">2.6</td><td class="num">6.76</td></tr>
+          <tr><td>7</td><td class="num">2.4</td><td class="num">5.76</td></tr>
+          <tr><td>8</td><td class="num">2.3</td><td class="num">5.29</td></tr>
+          <tr><td>9</td><td class="num">2.5</td><td class="num">6.25</td></tr>
+          <tr><td>10</td><td class="num">1.9</td><td class="num">3.61</td></tr>
+          <tr style="background:var(--surface-2);font-weight:600;"><td>合計</td><td class="num">22.0</td><td class="num">49.12</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>仮説を立てる — (1)</h2></div>
+    <p>帰無仮説H<sub>0</sub>は「変化していない」という主張なので、<b>必ず等号「=」を含む標準形</b>で書く。これだけで選択肢はア・イ・ウの3つに絞れる。問題文が問うているのは「<b>小さくなったか</b>」であり、「変わったか」でも「大きくなったか」でもない。</p>
+
+    <div class="steps">
+      <div class="step"><span class="mark">✕</span><span><b>ア. H<sub>1</sub>: σ²≠σ0²</b>(両側) … 「変化したか」を問う形。方向を指定していないので、この問題には合わない。</span></div>
+      <div class="step"><span class="mark">✓</span><span><b>イ. H<sub>1</sub>: σ²&lt;σ0²</b>(下側) … 「小さくなったか」と方向まで一致する。<b>これが正解</b>。</span></div>
+      <div class="step"><span class="mark">✕</span><span><b>ウ. H<sub>1</sub>: σ²&gt;σ0²</b>(上側) … 「大きくなったか」を問う形。問題文と逆方向。</span></div>
+      <div class="step"><span class="mark">✕</span><span><b>エ・オ・カ</b> … H<sub>0</sub>に不等号(≠, &lt;, &gt;)が入っている時点で標準形ではない。帰無仮説は常に「等しい」という主張から出発する。</span></div>
+    </div>
+
+    <span class="answer"><span class="qno">(1)</span> イ. H<sub>0</sub>: σ² = σ0², H<sub>1</sub>: σ² &lt; σ0²</span>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>検定統計量を求める — (2)</h2></div>
+    <p>まず偏差平方和Sを「2乗の和 − 補正項」の形で求め、それを基準値σ0²で割ればχ0²になる。<b>Vやnで割ってから比べるのではなく、平方和Sをそのまま使う</b>点に注意。</p>
+
+    <div class="calc">
+      <span class="label">偏差平方和</span>
+      <span class="line">S = Σx² − (Σx)²/n = 49.12 − 22.0²/10 = 49.12 − 48.4</span>
+      <span class="result">S = 0.72</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">検定統計量</span>
+      <span class="line">χ0² = S / σ0² = 0.72 / 0.32</span>
+      <span class="result">χ0² = 2.25</span>
+    </div>
+
+    <span class="answer"><span class="qno">(2)</span> オ. 2.25</span>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>棄却限界値と判定 — (3)(4)</h2></div>
+    <p>下側検定なので棄却域は分布の<b>左裾</b>に置く。自由度φ=n−1=9のχ²分布で、上側95%点(=下側5%点)を付表から引く。</p>
+
+    <div class="calc">
+      <span class="label">棄却限界値(付表)</span>
+      <span class="line">χ²(9, 0.95) = 3.325　(自由度9で、上側の面積が0.95になる点 = 下側5%の境界)</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">判定</span>
+      <span class="line">χ0² = 2.25 &lt; χ²(9, 0.95) = 3.325 → 棄却域に入る</span>
+      <span class="result">帰無仮説 H0 は棄却され、母分散は小さくなったといえる</span>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(3)</span> イ. 棄却</span>
+      <span class="answer"><span class="qno">(4)</span> キ. 小さくなった</span>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 210" role="img" aria-label="自由度9のχ²分布。左裾に棄却域があり、境界値3.325より検定統計量2.25の方が左(小さい側)にあるため棄却域に入ることを示す">
+          <line x1="50" y1="165" x2="600" y2="165" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+          <path d="M50,164 C90,164 100,30 160,24 C240,18 300,90 420,145 C480,165 540,164 600,163 Z" fill="none" stroke="var(--reg)" stroke-width="2.2"/>
+
+          <path d="M50,163 C75,163 92,150 108,110 C116,90 118,163 118,163 Z" fill="var(--wrong)" opacity="0.35"/>
+          <line x1="118" y1="165" x2="118" y2="176" stroke="var(--res)" stroke-width="1.8"/>
+          <text x="118" y="192" font-size="12" text-anchor="middle" fill="var(--res-ink)" font-weight="600">χ²(9,0.95)</text>
+          <text x="118" y="206" font-size="10.5" text-anchor="middle" fill="var(--res-ink)" opacity="0.85">3.325</text>
+
+          <line x1="92" y1="165" x2="92" y2="176" stroke="var(--reg-ink)" stroke-width="2"/>
+          <text x="92" y="192" font-size="12" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">χ0²</text>
+          <text x="92" y="206" font-size="10.5" text-anchor="middle" fill="var(--reg-ink)" opacity="0.9">2.25</text>
+
+          <text x="360" y="70" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.6">棄却域は左裾(下側5%)</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 「小さくなったか」を調べる検定は棄却域が<b>左側</b>に来る。χ0²=2.25は境界3.325より小さいので棄却域に入り、有意水準5%で「小さくなった」と判定できる。</figcaption>
+    </figure>
+
+    <div class="callout warn"><b>直感に反しやすい点:</b> 通常「検定統計量が大きいほど有意」というイメージを持ちがちだが、下側検定では逆に<b>検定統計量が小さいほど有意</b>になる。仮説の向き(H1がどちら向きか)を先に確認してから棄却域の位置を決めること。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">分析</span><h2>選択肢は「正しい値」と「その逆数」のペアでできている</h2></div>
+    <p>(2)の6つの選択肢を並べてみると、2数の積がほぼ1になる3組のペアになっている。<b>分子と分母を逆にする(χ0²=σ0²/Sとしてしまう)</b>という典型的なミスを想定した作り方だとわかる。</p>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>選択肢のペア構造</caption>
+        <thead><tr><th>値</th><th>逆数</th><th>判定</th><th>原因の候補</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="good">オ. 2.25</td><td>イ. 0.444</td>
+            <td><span style="color:var(--reg-ink);font-weight:700;">正解</span> / 逆数トラップ</td>
+            <td>χ0²=S/σ0²=0.72/0.32。逆にするとχ0²=σ0²/S=0.444になる</td>
+          </tr>
+          <tr>
+            <td class="bad">カ. 7.031</td><td class="bad">ア. 0.142</td>
+            <td>誤 / その逆数</td>
+            <td>σ0=0.32を<b>標準偏差</b>と誤解し2乗(0.32²=0.1024)。0.72/0.1024=7.031になる。問題文の「σ0²=0.32」は既に分散であり、これ以上2乗してはいけない</td>
+          </tr>
+          <tr>
+            <td class="bad">エ. 1.620</td><td class="bad">ウ. 0.617</td>
+            <td>誤 / その逆数</td>
+            <td>1.620×0.617≒1で、同じ「逆数ペア」の構造。具体的な計算過程は一通りに決まらないが、他の2組と同じ罠の系列にある値</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout info"><b>検算のコツ:</b> χ0²=S/σ0²で、Sは基準値σ0²よりわずかに大きいはず(データのばらつき自体は残っている)なので、χ0²は1より少し大きい程度の値になる。2.25はその範囲に収まるが、7.031のように極端に大きい値が出たら「σ0とσ0²を取り違えていないか」を疑うとよい。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">補足</span><h2>上側検定との対比</h2></div>
+    <p>母分散の検定はいつも下側とは限らない。「ばらつきが増えたか」を問う場合は上側検定になり、棄却域は右裾に来る。同じχ²検定でも<b>「何を示したいか」で棄却域の向きが変わる</b>ことは、母平均のt検定と母分散のχ²検定を並べて上側/下側の対比を扱った第40回問1でも詳しく解説している。</p>
+    <div class="callout"><b>χ0²=S/σ0²そのものの正体</b>(標準化した誤差の2乗和であること、自由度がn−1になる理由)は「χ0²=S/σ0²は何を測っているのか」で掘り下げている。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>H<sub>0</sub>は必ず「=」を含む標準形。方向(&lt;, &gt;, ≠)はH<sub>1</sub>側に書く。</span></div>
+      <div class="step"><span class="mark">2</span><span>母分散の検定統計量は<b>χ0²=S/σ0²</b>(平方和Sをそのまま使う。Vやnで割らない)。</span></div>
+      <div class="step"><span class="mark">3</span><span>「小さくなった/向上した」を示したい検定は<b>下側検定</b>、棄却域は分布の左裾。「大きくなった」は上側検定。</span></div>
+      <div class="step"><span class="mark">4</span><span>σ0²と書かれていれば、それは既に分散。<b>2乗し直さない</b>。σ0(標準偏差)が与えられたときだけ2乗して分散にする。</span></div>
+      <div class="step"><span class="mark">5</span><span>選択肢に「近い値の組」が並んでいたら、分子分母の逆転や単位の取り違えを想定した罠である可能性を疑う。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第35回 問1 / 母分散の片側(下側)検定</span>
+    <span>χ0²=2.25 &lt; χ²(9,0.95)=3.325 → 棄却</span>
+  </footer>
+
+</div>

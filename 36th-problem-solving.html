@@ -1,0 +1,443 @@
+<title>第36回 問題解決事例</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:74px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer.pending{background:var(--surface-2);border-color:var(--border-strong);color:var(--ink-soft);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-a td{border-left:3px solid var(--reg);}
+tbody tr.row-b td{border-left:3px solid var(--res);}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+td.ng{color:var(--wrong);font-weight:600;}
+td.ok{color:var(--reg-ink);font-weight:600;}
+
+.opts{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.opt{display:grid;grid-template-columns:30px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.opt:last-child{border-bottom:none;}
+.opt .mark{font-family:'JetBrains Mono',monospace;font-weight:700;}
+.opt.yes{background:var(--reg-soft);}
+.opt.yes .mark{color:var(--reg-ink);}
+.opt.no .mark{color:var(--wrong);opacity:0.8;}
+.opt span{font-size:14.5px;color:var(--ink-soft);}
+.opt span b{color:var(--ink);}
+.opt.yes span{color:var(--ink);}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第36回 問6</span>
+    <h1>層別で真因にたどり着く</h1>
+    <p class="lede">不織布マスクの引張強度不足を追う問題解決事例。パレート図・ヒストグラム・工程能力指数・特性要因図・散布図と手法は次々変わるが、この問題を貫いているテーマはひとつ、<b>「層別」</b>。全体で見ていたものをラインA・Bに分けた瞬間に何が見えるかを、設問ごとに追いかける。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">全体像</span><h2>問題解決ストーリーとQC手法の対応</h2></div>
+    <p>設問①〜⑤は、QC的問題解決のステップをそのままなぞっている。<b>どの段階で何の手法を使うか</b>という対応関係が、この問題の背骨になっている。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 660 250" role="img" aria-label="問題解決ステップとQC手法の対応図。テーマ選定・現状把握でパレート図、要因解析でヒストグラムと特性要因図と散布図、対策で系統図を使う流れ">
+          <defs>
+            <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <g font-size="12.5">
+            <rect x="14" y="60" width="112" height="56" rx="9" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.2" opacity="0.9"/>
+            <text x="70" y="84" text-anchor="middle" fill="currentColor">現状把握</text>
+            <text x="70" y="103" text-anchor="middle" fill="currentColor" opacity="0.6" font-size="11">①</text>
+
+            <rect x="150" y="60" width="112" height="56" rx="9" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.2" opacity="0.9"/>
+            <text x="206" y="84" text-anchor="middle" fill="currentColor">層別・解析</text>
+            <text x="206" y="103" text-anchor="middle" fill="currentColor" opacity="0.6" font-size="11">②</text>
+
+            <rect x="286" y="60" width="112" height="56" rx="9" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.2" opacity="0.9"/>
+            <text x="342" y="84" text-anchor="middle" fill="currentColor">要因の整理</text>
+            <text x="342" y="103" text-anchor="middle" fill="currentColor" opacity="0.6" font-size="11">③</text>
+
+            <rect x="422" y="60" width="112" height="56" rx="9" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.2" opacity="0.9"/>
+            <text x="478" y="84" text-anchor="middle" fill="currentColor">要因の検証</text>
+            <text x="478" y="103" text-anchor="middle" fill="currentColor" opacity="0.6" font-size="11">④</text>
+
+            <rect x="558" y="60" width="88" height="56" rx="9" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.2" opacity="0.9"/>
+            <text x="602" y="84" text-anchor="middle" fill="currentColor">対策</text>
+            <text x="602" y="103" text-anchor="middle" fill="currentColor" opacity="0.6" font-size="11">⑤</text>
+          </g>
+
+          <line x1="128" y1="88" x2="146" y2="88" stroke="currentColor" stroke-width="1.3" marker-end="url(#a2)" opacity="0.6"/>
+          <line x1="264" y1="88" x2="282" y2="88" stroke="currentColor" stroke-width="1.3" marker-end="url(#a2)" opacity="0.6"/>
+          <line x1="400" y1="88" x2="418" y2="88" stroke="currentColor" stroke-width="1.3" marker-end="url(#a2)" opacity="0.6"/>
+          <line x1="536" y1="88" x2="554" y2="88" stroke="currentColor" stroke-width="1.3" marker-end="url(#a2)" opacity="0.6"/>
+
+          <g font-size="12">
+            <line x1="70" y1="120" x2="70" y2="146" stroke="var(--reg)" stroke-width="1.3" marker-end="url(#a2)"/>
+            <rect x="14" y="150" width="112" height="52" rx="9" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+            <text x="70" y="171" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">パレート図</text>
+            <text x="70" y="190" text-anchor="middle" fill="var(--reg-ink)" font-size="11">(37)(38)</text>
+
+            <line x1="206" y1="120" x2="206" y2="146" stroke="var(--reg)" stroke-width="1.3" marker-end="url(#a2)"/>
+            <rect x="150" y="150" width="112" height="52" rx="9" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+            <text x="206" y="171" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">ヒストグラム</text>
+            <text x="206" y="190" text-anchor="middle" fill="var(--reg-ink)" font-size="11">(39)〜(42)</text>
+
+            <line x1="342" y1="120" x2="342" y2="146" stroke="var(--reg)" stroke-width="1.3" marker-end="url(#a2)"/>
+            <rect x="286" y="150" width="112" height="52" rx="9" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+            <text x="342" y="171" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">特性要因図</text>
+            <text x="342" y="190" text-anchor="middle" fill="var(--reg-ink)" font-size="11">(43)</text>
+
+            <line x1="478" y1="120" x2="478" y2="146" stroke="var(--reg)" stroke-width="1.3" marker-end="url(#a2)"/>
+            <rect x="422" y="150" width="112" height="52" rx="9" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+            <text x="478" y="171" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">散布図</text>
+            <text x="478" y="190" text-anchor="middle" fill="var(--reg-ink)" font-size="11">(44)〜(47)</text>
+
+            <line x1="602" y1="120" x2="602" y2="146" stroke="currentColor" stroke-width="1.3" marker-end="url(#a2)" opacity="0.5"/>
+            <rect x="558" y="150" width="88" height="52" rx="9" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+            <text x="602" y="180" text-anchor="middle" fill="currentColor" opacity="0.6">系統図</text>
+          </g>
+
+          <text x="330" y="34" font-size="12.5" text-anchor="middle" fill="var(--res-ink)" font-weight="600">一貫したテーマ: 全体 → ラインA / ラインB に「層別」して見る</text>
+          <line x1="70" y1="222" x2="478" y2="222" stroke="var(--res)" stroke-width="1.6" stroke-dasharray="5 4"/>
+          <text x="274" y="240" font-size="11.5" text-anchor="middle" fill="var(--res-ink)">どの手法でも「層別すると何が変わるか」が問われている</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 手法は5つ登場するが、設問が問うているのは一貫して「層別して見ると何が見えるか」。手法名を覚えるだけでなく、<b>各ステップでその手法を選ぶ理由</b>を押さえておくと、他の回でも同じ形で解ける。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(37)(38)</span><h2>パレート図をライン別に層別する</h2></div>
+    <p>選択肢は図なので、<b>数値から絞り込む</b>のが確実。与えられた条件は次の通り。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>パレート図の判別に使える数値</caption>
+        <thead><tr><th>対象</th><th>不適合数</th><th>上位2項目の累積</th><th>件数に換算</th><th>縦軸の目盛り</th></tr></thead>
+        <tbody>
+          <tr><td>全体（図6.1）</td><td><div class="num">88 件</div></td><td><div class="num">約78%</div></td><td><div class="num">約69 件</div></td><td><div class="num">80 前後</div></td></tr>
+          <tr class="row-a"><td>ラインA …(37)</td><td><div class="num">31 件</div></td><td><div class="num">約75%</div></td><td><div class="num">約23 件</div></td><td><div class="num hit">30 前後</div></td></tr>
+          <tr class="row-b"><td>ラインB …(38)</td><td><div class="num">57 件</div></td><td><div class="num">約80%</div></td><td><div class="num">約46 件</div></td><td><div class="num hit">60 前後</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span><b>まず縦軸の最大目盛りで振り分ける。</b> ラインAは合計31件なので縦軸は30前後、ラインBは57件なので60前後。この1点だけで候補が半分に絞れる。</span></div>
+      <div class="step"><span class="mark">2</span><span><b>棒が件数の多い順に並んでいるか確認する。</b> パレート図は必ず降順。降順になっていない図はその時点で誤り。</span></div>
+      <div class="step"><span class="mark">3</span><span><b>「その他」が必ず最後にあるか確認する。</b> 件数が多くても「その他」は末尾に置くのがパレート図の約束。ここも誤答図の作り所。</span></div>
+      <div class="step"><span class="mark">4</span><span><b>上位2項目の累積百分率を折れ線で確認する。</b> ラインAは2本目で約75%、ラインBは約80%の位置に累積点が来る。</span></div>
+    </div>
+
+    <div class="callout info"><b>検算:</b> ラインA(31件)＋ラインB(57件)＝88件で、全体の n=88 と一致する。層別した図の合計が元の図と合うかは、必ず確認できる手がかり。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(39)(40)</span><h2>工程能力指数を計算する</h2></div>
+    <p>規格が<b>下側だけ</b>(SL=20)なので、両側規格の C<sub>p</sub> ではなく<b>片側規格の式</b>を使う。平均から規格までの距離が、標準偏差3個分の何倍あるかを表す。</p>
+
+    <div class="calc">
+      <span class="label">下側規格のみの場合の工程能力指数</span>
+      <span class="line">C<sub>pk</sub> = (x̄ − S<sub>L</sub>) / (3s)</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">ラインA（x̄ = 22.05、s = 0.363）…(39)</span>
+      <span class="line">= (22.05 − 20) / (3 × 0.363) = 2.05 / 1.089</span>
+      <span class="result">C<sub>pk</sub> ≒ 1.882</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">ラインB（x̄ = 21.40、s = 0.692）…(40)</span>
+      <span class="line">= (21.40 − 20) / (3 × 0.692) = 1.40 / 2.076</span>
+      <span class="result">C<sub>pk</sub> ≒ 0.674</span>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(39)</span> 1.882</span>
+      <span class="answer"><span class="qno">(40)</span> 0.674</span>
+    </div>
+
+    <div class="callout info"><b>公式が正しいかの確認:</b> 図6.2に書かれた全体の値(x̄=21.73、s=0.638、C=0.90)を同じ式に入れると (21.73−20)/(3×0.638) = <span class="mono">0.904</span> となり、図の 0.90 と一致する。<b>問題文中に検算材料が置かれている</b>ので、式の選択に迷ったらここで確かめられる。</div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 660 300" role="img" aria-label="ラインAとラインBの分布を同じ数直線上で比較する図。下側規格20に対し、ラインAは平均から3σ下げても規格内に収まるがラインBは規格を割り込む">
+          <line x1="60" y1="270" x2="620" y2="270" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+          <g font-size="11.5" fill="currentColor" opacity="0.6" text-anchor="middle">
+            <line x1="60" y1="270" x2="60" y2="276" stroke="currentColor"/><text x="60" y="290">19.0</text>
+            <line x1="176" y1="270" x2="176" y2="276" stroke="currentColor"/><text x="176" y="290">20.0</text>
+            <line x1="291" y1="270" x2="291" y2="276" stroke="currentColor"/><text x="291" y="290">21.0</text>
+            <line x1="407" y1="270" x2="407" y2="276" stroke="currentColor"/><text x="407" y="290">22.0</text>
+            <line x1="522" y1="270" x2="522" y2="276" stroke="currentColor"/><text x="522" y="290">23.0</text>
+          </g>
+
+          <line x1="176" y1="30" x2="176" y2="270" stroke="var(--wrong)" stroke-width="2"/>
+          <text x="176" y="24" font-size="12.5" text-anchor="middle" fill="var(--wrong)" font-weight="700">S(L) = 20</text>
+
+          <polygon points="286,140 412,52 537,140" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="2"/>
+          <line x1="412" y1="52" x2="412" y2="140" stroke="var(--reg)" stroke-width="1.4" stroke-dasharray="3 3"/>
+          <text x="418" y="66" font-size="12" fill="var(--reg-ink)" font-weight="600">ラインA  x̄=22.05</text>
+          <text x="418" y="83" font-size="11.5" fill="var(--reg-ink)">s=0.363</text>
+          <line x1="286" y1="150" x2="412" y2="150" stroke="var(--reg)" stroke-width="2.5"/>
+          <line x1="286" y1="144" x2="286" y2="156" stroke="var(--reg)" stroke-width="2.5"/>
+          <text x="300" y="168" font-size="11.5" fill="var(--reg-ink)">3s ＝ 1.09</text>
+          <text x="196" y="130" font-size="12" fill="var(--reg-ink)" font-weight="600">規格まで余裕あり → C(pk)=1.88</text>
+
+          <polygon points="97,258 337,176 577,258" fill="var(--res-soft)" stroke="var(--res)" stroke-width="2"/>
+          <line x1="337" y1="176" x2="337" y2="258" stroke="var(--res)" stroke-width="1.4" stroke-dasharray="3 3"/>
+          <text x="344" y="190" font-size="12" fill="var(--res-ink)" font-weight="600">ラインB  x̄=21.40</text>
+          <text x="344" y="207" font-size="11.5" fill="var(--res-ink)">s=0.692</text>
+          <line x1="97" y1="234" x2="337" y2="234" stroke="var(--res)" stroke-width="2.5"/>
+          <line x1="97" y1="228" x2="97" y2="240" stroke="var(--res)" stroke-width="2.5"/>
+          <text x="106" y="252" font-size="11.5" fill="var(--res-ink)">3s ＝ 2.08</text>
+          <text x="103" y="222" font-size="12" fill="var(--wrong)" font-weight="700">規格を割り込む → C(pk)=0.67</text>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> 三角形の裾は平均 ± 3s の範囲。<b>C<sub>pk</sub> = 1 は「平均から3s下げた点がちょうど規格線に届く」状態</b>を意味する。ラインAは裾が規格線より右にあり(1.88)、ラインBは裾が規格線を越えて左にはみ出している(0.67)。</figcaption>
+    </figure>
+
+    <div class="callout"><b>工程能力指数の判定基準:</b> C<sub>pk</sub> ≧ 1.33 で十分、1.00 〜 1.33 はまずまず(要注意)、1.00 未満は<b>不足</b>。ラインA(1.88)は十分だが、ラインB(0.67)と全体(0.90)は明らかに不足している。<b>この時点でラインBが問題の中心だと数値で確定する</b> — (43)の答えはここで決まっている。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(41)(42)</span><h2>層別ヒストグラムを読む</h2></div>
+    <p>(41)は図の選択、(42)はその読み取り。どちらも<b>「平均の位置」と「ばらつきの幅」の2軸</b>で判断する。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>ラインAとラインBの比較</caption>
+        <thead><tr><th>項目</th><th>ラインA</th><th>ラインB</th><th>読み取り</th></tr></thead>
+        <tbody>
+          <tr><td>平均値</td><td class="ok">22.05</td><td class="ng">21.40</td><td>Bのほうが<b>下側規格(20)に近い</b>＝規格側にかたよる</td></tr>
+          <tr><td>標準偏差</td><td class="ok">0.363</td><td class="ng">0.692</td><td>Bはおよそ<b>2倍ばらつく</b>＝山が広い</td></tr>
+          <tr><td>C<sub>pk</sub></td><td class="ok">1.882</td><td class="ng">0.674</td><td>Bは工程能力が不足</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><b>(41)</b> は「Aが右寄りで幅の狭い山、Bが左寄り(規格側)で幅の広い山」になっている図を選ぶ。両方の山が同じ形の図、Bのほうが右にある図は誤り。</p>
+
+    <div class="opts">
+      <div class="opt no"><span class="mark">ア</span><span>ラインA,Bの平均値がほぼ同じであるが、ばらつきはラインBのほうが大きい → <b>平均が違う</b>(22.05 と 21.40)ので誤り</span></div>
+      <div class="opt no"><span class="mark">イ</span><span>ラインBの平均値が下限規格側にかたよっているが、ばらつきに大きな違いはない → <b>ばらつきは約2倍違う</b>ので誤り</span></div>
+      <div class="opt yes"><span class="mark">ウ</span><span>ラインBの平均値が下限規格側にかたよっており、ばらつきも大きい → <b>平均・ばらつきの両方が正しい …(42)の正解</b></span></div>
+      <div class="opt no"><span class="mark">エ</span><span>ラインA,Bの平均値、ばらつきに大きな違いはない → どちらも違うので誤り</span></div>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(42)</span> ウ</span></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(43)</span><h2>特性要因図の「特性」を決める</h2></div>
+    <p>選択肢は「〜が多い」系と「〜をなくす」系、そして対象が「不織布マスク全体」「ラインA」「ラインB」で組み合わされている。<b>2つの軸で消していく</b>と1つに絞れる。</p>
+
+    <div class="steps">
+      <div class="step"><span class="mark">軸1</span><span><b>特性は「結果・現象」であって「目標・対策」ではない。</b> 特性要因図の背骨の先に書くのは、いま起きている悪さの姿。「〜をなくす」「〜を高める」は目標の表現なので、この時点ですべて消える。</span></div>
+      <div class="step"><span class="mark">軸2</span><span><b>対象は層別で絞り込んだ結果を書く。</b> ①②の解析でラインB(57件、C<sub>pk</sub>=0.674)に問題が集中していることが判明済み。全体やラインAを特性に据えると、せっかくの層別が無駄になる。</span></div>
+    </div>
+
+    <div class="opts">
+      <div class="opt no"><span class="mark">ア</span><span>不織布マスクの生産性が低い → 対象が広すぎる。追っているのは引張強度不足</span></div>
+      <div class="opt no"><span class="mark">イ</span><span>不織布マスクの生産性を高める → 目標の表現。特性ではない</span></div>
+      <div class="opt no"><span class="mark">ウ</span><span>不織布マスクの製造不適合数が多い → 層別前の話に戻ってしまう</span></div>
+      <div class="opt no"><span class="mark">エ</span><span>不織布マスクの製造不適合数をなくす → 目標の表現</span></div>
+      <div class="opt no"><span class="mark">オ</span><span>ラインAの引張強度不適合数が多い → ラインAは C<sub>pk</sub>=1.88 で問題なし</span></div>
+      <div class="opt yes"><span class="mark">カ</span><span>ラインBの引張強度不適合数が多い → <b>現象の表現＋層別で絞った対象。これが正解</b></span></div>
+      <div class="opt no"><span class="mark">キ</span><span>ラインAの引張強度不適合数をなくす → 対象も表現も誤り</span></div>
+      <div class="opt no"><span class="mark">ク</span><span>ラインBの引張強度不適合数をなくす → 対象は正しいが「なくす」は目標の表現</span></div>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(43)</span> カ</span></div>
+
+    <div class="callout"><b>ここが引っかけどころ:</b> 対象(ラインB)が合っている「ク」が用意されている。<b>対象だけ合わせて選ぶと落ちる</b>ように作られているので、必ず「〜が多い(現象)」か「〜をなくす(目標)」かを最後に確認する。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(44)〜(47)</span><h2>散布図で要因を検証する</h2></div>
+    <p>電流値 x と引張強度 y の関係を、まず全体で見て、次にライン別に層別して見る。<b>層別すると関係の強さが変わる</b>ことが、この段落の主題。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 660 280" role="img" aria-label="ラインAとラインBの散布図の比較。ラインAは強い正の相関で点が細い帯に並ぶが、ラインBは同じ電流値でも引張強度が縦に大きく散らばる">
+          <g>
+            <text x="170" y="26" font-size="13" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">ラインA — 強い正の相関</text>
+            <line x1="60" y1="210" x2="290" y2="210" stroke="currentColor" stroke-width="1.3" opacity="0.55"/>
+            <line x1="60" y1="210" x2="60" y2="45" stroke="currentColor" stroke-width="1.3" opacity="0.55"/>
+            <text x="175" y="232" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.65">電流値 x</text>
+            <text x="46" y="40" font-size="12" fill="currentColor" opacity="0.65">y</text>
+            <g fill="var(--reg)">
+              <circle cx="78" cy="192" r="3.6"/><circle cx="96" cy="180" r="3.6"/><circle cx="112" cy="176" r="3.6"/>
+              <circle cx="130" cy="163" r="3.6"/><circle cx="147" cy="157" r="3.6"/><circle cx="164" cy="145" r="3.6"/>
+              <circle cx="181" cy="138" r="3.6"/><circle cx="198" cy="125" r="3.6"/><circle cx="216" cy="117" r="3.6"/>
+              <circle cx="233" cy="104" r="3.6"/><circle cx="250" cy="97" r="3.6"/><circle cx="268" cy="85" r="3.6"/>
+            </g>
+            <line x1="72" y1="196" x2="274" y2="82" stroke="var(--reg)" stroke-width="1.4" stroke-dasharray="5 4" opacity="0.7"/>
+            <text x="175" y="252" font-size="11.5" text-anchor="middle" fill="var(--reg-ink)">x を変えれば y が動く → x で制御できる</text>
+          </g>
+
+          <g>
+            <text x="480" y="26" font-size="13" text-anchor="middle" fill="var(--res-ink)" font-weight="600">ラインB — 関係が弱い</text>
+            <line x1="370" y1="210" x2="600" y2="210" stroke="currentColor" stroke-width="1.3" opacity="0.55"/>
+            <line x1="370" y1="210" x2="370" y2="45" stroke="currentColor" stroke-width="1.3" opacity="0.55"/>
+            <text x="485" y="232" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.65">電流値 x</text>
+            <text x="356" y="40" font-size="12" fill="currentColor" opacity="0.65">y</text>
+
+            <rect x="452" y="50" width="26" height="160" fill="var(--res)" opacity="0.13"/>
+
+            <g fill="var(--res)">
+              <circle cx="386" cy="130" r="3.6"/><circle cx="388" cy="180" r="3.6"/><circle cx="402" cy="98" r="3.6"/>
+              <circle cx="408" cy="165" r="3.6"/><circle cx="422" cy="142" r="3.6"/><circle cx="432" cy="190" r="3.6"/>
+              <circle cx="446" cy="108" r="3.6"/><circle cx="458" cy="152" r="3.6"/><circle cx="465" cy="72" r="3.6"/>
+              <circle cx="472" cy="178" r="3.6"/><circle cx="490" cy="132" r="3.6"/><circle cx="500" cy="195" r="3.6"/>
+              <circle cx="512" cy="112" r="3.6"/><circle cx="526" cy="158" r="3.6"/><circle cx="540" cy="92" r="3.6"/>
+              <circle cx="552" cy="143" r="3.6"/><circle cx="566" cy="178" r="3.6"/><circle cx="578" cy="118" r="3.6"/>
+            </g>
+
+            <line x1="486" y1="72" x2="486" y2="178" stroke="var(--wrong)" stroke-width="2"/>
+            <line x1="480" y1="72" x2="492" y2="72" stroke="var(--wrong)" stroke-width="2"/>
+            <line x1="480" y1="178" x2="492" y2="178" stroke="var(--wrong)" stroke-width="2"/>
+            <text x="498" y="128" font-size="11.5" fill="var(--wrong)" font-weight="600">同じ x でも</text>
+            <text x="498" y="144" font-size="11.5" fill="var(--wrong)" font-weight="600">y がこれだけ散る</text>
+            <text x="485" y="252" font-size="11.5" text-anchor="middle" fill="var(--res-ink)">x 以外の何かが y を動かしている</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption><b>図3.</b> ラインBでは、電流値 x を1点に固定しても引張強度 y が大きく散らばる。これは<b>「x では説明できないばらつきがある」＝ x 以外に原因がある</b>ことを意味する。(47)の選択肢はこの読み取りができているかを問う。</figcaption>
+    </figure>
+
+    <div class="opts">
+      <div class="opt no"><span class="mark">ア</span><span>ラインA,Bともに電流値xをコントロールすることで引張強度不足を改善できる → <b>ラインBは相関が弱い</b>ので、xを操作してもyは思うように動かない</span></div>
+      <div class="opt no"><span class="mark">イ</span><span>…ラインAよりラインBのほうが、電流値xをコントロールすることの効果が大きい → <b>逆</b>。相関が強いラインAのほうがxで制御しやすい</span></div>
+      <div class="opt no"><span class="mark">ウ</span><span>…ラインBにおいて<b>電流値xをばらつかせている</b>原因を究明することが必要である → ばらついているのは<b>y(引張強度)</b>であって x ではない。主語がすり替わっている</span></div>
+      <div class="opt yes"><span class="mark">エ</span><span>…ラインBにおいて<b>電流値x以外で引張強度yをばらつかせている</b>原因を究明することが必要である → <b>散布図から読み取れる事実と一致。これが正解</b></span></div>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(47)</span> エ</span></div>
+
+    <div class="callout warn"><b>ウとエの差はたった数文字:</b> 「x<b>を</b>ばらつかせている原因」(ウ)と「x<b>以外で</b>y<b>を</b>ばらつかせている原因」(エ)。散布図で縦に散っているのは y なので、探すべきは<b>y を散らす x 以外の要因</b>。長文選択肢では、<b>何がばらついているのか(主語)</b>に線を引いて読むと差が見える。</div>
+
+    <div class="callout"><b>(44)(45)(46)について:</b> これらの選択肢が載っている p.64 の画像(IMG_5589)が読み取れなかったため、記号の特定は保留とする。文脈上は「全体の散布図では2つのラインが混ざるため関係がはっきりせず、相関は弱い」という趣旨が入る。<b>層別しない散布図では、性質の違う集団が混ざって関係が見えにくくなる</b>という、この問題全体のテーマがここでも問われている。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">解答</span><h2>解答まとめ</h2></div>
+    <div class="table-wrap">
+      <table>
+        <caption>問6 解答一覧</caption>
+        <thead><tr><th>設問</th><th>解答</th><th>根拠</th></tr></thead>
+        <tbody>
+          <tr><td>(37) ラインAのパレート図</td><td><div class="num">縦軸30前後の図</div></td><td>不適合数31件・上位2項目75%</td></tr>
+          <tr><td>(38) ラインBのパレート図</td><td><div class="num">縦軸60前後の図</div></td><td>不適合数57件・上位2項目80%</td></tr>
+          <tr><td>(39) ラインAの C<sub>pk</sub></td><td><div class="num hit">1.882</div></td><td>(22.05−20)/(3×0.363)</td></tr>
+          <tr><td>(40) ラインBの C<sub>pk</sub></td><td><div class="num hit">0.674</div></td><td>(21.40−20)/(3×0.692)</td></tr>
+          <tr><td>(41) 層別ヒストグラム</td><td><div class="num">Aが右で幅狭・Bが左で幅広の図</div></td><td>平均 22.05 &gt; 21.40、s 0.363 &lt; 0.692</td></tr>
+          <tr><td>(42) 読み取り</td><td><div class="num hit">ウ</div></td><td>Bは規格側にかたより、かつばらつきも大</td></tr>
+          <tr><td>(43) 特性要因図の特性</td><td><div class="num hit">カ</div></td><td>現象の表現＋層別で絞った対象(ラインB)</td></tr>
+          <tr><td>(44)(45)(46)</td><td><div class="num" style="color:var(--ink-faint);">選択肢未確認</div></td><td>p.64の画像が読み取れず保留</td></tr>
+          <tr><td>(47) 検証結果</td><td><div class="num hit">エ</div></td><td>散らばっているのは y、原因は x 以外</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span><b>層別がこの問題の背骨。</b> パレート図・ヒストグラム・散布図のどれも「全体では見えないが、ラインで分けると見える」構造になっている。手法が変わっても問われ方は同じ。</span></div>
+      <div class="step"><span class="mark">2</span><span><b>片側規格の工程能力指数は (x̄ − S<sub>L</sub>)/(3s)。</b> 両側規格の (S<sub>U</sub>−S<sub>L</sub>)/(6s) と混同しない。規格が片方しかない問題では必ずこちら。</span></div>
+      <div class="step"><span class="mark">3</span><span><b>C<sub>pk</sub> = 1 の意味は「平均から3s下げた点が規格線にちょうど届く」。</b> 判定は 1.33以上で十分、1.00未満は不足。数値の意味を絵で持っておくと選択肢の妥当性を判断できる。</span></div>
+      <div class="step"><span class="mark">4</span><span><b>特性要因図の特性は「現象」で書く。</b> 「〜をなくす」「〜を高める」は目標であって特性ではない。対象は層別で絞り込んだ後のものを書く。</span></div>
+      <div class="step"><span class="mark">5</span><span><b>相関が弱い＝その要因では説明できない。</b> 「xを変えてもyが動かない」のではなく「<b>xを固定してもyが散る＝x以外の原因がある</b>」と読むのが正しい。次の一手は他要因の探索になる。</span></div>
+      <div class="step"><span class="mark">6</span><span><b>図の選択肢は数値で絞る。</b> 縦軸の目盛り・件数・平均・ばらつきといった、本文中に書かれた数字が判別材料。図の形を眺めて選ばない。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第36回 問6 / 問題解決事例</span>
+    <span>ラインA C(pk)=1.88 · ラインB C(pk)=0.67</span>
+  </footer>
+
+</div>

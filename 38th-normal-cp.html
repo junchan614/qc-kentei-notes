@@ -1,0 +1,231 @@
+<title>第38回 問2 部品合成の正規分布とCp</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(26px,4vw,36px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:62ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第38回 問2</span>
+    <h1>2つの部品を合成した正規分布から、不適合品率・工程能力指数まで</h1>
+    <p class="lede">全長が正規分布に従う部品A・部品Bをつなぎ合わせた部品Cの分布パラメータを求め(9)、標準化の式を選び(10)(11)、正規分布表で不適合品率を求め(12)、最後に工程能力指数Cpを計算する(13)まで一直線の問題。<b>「標準偏差をそのまま足す」「標準誤差の式と混同する」という2つの罠</b>が前半に仕込まれている。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>設定</h2></div>
+    <p>ある工程では、全長(mm)が正規分布 <span class="mono">N(40,3²)</span> に従う部品Aと、<span class="mono">N(60,4²)</span> に従う部品Bをつなぎ合わせて部品Cを生産している。部品Cの全長の製品規格寸法は<b>85mm〜115mm</b>。この工程の不適合品率と工程能力指数Cpを求めたい。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">①</span><h2>部品Cの全長が従う分布 — (9)</h2></div>
+    <p>部品Cの全長は「部品Aの全長 + 部品Bの全長」。2つの部品は独立に生産されているとみなせるので、<b>平均は足し算、分散も足し算</b>(標準偏差はそのまま足せない)。</p>
+
+    <div class="calc">
+      <span class="label">計算</span>
+      <span class="line">平均: E[C] = E[A] + E[B] = 40 + 60 = 100</span>
+      <span class="line">分散(独立なので加法性が成り立つ): V[C] = 3² + 4² = 9 + 16 = 25 = 5²</span>
+      <span class="result">C ~ N(100, 5²)</span>
+    </div>
+    <span class="answer"><span class="qno">(9)</span> ウ. N(100, 5²)</span>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 190" role="img" aria-label="部品Aの分散9と部品Bの分散16を足すと25になり、平方根を取ってはじめて標準偏差5が出ることを示す図。標準偏差の3と4をそのまま足した7は誤り">
+          <rect x="30" y="20" width="150" height="60" rx="10" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.2" opacity="0.85"/>
+          <text x="105" y="46" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">部品A</text>
+          <text x="105" y="64" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.7">σ=3 → 分散9</text>
+
+          <text x="200" y="56" font-size="18" text-anchor="middle" fill="currentColor" opacity="0.6">+</text>
+
+          <rect x="220" y="20" width="150" height="60" rx="10" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.2" opacity="0.85"/>
+          <text x="295" y="46" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">部品B</text>
+          <text x="295" y="64" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.7">σ=4 → 分散16</text>
+
+          <line x1="105" y1="82" x2="270" y2="118" stroke="var(--reg)" stroke-width="1.4" opacity="0.7"/>
+          <line x1="295" y1="82" x2="330" y2="118" stroke="var(--reg)" stroke-width="1.4" opacity="0.7"/>
+
+          <rect x="220" y="120" width="180" height="56" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.8"/>
+          <text x="310" y="144" font-size="13" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">分散を足す: 9+16=25</text>
+          <text x="310" y="162" font-size="12" text-anchor="middle" fill="var(--reg-ink)">√25 = 5 → σ(C)=5</text>
+
+          <rect x="440" y="120" width="180" height="56" rx="10" fill="var(--wrong-soft)" stroke="var(--wrong)" stroke-width="1.6"/>
+          <text x="530" y="144" font-size="13" text-anchor="middle" fill="var(--wrong)" font-weight="600">✗ 標準偏差を足す</text>
+          <text x="530" y="162" font-size="12" text-anchor="middle" fill="var(--wrong)">3+4=7 → N(100,7²)は誤り</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 独立な確率変数の和では<b>分散が加法的</b>(V[A+B]=V[A]+V[B])。標準偏差はその平方根なので、標準偏差どうしを直接足しても正しい値にはならない。</figcaption>
+    </figure>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>(9)の選択肢に混ざる誤答</caption>
+        <thead><tr><th>選択肢</th><th>判定</th><th>原因の候補</th></tr></thead>
+        <tbody>
+          <tr><td class="good">ウ. N(100,5²)</td><td>正解</td><td>V[C]=3²+4²=25=5²</td></tr>
+          <tr><td class="bad">オ. N(100,7²)</td><td>誤</td><td>標準偏差をそのまま足す(3+4=7)。分散の加法性を無視した典型的な罠</td></tr>
+          <tr><td class="bad">ア. N(0,1²) / イ. N(0,10²)</td><td>誤</td><td>後半(10)(11)の標準化後の分布(平均0)と取り違えている</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">②</span><h2>標準化の式 — (10)(11)</h2></div>
+    <p>不適合品率を正規分布表で求めるには、まずCを標準正規分布に変換する。</p>
+
+    <div class="calc">
+      <span class="label">標準化</span>
+      <span class="line">u = (x − μ) / σ = (x − 100) / 5</span>
+      <span class="result">u ~ N(0, 1²)</span>
+    </div>
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(10)</span> カ. u=(x−μ)/σ</span>
+      <span class="answer"><span class="qno">(11)</span> ア. N(0,1²)</span>
+    </div>
+
+    <div class="callout warn"><b>もう1つの選択肢 キ. u=(x−μ)/(σ/n) は何の式か:</b> これは<b>標本平均 x̄ を標準化する式</b>(しかも正しくは σ/√n であり、この選択肢は√すら付いていない二重の誤り)。1個の測定値xを標準化する場面と、n個の平均x̄の分布を標準化する場面は別物。「なぜ√nで割るのか」で扱った標準誤差の考え方と混同しないこと。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">③</span><h2>不適合品率 — (12)</h2></div>
+    <p>規格は85mm〜115mm。C~N(100,5²)なので、上下の規格値は平均からちょうど<b>3σ</b>離れている。</p>
+
+    <div class="calc">
+      <span class="label">上下の規格値を標準化</span>
+      <span class="line">u(L) = (85 − 100) / 5 = −3</span>
+      <span class="line">u(U) = (115 − 100) / 5 = 3</span>
+      <span class="line">正規分布は左右対称 → 片側の確率を求めて2倍すればよい</span>
+      <span class="line">正規分布表より Kp=3.00 の確率 P = 0.0013</span>
+      <span class="line">不適合品率 = 0.0013 × 2 × 100</span>
+      <span class="result">= 0.26 %</span>
+    </div>
+    <span class="answer"><span class="qno">(12)</span> ア. 0.26</span>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">④</span><h2>工程能力指数Cp — (13)</h2></div>
+    <p>規格の上下幅と、実際のばらつき(6σ)の比を取る。両側規格なので使う式はCp。</p>
+
+    <div class="calc">
+      <span class="label">計算</span>
+      <span class="line">Cp = (規格上限 − 規格下限) / 6σ</span>
+      <span class="line">　　= (115 − 85) / (6 × 5) = 30 / 30</span>
+      <span class="result">= 1.00</span>
+    </div>
+    <span class="answer"><span class="qno">(13)</span> エ. 1.00</span>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>(13)の選択肢に混ざる誤答 — (9)のミスがそのまま伝染する</caption>
+        <thead><tr><th>選択肢</th><th>判定</th><th>原因の候補</th></tr></thead>
+        <tbody>
+          <tr><td class="good">エ. 1.00</td><td>正解</td><td>30/(6×5)</td></tr>
+          <tr><td class="bad">ウ. 0.83</td><td>誤</td><td>30/(6×<b>6</b>)=0.833… — (9)でσ=6(選択肢エ)を選んでしまうと、その間違ったσをそのままここでも使ってしまう</td></tr>
+          <tr><td class="bad">オ. 1.24 / カ. 3.24</td><td>誤</td><td>σに別の値(4や、規格幅と6σの取り違えなど)を当てはめた場合に近い値。どの計算ミスに正確に対応するかは断定できない</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout"><b>1問の中でミスが連鎖する好例:</b> (9)で標準偏差を7や6と間違えると、その値をそのまま(13)のCp計算に使ってしまい、選択肢の中にちょうど対応する誤答(0.83)が用意されている。大問の前半で出した値は、後半でもそのまま使い回されることを意識すると、途中のミスに自分で気づきやすい。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>独立な確率変数の和では、<b>平均は足し算・分散も足し算</b>。標準偏差はその平方根を取ってから使う(3+4=7ではなく√(3²+4²)=5)。</span></div>
+      <div class="step"><span class="mark">2</span><span>標準化の式 <b>u=(x−μ)/σ</b> は1個の値を標準化する式。σ/nやσ/√nが出てくる式は<b>標本平均</b>を標準化する別の式であり混同しない。</span></div>
+      <div class="step"><span class="mark">3</span><span>両側規格で規格値がちょうど±kσの位置にあるときは、正規分布表の片側確率を<b>2倍</b>すれば不適合品率になる(左右対称性)。</span></div>
+      <div class="step"><span class="mark">4</span><span>工程能力指数は <b>Cp=(規格幅)/6σ</b>。大問の前半で出したσを later re-useする設問構成では、前半のミスが後半にそのまま伝染するので要注意。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第38回 問2 / 正規分布の合成とCp</span>
+    <span>C~N(100,5²) ・ 不適合品率0.26% ・ Cp=1.00</span>
+  </footer>
+
+</div>

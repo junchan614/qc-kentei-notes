@@ -1,0 +1,252 @@
+<title>np̄(1−p̄)の正体</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .hit{color:var(--reg-ink);font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">概念の掘り下げ / 第40回 問5 関連</span>
+    <h1>なぜnp̄(1−p̄)なのか — np管理図の3σの正体</h1>
+    <p class="lede">「<a href="40th-np-chart.html" target="_blank" rel="noopener">不適合品数のnp管理図</a>」で使った UCL/LCL = np̄ ± 3√(np̄(1−p̄)) という式。この√の中身は暗記するものではなく、<b>製品1個ずつを「合格/不合格のコイン投げ」とみなし、それをn個分足し合わせる</b>という、ごく単純な発想から機械的に出てくる。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>製品1個を確率変数として見る</h2></div>
+    <p>検査する製品1個を、不適合なら1・適合なら0を取る確率変数 X<sub>i</sub> とする。不適合になる確率をpとすると、X<sub>i</sub>の分布(ベルヌーイ分布)は次の2通りしかない。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 480 260" role="img" aria-label="製品1個の合否をあらわす確率変数の分布。Xi=0(適合)の確率は0.95、Xi=1(不適合)の確率は0.05で、不適合側の棒はごく低い">
+          <line x1="60" y1="220" x2="420" y2="220" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <rect x="100" y="68" width="90" height="152" fill="var(--reg)" opacity="0.85"/>
+          <rect x="290" y="212" width="90" height="8" fill="var(--res)" opacity="0.9"/>
+          <g font-size="13" text-anchor="middle" fill="currentColor">
+            <text x="145" y="56" font-weight="700" fill="var(--reg-ink)">0.95</text>
+            <text x="335" y="204" font-weight="700" fill="var(--res-ink)">0.05</text>
+            <text x="145" y="240">Xi = 0（適合）</text>
+            <text x="335" y="240">Xi = 1（不適合）</text>
+          </g>
+          <text x="240" y="20" font-size="12.5" text-anchor="middle" fill="currentColor" opacity="0.7">P(Xi = 1) = p = 0.05 のときの分布</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 1個の製品を見る限り、不適合になる確率p=0.05はごく小さい。しかしn=200個も検査すれば、この小さな確率が積み重なって無視できない量になる。</figcaption>
+    </figure>
+
+    <div class="calc">
+      <span class="label">1個あたりの平均（期待値）</span>
+      <span class="line">E[Xi] = 0×(1−p) + 1×p = p</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">1個あたりの分散 — ここが核心</span>
+      <span class="line">Xi は0か1しか取らないので、Xi² = Xi が常に成り立つ（0²=0、1²=1）</span>
+      <span class="line">よって E[Xi²] = E[Xi] = p</span>
+      <span class="line">V[Xi] = E[Xi²] − (E[Xi])² = p − p²</span>
+      <span class="result">V[Xi] = p(1−p)</span>
+    </div>
+
+    <div class="callout info"><b>「2乗しても値が変わらない」という特殊性:</b> 0/1しか取らない変数だけが持つ性質。この一手間(Xi²=Xiに気づく)だけで、分散の公式 V=E[X²]−(E[X])² から自動的に p(1−p) という積の形が出てくる。丸暗記する式ではなく、ここまでたどれば導出できる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>p(1−p)という形を見る</h2></div>
+    <p>p(1−p)をpの関数としてグラフに描くと、p=0.5を頂点とする上に凸の放物線になる。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 260" role="img" aria-label="p(1-p)のグラフ。pが0から1の間で上に凸の放物線を描き、p=0.5で最大値0.25を取る。p=0.05の位置では値が0.0475と小さい">
+          <line x1="50" y1="220" x2="590" y2="220" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <line x1="50" y1="220" x2="50" y2="40" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <line x1="50" y1="40" x2="590" y2="40" stroke="currentColor" stroke-width="1" stroke-dasharray="3 4" opacity="0.35"/>
+
+          <polyline points="60,220 86,185.8 112,155.2 164,104.8 216,68.8 268,47.2 320,40 372,47.2 424,68.8 476,104.8 528,155.2 580,220" fill="none" stroke="var(--reg)" stroke-width="2.4"/>
+
+          <circle cx="86" cy="185.8" r="5" fill="var(--res)"/>
+          <text x="96" y="180" font-size="12" fill="var(--res-ink)" font-weight="700">p̄=0.05 → p(1−p)=0.0475</text>
+
+          <circle cx="320" cy="40" r="5" fill="var(--reg)"/>
+          <text x="320" y="28" font-size="12" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">p=0.5で最大 (0.25)</text>
+
+          <g font-size="12" fill="currentColor" opacity="0.65">
+            <text x="60" y="236" text-anchor="middle">0</text>
+            <text x="320" y="236" text-anchor="middle">0.5</text>
+            <text x="580" y="236" text-anchor="middle">1</text>
+            <text x="38" y="44" text-anchor="end">0.25</text>
+            <text x="320" y="252" text-anchor="middle" opacity="0.85">p（不適合品率）</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> pが0か1に近いほど「結果がほぼ読める」ので分散(ばらつき)は小さく、p=0.5(五分五分)のとき最も予測しづらく分散が最大になる。今回のp̄=0.05はグラフの左端に近く、分散への寄与自体は小さい。</figcaption>
+    </figure>
+
+    <div class="callout"><b>直感との一致:</b> 不適合品率が0%や100%の工程は「毎回結果が同じ」なのでばらつきがない(分散0)。半々の確率が一番読めない、というのは感覚的にも自然で、グラフの形がその直感をそのまま表している。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>n個ぶん足し合わせる — 分散の加法性</h2></div>
+    <p>群のn個の製品は互いに独立に検査される。n個の合計X=X1+X2+⋯+Xnが「群の不適合品数」で、これがnp管理図で打点する値そのもの。独立な確率変数の和では、<b>分散はそのまま足し算になる</b>（「<a href="37th-sample-mean-sd.html" target="_blank" rel="noopener">なぜ√nで割るのか</a>」で見たのと同じ原理）。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 220" role="img" aria-label="X1からXnまでn個の独立な確率変数、それぞれ分散p(1-p)を持つものを足し合わせると、合計の分散はn×p(1-p)になる模式図">
+          <g font-size="12" text-anchor="middle" fill="currentColor">
+            <rect x="30" y="40" width="56" height="56" rx="8" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.2" opacity="0.85"/>
+            <text x="58" y="72" font-weight="700">X1</text>
+            <rect x="106" y="40" width="56" height="56" rx="8" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.2" opacity="0.85"/>
+            <text x="134" y="72" font-weight="700">X2</text>
+            <rect x="182" y="40" width="56" height="56" rx="8" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.2" opacity="0.85"/>
+            <text x="210" y="72" font-weight="700">X3</text>
+            <text x="266" y="72" font-size="20" opacity="0.6">…</text>
+            <rect x="298" y="40" width="56" height="56" rx="8" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.2" opacity="0.85"/>
+            <text x="326" y="72" font-weight="700">X200</text>
+          </g>
+          <text x="192" y="118" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.7">どれも同じ分散 V[Xi] = p(1−p) = 0.0475（独立）</text>
+
+          <line x1="192" y1="128" x2="192" y2="150" stroke="currentColor" stroke-width="1.4" opacity="0.6"/>
+          <path d="M192,150 h0" />
+          <text x="192" y="146" font-size="16" text-anchor="middle" opacity="0.6">↓ 独立な和は分散がそのまま足し算</text>
+
+          <rect x="80" y="160" width="280" height="46" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.8"/>
+          <text x="220" y="188" font-size="14" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">V[X] = n × p(1−p) = 200 × 0.0475 = 9.5</text>
+        </svg>
+      </div>
+      <figcaption><b>図3.</b> 1個あたりの分散はごく小さい(0.0475)が、n=200個ぶん足し合わせると合計の分散は9.5まで積み上がる。標準偏差にするには最後に√を取る。</figcaption>
+    </figure>
+
+    <div class="calc">
+      <span class="label">合計Xの分散と標準偏差</span>
+      <span class="line">V[X] = V[X1] + V[X2] + ⋯ + V[Xn] = n・p(1−p)</span>
+      <span class="line">σ = √(V[X]) = √(np(1−p))</span>
+    </div>
+
+    <div class="callout warn"><b>標準偏差は個数分の1にはならない:</b> 「なぜ√nで割るのか」で見た標本平均の場合はn個の<b>平均</b>を扱うのでσ/√nと小さくなった。np管理図で扱うのはn個の<b>合計(個数)</b>なので逆にnが掛かり、√(np(1−p))と<b>大きくなる</b>。同じ「分散の加法性」から出発しても、最後に割るか(平均)・割らないか(合計)で結果の向きが逆になる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 4</span><h2>実際の数値で確認する</h2></div>
+    <p>「<a href="40th-np-chart.html" target="_blank" rel="noopener">第40回 問5</a>」のデータ(n=200, p̄=0.05)にそのまま当てはめる。</p>
+
+    <div class="calc">
+      <span class="label">標準偏差から管理限界線まで</span>
+      <span class="line">V[X] = n・p̄(1−p̄) = 200 × 0.05 × 0.95 = 9.5</span>
+      <span class="line">σ = √9.5 ≒ 3.082</span>
+      <span class="line">3σ ≒ 9.25</span>
+      <span class="line">CL = np̄ = 10.0　→　UCL = 10 + 9.25 ≒ 19.2　LCL = 10 − 9.25 ≒ 0.8</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>導出の流れと、それぞれの段階の意味</caption>
+        <thead><tr><th>段階</th><th>式</th><th>意味</th></tr></thead>
+        <tbody>
+          <tr><td>1個</td><td class="num">V[Xi] = p(1−p)</td><td>Xi²=Xiという0/1特有の性質から</td></tr>
+          <tr><td>n個の合計</td><td class="num">V[X] = n・p(1−p)</td><td>独立な和は分散が足し算（分散の加法性）</td></tr>
+          <tr><td>標準偏差</td><td class="num hit">σ = √(np(1−p))</td><td>分散の単位を「個数」に戻すための√</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>製品1個は0/1しか取らない確率変数。<b>Xi²=Xi</b>という特殊性から、分散が自動的に V[Xi]=p(1−p) という積の形になる。</span></div>
+      <div class="step"><span class="mark">2</span><span>p(1−p)はp=0.5で最大・p=0や1で0になる上に凸の放物線。不適合品率が五分五分に近いほど、1個あたりのばらつきは大きい。</span></div>
+      <div class="step"><span class="mark">3</span><span>n個の独立な和では<b>分散がそのまま足し算</b>になる(分散の加法性)。個数を数えるnp管理図では、この和にnが掛かるぶん標準偏差は<b>√n倍に大きくなる</b>(標本平均のσ/√nとは逆向き)。</span></div>
+      <div class="step"><span class="mark">4</span><span>√(np̄(1−p̄))は暗記する公式ではなく、<b>「1個の分散 p(1−p)」×「n個ぶん(分散の加法性)」の√を取っただけ</b>という2段階の掛け算。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 概念の掘り下げ / np管理図の3σの由来</span>
+    <span>V[Xi]=p(1−p) ・ V[X]=np(1−p) ・ σ=√(np(1−p))</span>
+  </footer>
+
+</div>

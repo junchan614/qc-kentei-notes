@@ -1,0 +1,228 @@
+<title>なぜt表で最適水準を推定するのか</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:62ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+td a{color:var(--reg-ink);}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 概念の掘り下げ</span>
+    <h1>なぜt表で最適水準を推定するのか</h1>
+    <p class="lede"><a href="39th-anova-unequal.html" target="_blank" rel="noopener">第39回 問4</a>の最適水準の推定で <span class="mono">t(11,0.025)=2.201</span> という値が出てきたが、これは<b>「点推定」自体には使っていない</b>。点推定はただの平均計算で、t表が登場するのはその<b>1歩あと</b>——区間推定のところ。まずこの順番を切り分け、そのうえで「なぜ正規分布ではなくt分布か」「なぜφ=11というやや大きい自由度なのか」の2つを解く。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">①</span><h2>点推定にt表は出てこない</h2></div>
+    <p>点推定 <span class="mono">x̄(A2) = 74/3 = 24.7</span> は、A2の3個のデータをただ足して3で割っただけの値。t表どころか、分散もF検定の結果も一切使っていない。</p>
+
+    <div class="calc">
+      <span class="label">点推定(t表は無関係)</span>
+      <span class="line">x̄(A2) = (25+26+23) / 3 = 24.7</span>
+    </div>
+
+    <div class="callout warn"><b>混乱の正体:</b> 問題の解説では「点推定」と「区間推定」がセットで並んで出てくるため、区間推定側で使うt表があたかも点推定の根拠であるかのように見えてしまう。実際には<b>点推定＝ただの平均</b>、<b>区間推定＝平均のまわりに「このくらいブレる」という幅を足したもの</b>で、役割がまったく別。t表は後者、つまり<b>幅の大きさを決める係数</b>を提供しているだけ。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">②</span><h2>区間推定の式のどこにt表が入るか</h2></div>
+    <p>区間推定の式を分解すると、t表の値は「点推定 ± 誤差の幅」の<b>誤差の幅を作る係数</b>として登場する。</p>
+
+    <div class="calc">
+      <span class="label">区間推定の分解</span>
+      <span class="line">x̄(A2) ± t(11,0.025) × √(V(E)/n(A2))</span>
+      <span class="line">　　↑点推定　　　↑係数(t表)　　　↑標準誤差(バラつきの大きさ)</span>
+      <span class="line">= 24.7 ± 2.201 × √(2.40/3) = 24.7 ± 1.97 = (22.7, 26.7)</span>
+    </div>
+
+    <p>標準誤差 <span class="mono">√(V(E)/n)</span> が「平均がどのくらいブレやすいか」を表し、t表の値 <span class="mono">2.201</span> が「95%の確率で収まる範囲にするには、その標準誤差の何倍まで広げればよいか」という<b>倍率</b>を教えてくれる。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">③</span><h2>なぜ正規分布(Z)ではなくt分布なのか</h2></div>
+    <p>「平均のまわりのブレ」を扱うだけなら、統計の教科書で最初に習うのは正規分布(Z)の方だろう。にもかかわらずここでt分布を使う理由は、<b>母分散σ²が分かっていないから</b>という一点に尽きる。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Zを使う場合とtを使う場合の分かれ道</caption>
+        <thead><tr><th></th><th>母分散σ²</th><th>使う分布</th><th>今回</th></tr></thead>
+        <tbody>
+          <tr><td>σ²が既知(理論値・過去の膨大な実績などで分かっている)</td><td class="num">既知</td><td class="num">正規分布 Z</td><td class="num">該当しない</td></tr>
+          <tr class="row-res"><td>σ²が未知で、手元のデータから推定するしかない</td><td class="num hit">未知(推定)</td><td class="num hit">t分布</td><td class="num hit">今回はこちら</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>今回、σ²の代わりに使っているのは分散分析表で計算済みの<b>誤差分散 V(E) = 2.40</b>。これはあくまで15個のデータから<b>推定した</b>値であり、真の母分散そのものではない。「真の値の代わりに推定値を使う」という不確かさが1つ上乗せされる分、正規分布よりも裾が少し重い<b>t分布</b>を使う——これは1標本の平均の検定・区間推定(母分散未知)で習うのと全く同じロジックが、分散分析の後にも引き継がれているだけ。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 220" role="img" aria-label="正規分布とt分布を重ねた図。t分布の方が裾が重く、同じ95%を囲むにはより広い範囲が必要になることを示す">
+          <line x1="60" y1="180" x2="600" y2="180" stroke="currentColor" stroke-width="1.4" opacity="0.5"/>
+          <path d="M60,180 C140,180 190,30 320,30 C450,30 500,180 580,180" fill="none" stroke="var(--reg)" stroke-width="2.2"/>
+          <text x="320" y="20" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">正規分布(σ²が既知のときだけ使える)</text>
+
+          <path d="M60,180 C140,180 200,58 320,58 C440,58 500,180 580,180" fill="none" stroke="var(--res)" stroke-width="2.2" stroke-dasharray="5 4"/>
+          <text x="320" y="206" font-size="12.5" text-anchor="middle" fill="var(--res-ink)" font-weight="600">t分布(σ²をV(E)で推定 → 裾が重い)</text>
+
+          <line x1="230" y1="180" x2="230" y2="188" stroke="var(--reg-ink)" stroke-width="1.8"/>
+          <text x="230" y="200" font-size="10.5" text-anchor="middle" fill="var(--reg-ink)">z=1.96</text>
+          <line x1="180" y1="180" x2="180" y2="188" stroke="var(--res)" stroke-width="1.8"/>
+          <text x="150" y="150" font-size="10.5" text-anchor="middle" fill="var(--res-ink)">t(11)=2.201</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 同じ「95%を囲む」範囲でも、σ²を推定値で代用するt分布は正規分布より広めに取る必要がある。t(11,0.025)=2.201 は正規分布のz=1.96より一回り大きい——これが「推定の不確かさ」の分の上乗せ。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">④</span><h2>なぜt(2)ではなくt(11)なのか — 分散分析ならではの理由</h2></div>
+    <p>「σ²未知だからt分布」までは1標本の推定と同じだが、ここでもう1つ疑問が残る。A2は<b>3個</b>しかデータがないので、A2だけで分散を推定すれば自由度は<span class="mono">n(A2)−1=2</span>のはず。なぜ問題の解答は<span class="mono">t(11,0.025)</span>を使うのか。</p>
+
+    <div class="calc">
+      <span class="label">もしA2だけのデータで分散を推定していたら(参考)</span>
+      <span class="line">A2のデータ: 25, 26, 23 → 平均24.667</span>
+      <span class="line">偏差平方和 = (25−24.667)² + (26−24.667)² + (23−24.667)² = 0.111 + 1.777 + 2.778 = 4.667</span>
+      <span class="line">分散 s(A2)² = 4.667 / (3−1) = 2.33,  自由度 = 2</span>
+    </div>
+
+    <div class="callout info"><b>一元配置分散分析の前提: 4水準はすべて同じ母分散σ²を持つ(等分散性の仮定)</b>。この仮定があるからこそ、A2だけの3個のデータで細々とσ²を推定するのではなく、<b>A1〜A4の15個全部を使って推定した誤差分散 V(E)=26.42/11=2.40</b>を「A2の母分散の推定値」としてそのまま流用してよい。φ(E)=11は、A2単独のφ=2よりずっと大きな自由度、つまり<b>ずっと精度の高いσ²の推定</b>を意味する。</div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>A2単独の推定 vs 全水準プールした推定(V(E))で区間推定を比べる</caption>
+        <thead><tr><th>推定に使うデータ</th><th>分散</th><th>自由度</th><th>t表の値</th><th>区間推定</th></tr></thead>
+        <tbody>
+          <tr><td>A2だけ(n=3)</td><td class="num">s(A2)²=2.33</td><td class="num">2</td><td class="num">t(2,0.025)=4.303</td><td class="num">24.7 ± 4.303×√(2.33/3) = 24.7 ± 3.80 → <b>(20.9, 28.5)</b></td></tr>
+          <tr class="row-reg"><td>A1〜A4全部プール(N=15)</td><td class="num hit">V(E)=2.40</td><td class="num hit">11</td><td class="num hit">t(11,0.025)=2.201</td><td class="num hit">24.7 ± 2.201×√(2.40/3) = 24.7 ± 1.97 → <b>(22.7, 26.7)</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn"><b>これが「プールする」ことの実利:</b> 分散の値そのもの(2.33 vs 2.40)はほとんど変わらないのに、自由度が2から11に増えるだけでt表の値が4.303→2.201まで下がり、区間の幅がほぼ半分になる。<b>データの少ない水準でも、他の水準と分散が共通という前提を使えば、まるでもっと多くのデータで推定したかのような精度が得られる</b>——これが分散分析でわざわざ「誤差平方和を全水準でプールしてから割る」手順を踏む理由そのもの。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">⑤</span><h2>一般化 — この構造はどこでも同じ形をしている</h2></div>
+    <p>母分散未知のときの「点推定 ± t×標準誤差」という型は、1標本の平均の推定でも、2標本の差の推定でも、分散分析の水準推定でも共通している。違うのは<b>分散の推定元と自由度だけ</b>。</p>
+
+    <div class="calc">
+      <span class="label">共通の型</span>
+      <span class="line">点推定 ± t(自由度, α/2) × √(分散の推定値 × 係数)</span>
+      <span class="line">1標本の平均:      x̄ ± t(n−1,α/2)×√(s²/n)</span>
+      <span class="line">分散分析の1水準:  x̄(i) ± t(φ(E),α/2)×√(V(E)/n(i))　← 今回はこれ</span>
+      <span class="line">分散分析の2水準差: (x̄(i)−x̄(j)) ± t(φ(E),α/2)×√{V(E)(1/n(i)+1/n(j))}</span>
+    </div>
+
+    <p>分散分析では、この「分散の推定値」に<b>その水準単独の分散ではなく、分散分析表で計算済みのV(E)(全水準プール・自由度φ(E))を使う</b>という1点だけが特殊——そしてこの1点こそ、分散分析を先にやってから区間推定する理由でもある。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この資料から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span><b>点推定にt表は無関係</b>。点推定はただの標本平均の計算(74/3=24.7)。</span></div>
+      <div class="step"><span class="mark">2</span><span>t表が出てくるのは<b>区間推定</b>の「幅」を決める係数として。点推定 ± t×標準誤差、という並びの中の1部品。</span></div>
+      <div class="step"><span class="mark">3</span><span>正規分布(Z)ではなくt分布を使うのは<b>母分散σ²が未知で、データから推定するしかない</b>から。推定の不確かさの分、裾が重いt分布で幅を広めに取る。</span></div>
+      <div class="step"><span class="mark">4</span><span>自由度がA2単独のn−1=2ではなくφ(E)=11なのは、<b>「全水準の母分散は等しい」という一元配置分散分析の前提</b>を使い、15個全データでσ²を推定しているから。</span></div>
+      <div class="step"><span class="mark">5</span><span>自由度が大きいほどt表の値は小さくなる(4.303→2.201)。<b>プールして自由度を稼ぐことが、区間推定の幅を狭め、推定の精度を上げる</b>——これが分散分析表を先に作ってから区間推定に進む理由。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 概念の掘り下げ / なぜt表で最適水準を推定するのか</span>
+    <span>点推定=ただの平均 ・ 区間推定の幅にt表 ・ σ²未知→t分布 ・ プールでφ(E)=11に</span>
+  </footer>
+
+</div>

@@ -1,0 +1,239 @@
+<title>第36回 問3 分布の使い分けと母分散の両側χ²検定</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(26px,4vw,36px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:62ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第36回 問3</span>
+    <h1>検定と推定 — どの分布を使うかの対応表と、母分散の両側χ²検定</h1>
+    <p class="lede">①は「何を検定・推定するか」によって使う分布が決まる、という知識の一覧を埋める。②はその応用として、新旧の設備で製造した薬品の<b>ばらつき(母分散)に差があるか</b>を両側χ²検定で確かめる。片側検定(<a href="35th-variance-test.html" target="_blank" rel="noopener">第35回問1</a>)との違いは、<b>棄却域が両裾にある</b>ため、対立仮説の書き方と結論の言い方が変わる点。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">①</span><h2>検定と推定に使う分布の対応表 — (15)〜(18)</h2></div>
+    <p>統計量をもとに検定と推定を行う場合、「何についての検定・推定か」によって使うべき分布が決まっている。丸暗記ではなく、<b>母数が1つか2つか・分散が既知か未知か</b>で整理すると覚えやすい。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>表3.1 検定と推定で使用する分布</caption>
+        <thead><tr><th>検定と推定の種類</th><th>使用する統計量の分布</th></tr></thead>
+        <tbody>
+          <tr><td>一つの母平均に関する検定と推定(母分散が<b>未知</b>の場合)</td><td class="hit">(15) キ. t分布</td></tr>
+          <tr><td>一つの母分散に関する検定と推定</td><td class="hit">(16) ウ. χ²分布</td></tr>
+          <tr><td>二つの母分散の比に関する検定と推定</td><td class="hit">(17) オ. F分布</td></tr>
+          <tr><td>二つの母平均の差に関する検定と推定(二つとも母分散が<b>既知</b>の場合)</td><td class="hit">(18) イ. 正規分布</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout info"><b>覚え方の軸:</b> 「平均」か「分散」かで大分類し、「平均」はさらに<b>分散が既知(正規分布のまま)か未知(推定するのでt分布)か</b>で分かれる。「分散」は<b>1つ(χ²分布)か2つの比(F分布)か</b>で分かれる。この4パターンが土台になり、一元配置分散分析のF検定(<a href="regression-anova.html" target="_blank" rel="noopener">単回帰分析の分散分析表</a>参照)も突き詰めれば「2つ以上の分散の比を見る」F分布の応用にあたる。</div>
+
+    <span class="answer-row">
+      <span class="answer"><span class="qno">(15)</span> キ. t分布</span>
+      <span class="answer"><span class="qno">(16)</span> ウ. χ²分布</span>
+      <span class="answer"><span class="qno">(17)</span> オ. F分布</span>
+      <span class="answer"><span class="qno">(18)</span> イ. 正規分布</span>
+    </span>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">②</span><h2>母分散の両側χ²検定 — (19)〜(22)</h2></div>
+    <p>従来設備での母分散はσ0²=17.5(基準値)。新しい設備で製造した薬品25個を測定し、平方和S=752を得た。「差があるといえるか」を調べるので、対立仮説は<b>≠(両側)</b>になる。</p>
+
+    <div class="calc">
+      <span class="label">仮説と有意水準</span>
+      <span class="line">H0: σ² = σ0²(17.5)　　H1: σ² ≠ σ0²(両側)</span>
+      <span class="line">有意水準 α = 0.05　　n = 25、S = 752</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">検定統計量 χ0² — S/σ0²で標準化する(問1で見た片側χ²検定と同じ式)</span>
+      <span class="line">χ0² = S / σ0² = 752 / 17.5 = 42.9714…</span>
+      <span class="result">χ0² ≒ 42.97</span>
+    </div>
+    <span class="answer-row"><span class="answer"><span class="qno">(19)</span> オ. 42.97</span></span>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 660 260" role="img" aria-label="自由度24のカイ二乗分布。両側検定なので下側2.5%と上側2.5%の両方に棄却域があるが、検定統計量42.97は上側の棄却限界値39.4をはるかに超えているため、下側は見るまでもなく棄却と判定できる">
+          <line x1="40" y1="220" x2="620" y2="220" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <path d="M40,220 C90,220 110,40 180,40 C260,40 300,150 380,185 C450,205 520,215 620,219" fill="none" stroke="var(--reg)" stroke-width="2.2"/>
+
+          <line x1="130" y1="55" x2="130" y2="220" stroke="currentColor" stroke-width="1.4" stroke-dasharray="3 4" opacity="0.55"/>
+          <text x="130" y="240" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.8">χ²(24,0.975)</text>
+          <text x="130" y="253" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">(下側2.5%点・今回は関係なし)</text>
+
+          <line x1="330" y1="150" x2="330" y2="220" stroke="var(--res)" stroke-width="1.8"/>
+          <text x="330" y="240" font-size="12" text-anchor="middle" fill="var(--res-ink)" font-weight="700">χ²(24,0.025)=39.4</text>
+
+          <path d="M 500,214 C 520,195 545,150 570,90 L 600,90 L 600,219 Z" fill="var(--wrong)" opacity="0.5"/>
+          <line x1="560" y1="60" x2="560" y2="220" stroke="var(--wrong)" stroke-width="1.8"/>
+          <text x="560" y="45" font-size="12.5" text-anchor="middle" fill="var(--wrong)" font-weight="700">χ0²=42.97</text>
+          <text x="560" y="30" font-size="11" text-anchor="middle" fill="var(--wrong)">(棄却域の中)</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 両側検定なので棄却域は下側2.5%(χ²(24,0.975)、今回は未使用)と上側2.5%(χ²(24,0.025)=39.4)の両方にある。χ0²=42.97は上側の棄却限界値39.4を超えているので、下側を確認するまでもなく<b>棄却域に入る</b>と判定できる。</figcaption>
+    </figure>
+
+    <div class="calc">
+      <span class="label">棄却限界値 — 自由度φ=n−1=24、両側検定なので上側2.5%点を使う</span>
+      <span class="line">φ = n − 1 = 25 − 1 = 24</span>
+      <span class="line">χ0²=42.97 は明らかに大きいので、上側の限界値 χ²(24, 0.025) と比較すれば十分</span>
+      <span class="result">χ²(24, 0.025) = 39.4</span>
+    </div>
+    <span class="answer-row"><span class="answer"><span class="qno">(20)</span> オ. χ²(24,0.025)=39.4</span></span>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>(19)(20)の選択肢トレース</caption>
+        <thead><tr><th>選択肢</th><th>判定</th><th>原因の候補</th></tr></thead>
+        <tbody>
+          <tr><td class="bad">ア. 0.02</td><td>誤(19)</td><td>17.5/752のように分子分母を逆にした値に近い</td></tr>
+          <tr><td class="bad">イ. 1.72 / ウ. 1.79</td><td>誤(19)</td><td>S/σ0²でなく752を別の値(例:平方和でなく分散)で割った値</td></tr>
+          <tr><td class="bad">エ. 2.46</td><td>誤(19)</td><td>自由度24とχ0²を混同、または別の統計量との取り違え</td></tr>
+          <tr><td class="good">オ. 42.97</td><td>正解(19)</td><td>χ0² = S/σ0² = 752/17.5</td></tr>
+          <tr><td class="bad">ア. t(25,0.05)=2.060 / イ. t(24,0.05)=2.064</td><td>誤(20)</td><td>母平均の検定に使うt分布の値を誤って持ってきた(母分散の検定はt分布を使わない)</td></tr>
+          <tr><td class="bad">ウ. χ²(24,0.05)=36.4</td><td>誤(20)</td><td>両側検定なのに片側5%(α)をそのまま使った値。両側ではα/2=0.025を使う必要がある</td></tr>
+          <tr><td class="bad">エ. χ²(25,0.05)=37.7</td><td>誤(20)</td><td>自由度をn=25のまま使った誤り(正しくはn−1=24)</td></tr>
+          <tr><td class="good">オ. χ²(24,0.025)=39.4</td><td>正解(20)</td><td>φ=24、両側検定の片側あたりの確率0.025</td></tr>
+          <tr><td class="bad">カ. χ²(25,0.025)=40.6</td><td>誤(20)</td><td>確率は正しく0.025だが自由度をn=25のまま使った誤り</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout warn"><b>両側検定は「α」でなく「α/2」を使う:</b> 有意水準α=0.05を両裾に半分ずつ割り振るので、上側の限界値はχ²(24, 0.05)ではなくχ²(24, <b>0.025</b>)。選択肢ウのようにα=0.05をそのまま使ってしまうと、本来は棄却域でない範囲まで棄却域として扱ってしまう(検定が甘くなる)。</div>
+
+    <div class="calc">
+      <span class="label">判定 — χ0²と棄却限界値を比較</span>
+      <span class="line">χ0² = 42.97 &gt; χ²(24, 0.025) = 39.4 → 棄却域に入る</span>
+    </div>
+    <span class="answer-row"><span class="answer"><span class="qno">(21)</span> エ. 棄却</span></span>
+
+    <div class="callout info"><b>(22)の結論は「差がある」までで、方向は言わない:</b> 対立仮説がH1:σ²≠σ0²という<b>両側</b>の形である以上、検定そのものが教えてくれるのは「等しいとはいえない(差がある)」という事実だけ。新しい設備の不偏分散V=S/(n−1)=752/24≒31.3は基準値17.5より確かに大きいが、<b>この検定の枠組みでは「大きくなった」と結論しない</b>(片側検定であれば方向まで言えるが、今回はH1が≠なので不可)。よって(22)は「差があるといえる」が正しく、「大きくなったといえる」(キ・ク)は片側検定と混同した誤り。</div>
+    <span class="answer-row"><span class="answer"><span class="qno">(22)</span> カ. 差があるといえる</span></span>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">比較</span><h2>片側χ²検定(第35回問1)との違い</h2></div>
+    <div class="table-wrap">
+      <table>
+        <caption>片側検定(第35回問1)と両側検定(本問)の対比</caption>
+        <thead><tr><th></th><th>第35回問1(片側・下側)</th><th>第36回問3(本問・両側)</th></tr></thead>
+        <tbody>
+          <tr><td>対立仮説</td><td class="num">H1: σ² &lt; σ0²</td><td class="num">H1: σ² ≠ σ0²</td></tr>
+          <tr><td>棄却域</td><td>下側のみ</td><td>上側・下側の両方</td></tr>
+          <tr><td>使う確率点</td><td class="num">χ²(φ, 1−α)</td><td class="num">χ²(φ, α/2) と χ²(φ, 1−α/2)</td></tr>
+          <tr><td>結論の言い方</td><td>「小さくなったといえる」まで言える</td><td>「差があるといえる」まで(方向は言えない)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>検定統計量 χ0²=S/σ0² の作り方自体は同じ。違うのは<b>棄却域の取り方と、そこから言える結論の強さ</b>だけ。「新しい方が悪化したか」のように向きを問われている(片側)のか、「差があるかどうか」だけを問われている(両側)のかを、問題文の対立仮説の書き方(&lt;・&gt;・≠)で必ず確認する。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>検定・推定に使う分布は「平均か分散か」「1つか2つか」「分散が既知か未知か」で決まる。母分散→<b>χ²分布</b>、分散比→<b>F分布</b>、母分散未知の平均→<b>t分布</b>、母分散既知の2平均差→<b>正規分布</b>。</span></div>
+      <div class="step"><span class="mark">2</span><span>母分散の検定統計量は χ0²=S/σ0² で片側・両側とも共通。<b>変わるのは棄却域の取り方</b>。</span></div>
+      <div class="step"><span class="mark">3</span><span>両側検定はα全体でなく<b>α/2</b>を使って棄却限界値を引く。片側の値(α=0.05)をそのまま使うと検定が甘くなる。</span></div>
+      <div class="step"><span class="mark">4</span><span>対立仮説が≠(両側)のとき、結論は「差があるといえる」までで、<b>「大きく/小さくなった」という方向までは言えない</b>。方向まで言うのは対立仮説が&lt;または&gt;の片側検定のとき。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第36回 問3 / 検定と推定の分布対応表・母分散の両側χ²検定</span>
+    <span>χ0²=42.97 ・ 棄却限界χ²(24,0.025)=39.4 ・ 棄却 ・ 差があるといえる</span>
+  </footer>
+
+</div>

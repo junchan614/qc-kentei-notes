@@ -1,0 +1,283 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<title>寄与率R²とSE(b)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(26px,4vw,36px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:62ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc.res{border-left-color:var(--res);}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+
+.related{display:flex;flex-direction:column;gap:8px;}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:14px;text-decoration:none;box-shadow:var(--shadow);}
+.related a b{color:var(--ink);}
+.related a span{display:block;color:var(--ink-soft);font-size:13px;margin-top:2px;}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">概念の掘り下げ（第38回 問4 関連）</span>
+    <h1>寄与率R²とSE(b)=√(Ve/Sxx) — 2つの式は何を測っているのか</h1>
+    <p class="lede">「<a href="38th-regression-anova.html" target="_blank" rel="noopener">単回帰の分散分析表〜信頼区間</a>」の(27)寄与率R²と(29)信頼区間で使うSE(b)=√(Ve/Sxx)は、どちらも計算のやり方は暗記できても「なぜその式になるか」は素通りしがちな2つの値。<b>R²は「当てはまりの良さ」、SE(b)は「傾きの推定がどれだけブレるか」</b>――別のことを測っている、という区別を軸に、式の由来を追う。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">①</span><h2>寄与率R² — 「全体の変動のうち何%を説明できたか」</h2></div>
+    <p>単回帰では全体の変動S(yy)が、回帰で説明できる部分S(R)と、説明しきれない残差S(e)にきれいに分かれる。この事実(平方和の分解)がR²の定義そのもの。</p>
+
+    <div class="calc">
+      <span class="label">平方和の分解（第38回 問4のデータ）</span>
+      <span class="line">S(yy) = S(R) + S(e)</span>
+      <span class="line">19.07 = 15.23 + 3.84</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">寄与率R² の定義</span>
+      <span class="line">R² = S(R) / S(yy) = 15.23 / 19.07</span>
+      <span class="result">R² ≒ 0.7986</span>
+    </div>
+
+    <p>この式を1から引く形に書き換えると、R²の意味がもう一段はっきりする。</p>
+
+    <div class="calc">
+      <span class="label">同じ式の言い換え</span>
+      <span class="line">R² = S(R)/S(yy) = (S(yy)−S(e))/S(yy) = 1 − S(e)/S(yy)</span>
+      <span class="line">　= 1 − 3.84/19.07 = 1 − 0.2014</span>
+      <span class="result">R² ≒ 0.7986（同じ値）</span>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 150" role="img" aria-label="全体の変動S(yy)=19.07を横棒として、回帰による部分15.23（約80%）と残差の部分3.84（約20%）に分けて示す図">
+          <text x="20" y="30" font-size="13" fill="currentColor" opacity="0.75">全体の変動 S(yy) = 19.07</text>
+          <rect x="20" y="42" width="600" height="40" rx="6" fill="var(--surface-2)" stroke="var(--border-strong)"/>
+          <rect x="20" y="42" width="478.9" height="40" rx="6" fill="var(--reg)"/>
+          <text x="259" y="67" font-size="14" text-anchor="middle" fill="#fff" font-weight="700">S(R) = 15.23（79.9%）</text>
+          <rect x="498.9" y="42" width="121.1" height="40" rx="0" fill="var(--res)"/>
+          <text x="559" y="67" font-size="12.5" text-anchor="middle" fill="#fff" font-weight="700">S(e)=3.84</text>
+          <text x="20" y="112" font-size="12.5" fill="var(--reg-ink)">■ 回帰で説明できた部分 → R²の分子</text>
+          <text x="20" y="132" font-size="12.5" fill="var(--res-ink)">■ 説明しきれない残差 → 1−R²の分子</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> R²は「棒全体のうち回帰(teal)が占める割合」。残差(orange)側が0に近づくほどR²は1に近づき、直線に沿ってデータがきれいに並んでいることを意味する。</figcaption>
+    </figure>
+
+    <div class="callout info"><b>0≤R²≤1になる理由は暗記不要:</b> S(e)は残差(実測−予測)を2乗して足した値なので、必ず<b>0以上</b>。そしてS(e)=S(yy)−S(R)という引き算の形から、S(e)がS(yy)を超えることもない。この2つだけから「R²=S(R)/S(yy)は0以上1以下」が自動的に出る。相関係数rの−1≤r≤1も同じ不等式の言い換えで、実は<b>R²=r²</b>という関係にある(<a href="correlation-coefficient.html" target="_blank" rel="noopener">相関係数はなぜこの式になるのか</a>で導出済み)。</div>
+
+    <div class="callout"><b>R²=0.7986の実感:</b> 「濃度xのばらつきだけで、質量yのばらつきの約80%を説明できる」という意味。残り約20%は、このモデルに入っていない別の要因や測定誤差。R²は当てはめの良さを測る値であって、傾きbの大きさとは無関係――b自体がいくら大きくても、点が直線から大きく散らばっていればR²は小さくなる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">②</span><h2>SE(b)=√(Ve/Sxx) — 「傾きbの推定はどれだけブレるか」</h2></div>
+    <p>信頼区間の式 b ± t(n−2,0.025)×√(Ve/Sxx) の中で、√(Ve/Sxx)だけが回帰特有の部品。これは<b>傾きbの標準誤差 SE(b)</b>――「同じ実験をやり直したら、推定される傾きbはどれくらいの幅でブレるか」を表す。天下り的な式に見えるが、bの計算式を分散の目で見直すだけで出てくる。</p>
+
+    <div class="calc">
+      <span class="label">出発点: bを「yの重み付き和」として書き直す</span>
+      <span class="line">b = S(xy)/S(xx) = Σ(xi−x̄)(yi−ȳ) / S(xx)</span>
+      <span class="line">　Σ(xi−x̄)=0 なので Σ(xi−x̄)ȳ=0 → yiの前のȳは消せる</span>
+      <span class="line">b = Σ ci·yi 　（ここで ci = (xi−x̄)/S(xx) ）</span>
+    </div>
+
+    <p>つまりbは、n個のデータyiを「重みci」で足し合わせた値にすぎない。重みciはxiが平均から離れているほど大きい。分散は「独立な値の重み付き和」に対してΣ(重み²×分散)という決まった計算ができるので、あとは重みciの性質を2つ確認するだけでよい。</p>
+
+    <div class="calc">
+      <span class="label">重みciの性質</span>
+      <span class="line">Σci² = Σ(xi−x̄)² / S(xx)² = S(xx) / S(xx)²</span>
+      <span class="result">Σci² = 1/S(xx)</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">bの分散（yiは独立・分散σ²を仮定）</span>
+      <span class="line">Var(b) = Var(Σci·yi) = Σci²・Var(yi) = σ²・Σci²</span>
+      <span class="line">　　　 = σ² × 1/S(xx) = σ²/S(xx)</span>
+      <span class="result">SD(b) = σ / √S(xx)</span>
+    </div>
+
+    <div class="calc res">
+      <span class="label">σ²は未知 → 残差の平均平方V(e)で置き換える</span>
+      <span class="line">σ²の不偏推定量が V(e)（分散分析表の残差の行）</span>
+      <span class="line">SE(b) = √( V(e) / S(xx) )</span>
+    </div>
+
+    <div class="answer-row"><span class="answer">SE(b) = √(Ve/Sxx) の正体 = 「傾きbの標準偏差」の推定値</span></div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 260" role="img" aria-label="xの散らばりが狭い場合と広い場合を並べ、同じばらつきの誤差でも傾きの信頼区間の幅が違うことを示す図">
+          <text x="150" y="24" font-size="13" text-anchor="middle" fill="currentColor" opacity="0.75">A. xの範囲が狭い（S(xx)小）</text>
+          <line x1="40" y1="180" x2="260" y2="80" stroke="var(--reg)" stroke-width="2.5"/>
+          <line x1="40" y1="150" x2="260" y2="30" stroke="var(--res)" stroke-width="1.4" stroke-dasharray="4 3" opacity="0.85"/>
+          <line x1="40" y1="210" x2="260" y2="130" stroke="var(--res)" stroke-width="1.4" stroke-dasharray="4 3" opacity="0.85"/>
+          <g fill="var(--ink)" opacity="0.85">
+            <circle cx="118" cy="150" r="3.5"/><circle cx="132" cy="118" r="3.5"/><circle cx="146" cy="140" r="3.5"/>
+            <circle cx="160" cy="108" r="3.5"/><circle cx="174" cy="128" r="3.5"/><circle cx="188" cy="102" r="3.5"/>
+          </g>
+          <text x="150" y="238" font-size="12" text-anchor="middle" fill="var(--res-ink)">傾きの候補が広い範囲でブレる → SE(b)大</text>
+
+          <text x="480" y="24" font-size="13" text-anchor="middle" fill="currentColor" opacity="0.75">B. xの範囲が広い（S(xx)大）</text>
+          <line x1="360" y1="200" x2="620" y2="60" stroke="var(--reg)" stroke-width="2.5"/>
+          <line x1="360" y1="185" x2="620" y2="45" stroke="var(--res)" stroke-width="1.4" stroke-dasharray="4 3" opacity="0.85"/>
+          <line x1="360" y1="215" x2="620" y2="75" stroke="var(--res)" stroke-width="1.4" stroke-dasharray="4 3" opacity="0.85"/>
+          <g fill="var(--ink)" opacity="0.85">
+            <circle cx="380" cy="188" r="3.5"/><circle cx="420" cy="162" r="3.5"/><circle cx="460" cy="148" r="3.5"/>
+            <circle cx="500" cy="118" r="3.5"/><circle cx="540" cy="98" r="3.5"/><circle cx="580" cy="72" r="3.5"/>
+          </g>
+          <text x="480" y="238" font-size="12" text-anchor="middle" fill="var(--reg-ink)">傾きの候補が狭い範囲に収まる → SE(b)小</text>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> 点のばらつき方(誤差の大きさ=Ve)が同じでも、<b>xを広い範囲で測るほど直線の傾きは決まりやすい</b>(点線＝ありうる傾きの幅が狭まる)。これがS(xx)が分母にある理由。逆にVe(残差のばらつき)が大きいほど、どちらのケースでも点線の幅は広がる。</figcaption>
+    </figure>
+
+    <div class="callout info"><b>分母・分子の直感:</b> S(xx)は「xをどれだけ広い範囲で測ったか」。広く測るほど直線の傾きが一意に決まりやすく、SE(b)は<b>小さく</b>なる。Veは「直線に対する点の散らばり(誤差)の大きさ」。散らばりが大きいほど傾きの推定は不安定になり、SE(b)は<b>大きく</b>なる。分母にSxx・分子にVeがあるのは、この2つの直感をそのまま数式にしたもの。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">③</span><h2>数値で確認する（第38回 問4のデータ）</h2></div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>表1. R²とSE(b)の計算に使う値</caption>
+        <thead><tr><th>量</th><th>値</th><th>使いみち</th></tr></thead>
+        <tbody>
+          <tr class="row-reg"><td>S(xx)</td><td><span class="num">713.01</span></td><td>SE(b)の分母（xの散らばり）</td></tr>
+          <tr class="row-reg"><td>S(yy)</td><td><span class="num">19.07</span></td><td>R²の分母（yの全体の変動）</td></tr>
+          <tr class="row-reg"><td>S(R)</td><td><span class="num">15.23</span></td><td>R²の分子（回帰で説明できた変動）</td></tr>
+          <tr class="row-res"><td>V(e)</td><td><span class="num">0.21</span></td><td>SE(b)の分子（誤差の大きさの推定）</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="calc">
+      <span class="label">R²</span>
+      <span class="line">R² = S(R)/S(yy) = 15.23/19.07</span>
+      <span class="result">R² ≒ 0.7986</span>
+    </div>
+
+    <div class="calc res">
+      <span class="label">SE(b)</span>
+      <span class="line">SE(b) = √(V(e)/S(xx)) = √(0.21/713.01) = √0.0002945</span>
+      <span class="result">SE(b) ≒ 0.0172</span>
+    </div>
+
+    <p>SE(b)はここで終わりではなく、<b>t分布と組み合わせて信頼区間の「幅」を作る部品</b>として使われる。</p>
+
+    <div class="calc">
+      <span class="label">95%信頼区間（b=0.1461, t(18,0.025)=2.101）</span>
+      <span class="line">b ± t×SE(b) = 0.1461 ± 2.101×0.0172 = 0.1461 ± 0.0361</span>
+      <span class="result">0.1100 〜 0.1822</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この2つの式が答えている「別の問い」</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span><b>R² = S(R)/S(yy)</b> は「直線がデータにどれだけ当てはまっているか」という<b>当てはめの良さ</b>の指標。0〜1の値になるのは、S(e)≥0かつS(e)≤S(yy)という平方和の分解から自動的に出る。</span></div>
+      <div class="step"><span class="mark">2</span><span><b>SE(b) = √(Ve/Sxx)</b> は「傾きbの推定値がどれだけブレるか」という<b>推定の精度</b>の指標。b=Σci yi(ci=(xi−x̄)/Sxx)と書き直し、独立な値の重み付き和の分散Σci²Var(yi)を計算すると自然に出てくる。</span></div>
+      <div class="step"><span class="mark">3</span><span>SE(b)の分母S(xx)は「xを広い範囲で測ったか」、分子Veは「点が直線からどれだけ散らばっているか」。広く測るほど、散らばりが小さいほど、傾きは精度よく推定できる。</span></div>
+      <div class="step"><span class="mark">4</span><span>R²が高い(当てはまりが良い)ことと、SE(b)が小さい(傾きの推定が正確)ことは<b>連動しやすいが同じ量ではない</b>。R²はS(yy)に対する相対的な割合、SE(b)はS(xx)というxの散らばりに依存する絶対的な誤差の大きさ。</span></div>
+      <div class="step"><span class="mark">5</span><span>「分散の性質(独立な値の和の分散=分散の和)だけから標準誤差を導く」考え方は、<a href="37th-sample-mean-sd.html" target="_blank" rel="noopener">標本平均の標準偏差がσ/√nになる理由</a>と全く同じ型。bはyの単純平均ではなく重み付き平均という違いがあるだけ。</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">関連</span><h2>関連資料</h2></div>
+    <div class="related">
+      <a href="38th-regression-anova.html" target="_blank" rel="noopener"><b>単回帰の分散分析表〜信頼区間（第38回 問4）</b><span>このR²とSE(b)が実際に問われた元の過去問。この資料はその(27)(29)を深掘りしたもの。</span></a>
+      <a href="correlation-coefficient.html" target="_blank" rel="noopener"><b>相関係数はなぜこの式になるのか</b><span>R²=r²の関係と、0≤R²≤1が導かれる同じ不等式の由来をより深く扱う。</span></a>
+      <a href="37th-sample-mean-sd.html" target="_blank" rel="noopener"><b>標本平均の標準偏差がσ/√nになる理由</b><span>「独立な値の和の分散」からSE(b)と同じ導出パターンを先に扱っている基礎編。</span></a>
+      <a href="degrees-of-freedom.html" target="_blank" rel="noopener"><b>自由度の正体</b><span>SE(b)の計算で使うV(e)の自由度がn−2になる理由。</span></a>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 概念の掘り下げ（第38回 問4 関連） / 寄与率R²とSE(b)=√(Ve/Sxx)</span>
+    <span>R²=0.7986 ・ SE(b)=0.0172</span>
+  </footer>
+
+</div>
+
+</body></html>

@@ -1,0 +1,370 @@
+<title>第37回 問5 母平均の区間推定</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第37回 問5</span>
+    <h1>母平均の点推定と区間推定 — 一元配置実験</h1>
+    <p class="lede">原材料メーカー3社(DD・GG・MM)を比べた一元配置実験。分散分析表はすでに完成した形で与えられているので、この問題の核心は計算そのものより「①どの水準が一番良いかを見抜く」「②<b>1つの母平均</b>の区間推定と<b>2つの母平均の差</b>の区間推定の式を混同しない」の2点にある。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>与えられたデータ</h2></div>
+
+    <p>新製品の原材料を、現行のDD社・候補のGG社・MM社から選びたい。各社4回ずつ強度試験を行い(計12回)、一元配置実験として分散分析を行った。</p>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <caption>表5.1 材料強度のデータ（単位: N/mm²）</caption>
+        <thead>
+          <tr><th>メーカー</th><th colspan="4">強度試験成績</th><th>合計 T<sub>i</sub></th><th>平均 x̄<sub>i</sub></th></tr>
+        </thead>
+        <tbody>
+          <tr><td>A<sub>1</sub> DD社（現行）</td><td>23</td><td>24</td><td>24</td><td>25</td><td class="sum">96</td><td class="sum">24.0</td></tr>
+          <tr><td>A<sub>2</sub> GG社</td><td>29</td><td>29</td><td>29</td><td>31</td><td class="sum">118</td><td class="sum">29.5</td></tr>
+          <tr><td>A<sub>3</sub> MM社</td><td>26</td><td>27</td><td>27</td><td>26</td><td class="sum">106</td><td class="sum">26.5</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>表5.2 分散分析表（すでに与えられている）</caption>
+        <thead>
+          <tr><th>要因</th><th>平方和 S</th><th>自由度 φ</th><th>平均平方 V</th><th>分散比 F<sub>0</sub></th></tr>
+        </thead>
+        <tbody>
+          <tr class="row-reg"><td>要因 A</td><td><div class="num">60.67</div></td><td><div class="num">2</div></td><td><div class="num">30.335</div></td><td><div class="num hit">45.480**</div></td></tr>
+          <tr class="row-res"><td>誤差 E</td><td><div class="num">6.00</div></td><td><div class="num">9</div></td><td><div class="num">0.667</div></td><td><div class="sub" style="margin-top:0;">—</div></td></tr>
+          <tr class="row-total"><td>計 T</td><td><div class="num">66.67</div></td><td><div class="num">11</div></td><td><div class="sub" style="margin-top:0;">—</div></td><td><div class="sub" style="margin-top:0;">—</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn"><b>この問題の見た目の罠:</b> 分散分析表がすでに完成しているので「もう検定は終わった話」と早合点しやすい。実際に(29)〜(32)で問われているのは<b>F検定のその先</b>――「有意差があるとわかった後、じゃあ実際どの水準を選び、母平均はいくつと言えるのか」という区間推定の部分。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>最も良い水準を選ぶ — (29)(30)</h2></div>
+    <p>強度は<b>高いほど良い特性（望大特性）</b>なので、単純に3社の標本平均を比べれば良い水準がわかる。母平均の<b>点推定値は、その水準の標本平均そのもの</b>。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>3水準の平均強度の比較</caption>
+        <thead><tr><th>メーカー</th><th>平均 x̄<sub>i</sub></th><th>判定</th></tr></thead>
+        <tbody>
+          <tr><td>DD社（現行）</td><td class="num">24.0</td><td>最も低い</td></tr>
+          <tr class="row-reg"><td>GG社</td><td class="num hit">29.5</td><td><b>最も高い ← 採用</b></td></tr>
+          <tr><td>MM社</td><td class="num">26.5</td><td>2番目</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(29)</span> GG社</span>
+      <span class="answer"><span class="qno">(30)</span> 29.5 N/mm²</span>
+    </div>
+
+    <div class="callout"><b>ここで惑わされやすいポイント:</b> 報告書の文章が「現行以外のメーカーも検討する」から始まるため、<b>現行のDD社を無意識に基準・答えにしてしまう</b>受験者が一定数いる。問われているのは「一番強度が高いのはどこか」であって「現行はどこか」ではない。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>1つの母平均の区間推定 — (31)</h2></div>
+    <p>母平均の区間推定は<b>誤差分散 V<sub>E</sub>（分散分析表の値）</b>を使う。各水準ごとの標本分散を使わないのは、<b>実験全体で「ばらつきの大きさは水準によらず一定」と仮定している</b>から――だからこそ自由度9(=全体の誤差自由度)というより信頼できる分散が使える。</p>
+
+    <div class="calc">
+      <span class="label">1つの母平均の区間推定（信頼率95%）</span>
+      <span class="line">μ(A<sub>i</sub>) = x̄<sub>i</sub> ± t(φ<sub>E</sub>, 0.025) × √(V<sub>E</sub> / n<sub>i</sub>)</span>
+      <span class="line">　 t(9, 0.025) = 2.262　、V<sub>E</sub> = 0.667　、n<sub>i</sub> = 4</span>
+      <span class="line">μ(GG) = 29.5 ± 2.262 × √(0.667 / 4) = 29.5 ± 2.262 × 0.408</span>
+      <span class="result">μ(GG) = 29.5 ± 0.92 → 28.6 〜 30.4 N/mm²</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(31)</span> 28.6 〜 30.4 N/mm²</span></div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>参考: 3水準とも同じ式で区間推定すると</caption>
+        <thead><tr><th>メーカー</th><th>平均 x̄<sub>i</sub></th><th>幅 ± t√(V<sub>E</sub>/n)</th><th>95%信頼区間</th></tr></thead>
+        <tbody>
+          <tr><td>DD社</td><td class="num">24.0</td><td class="num">± 0.92</td><td class="num">23.1 〜 24.9</td></tr>
+          <tr class="row-reg"><td>GG社</td><td class="num">29.5</td><td class="num">± 0.92</td><td class="num hit">28.6 〜 30.4 …(31)</td></tr>
+          <tr><td>MM社</td><td class="num">26.5</td><td class="num">± 0.92</td><td class="num">25.6 〜 27.4</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout info"><b>第36回の問題との違い:</b> 第36回(繰り返し数5・4・3の不揃い実験)では水準ごとに区間の幅が変わったが、今回は<b>全水準とも n=4 で揃っている</b>ので、幅 ±0.92 はどの水準でも同じになる。3つの区間はどこも重ならず、視覚的にも「3社は互いに強度が異なる」と確認できる（下図）。</div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 220" role="img" aria-label="3社の95%信頼区間を数直線上に並べた図。DD社・MM社・GG社の区間はどれも重ならず、幅もすべて同じであることを示す">
+          <line x1="60" y1="185" x2="580" y2="185" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+          <g font-size="11.5" fill="currentColor" opacity="0.65" text-anchor="middle">
+            <line x1="60" y1="185" x2="60" y2="191" stroke="currentColor"/><text x="60" y="205">22</text>
+            <line x1="164" y1="185" x2="164" y2="191" stroke="currentColor"/><text x="164" y="205">24</text>
+            <line x1="268" y1="185" x2="268" y2="191" stroke="currentColor"/><text x="268" y="205">26</text>
+            <line x1="372" y1="185" x2="372" y2="191" stroke="currentColor"/><text x="372" y="205">28</text>
+            <line x1="476" y1="185" x2="476" y2="191" stroke="currentColor"/><text x="476" y="205">30</text>
+            <line x1="580" y1="185" x2="580" y2="191" stroke="currentColor"/><text x="580" y="205">32</text>
+          </g>
+
+          <text x="20" y="46" font-size="13" fill="currentColor" font-weight="600">GG</text>
+          <line x1="402" y1="42" x2="498" y2="42" stroke="var(--reg)" stroke-width="3"/>
+          <line x1="402" y1="33" x2="402" y2="51" stroke="var(--reg)" stroke-width="2.5"/>
+          <line x1="498" y1="33" x2="498" y2="51" stroke="var(--reg)" stroke-width="2.5"/>
+          <circle cx="450" cy="42" r="5" fill="var(--reg)"/>
+          <text x="506" y="46" font-size="11.5" fill="var(--reg-ink)">29.5（採用）</text>
+
+          <text x="20" y="94" font-size="13" fill="currentColor" font-weight="600">MM</text>
+          <line x1="246" y1="90" x2="342" y2="90" stroke="currentColor" stroke-width="3" opacity="0.7"/>
+          <line x1="246" y1="81" x2="246" y2="99" stroke="currentColor" stroke-width="2.5" opacity="0.7"/>
+          <line x1="342" y1="81" x2="342" y2="99" stroke="currentColor" stroke-width="2.5" opacity="0.7"/>
+          <circle cx="294" cy="90" r="5" fill="currentColor" opacity="0.7"/>
+          <text x="350" y="94" font-size="11.5" fill="currentColor" opacity="0.7">26.5</text>
+
+          <text x="20" y="142" font-size="13" fill="currentColor" font-weight="600">DD</text>
+          <line x1="116" y1="138" x2="212" y2="138" stroke="var(--res)" stroke-width="3"/>
+          <line x1="116" y1="129" x2="116" y2="147" stroke="var(--res)" stroke-width="2.5"/>
+          <line x1="212" y1="129" x2="212" y2="147" stroke="var(--res)" stroke-width="2.5"/>
+          <circle cx="164" cy="138" r="5" fill="var(--res)"/>
+          <text x="220" y="142" font-size="11.5" fill="var(--res-ink)">24.0（現行）</text>
+
+          <text x="330" y="172" font-size="11.5" text-anchor="middle" fill="var(--ink-faint)">3つの区間はどれも重ならない・幅もすべて同じ</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> DD社（現行・橙）とGG社（採用・青緑）、そしてMM社の95%信頼区間。<b>幅がすべて等しい</b>のは n が全水準で共通4だから。区間がどれも重ならないことが、F検定で「効果あり」と判定されたことと視覚的に対応する。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>2つの母平均の「差」の区間推定 — (32)</h2></div>
+    <p>ここが本問の一番のヤマ。<b>1つの母平均の区間推定と、2つの母平均の「差」の区間推定は式が違う</b>。差を見るときは、両方の水準の誤差を合わせて考えるため、平方根の中身が <span class="mono">1/n<sub>i</sub> + 1/n<sub>j</sub></span> になる。</p>
+
+    <div class="calc">
+      <span class="label">2つの母平均の差の区間推定（信頼率95%）</span>
+      <span class="line">μ(A<sub>i</sub>) − μ(A<sub>j</sub>) = (x̄<sub>i</sub> − x̄<sub>j</sub>) ± t(φ<sub>E</sub>, 0.025) × √{ V<sub>E</sub> × (1/n<sub>i</sub> + 1/n<sub>j</sub>) }</span>
+      <span class="line">　 GG社 − DD社 = 29.5 − 24.0 = 5.5</span>
+      <span class="line">　 幅 = 2.262 × √{ 0.667 × (1/4 + 1/4) } = 2.262 × √0.3335 = 2.262 × 0.577</span>
+      <span class="result">μ(GG)−μ(DD) = 5.5 ± 1.31 → 4.2 〜 6.8 N/mm²</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(32)</span> 4.2 〜 6.8 N/mm²</span></div>
+
+    <div class="callout warn"><b>典型的なミス:</b> 「差」の区間推定なのに、STEP2で使った<b>1つの母平均の式（√(V<sub>E</sub>/n)）をそのまま使ってしまう</b>と、幅が ±0.92 になり、5.5 ± 0.92 = <span class="mono">4.6 〜 6.4</span> という<b>もっともらしいが間違った答え</b>が出る（選択肢オ）。差の分散は2つの水準ぶんの誤差を足し合わせるので、必ず幅が広くなる（±0.92 → ±1.31）。<b>「差」を見る式では 1/n を2回足す</b>、と覚えておく。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">覚え方</span><h2>「1人分」か「2人分」かで式を選ぶ</h2></div>
+    <p>2つの式を丸暗記しようとすると必ず混ざる。<b>「今、傘（誤差）を何人ぶん持ち寄っているか」</b>という1つのイメージで覚えると、式を見た瞬間にどちらか判断できる。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>2つの区間推定の違い</caption>
+        <thead><tr><th></th><th>1つの母平均</th><th>2つの母平均の差</th></tr></thead>
+        <tbody>
+          <tr><td>知りたいこと</td><td>その水準1つだけの真の値</td><td>2つの水準の真の値の<b>差</b></td></tr>
+          <tr><td>傘（誤差）を持ち寄る人数</td><td class="num">1人ぶん</td><td class="num">2人ぶん</td></tr>
+          <tr><td>1/n の個数</td><td class="num">1個</td><td class="num">2個（両方の水準ぶん）</td></tr>
+          <tr class="row-reg"><td>式</td><td class="num">√(V<sub>E</sub>/n)</td><td class="num">√{V<sub>E</sub>(1/n<sub>i</sub>+1/n<sub>j</sub>)}</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 260" role="img" aria-label="1人分の傘と2人分の傘のイメージ図。1つの母平均では自分の誤差だけを持ち寄り、差の推定では両方の水準の誤差を持ち寄って幅がひろがることを示す">
+          <text x="150" y="26" font-size="13.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">1つの母平均 ＝ 1人ぶんの傘</text>
+          <circle cx="150" cy="70" r="26" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="2"/>
+          <text x="150" y="76" font-size="13" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">GG</text>
+          <line x1="150" y1="96" x2="150" y2="130" stroke="var(--reg)" stroke-width="2" marker-end="url(#arrow1)"/>
+          <text x="150" y="150" font-size="12.5" text-anchor="middle" fill="currentColor">1/n が<b>1個</b></text>
+          <rect x="90" y="164" width="120" height="34" rx="8" fill="var(--surface)" stroke="var(--reg)" stroke-width="1.6"/>
+          <text x="150" y="186" font-size="12.5" text-anchor="middle" fill="var(--ink)" class="mono">√(V(E)/n)</text>
+          <text x="150" y="222" font-size="14" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">幅 ± 0.92</text>
+
+          <line x1="320" y1="40" x2="320" y2="220" stroke="currentColor" stroke-width="1" opacity="0.25"/>
+
+          <text x="490" y="26" font-size="13.5" text-anchor="middle" fill="var(--res-ink)" font-weight="600">差の推定 ＝ 2人ぶんの傘</text>
+          <circle cx="430" cy="70" r="26" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="2"/>
+          <text x="430" y="76" font-size="13" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">GG</text>
+          <circle cx="550" cy="70" r="26" fill="var(--res-soft)" stroke="var(--res)" stroke-width="2"/>
+          <text x="550" y="76" font-size="13" text-anchor="middle" fill="var(--res-ink)" font-weight="700">DD</text>
+          <line x1="430" y1="96" x2="470" y2="130" stroke="var(--reg)" stroke-width="2" marker-end="url(#arrow1)"/>
+          <line x1="550" y1="96" x2="510" y2="130" stroke="var(--res)" stroke-width="2" marker-end="url(#arrow1)"/>
+          <text x="490" y="150" font-size="12.5" text-anchor="middle" fill="currentColor">1/n が<b>2個</b>（両方から）</text>
+          <rect x="400" y="164" width="180" height="34" rx="8" fill="var(--surface)" stroke="var(--res)" stroke-width="1.6"/>
+          <text x="490" y="186" font-size="12" text-anchor="middle" fill="var(--ink)" class="mono">√{V(E)(1/n(i)+1/n(j))}</text>
+          <text x="490" y="222" font-size="14" text-anchor="middle" fill="var(--res-ink)" font-weight="700">幅 ± 1.31（広い）</text>
+
+          <defs>
+            <marker id="arrow1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> 「差」を見るときは<b>両方の水準の誤差を両方とも持ち寄る</b>ので、1/nが2つ足し算される分だけ幅が広くなる。片方の傘だけで済ませてしまう（1/nを1個で止める）のが、選択肢オのような典型的な間違い。</figcaption>
+    </figure>
+
+    <div class="callout info"><b>もう1つの覚え方 — 足せるのは分散だけ:</b> V<sub>E</sub>/n<sub>i</sub> と V<sub>E</sub>/n<sub>j</sub> はどちらも<b>分散</b>（2乗の単位）だから、足してから最後にまとめて√を取れる。これは「<a href="37th-sample-mean-sd.html" target="_blank" rel="noopener">なぜ√nで割るのか</a>」で扱った<b>「足せるのは分散だけ、標準偏差はそのままでは足せない」</b>という原則そのもの。だから式は必ず「√の中で1/nを2回足す」形になり、「√の外に出してから2倍する」のは間違い（それだと 0.92×2=1.84 になってしまい、正しい 1.31 と合わない）。</div>
+
+    <div class="callout"><b>暗算チェック:</b> 例数が全水準で同じ(n<sub>i</sub>=n<sub>j</sub>=n)のときは、差の幅は必ず<b>1つの母平均の幅 × √2</b>になる（0.92×1.414≒1.31）。計算し終えたらこの比率で検算する習慣をつけておくと、選択肢オのようなミスにすぐ気づける。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">分析</span><h2>選択肢はどの計算に対応しているか</h2></div>
+    <p>(31)(32)は10個の選択肢(ア〜コ)を共有している。逆算すると、ほとんどの選択肢が「正しい式だが対象を間違えた」か「対象は合っているが式を間違えた」のどちらかにきれいに対応する。</p>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>(29)(30) の選択肢</caption>
+        <thead><tr><th>問</th><th>選択肢</th><th>判定</th><th>この値が出る原因</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="3">(29)</td><td class="bad">ア. DD社</td><td>誤</td><td>「現行」という言葉に引っ張られ、一番強度が高い水準ではなく現行を選んでしまう</td></tr>
+          <tr><td class="good">イ. GG社</td><td><span style="color:var(--reg-ink);font-weight:700;">正解</span></td><td>標本平均が最も高い(29.5)</td></tr>
+          <tr><td class="bad">ウ. MM社</td><td>誤</td><td>2番目に高い水準を最良と取り違える</td></tr>
+          <tr><td rowspan="3">(30)</td><td class="bad">ア. 24.0</td><td>誤</td><td>DD社(現行)の平均。(29)でDD社を選ぶミスと連動する</td></tr>
+          <tr><td class="bad">イ. 26.5</td><td>誤</td><td>MM社の平均。2番目に高い水準の値を答えてしまう</td></tr>
+          <tr><td class="good">ウ. 29.5</td><td><span style="color:var(--reg-ink);font-weight:700;">正解</span></td><td>GG社の標本平均＝母平均の点推定値</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>(31)(32) 共通の選択肢</caption>
+        <thead><tr><th>選択肢</th><th>判定</th><th>この値が出る原因</th></tr></thead>
+        <tbody>
+          <tr><td class="bad">ア. 1.2〜3.8</td><td>誤</td><td>正しい「差の区間推定」の式(幅±1.31)だが、<b>対象がMM社−DD社</b>(2.5±1.31)になっている</td></tr>
+          <tr><td class="bad">イ. 1.7〜4.3</td><td>誤</td><td>正しい「差の区間推定」の式(幅±1.31)だが、<b>対象がGG社−MM社</b>(3.0±1.31)になっている</td></tr>
+          <tr><td class="bad">ウ. 3.8〜7.2</td><td>誤</td><td>GG社−DD社の差(5.5)を中心にした、より幅広の区間。誤差分散の使い方を誤ると生まれる値</td></tr>
+          <tr><td class="good">エ. 4.2〜6.8</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (32)</span></td><td>GG社−DD社の差 5.5、幅±1.31で正しく計算</td></tr>
+          <tr><td class="bad">オ. 4.6〜6.4</td><td>誤</td><td><b>最重要の罠。</b>差(5.5)は合っているが、幅が±0.92＝<b>1つの母平均の式をそのまま流用</b>してしまっている(1/n を2回足し忘れ)</td></tr>
+          <tr><td class="bad">カ. 22.3〜36.7</td><td>誤</td><td>GG社(29.5)を中心にした、データの範囲(23〜31)を超えるほど広すぎる区間。分散の単位を見失うと生まれる非現実的な値</td></tr>
+          <tr><td class="bad">キ. 23.0〜24.9</td><td>誤</td><td>正しい「1つの母平均」の式(幅±0.92)だが、<b>対象がDD社</b>(選ぶべきはGG社)になっている</td></tr>
+          <tr><td class="bad">ク. 23.3〜35.7</td><td>誤</td><td>カと同様、GG社を中心にした広すぎる区間。常識的な幅から外れており計算前でも消去できる</td></tr>
+          <tr><td class="bad">ケ. 25.6〜27.4</td><td>誤</td><td>正しい「1つの母平均」の式(幅±0.92)だが、<b>対象がMM社</b>(選ぶべきはGG社)になっている</td></tr>
+          <tr><td class="good">コ. 28.6〜30.4</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (31)</span></td><td>GG社の母平均、幅±0.92で正しく計算</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><b>選択肢を見るときのコツ:</b> 幅が±0.9前後のグループ(キ・ケ・コ)は「1つの母平均」用、幅が±1.3前後のグループ(ア・イ・エ)は「差」用、と<b>幅の大きさだけで式の種類が絞れる</b>。カ・クのように元データ(23〜31)を大きく超える区間は、計算する前に「常識的にありえない」と見切りをつけてよい。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>望大特性(強度は高いほど良い)では、<b>標本平均が一番大きい水準を選ぶ</b>。「現行」という文言に惑わされない。</span></div>
+      <div class="step"><span class="mark">2</span><span>母平均の点推定値は<b>その水準の標本平均そのもの</b>。特別な補正は要らない。</span></div>
+      <div class="step"><span class="mark">3</span><span>1つの母平均の区間推定: <b>x̄<sub>i</sub> ± t(φ<sub>E</sub>) √(V<sub>E</sub>/n<sub>i</sub>)</b>。誤差分散V<sub>E</sub>は分散分析表の値を全水準共通で使う。</span></div>
+      <div class="step"><span class="mark">4</span><span>2つの母平均の<b>差</b>の区間推定: <b>(x̄<sub>i</sub>−x̄<sub>j</sub>) ± t(φ<sub>E</sub>) √{V<sub>E</sub>(1/n<sub>i</sub>+1/n<sub>j</sub>)}</b>。1/n を<b>2回足す</b>ことを忘れると、選択肢オのような「幅が狭すぎる」誤答に落ちる。</span></div>
+      <div class="step"><span class="mark">5</span><span>n が全水準で同じときは、1つの母平均の区間の幅はどの水準でも同じになる（第36回の不揃い実験とは違う点）。</span></div>
+      <div class="step"><span class="mark">6</span><span>検算の勘所: 差の区間の幅は、1つの母平均の区間の幅の<b>√2倍</b>になる(今回は 0.92×√2 ≒ 1.31)。この比率がずれていたら、どちらかの式を間違えている。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第37回 問5 / 一元配置実験・区間推定</span>
+    <span>GG社 29.5(28.6〜30.4) ・ 差 5.5(4.2〜6.8)</span>
+  </footer>
+
+</div>

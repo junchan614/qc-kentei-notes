@@ -1,0 +1,475 @@
+<title>第36回 回帰分析の解法</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3;
+  --surface:#FFFFFF;
+  --surface-2:#E7EDEB;
+  --ink:#16232A;
+  --ink-soft:#4B5D60;
+  --ink-faint:#7C8D8F;
+  --border:#C9D6D2;
+  --border-strong:#AABAB5;
+  --reg:#1C7C8C;
+  --reg-soft:#DCEEF0;
+  --reg-ink:#0F5B68;
+  --res:#C97A2B;
+  --res-soft:#F5E4D0;
+  --res-ink:#8F5116;
+  --wrong:#B04A44;
+  --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.given{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 22px;display:flex;flex-direction:column;gap:14px;}
+.given-row{display:flex;flex-wrap:wrap;gap:10px;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:14px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--ink);}
+.ask-row{display:flex;flex-wrap:wrap;gap:8px;}
+.ask{font-family:'JetBrains Mono',monospace;font-size:13px;border:1px dashed var(--border-strong);border-radius:999px;padding:5px 12px;color:var(--ink-soft);}
+
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:620px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:13px 18px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第36回 問4</span>
+    <h1>平方和の分解から回帰係数・分散分析表まで</h1>
+    <p class="lede">①はS(T)=Σ(yi−ȳ)²を「残差」と「回帰による平方和」に分解する式の用語と、その2つを図でどう見分けるかを問う知識問題。②は与えられる5つの和だけから3つの平方和を作れば、回帰係数も分散分析表もすべて機械的に埋まる計算問題。設問(23)〜(30)を順に解きながら、誤答選択肢が何の計算ミス・読み違えに対応しているかまで確認する。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">①</span><h2>平方和の分解 — 残差と回帰による平方和の見分け方 (23)〜(25)</h2></div>
+    <p>単回帰分析では、データの構造式を y<sub>i</sub> = β<sub>0</sub> + β<sub>1</sub>x<sub>i</sub> + ε<sub>i</sub> とし、実測値y<sub>i</sub>と予測値ŷ<sub>i</sub>の差の2乗和が最小になるようβ<sub>0</sub>・β<sub>1</sub>を求める(最小二乗法)。この式に意味があるかを分散分析で調べるために、yの平方和を次のように分解する。</p>
+
+    <div class="calc">
+      <span class="label">平方和の分解</span>
+      <span class="line">Σ(y<sub>i</sub>−ȳ)² = Σ(y<sub>i</sub>−ŷ<sub>i</sub>+ŷ<sub>i</sub>−ȳ)²</span>
+      <span class="line">　　　　　　= Σe<sub>i</sub>² + Σ(ŷ<sub>i</sub>−ȳ)²</span>
+    </div>
+
+    <p>右辺第1項Σe<sub>i</sub>²は、実測値y<sub>i</sub>と予測値ŷ<sub>i</sub>の差(e<sub>i</sub>=y<sub>i</sub>−ŷ<sub>i</sub>)の2乗和。この「実測−予測」の差を指す言葉が(23)。</p>
+    <span class="answer"><span class="qno">(23)</span> イ. 残差</span>
+
+    <div class="table-wrap">
+      <table>
+        <caption>(23)の選択肢の区別</caption>
+        <thead><tr><th>選択肢</th><th>意味</th><th>この設問に当てはまるか</th></tr></thead>
+        <tbody>
+          <tr><td>ア. 偏差</td><td>ある値と平均との差(y<sub>i</sub>−ȳ など)</td><td>分解する前の全体の話で、e<sub>i</sub>そのものではない</td></tr>
+          <tr class="row-reg"><td>イ. 残差</td><td>実測値と予測値(モデルからの当てはめ)の差</td><td class="hit">e<sub>i</sub>=y<sub>i</sub>−ŷ<sub>i</sub> はまさにこの定義</td></tr>
+          <tr><td>ウ. 誤差</td><td>真の値(母数)とのズレ。理論上の概念で観測できない</td><td>e<sub>i</sub>は観測データから計算できる推定量なので誤差そのものではない</td></tr>
+          <tr><td>エ. 精度／オ. ばらつき</td><td>測定の細かさ／散らばりの大きさ一般</td><td>差の定義を表す言葉ではない</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>矢印でe<sub>i</sub>(実測値と予測値の差)を表した図が(24)、矢印でŷ<sub>i</sub>−ȳ(予測値と全体平均の差)を表した図が(25)。この2つは<b>矢印の始点と終点がどこにあるか</b>で見分ける。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 260" role="img" aria-label="左は残差eiを示す図。各データ点から回帰直線上の同じx位置まで短い矢印が伸びる。右は回帰による平方和を示す図。全体平均の水平線から回帰直線上の点まで矢印が伸びる">
+          <text x="150" y="20" font-size="13" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">(24) 残差 e_i = y_i − ŷ_i</text>
+          <line x1="40" y1="210" x2="270" y2="210" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <line x1="40" y1="210" x2="40" y2="40" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <line x1="60" y1="190" x2="250" y2="60" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="150" y1="185" x2="270" y2="185" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+          <text x="278" y="189" font-size="11" fill="currentColor" opacity="0.6">ȳ</text>
+
+          <circle cx="90" cy="150" r="4" fill="var(--ink)"/>
+          <line x1="90" y1="150" x2="90" y2="169" stroke="var(--reg)" stroke-width="2" marker-end="url(#dwn)"/>
+          <circle cx="140" cy="95" r="4" fill="var(--ink)"/>
+          <line x1="140" y1="95" x2="140" y2="112" stroke="var(--reg)" stroke-width="2" marker-end="url(#dwn)"/>
+          <circle cx="190" cy="135" r="4" fill="var(--ink)"/>
+          <line x1="190" y1="135" x2="190" y2="115" stroke="var(--reg)" stroke-width="2" marker-end="url(#up1)"/>
+          <circle cx="225" cy="75" r="4" fill="var(--ink)"/>
+          <line x1="225" y1="75" x2="225" y2="90" stroke="var(--reg)" stroke-width="2" marker-end="url(#dwn)"/>
+
+          <defs>
+            <marker id="dwn" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--reg)"/></marker>
+            <marker id="up1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--reg)"/></marker>
+          </defs>
+
+          <text x="150" y="245" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.7">点(実測値)⇔線(予測値)の矢印 = 選択肢ア</text>
+
+          <line x1="330" y1="0" x2="330" y2="260" stroke="currentColor" stroke-width="1" opacity="0.15"/>
+
+          <text x="490" y="20" font-size="13" text-anchor="middle" fill="var(--res-ink)" font-weight="700">(25) 回帰による ŷ_i − ȳ</text>
+          <line x1="380" y1="210" x2="610" y2="210" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <line x1="380" y1="210" x2="380" y2="40" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <line x1="400" y1="190" x2="590" y2="60" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="380" y1="150" x2="610" y2="150" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+          <text x="618" y="154" font-size="11" fill="currentColor" opacity="0.6">ȳ</text>
+
+          <line x1="430" y1="150" x2="430" y2="170" stroke="var(--res)" stroke-width="2" marker-end="url(#dwn2)"/>
+          <line x1="480" y1="150" x2="480" y2="103" stroke="var(--res)" stroke-width="2" marker-end="url(#up2)"/>
+          <line x1="530" y1="150" x2="530" y2="82" stroke="var(--res)" stroke-width="2" marker-end="url(#up2)"/>
+          <line x1="565" y1="150" x2="565" y2="70" stroke="var(--res)" stroke-width="2" marker-end="url(#up2)"/>
+          <defs>
+            <marker id="dwn2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--res)"/></marker>
+            <marker id="up2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--res)"/></marker>
+          </defs>
+
+          <text x="490" y="245" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.7">ȳ線⇔回帰直線上の矢印 = 選択肢エ(基準解答)</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 左(24): 矢印は<b>各データ点</b>から<b>回帰直線上の同じx位置</b>まで伸びる — 「実測値と予測値の差」そのものが残差。右(25): 矢印は<b>ȳの水平線</b>から<b>回帰直線上の点</b>まで伸びる(データ点は矢印の始点・終点に登場しない) — 「予測値が全体平均からどれだけ離れているか」が回帰の効果。</figcaption>
+    </figure>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>(24)(25)の選択肢トレース</caption>
+        <thead><tr><th>選択肢</th><th>矢印の始点→終点</th><th>判定</th></tr></thead>
+        <tbody>
+          <tr><td class="good">ア</td><td>各データ点 → 回帰直線上の同じx位置(残差e<sub>i</sub>)</td><td class="good">(24)の正解</td></tr>
+          <tr><td class="bad">イ</td><td>ȳの水平線 → 回帰直線上の点(ŷ<sub>i</sub>−ȳ)</td><td class="bad">この図が表す内容自体は(25)の正しい概念と一致するが、公式の基準解答では(25)の記号は<b>エ</b>。元画像の選択肢(絵)を再現できないため、記号と絵の対応はここで断定しない</td></tr>
+          <tr><td class="bad">ウ</td><td>回帰直線が描かれておらず、ȳ線から各データ点へ直接矢印(y<sub>i</sub>−ȳ)</td><td class="bad">分解前の全体の偏差の図。回帰直線を使っていないので該当なし</td></tr>
+          <tr><td class="good">エ</td><td>(元画像未収録。基準解答上の(25)の正解)</td><td class="good">(25)の正解</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <span class="answer" style="margin-right:12px;"><span class="qno">(24)</span> ア</span>
+    <span class="answer"><span class="qno">(25)</span> エ</span>
+
+    <div class="callout warn"><b>訂正(基準解答との照合):</b> 当初この資料では(25)の正解を「イ」としていたが、書籍の基準解答は「エ」。「回帰による平方和(ŷ<sub>i</sub>−ȳ)」を表す図という<b>概念自体</b>は上図・上記イの説明で正しいが、実際の試験ではその図に振られている記号が<b>エ</b>だった。元の選択肢(4枚の図)そのものを保持していないため、記号エの絵柄は再現できていない — 概念(ȳ線から回帰直線上の点への矢印)と記号(エ)をセットで覚えること。</div>
+
+    <div class="callout info"><b>覚え方:</b> 「残差」は<b>点と線の距離</b>(実測が予測からどれだけ外れたか)、「回帰による平方和」は<b>線と平均線の距離</b>(予測が全体平均からどれだけ動いたか)。矢印がデータ点に触れているかどうかで即座に判別できる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">②</span><h2>回帰係数と分散分析表 — (26)〜(30)</h2></div>
+    <p>溶接部品の特性値yと成分量xの関係を調べるため、n=20組のデータから次の値を得た。</p>
+    <div class="given">
+      <div>
+        <div style="font-size:14px;color:var(--ink-soft);margin-bottom:10px;">n = 20 組のデータについて、次の値が得られている。</div>
+        <div class="given-row">
+          <span class="chip">Σx<sub>i</sub> = 250</span>
+          <span class="chip">Σy<sub>i</sub> = 1379</span>
+          <span class="chip">Σx<sub>i</sub>² = 3370</span>
+          <span class="chip">Σy<sub>i</sub>² = 95299</span>
+          <span class="chip">Σx<sub>i</sub>y<sub>i</sub> = 17031</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:14px;color:var(--ink-soft);margin-bottom:10px;">これに y = β<sub>0</sub> + β<sub>1</sub>x を最小二乗法であてはめ、次を求める。</div>
+        <div class="ask-row">
+          <span class="ask">(26) β<sub>0</sub></span>
+          <span class="ask">(27) β<sub>1</sub></span>
+          <span class="ask">(28) 残差の自由度</span>
+          <span class="ask">(29) 分散比 F<sub>0</sub></span>
+          <span class="ask">(30) 帰無仮説 H<sub>0</sub></span>
+        </div>
+      </div>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 210" role="img" aria-label="解答の流れ図。5つの和から3つの平方和Sxx・Sxy・Syyを計算し、そこから回帰係数と分散分析表の両方が導かれることを示す">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <rect x="14" y="70" width="140" height="70" rx="10" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.6"/>
+          <text x="84" y="98" font-size="13" text-anchor="middle" fill="currentColor">与えられた5つの和</text>
+          <text x="84" y="120" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.65">Σx, Σy, Σx², Σy², Σxy</text>
+
+          <line x1="158" y1="105" x2="212" y2="105" stroke="currentColor" stroke-width="1.4" marker-end="url(#ar)" opacity="0.75"/>
+          <text x="185" y="96" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">補正項を引く</text>
+
+          <rect x="216" y="62" width="150" height="86" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.8"/>
+          <text x="291" y="86" font-size="13" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">3つの平方和</text>
+          <text x="291" y="107" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)">S(xx)=245</text>
+          <text x="291" y="124" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)">S(xy)=−206.5</text>
+          <text x="291" y="141" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)">S(yy)=216.95</text>
+
+          <line x1="370" y1="90" x2="424" y2="52" stroke="currentColor" stroke-width="1.4" marker-end="url(#ar)" opacity="0.75"/>
+          <line x1="370" y1="122" x2="424" y2="158" stroke="currentColor" stroke-width="1.4" marker-end="url(#ar)" opacity="0.75"/>
+
+          <rect x="428" y="18" width="196" height="62" rx="10" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.6"/>
+          <text x="526" y="41" font-size="13" text-anchor="middle" fill="currentColor">回帰係数 (26)(27)</text>
+          <text x="526" y="62" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.65">β₁=S(xy)/S(xx), β₀=ȳ−β₁x̄</text>
+
+          <rect x="428" y="130" width="196" height="62" rx="10" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.6"/>
+          <text x="526" y="153" font-size="13" text-anchor="middle" fill="currentColor">分散分析表 (28)(29)</text>
+          <text x="526" y="174" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.65">S(R)=S(xy)²/S(xx) から展開</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 設問は5つに分かれているが、実質的な計算は「3つの平方和を出す」1回だけ。ここを間違えると以降すべてが崩れ、逆にここが正しければ残りは代入で済む。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>3つの平方和を求める</h2></div>
+    <p>平方和はどれも「2乗の和 − <b>補正項</b>(和の2乗をnで割ったもの)」の形。この形さえ覚えていれば3本とも同じ手順で書ける。</p>
+
+    <div class="calc">
+      <span class="label">xの平方和</span>
+      <span class="line">S<sub>xx</sub> = Σx² − (Σx)²/n = 3370 − 250²/20 = 3370 − 3125</span>
+      <span class="result">S<sub>xx</sub> = 245</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">xとyの積和</span>
+      <span class="line">S<sub>xy</sub> = Σxy − (Σx)(Σy)/n = 17031 − (250 × 1379)/20 = 17031 − 17237.5</span>
+      <span class="result">S<sub>xy</sub> = −206.5</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">yの平方和（＝全体の変動 S<sub>T</sub>）</span>
+      <span class="line">S<sub>yy</sub> = Σy² − (Σy)²/n = 95299 − 1379²/20 = 95299 − 95082.05</span>
+      <span class="result">S<sub>yy</sub> = 216.95</span>
+    </div>
+
+    <div class="callout info"><b>ここで平均も出しておく:</b> x̄ = 250/20 = <span class="mono">12.5</span>、ȳ = 1379/20 = <span class="mono">68.95</span>。次のステップですぐ使う。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>回帰係数を求める — (26)(27)</h2></div>
+    <p>傾き β<sub>1</sub> を先に出し、それを使って切片 β<sub>0</sub> を出す。<b>順序は必ず β<sub>1</sub> → β<sub>0</sub></b>。</p>
+
+    <div class="calc">
+      <span class="label">傾き（回帰係数）</span>
+      <span class="line">β<sub>1</sub> = S<sub>xy</sub> / S<sub>xx</sub> = −206.5 / 245 = −0.84285…</span>
+      <span class="result">β<sub>1</sub> ≒ −0.843</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">切片</span>
+      <span class="line">β<sub>0</sub> = ȳ − β<sub>1</sub>x̄ = 68.95 − (−0.843 × 12.5) = 68.95 + 10.5375</span>
+      <span class="result">β<sub>0</sub> ≒ 79.488</span>
+    </div>
+
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <span class="answer"><span class="qno">(26)</span> β<sub>0</sub> = 79.488</span>
+      <span class="answer"><span class="qno">(27)</span> β<sub>1</sub> = −0.843</span>
+    </div>
+
+    <div class="callout"><b>丸めの注意:</b> β<sub>1</sub> を丸めずに計算すると β<sub>0</sub> = 79.4857 となり、選択肢の 79.488 とわずかにずれる。この問題は <b>β<sub>1</sub> を −0.843 に丸めてから代入する</b>と選択肢とぴったり一致する。選択肢が僅差で並んでいるときは、丸めた値を代入して照合する。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>分散分析表を埋める — (28)(29)</h2></div>
+    <p>回帰の平方和は <span class="mono">S<sub>R</sub> = S<sub>xy</sub>² / S<sub>xx</sub></span> で一発で出る(<span class="mono">β<sub>1</sub> × S<sub>xy</sub></span> でも同じ)。あとは引き算と割り算だけ。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>表4.1 分散分析表（完成形）</caption>
+        <thead>
+          <tr><th>要因</th><th>平方和 S</th><th>自由度 φ</th><th>平均平方 V</th><th>分散比 F<sub>0</sub></th></tr>
+        </thead>
+        <tbody>
+          <tr class="row-reg">
+            <td>回帰 R</td>
+            <td><div class="num">174.05</div><div class="sub">= (−206.5)² / 245</div></td>
+            <td><div class="num">1</div><div class="sub">説明変数1個なので常に1</div></td>
+            <td><div class="num">174.05</div><div class="sub">= 174.05 / 1</div></td>
+            <td><div class="num hit">≒ 73.0</div><div class="sub">= 174.05 / 2.383 …(29)</div></td>
+          </tr>
+          <tr class="row-res">
+            <td>残差 e</td>
+            <td><div class="num">42.90</div><div class="sub">= 216.95 − 174.05</div></td>
+            <td><div class="num hit">18</div><div class="sub">= n − 2 = 20 − 2 …(28)</div></td>
+            <td><div class="num">2.383</div><div class="sub">= 42.90 / 18</div></td>
+            <td><div class="sub" style="margin-top:0;">—</div></td>
+          </tr>
+          <tr class="row-total">
+            <td>計 T</td>
+            <td><div class="num">216.95</div><div class="sub">= S<sub>yy</sub></div></td>
+            <td><div class="num">19</div><div class="sub">= n − 1</div></td>
+            <td><div class="sub" style="margin-top:0;">—</div></td>
+            <td><div class="sub" style="margin-top:0;">—</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <span class="answer"><span class="qno">(28)</span> φ<sub>e</sub> = 18</span>
+      <span class="answer"><span class="qno">(29)</span> F<sub>0</sub> ≒ 73.0</span>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 620 210" role="img" aria-label="残差の自由度の選び方でF0が73.0・77.1・154.2に分岐する図。正しいのはn-2=18で、19や38を選ぶと誤答選択肢の値になる">
+          <rect x="14" y="80" width="132" height="52" rx="10" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.6"/>
+          <text x="80" y="101" font-size="13" text-anchor="middle" fill="currentColor">S(e) = 42.90</text>
+          <text x="80" y="120" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.6">これを φ(e) で割る</text>
+
+          <line x1="150" y1="106" x2="196" y2="42" stroke="currentColor" stroke-width="1.2" marker-end="url(#ar)" opacity="0.45"/>
+          <line x1="150" y1="106" x2="196" y2="106" stroke="var(--reg)" stroke-width="2" marker-end="url(#ar)"/>
+          <line x1="150" y1="106" x2="196" y2="170" stroke="currentColor" stroke-width="1.2" marker-end="url(#ar)" opacity="0.45"/>
+
+          <text x="204" y="34" font-size="12.5" fill="var(--wrong)">φ(e)=19 と誤る</text>
+          <text x="204" y="52" font-size="12" fill="currentColor" opacity="0.6">V(e)=2.258</text>
+          <line x1="360" y1="40" x2="404" y2="40" stroke="currentColor" stroke-width="1.2" marker-end="url(#ar)" opacity="0.45"/>
+          <text x="412" y="45" font-size="13" fill="var(--wrong)" font-weight="600">F(0)=77.1 → 誤答</text>
+
+          <text x="204" y="100" font-size="12.5" fill="var(--reg-ink)" font-weight="600">φ(e)=n−2=18 ← 正</text>
+          <text x="204" y="118" font-size="12" fill="var(--reg-ink)" opacity="0.8">V(e)=2.383</text>
+          <line x1="360" y1="106" x2="404" y2="106" stroke="var(--reg)" stroke-width="2" marker-end="url(#ar)"/>
+          <text x="412" y="111" font-size="13" fill="var(--reg-ink)" font-weight="700">F(0)=73.0 → 正解</text>
+
+          <text x="204" y="166" font-size="12.5" fill="var(--wrong)">φ(e)=38 と誤る</text>
+          <text x="204" y="184" font-size="12" fill="currentColor" opacity="0.6">V(e)=1.129</text>
+          <line x1="360" y1="172" x2="404" y2="172" stroke="currentColor" stroke-width="1.2" marker-end="url(#ar)" opacity="0.45"/>
+          <text x="412" y="177" font-size="13" fill="var(--wrong)" font-weight="600">F(0)=154.2 → 誤答</text>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> 選択肢に並ぶ 77.01 と 154.03 は、残差の自由度を 19(＝n−1)や 38 と取り違えたときに出る値。<b>自由度さえ間違えなければ、この設問は落とさない</b>。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 4</span><h2>帰無仮説を答える — (30)</h2></div>
+    <p>回帰の分散分析が検定しているのは「<b>xでyを説明できるか</b>」。説明できないとは、傾きがゼロで直線が水平になること。したがって帰無仮説は傾きに関する主張になる。</p>
+
+    <span class="answer"><span class="qno">(30)</span> H<sub>0</sub> : β<sub>1</sub> = 0</span>
+
+    <div class="steps">
+      <div class="step"><span class="mark">✓</span><span><b>β<sub>1</sub> = 0</b> … 傾きがゼロ＝xが変わってもyの予測値が変わらない。「回帰式に意味がない」という主張そのもの。<b>これが正解</b>。</span></div>
+      <div class="step"><span class="mark">✕</span><span><b>β<sub>0</sub> = 0</b> … 切片がゼロ、つまり直線が原点を通るかどうかの話。回帰式に意味があるかとは無関係。</span></div>
+      <div class="step"><span class="mark">✕</span><span><b>ρ = 0</b> … 母相関係数の検定の帰無仮説。単回帰では結論が一致するが、分散分析表が検定しているのは回帰係数であり、設問が問う仮説はこちらではない。</span></div>
+    </div>
+
+    <div class="callout info"><b>判定:</b> F<sub>0</sub> = 73.0 に対し、F(1, 18; 0.01) ≒ 8.3。73.0 は 1%点をはるかに超えるので<b>高度に有意</b>となり、問題文の「回帰式に意味があるといえる」に一致する。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">分析</span><h2>誤答選択肢は何のミスに対応しているか</h2></div>
+    <p>この問題の選択肢は、典型的な計算ミスをそのまま数値化して並べてある。<b>自分が出した答えが下の「誤答」欄にあったら、右の原因を疑う</b>とすぐ立て直せる。</p>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>選択肢と、その裏にある計算ミス</caption>
+        <thead>
+          <tr><th>β<sub>1</sub></th><th>β<sub>0</sub></th><th>判定</th><th>原因</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="good">−0.843</td><td class="good">79.488</td>
+            <td><span style="color:var(--reg-ink);font-weight:700;">正解</span></td>
+            <td>β<sub>1</sub> = S<sub>xy</sub>/S<sub>xx</sub>、β<sub>0</sub> = ȳ − β<sub>1</sub>x̄</td>
+          </tr>
+          <tr>
+            <td class="bad">−0.952</td><td class="bad">80.850</td>
+            <td>誤</td>
+            <td><b>xとyを取り違えた</b>。S<sub>xy</sub>/S<sub>yy</sub> で割っている（yに対するxの回帰）</td>
+          </tr>
+          <tr>
+            <td class="bad">−1.186</td><td class="bad">83.775</td>
+            <td>誤</td>
+            <td>分母に S<sub>xx</sub> ではなく回帰平方和 S<sub>R</sub>(=174.05)を使ってしまった</td>
+          </tr>
+          <tr>
+            <td class="bad">0.886</td><td class="bad">57.875</td>
+            <td>誤</td>
+            <td><b>符号ミス</b>。S<sub>xy</sub> が負であることを見落とし、β<sub>1</sub> を正として ȳ − β<sub>1</sub>x̄ を計算した</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><b>β<sub>1</sub> と β<sub>0</sub> はペアで用意されている:</b> 上表の通り、誤った β<sub>1</sub> にはそれに対応する誤った β<sub>0</sub> が必ず選択肢に置かれている。「β<sub>0</sub> の選択肢に自分の答えがあったから合っている」とは限らない。<b>検算は選択肢ではなく S<sub>xy</sub> の符号と分母で行う</b>。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">0</span><span><b>残差=点と線の距離、回帰による平方和=線と平均線の距離。</b> 矢印がデータ点に触れているかどうかで図を見分ける。</span></div>
+      <div class="step"><span class="mark">1</span><span>平方和はすべて <b>「2乗の和 − 補正項」</b>。S<sub>xx</sub>・S<sub>xy</sub>・S<sub>yy</sub> の3本を最初に出し切ってから設問に入る。</span></div>
+      <div class="step"><span class="mark">2</span><span><b>S<sub>xy</sub> の符号</b>がそのまま β<sub>1</sub> の符号になる。今回のように負であれば「xが増えるとyは減る」関係。ここを落とすと連鎖的に全問外す。</span></div>
+      <div class="step"><span class="mark">3</span><span>単回帰の自由度は <b>回帰1・残差 n−2・計 n−1</b>。n=20 なら 1・18・19。この3つは足し算で必ず整合する。</span></div>
+      <div class="step"><span class="mark">4</span><span>回帰平方和は <b>S<sub>R</sub> = S<sub>xy</sub>² / S<sub>xx</sub></b> で直接出せる。残差は引き算(S<sub>e</sub> = S<sub>yy</sub> − S<sub>R</sub>)。</span></div>
+      <div class="step"><span class="mark">5</span><span>回帰の分散分析の帰無仮説は必ず <b>H<sub>0</sub>: β<sub>1</sub> = 0</b>(傾きがゼロ)。切片や相関係数ではない。</span></div>
+      <div class="step"><span class="mark">6</span><span>参考: 寄与率 R² = S<sub>R</sub>/S<sub>T</sub> = 174.05/216.95 = <b>0.802</b>。yのばらつきの約80%をxで説明できている。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第36回 問4 / 平方和の分解と回帰分析</span>
+    <span>(23)残差 (24)ア (25)エ ・ n=20 · β₁=−0.843 · F₀≒73.0</span>
+  </footer>
+
+</div>

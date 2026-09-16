@@ -1,0 +1,271 @@
+<title>第39回 問2 二群の母分散の比較</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+.trap-table td.reuse{color:var(--res-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第39回 問2</span>
+    <h1>2つのラインの母分散を比べる — 分散比のF検定</h1>
+    <p class="lede">AラインとBラインで製品のばらつき(母分散)に違いがあるかを調べる問題。分散分析(ANOVA)のF検定とよく似た式を使うが、目的は「水準間で平均に差があるか」ではなく<b>「2つの分散そのものが等しいか」</b>。棄却域の作り方に、この検定ならではの<b>「大きい方を分子にする」というひと工夫</b>がある。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>設定</h2></div>
+    <p>ある工場で製造される製品について、AラインとBラインで母分散に違いがあるかを調べる。Aラインから8個、Bラインから9個をランダムに取り、分散比のF検定を行う。</p>
+
+    <div class="calc">
+      <span class="label">サンプルサイズ</span>
+      <span class="line">n(A) = 8 → 自由度 φ(A) = n(A)−1 = 7</span>
+      <span class="line">n(B) = 9 → 自由度 φ(B) = n(B)−1 = 8</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>仮説の設定と有意水準 — (8)(9)</h2></div>
+    <p>調べたいのは「違いがあるかどうか」であって「どちらが大きいか」ではないので、対立仮説は<b>両側</b>(≠)になる。</p>
+
+    <div class="calc">
+      <span class="label">仮説</span>
+      <span class="line">帰無仮説 H(0): σA² = σB²</span>
+      <span class="line">対立仮説 H(1): σA² ≠ σB²</span>
+      <span class="line">有意水準 α = 0.05</span>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(8)</span> ア. σA² = σB²</span>
+      <span class="answer"><span class="qno">(9)</span> イ. σA² ≠ σB²</span>
+    </div>
+
+    <div class="callout info"><b>一元配置実験のF検定との違い:</b> 一元配置実験の分散分析(<a href="36th-anova-oneway.html" target="_blank" rel="noopener">第36回 問5</a>など)では対立仮説は「少なくとも1つの水準平均が異なる」で、検定は常に<b>片側</b>(F0が大きいときだけ有意)。今回は「2つの分散のどちらが大きいか」を決め打ちしない両側検定なので、棄却域の作り方も一手間増える。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>棄却域Rの設定 — (10)(11)</h2></div>
+    <p>F分布の表は<b>上側の値しか載っていない</b>ことが多いため、両側検定でも<b>分散が大きい方を分子にしてF0を常に1以上にする</b>という工夫をする。どちらが分子になるかでF0が従うF分布の自由度の組み合わせが入れ替わるので、棄却域の境界値も2種類用意しておく。</p>
+
+    <div class="calc">
+      <span class="label">分散の大小関係で場合分け</span>
+      <span class="line">VA ≥ VB のとき F0 = VA/VB,  棄却域 R: F0 ≥ F(φA, φB; 0.025) = F(7, 8; 0.025)</span>
+      <span class="line">VA &lt; VB のとき F0 = VB/VA,  棄却域 R: F0 ≥ F(φB, φA; 0.025) = F(8, 7; 0.025)</span>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(10)</span> キ. F(7,8;0.025) = 4.53</span>
+      <span class="answer"><span class="qno">(11)</span> ク. F(8,7;0.025) = 4.90</span>
+    </div>
+
+    <div class="callout"><b>なぜ0.025なのか:</b> 両側検定でα=0.05を上下2つの裾に振り分けるので、片側あたりはα/2=0.025になる。「大きい方を分子にする」トリックのおかげで、実際に見るのは<b>常に上側だけ</b>で済み、F表の下側(1未満)の値を別途探す必要がない。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>統計量の計算 — (12)</h2></div>
+    <p>各ラインの平方和から分散(平均平方)Vを求め、大小を比較してから比を取る。</p>
+
+    <div class="calc">
+      <span class="label">各ラインの分散</span>
+      <span class="line">SA = 5.875 → VA = SA/φA = 5.875/7 = 0.839</span>
+      <span class="line">SB = 12.222 → VB = SB/φB = 12.222/8 = 1.528</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>VAとVBの大小比較 → どちらの場合分けを使うか</caption>
+        <thead><tr><th></th><th>V</th><th>大小</th></tr></thead>
+        <tbody>
+          <tr><td>A</td><td class="num">0.839</td><td></td></tr>
+          <tr class="row-res"><td>B</td><td class="num hit">1.528</td><td>VA &lt; VB → F0 = VB/VA を使う</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="calc">
+      <span class="label">検定統計量</span>
+      <span class="line">F0 = VB/VA = 1.528 / 0.839 = 1.820</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(12)</span> ウ. F0 = 1.82</span></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 4</span><h2>判定 — (13)</h2></div>
+    <p>VA&lt;VBの場合なので、棄却域は(11)の F(8,7;0.025)=4.90 と比較する。</p>
+
+    <div class="calc">
+      <span class="label">判定</span>
+      <span class="line">F0 = 1.82 < 4.90 = F(8,7;0.025)</span>
+      <span class="line">→ 棄却域に入らない → 有意でない</span>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 220" role="img" aria-label="F(8,7)分布の図。棄却域の境界4.90に対して、計算された検定統計量1.82ははるかに左側の受容域に入っており、有意でないことを示す">
+          <line x1="60" y1="180" x2="600" y2="180" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+          <path d="M60,180 C90,180 110,60 165,50 C230,38 260,110 340,155 C420,185 500,180 600,180 Z" fill="none" stroke="var(--reg)" stroke-width="2.2"/>
+
+          <line x1="350" y1="180" x2="350" y2="190" stroke="var(--res)" stroke-width="1.8"/>
+          <text x="350" y="206" font-size="12" text-anchor="middle" fill="var(--res-ink)" font-weight="600">F(8,7;0.025)</text>
+          <text x="350" y="220" font-size="10.5" text-anchor="middle" fill="var(--res-ink)" opacity="0.85">4.90</text>
+          <path d="M350,178 C400,180 470,180 600,180 Z" fill="var(--wrong)" opacity="0.35"/>
+
+          <line x1="185" y1="180" x2="185" y2="190" stroke="var(--reg-ink)" stroke-width="2"/>
+          <text x="185" y="206" font-size="12" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">F0</text>
+          <text x="185" y="220" font-size="10.5" text-anchor="middle" fill="var(--reg-ink)" opacity="0.9">1.82</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> F0=1.82は棄却域の境界4.90より大きく手前(左側)にあり、受容域の中に収まっている。有意水準5%でH(0)を棄却できない。</figcaption>
+    </figure>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(13)</span> キ. 有意でないので、母分散σA²とσB²は異なるとはいえない</span></div>
+
+    <div class="callout warn"><b>「等しいといえる」ではない:</b> 「有意でないので、母分散は等しいといえる」という選択肢は誤り。<b>検定が有意でない=「差がある証拠が見つからなかった」だけ</b>で、「等しいと証明された」わけではない。仮説検定は「差がないことの証明」には使えないので、正しい結論は<b>「異なるとはいえない」という消極的な表現</b>にとどめる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">補足</span><h2>「大きい方を分子にする」トリックを図で理解する</h2></div>
+    <p>F分布は左右非対称なので、両側検定でも「下側5%点」と「上側5%点」の2つを別々に用意する必要がある。ところがF検定表には通常<b>上側の値しか載っていない</b>。そこで、<b>VA/VBとVB/VAはちょうど逆数の関係</b>にあることを利用し、常に1以上になる方(=大きい方÷小さい方)だけを計算して、上側の値とだけ比較すればよいことにする。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 240" role="img" aria-label="VA/VBとVB/VAが逆数の関係にあり、両側検定の下側棄却域が大きい方を分子にする裏技によって上側棄却域だけの比較に変換されることを示す図">
+          <text x="320" y="24" font-size="13" text-anchor="middle" fill="currentColor" opacity="0.75">両側検定の下側・上側 は「逆数を取る」ことで表裏になる</text>
+
+          <g font-size="12.5">
+            <rect x="60" y="50" width="180" height="40" rx="8" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.6"/>
+            <text x="150" y="75" text-anchor="middle" fill="var(--res-ink)">VA/VB が下側5%に入る</text>
+            <rect x="400" y="50" width="180" height="40" rx="8" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+            <text x="490" y="75" text-anchor="middle" fill="var(--reg-ink)">VB/VA が上側5%に入る</text>
+          </g>
+          <line x1="240" y1="70" x2="400" y2="70" stroke="currentColor" stroke-width="1.4" marker-end="url(#arrow3)" marker-start="url(#arrow3s)"/>
+          <text x="320" y="60" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.7">逆数</text>
+
+          <text x="320" y="130" font-size="12.5" text-anchor="middle" fill="currentColor" opacity="0.75">これは「VA&lt;VBのときだけ起こる、VB/VAが極端に大きくなる事象」と同じ</text>
+
+          <rect x="140" y="155" width="360" height="46" rx="8" fill="var(--surface-2)" stroke="var(--border-strong)" stroke-width="1.4"/>
+          <text x="320" y="183" text-anchor="middle" font-size="13" fill="var(--ink)" font-weight="600">だから「大きい方 ÷ 小さい方」だけ計算し、上側の棄却域とだけ比べればよい</text>
+
+          <defs>
+            <marker id="arrow3" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="currentColor" opacity="0.6"/></marker>
+            <marker id="arrow3s" markerWidth="8" markerHeight="8" refX="2" refY="4" orient="auto"><path d="M8,0 L0,4 L8,8 Z" fill="currentColor" opacity="0.6"/></marker>
+          </defs>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> VA/VBが極端に小さくなる(下側棄却域)ことと、その逆数のVB/VAが極端に大きくなる(上側棄却域)ことは<b>同じ事象を裏から見ているだけ</b>。だから「毎回、大きい方の分散を分子にする」と決めておけば、上側の棄却域(F表に載っている値)だけで両側検定ができる。</figcaption>
+    </figure>
+
+    <div class="callout"><b>手順への影響:</b> このトリックのせいで、どちらの自由度の組み合わせ(φA,φB)か(φB,φA)かは<b>計算してみるまで確定しない</b>。今回もSTEP2の時点では(10)(11)の両方を用意しておき、STEP3でVA・VBを実際に計算してから、どちらを使うか(今回は(11))を決めている。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>2群の母分散を比べる検定はF0=VA/VB(または逆数)。自由度は各群の<b>n−1</b>。</span></div>
+      <div class="step"><span class="mark">2</span><span>「違いがあるか」を調べる検定は<b>両側</b>(H1: σA²≠σB²)。α=0.05なら片側あたりα/2=0.025を使う。</span></div>
+      <div class="step"><span class="mark">3</span><span>両側検定の棄却域は、<b>大きい分散を分子にしてF0を常に1以上にする</b>ことで、上側の棄却域だけの比較に置き換えられる。どちらの自由度の組み合わせを使うかは、VAとVBを計算してから決まる。</span></div>
+      <div class="step"><span class="mark">4</span><span>有意でないという結論は「<b>異なるとはいえない</b>」であって「等しいといえる」ではない。仮説検定は差がないことの証明には使えない。</span></div>
+      <div class="step"><span class="mark">5</span><span>一元配置実験のF検定(水準平均の比較)は常に片側検定。分散の等質性を調べる本問のF検定とは、<b>同じF分布を使っても検定の組み立て方が異なる</b>ことを区別する。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第39回 問2 / 二群の母分散の比較(F検定)</span>
+    <span>F0=1.82 &lt; F(8,7;0.025)=4.90 ・ 有意でない</span>
+  </footer>
+
+</div>

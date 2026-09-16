@@ -1,0 +1,221 @@
+<title>第40回 問1 重量と加工精度の検定</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第40回 問1</span>
+    <h1>重量は増えたか、精度は上がったか — t検定とχ²検定の使い分け</h1>
+    <p class="lede">1つの大問の中に「①母平均の検定」と「②母分散の検定」が並んで出てくる構成そのものが出題ポイント。同じ有意水準5%・同じ片側検定でも、①はt分布、②はχ²分布を使う。さらに①は「増えたか」(上側検定)、②は「向上した(ばらつきが減った)か」(下側検定)と<b>棄却域の向きが逆</b>になる点も見落としやすい。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>設定</h2></div>
+    <p><b>①重量:</b> 従来の製造方法での重量の母平均は9.1(g)。原材料の成分比を変更し、重量を増やすことを狙った。変更後のデータ: n=8, 平均値 x̄=9.3, 不偏分散 V=0.72。母平均が従来より大きくなったといえるか、有意水準5%で検討する。</p>
+    <p><b>②加工精度:</b> 従来の母標準偏差は0.95(mm)。工程を改善し、加工精度(ばらつき)の向上を狙った。改善後のデータ: n=8, 平方和 S=1.526。母分散が従来より向上した(小さくなった)といえるか、有意水準5%で検討する。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>① 母平均の検定(片側t検定) — (1)(2)(3)</h2></div>
+    <p>母標準偏差が未知で、標本から不偏分散Vを計算しているので<b>t検定</b>を使う。「大きくなったか」だけを問う片側(上側)検定になる。</p>
+
+    <div class="calc">
+      <span class="label">仮説と検定統計量</span>
+      <span class="line">H(0): μ = 9.1　H(1): μ &gt; 9.1(上側検定)　自由度 φ = n−1 = 7</span>
+      <span class="line">t0 = (x̄ − μ0) / √(V/n) = (9.3 − 9.1) / √(0.72/8) = 0.2 / √0.09 = 0.2 / 0.3</span>
+      <span class="result">t0 = 0.667</span>
+    </div>
+    <div class="answer-row"><span class="answer"><span class="qno">(1)</span> ウ. 0.667</span></div>
+
+    <div class="calc">
+      <span class="label">棄却域の境界値</span>
+      <span class="line">上側片側検定・φ=7・α=0.05 → t表から t(7, 0.05) = 1.895</span>
+      <span class="line">判定: t0 = 0.667 &lt; 1.895 → 棄却域に入らない → 有意でない(大きくなったとはいえない)</span>
+    </div>
+    <div class="answer-row"><span class="answer"><span class="qno">(2)</span> キ. 1.895</span></div>
+
+    <div class="calc">
+      <span class="label">信頼率95%の信頼区間の幅</span>
+      <span class="line">区間推定は両側なので t(7, 0.025) = 2.365 を使う(検定の棄却域と表引きする列が違う点に注意)</span>
+      <span class="line">± t(7,0.025) × √(V/n) = ± 2.365 × 0.3 = ± 0.7095</span>
+      <span class="result">± 0.710 (g)</span>
+    </div>
+    <div class="answer-row"><span class="answer"><span class="qno">(3)</span> エ. 0.710</span></div>
+
+    <div class="callout warn"><b>棄却域と信頼区間でt表の列が違う:</b> 検定は片側(α=0.05の列)、信頼区間の幅は両側(α/2=0.025の列)を見る。同じt(7)でも1.895と2.365を取り違えると(2)と(3)を逆に答えてしまう。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>② 母分散の検定(片側χ²検定) — (4)(5)(6)</h2></div>
+    <p>「ばらつきが向上した(減った)か」を問う検定なので、母標準偏差ではなく<b>母分散</b>についての検定になる。検定統計量は平方和Sと従来の母分散σ0²の比。「向上した」= 分散が<b>小さくなった</b>ことを示したいので、棄却域はχ²分布の<b>下側</b>に置く。</p>
+
+    <div class="calc">
+      <span class="label">仮説と検定統計量</span>
+      <span class="line">H(0): σ² = 0.95² = 0.9025　H(1): σ² &lt; 0.9025(下側検定)　自由度 φ = n−1 = 7</span>
+      <span class="line">χ0² = S / σ0² = 1.526 / 0.9025</span>
+      <span class="result">χ0² = 1.691</span>
+    </div>
+    <div class="answer-row"><span class="answer"><span class="qno">(4)</span> エ. 1.691</span></div>
+
+    <div class="calc">
+      <span class="label">棄却域の境界値</span>
+      <span class="line">下側検定なので、上側95%点(=下側5%点)を使う → χ²表から χ²(7, 0.95) = 2.17</span>
+      <span class="line">判定: χ0² = 1.691 &lt; 2.17 → 棄却域に入る → 有意(向上したといえる)</span>
+    </div>
+    <div class="answer-row"><span class="answer"><span class="qno">(5)</span> オ. 2.17</span></div>
+
+    <div class="calc">
+      <span class="label">工程改善後の加工精度(分散)の点推定値</span>
+      <span class="line">V = S / φ = 1.526 / 7</span>
+      <span class="result">V = 0.218 (mm²)</span>
+    </div>
+    <div class="answer-row"><span class="answer"><span class="qno">(6)</span> イ. 0.218</span></div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 200" role="img" aria-label="χ²(7)分布の図。下側棄却域の境界2.17に対し、検定統計量1.691はさらに左の棄却域内にあり、有意であることを示す">
+          <line x1="60" y1="160" x2="600" y2="160" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+          <path d="M60,160 C90,160 100,40 150,32 C220,20 280,90 380,140 C460,170 520,160 600,158 Z" fill="none" stroke="var(--reg)" stroke-width="2.2"/>
+
+          <path d="M60,158 C90,159 110,150 140,120 C150,105 150,158 150,158 Z" fill="var(--wrong)" opacity="0.35"/>
+          <line x1="150" y1="160" x2="150" y2="170" stroke="var(--res)" stroke-width="1.8"/>
+          <text x="150" y="186" font-size="12" text-anchor="middle" fill="var(--res-ink)" font-weight="600">χ²(7,0.95)</text>
+          <text x="150" y="200" font-size="10.5" text-anchor="middle" fill="var(--res-ink)" opacity="0.85">2.17</text>
+
+          <line x1="118" y1="160" x2="118" y2="170" stroke="var(--reg-ink)" stroke-width="2"/>
+          <text x="118" y="186" font-size="12" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">χ0²</text>
+          <text x="118" y="200" font-size="10.5" text-anchor="middle" fill="var(--reg-ink)" opacity="0.9">1.691</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 「向上した」= 分散が小さくなったことを示す検定なので、棄却域は分布の<b>左裾</b>。χ0²=1.691は境界2.17より小さく棄却域に入るため、有意水準5%で工程改善の効果があったといえる。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">補足</span><h2>①と②、何が同じで何が違うか</h2></div>
+    <div class="table-wrap">
+      <table>
+        <caption>①母平均の検定 と ②母分散の検定 の対応</caption>
+        <thead><tr><th></th><th>① 母平均</th><th>② 母分散</th></tr></thead>
+        <tbody>
+          <tr><td>調べたいこと</td><td>重量が<b>増えた</b>か</td><td>ばらつきが<b>減った(向上した)</b>か</td></tr>
+          <tr><td>使う分布</td><td class="num">t分布 (φ=7)</td><td class="num">χ²分布 (φ=7)</td></tr>
+          <tr><td>検定統計量</td><td class="num">t0=(x̄−μ0)/√(V/n)</td><td class="num">χ0²=S/σ0²</td></tr>
+          <tr class="row-res"><td>棄却域の向き</td><td class="num hit">上側 (大きい方)</td><td class="num hit">下側 (小さい方)</td></tr>
+          <tr><td>境界値</td><td class="num">t(7,0.05)=1.895</td><td class="num">χ²(7,0.95)=2.17</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout info"><b>向きが逆になる理由:</b> ①は「大きくなった」ことを示したいので統計量が大きいほど有意 → 上側検定。②は「ばらつきが減った」ことを示したいので統計量(S/σ0²、従来との比)が小さいほど有意 → 下側検定。「片側検定=常に上側」と思い込むと②で符号を間違える。</div>
+
+    <div class="callout warn"><b>①は非有意、②は有意という結果の非対称性:</b> 標本平均は9.1→9.3に増えているのに、①の検定は有意でない(サンプルが8個では差を検出しきれない)。一方、②はサンプル数が同じ8個でも有意になる。「見た目の変化」と「統計的に意味のある変化」は別物であることが、この一問の中で対比されている。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>母平均の検定(σ未知)は<b>t検定</b>、統計量はt0=(x̄−μ0)/√(V/n)、自由度はn−1。</span></div>
+      <div class="step"><span class="mark">2</span><span>母分散の検定は<b>χ²検定</b>、統計量はχ0²=S/σ0²(平方和Sをそのまま使う。Vやnで割らない)。</span></div>
+      <div class="step"><span class="mark">3</span><span>「増えた/大きくなった」は<b>上側</b>検定、「ばらつきが減った/向上した」は<b>下側</b>検定。片側検定だからと機械的に上側だけを見ない。</span></div>
+      <div class="step"><span class="mark">4</span><span>検定の棄却域(片側α)と信頼区間の幅(両側α/2)は、<b>同じt表の別の列</b>を使う。φが同じでも数値は違う。</span></div>
+      <div class="step"><span class="mark">5</span><span>点推定値は検定と別物。分散の点推定は不偏分散 V=S/(n−1) であり、検定統計量χ0²=S/σ0²とは分母が違う。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第40回 問1 / 母平均の検定(t検定)と母分散の検定(χ²検定)</span>
+    <span>t0=0.667 &gt; t(7,0.05)=1.895は不成立 ・ χ0²=1.691 &lt; χ²(7,0.95)=2.17は成立</span>
+  </footer>
+
+</div>

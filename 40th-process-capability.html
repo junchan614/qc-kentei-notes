@@ -1,0 +1,220 @@
+<title>第40回 問2 工程能力指数の判定</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第40回 問2</span>
+    <h1>CpUがCpLよりずっと小さい理由 — かたよりを考慮したCpk</h1>
+    <p class="lede">工程は安定しているのに、なぜ規格外れが起きるのか。答えは「ばらつき」ではなく「平均のかたより」にある。Cp(ばらつきだけを見た指数)とCpk(かたよりまで考慮した指数)を並べて計算すると、CpUとCpLの<b>非対称な差</b>そのものが「どちらの規格に寄っているか」を教えてくれる。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>設定</h2></div>
+    <p>K工場で生産する金属部品の外形寸法xの規格は<b>95±5mm</b>(下限規格LSL=90、上限規格USL=100)。最近、規格外れが発生している。ロットごとに5個抜き取り、群の数k=20でX̄-R管理図を作成したところ、管理限界線を越える点もクセもなかった。全データでヒストグラムを作ると正規分布とみなせ、<span class="mono">x̄=97.33, V=s²=1.30</span>。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>工程の状態を確認する — (7)</h2></div>
+    <p>管理図上で管理限界線を越える点がなく、点の並び方にもクセ(連・傾向など)がないというのは、工程が統計的管理状態にあることを意味する。</p>
+    <div class="answer-row"><span class="answer"><span class="qno">(7)</span> イ. 安定状態</span></div>
+    <div class="callout info"><b>「安定 = 規格に収まる」ではない:</b> 管理図が安定状態を示すのは「工程が偶然原因だけで動いている」ということであって、「規格を満たしている」こととは無関係。安定していても規格の中心からずれていれば規格外れは起こる。だからこそ次のステップで規格との対比(工程能力指数)に進む。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>ばらつきだけを見る — Cp (8)</h2></div>
+    <p>Cpは規格幅と工程のばらつき(6σ)だけを比べる指数で、<b>平均がどこにあるか(かたより)は考慮しない</b>。</p>
+    <div class="calc">
+      <span class="label">計算</span>
+      <span class="line">σ = √V = √1.30 = 1.1402</span>
+      <span class="line">Cp = (USL − LSL) / 6σ = (100 − 90) / (6 × 1.1402) = 10 / 6.841</span>
+      <span class="result">Cp = 1.46</span>
+    </div>
+    <div class="answer-row"><span class="answer"><span class="qno">(8)</span> オ. 1.46</span></div>
+    <div class="callout"><b>Cp=1.46は悪くない数字:</b> 工程能力指数は一般に1.33以上あれば「十分」とされる目安がある。Cp単体を見る限りこの工程のばらつきそのものは問題ない。にもかかわらず規格外れが起きているなら、疑うべきは<b>平均のかたより</b>だとここで見当がつく。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>片側ずつ平均のかたよりを見る — CpU・CpL (9)(10)</h2></div>
+    <p>上限規格側・下限規格側それぞれについて、平均から規格までの余裕を3σで測る。</p>
+    <div class="calc">
+      <span class="label">上側工程能力指数</span>
+      <span class="line">CpU = (USL − x̄) / 3σ = (100 − 97.33) / (3 × 1.1402) = 2.67 / 3.4205</span>
+      <span class="result">CpU = 0.78</span>
+    </div>
+    <div class="answer-row"><span class="answer"><span class="qno">(9)</span> ウ. 0.78</span></div>
+
+    <div class="calc">
+      <span class="label">下側工程能力指数</span>
+      <span class="line">CpL = (x̄ − LSL) / 3σ = (97.33 − 90) / (3 × 1.1402) = 7.33 / 3.4205</span>
+      <span class="result">CpL = 2.14</span>
+    </div>
+    <div class="answer-row"><span class="answer"><span class="qno">(10)</span> キ. 2.14</span></div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 200" role="img" aria-label="規格の数直線。下限規格90、平均97.33、上限規格100が示され、平均が上限規格側に大きく寄っていることを表す">
+          <line x1="60" y1="120" x2="600" y2="120" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+
+          <line x1="90" y1="100" x2="90" y2="140" stroke="var(--wrong)" stroke-width="2"/>
+          <text x="90" y="160" font-size="12" text-anchor="middle" fill="var(--wrong)" font-weight="600">LSL=90</text>
+
+          <line x1="510" y1="100" x2="510" y2="140" stroke="var(--wrong)" stroke-width="2"/>
+          <text x="510" y="160" font-size="12" text-anchor="middle" fill="var(--wrong)" font-weight="600">USL=100</text>
+
+          <line x1="437" y1="90" x2="437" y2="150" stroke="var(--reg-ink)" stroke-width="2.4"/>
+          <text x="437" y="76" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">x̄=97.33</text>
+
+          <path d="M90,120 L437,120" stroke="var(--reg)" stroke-width="6" stroke-linecap="round" opacity="0.75"/>
+          <text x="263" y="112" font-size="12" text-anchor="middle" fill="var(--reg-ink)">CpL側の余裕: 7.33 (広い)</text>
+
+          <path d="M437,120 L510,120" stroke="var(--res)" stroke-width="6" stroke-linecap="round" opacity="0.85"/>
+          <text x="473" y="188" font-size="12" text-anchor="middle" fill="var(--res-ink)" font-weight="700">CpU側の余裕: 2.67 (狭い)</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 平均97.33は規格の中心95から上限規格(100)側に寄っている。下限規格までの余裕(7.33)に対し、上限規格までの余裕(2.67)は3分の1程度しかなく、<b>CpUだけが極端に小さくなる</b>。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 4</span><h2>かたよりを考慮したCpk、そして対策 — (9)(11)(12)</h2></div>
+    <p>Cpkは「規格に最も近い側」の余裕で決まる、つまりCpUとCpLの<b>小さい方</b>。</p>
+    <div class="calc">
+      <span class="label">Cpkの定義</span>
+      <span class="line">Cpk = min(CpU, CpL) = min(0.78, 2.14) = 0.78</span>
+    </div>
+    <div class="answer-row"><span class="answer"><span class="qno">(9)</span> ウ. 0.78 <span class="mono" style="font-size:12px;color:var(--ink-faint);">(CpUと同じ値・同じ空欄番号)</span></span></div>
+    <div class="callout warn"><b>空欄(9)が2回出てくる理由:</b> 問題文は「上側工程能力指数CpUは(9)」と「平均のかたよりを考慮したCpkは(9)」の2か所で、<b>同じ空欄番号(9)</b>を使っている。これは誤植ではなく、Cpk=min(CpU,CpL)でCpUの方が小さいこの設問では、<b>CpkとCpUの答えがそのまま一致する</b>ことを見抜かせる作り。先にCpUとCpLを両方計算し、小さい方を選ばない限りこの一致には気づけない。</div>
+
+    <p>CpUがCpLに比べて小さいということは、平均が上限規格側に片寄っていることを意味する。対策は平均を規格の中心(95)に近づけること。</p>
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(11)</span> ア. 小さい</span>
+      <span class="answer"><span class="qno">(12)</span> エ. 下げる</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">補足</span><h2>Cp・CpU・CpL・Cpkの関係を1枚で整理</h2></div>
+    <div class="table-wrap">
+      <table>
+        <caption>4つの指数が「何を」「どちらの規格を基準に」測るか</caption>
+        <thead><tr><th>指数</th><th>式</th><th>見ているもの</th><th>値</th></tr></thead>
+        <tbody>
+          <tr><td>Cp</td><td class="num">(USL−LSL)/6σ</td><td>規格幅とばらつきだけ(平均は見ない)</td><td class="num">1.46</td></tr>
+          <tr><td>CpU</td><td class="num">(USL−x̄)/3σ</td><td>上限規格までの余裕</td><td class="num hit">0.78</td></tr>
+          <tr><td>CpL</td><td class="num">(x̄−LSL)/3σ</td><td>下限規格までの余裕</td><td class="num">2.14</td></tr>
+          <tr class="row-res"><td>Cpk</td><td class="num">min(CpU, CpL)</td><td>規格に一番近い側の余裕(実質的な工程能力)</td><td class="num hit">0.78</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout info"><b>Cp &gt; Cpkが意味すること:</b> Cp=1.46は「ばらつきを規格幅と比べれば余裕がある」という理想値。実際のCpk=0.78との差(1.46−0.78=0.68)がそのまま「平均のかたよりによって失われた余裕」の大きさになる。Cp=Cpkなら平均は規格の中心に一致しており、差が大きいほどかたよりが深刻ということ。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>Cpは<b>ばらつきだけ</b>(6σと規格幅の比)、Cpk・CpU・CpLは<b>平均の位置まで</b>考慮する。Cp&gt;Cpkなら平均が中心からずれている。</span></div>
+      <div class="step"><span class="mark">2</span><span>CpU=(USL−x̄)/3σ、CpL=(x̄−LSL)/3σ。分母は6σでなく<b>3σ</b>(片側だけを見るため)。</span></div>
+      <div class="step"><span class="mark">3</span><span>Cpk=min(CpU, CpL)。<b>小さい方が実質的な工程能力</b>であり、小さい側の規格に平均が寄っている。</span></div>
+      <div class="step"><span class="mark">4</span><span>管理図の「安定状態」は工程が偶然原因だけで動いていることを示すだけで、規格を満たすことを保証しない。規格との対比には工程能力指数が必要。</span></div>
+      <div class="step"><span class="mark">5</span><span>CpUとCpLの差が大きいほど平均のかたよりが大きい。対策は工程のばらつきを減らすことではなく、<b>平均を規格の中心に寄せる</b>こと。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第40回 問2 / 工程能力指数(Cp・CpU・CpL・Cpk)</span>
+    <span>Cp=1.46 ・ CpU=Cpk=0.78 ・ CpL=2.14</span>
+  </footer>
+
+</div>

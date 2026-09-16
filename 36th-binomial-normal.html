@@ -1,0 +1,246 @@
+<title>第36回 問2 二項分布と正規分布の確率計算</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(26px,4vw,36px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:62ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第36回 問2</span>
+    <h1>確率分布 — 二項分布の確率計算と、正規分布の割合・境界値</h1>
+    <p class="lede">①は二項分布 Pr(X=x)=nCxPˣ(1−P)ⁿ⁻ˣ を実際にx=0,1,2まで計算し、「3個以上」の確率を余事象で求める。②は体重の母集団N(70.0, 5.0²)から、規格を超える割合と、下位10%の境界値を正規分布表で求める。どちらも公式に数値を当てはめるだけに見えて、<b>四捨五入した中間値をどこで使うかで最終結果が微妙にズレる</b>という実務的な罠がある。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">①</span><h2>二項分布 — Pr(X=x)を実際に計算する (9)〜(12)</h2></div>
+    <p>生産工程の母不適合品率P=0.2から、大きさn=5のサンプルを抜き取ったとき、不適合品がx個含まれる確率をPr(X=x)=₅Cₓ×0.2ˣ×0.8⁵⁻ˣで計算する。</p>
+
+    <div class="calc">
+      <span class="label">Pr(X=0), Pr(X=1), Pr(X=2) を計算</span>
+      <span class="line">Pr(X=0) = ₅C₀ × 0.2⁰ × 0.8⁵ = 1 × 1 × 0.32768 ≒ <b>0.328</b></span>
+      <span class="line">Pr(X=1) = ₅C₁ × 0.2¹ × 0.8⁴ = 5 × 0.2 × 0.4096 = 0.4096 ≒ <b>0.410</b></span>
+      <span class="line">Pr(X=2) = ₅C₂ × 0.2² × 0.8³ = 10 × 0.04 × 0.512 = 0.2048 ≒ <b>0.205</b></span>
+    </div>
+
+    <span class="answer-row">
+      <span class="answer"><span class="qno">(9)</span> カ. 0.328</span>
+      <span class="answer"><span class="qno">(10)</span> ク. 0.410</span>
+      <span class="answer"><span class="qno">(11)</span> エ. 0.205</span>
+    </span>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 620 260" role="img" aria-label="二項分布Pr(X=x)の棒グラフ。x=0,1,2の3本は個別に計算した値、x=3,4,5の3本をまとめて余事象で3個以上の確率を求める">
+          <line x1="60" y1="210" x2="580" y2="210" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <line x1="60" y1="210" x2="60" y2="20" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+
+          <rect x="90" y="76" width="60" height="134" fill="var(--reg)" opacity="0.85"/>
+          <text x="120" y="66" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">0.328</text>
+          <text x="120" y="228" font-size="12" text-anchor="middle" fill="currentColor">x=0</text>
+
+          <rect x="180" y="41" width="60" height="169" fill="var(--reg)" opacity="0.85"/>
+          <text x="210" y="31" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">0.410</text>
+          <text x="210" y="228" font-size="12" text-anchor="middle" fill="currentColor">x=1</text>
+
+          <rect x="270" y="126" width="60" height="84" fill="var(--reg)" opacity="0.85"/>
+          <text x="300" y="116" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">0.205</text>
+          <text x="300" y="228" font-size="12" text-anchor="middle" fill="currentColor">x=2</text>
+
+          <rect x="360" y="187" width="60" height="23" fill="var(--res)" opacity="0.85"/>
+          <rect x="450" y="207" width="60" height="3" fill="var(--res)" opacity="0.85"/>
+          <rect x="540" y="209.7" width="30" height="0.3" fill="var(--res)" opacity="0.85"/>
+          <text x="450" y="228" font-size="12" text-anchor="middle" fill="var(--res-ink)">x≧3(まとめて)</text>
+
+          <text x="450" y="176" font-size="12.5" text-anchor="middle" fill="var(--res-ink)" font-weight="700">合計0.057</text>
+          <path d="M 390,195 C 420,180 420,180 445,178" fill="none" stroke="var(--res)" stroke-width="1.4" marker-end="url(#ar2)"/>
+          <defs><marker id="ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--res)"/></marker></defs>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> x=0,1,2は個別に計算するが、x=3,4,5は分布の裾にあり値が小さい。全部を計算するより<b>1から(9)〜(11)の合計を引く余事象</b>のほうが速い。</figcaption>
+    </figure>
+
+    <div class="calc">
+      <span class="label">「3個以上」は余事象で(9)〜(11)の結果を使って計算</span>
+      <span class="line">Pr(X≧3) = 1 − {Pr(X=0)+Pr(X=1)+Pr(X=2)}</span>
+      <span class="line">　　　　= 1 − (0.328 + 0.410 + 0.205) = 1 − 0.943 = <b>0.057</b></span>
+    </div>
+
+    <div class="callout warn"><b>四捨五入した後の値を使うため、直接計算とわずかにズレる:</b> (9)〜(11)を四捨五入する前の正確な値で計算すると、Pr(X≧3) = 1−(0.32768+0.4096+0.2048) = 1−0.94208 = 0.05792 ≒ 0.058 になる。しかし設問は「(9)〜(11)の<b>結果</b>を用いて」と指示しているため、四捨五入済みの0.328・0.410・0.205を先に足してから引く必要があり、その結果は0.057になる。<b>どちらも正しい計算だが、指示された手順(丸めた値を使う)に従うと選択肢と一致する</b>——これは「先に丸めるか、最後に丸めるか」で最終桁が変わる典型例。</div>
+
+    <span class="answer-row"><span class="answer"><span class="qno">(12)</span> ウ. 0.057</span></span>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">②</span><h2>正規分布 — 規格超えの割合と、下位10%の境界値 (13)(14)</h2></div>
+    <p>50歳男性の体重はN(70.0, 5.0²)に従う。この母集団で「82.0kg以上」の割合と、「体重が軽いほうから10%」に入る境界値の2つを求める。</p>
+
+    <div class="calc">
+      <span class="label">(13) 82.0kg以上の割合 — 標準化してから正規分布表を引く</span>
+      <span class="line">Z = (82.0 − 70.0) / 5.0 = 12.0 / 5.0 = 2.40</span>
+      <span class="line">正規分布表(上側確率)で K(2.40) を引く</span>
+      <span class="result">Pr(X≧82.0) = K(2.40) ≒ 0.0082</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">(14) 下位10%の境界値 — 「割合→z」の向きが(13)と逆</span>
+      <span class="line">下側10%点: 正規分布表で上側確率が0.10になるzを探すと z ≒ −1.28</span>
+      <span class="line">境界値 x = μ + z×σ = 70.0 + (−1.28)×5.0 = 70.0 − 6.4 = 63.6</span>
+      <span class="line">小数第1位を四捨五入 → <b>64</b></span>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 660 280" role="img" aria-label="N(70,5の2乗)の正規分布。右側82kg以上の裾を塗りつぶして割合0.0082を示し、左側下位10%の境界線63.6kgの位置を示す">
+          <line x1="40" y1="230" x2="620" y2="230" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <path d="M40,230 C140,230 210,20 330,20 C450,20 520,230 620,230" fill="none" stroke="var(--reg)" stroke-width="2.2"/>
+
+          <path d="M 512,222 C 524,140 545,40 570,25 L 570,230 Z" fill="var(--res)" opacity="0.55" stroke="none"/>
+          <text x="590" y="90" font-size="12" text-anchor="middle" fill="var(--res-ink)" font-weight="700">0.0082</text>
+          <text x="590" y="106" font-size="11" text-anchor="middle" fill="var(--res-ink)">(82kg以上)</text>
+
+          <line x1="512" y1="222" x2="512" y2="245" stroke="var(--res)" stroke-width="1.8"/>
+          <text x="512" y="262" font-size="12" text-anchor="middle" fill="var(--res-ink)" font-weight="600">82.0</text>
+
+          <line x1="212" y1="200" x2="212" y2="245" stroke="var(--reg)" stroke-width="1.8" stroke-dasharray="4 3"/>
+          <text x="212" y="262" font-size="12" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">63.6→64</text>
+          <path d="M 40,225 C 100,224 160,215 212,200" fill="none" stroke="var(--reg)" stroke-width="0" />
+          <text x="120" y="196" font-size="12" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">下位10%</text>
+
+          <line x1="330" y1="230" x2="330" y2="16" stroke="currentColor" stroke-width="1" stroke-dasharray="3 4" opacity="0.4"/>
+          <text x="330" y="252" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.7">70.0(平均)</text>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> 右裾(82kg以上)は平均から+2.4σ離れた位置で、割合は小さく0.0082。左側の境界値63.6kgは、確率10%に対応するz=−1.28を使って平均から引く方向(マイナス側)に動かして求める。<b>「割合→z」の(13)と「z→値」の(14)は向きが逆の計算</b>。</figcaption>
+    </figure>
+
+    <span class="answer-row">
+      <span class="answer"><span class="qno">(13)</span> オ. 0.0082</span>
+      <span class="answer"><span class="qno">(14)</span> コ. 64</span>
+    </span>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>(13)(14)の選択肢トレース</caption>
+        <thead><tr><th>選択肢</th><th>判定</th><th>原因の候補</th></tr></thead>
+        <tbody>
+          <tr><td class="bad">ア. 0.0047</td><td>誤</td><td>K(2.60)付近の値。zを2.6と読み違えた場合</td></tr>
+          <tr><td class="bad">イ. 0.0062</td><td>誤</td><td>K(2.50)付近の値。zを2.5と読み違えた場合</td></tr>
+          <tr><td class="bad">ウ. 0.0078</td><td>誤</td><td>K(2.42)付近の値。標準化の割り算をわずかに誤った場合</td></tr>
+          <tr><td class="bad">エ. 0.0080</td><td>誤</td><td>K(2.41)に近い値。四捨五入の境界での読み取りミス</td></tr>
+          <tr><td class="good">オ. 0.0082</td><td>正解(13)</td><td>K(2.40) = (82.0−70.0)/5.0 = 2.40</td></tr>
+          <tr><td class="bad">カ. 53</td><td>誤</td><td>70.0−(1.28×5.0×2.something)のような二重に引いた値、または符号の取り違え</td></tr>
+          <tr><td class="bad">キ. 57</td><td>誤</td><td>z=2.58(1%点)を誤用: 70.0−2.58×5.0=57.1</td></tr>
+          <tr><td class="bad">ク. 59</td><td>誤</td><td>z=2.24あたりを誤用、または平均からの引く量を大きく見積もった</td></tr>
+          <tr><td class="good">ケ. 61</td><td>参考</td><td>z=1.80を使うと70.0−1.80×5.0=61.0。t分布の値やzの読み違いで出うる値</td></tr>
+          <tr><td class="good">コ. 64</td><td>正解(14)</td><td>z=−1.28、70.0+(−1.28)×5.0=63.6≒64</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>二項分布 Pr(X=x)=nCxPˣ(1−P)ⁿ⁻ˣ は、組合せ・確率・余事象の3つを機械的に当てはめるだけで解ける。「x個以上」は<b>1から下側を引く</b>のが定石。</span></div>
+      <div class="step"><span class="mark">2</span><span>設問が「(9)〜(11)の<b>結果</b>を用いて」と指定している場合は、<b>四捨五入した後の値</b>を使って計算する。生の値で計算した結果とは最終桁がズレることがある。</span></div>
+      <div class="step"><span class="mark">3</span><span>正規分布の「割合を求める」(13)と「境界値を求める」(14)は<b>逆方向の計算</b>: 前者はZ=(値−μ)/σで割合を出し、後者は割合からzを引いて x=μ+zσ で値に戻す。</span></div>
+      <div class="step"><span class="mark">4</span><span>「下位◯%」を扱うときのzは<b>マイナスの値</b>になる(平均より小さい側)。符号を落とすと大きい側の値を答えてしまう。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第36回 問2 / 二項分布と正規分布の確率計算</span>
+    <span>(9)0.328 (10)0.410 (11)0.205 (12)0.057 (13)0.0082 (14)64</span>
+  </footer>
+
+</div>

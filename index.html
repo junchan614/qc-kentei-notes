@@ -1,0 +1,872 @@
+<title>QC検定2級 学習ノート</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+  --shadow-lift: 0 2px 4px rgba(22,35,42,0.08), 0 14px 32px -14px rgba(22,35,42,0.22);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:900px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+a:focus-visible{outline:2px solid var(--reg);outline-offset:3px;border-radius:4px;}
+
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(30px,4.4vw,42px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:62ch;}
+.meta-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:6px;}
+.meta{display:flex;flex-direction:column;gap:2px;}
+.meta .v{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--ink);line-height:1.2;}
+.meta .k{font-size:11.5px;color:var(--ink-faint);letter-spacing:0.04em;}
+
+.search-bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:8px;padding:14px 18px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);}
+.search-bar .field{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--ink-soft);}
+.search-bar input[type="number"]{
+  width:64px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);
+  background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:6px 8px;text-align:center;
+  -moz-appearance:textfield;
+}
+.search-bar input[type="number"]::-webkit-outer-spin-button,
+.search-bar input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.search-bar input[type="number"]:focus-visible{outline:2px solid var(--reg);outline-offset:1px;}
+.search-bar button{
+  font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);
+  background:transparent;border:1px solid var(--border);border-radius:999px;padding:6px 14px;cursor:pointer;
+}
+.search-bar button:hover{color:var(--ink);border-color:var(--border-strong);}
+.search-bar .f-count{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--reg-ink);font-weight:600;}
+.no-results{display:none;background:var(--surface-2);border:1px dashed var(--border-strong);border-radius:12px;padding:22px;text-align:center;color:var(--ink-faint);font-size:14px;}
+.no-results.show{display:block;}
+
+section{display:flex;flex-direction:column;gap:20px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:56px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+
+.group{display:flex;flex-direction:column;gap:14px;}
+.group-label{display:flex;align-items:center;gap:12px;}
+.group-label h3{font-size:16px;font-weight:600;color:var(--ink);}
+.group-label .rule{flex:1;height:1px;background:var(--border);}
+.group-label .count{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-faint);}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;}
+.card{
+  display:flex;flex-direction:column;gap:10px;
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:20px 22px;box-shadow:var(--shadow);
+  text-decoration:none;color:inherit;
+  transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+}
+.card:hover{box-shadow:var(--shadow-lift);border-color:var(--border-strong);transform:translateY(-2px);}
+@media (prefers-reduced-motion: reduce){.card{transition:none;} .card:hover{transform:none;}}
+.card:focus-visible{outline:2px solid var(--reg);outline-offset:3px;}
+.card .chips{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.04em;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--ink-faint);border:1px solid var(--border);}
+.chip.src{background:var(--reg-soft);color:var(--reg-ink);border-color:var(--reg);}
+.card h4{font-family:'Zen Old Mincho',serif;font-size:19px;font-weight:600;margin:0;color:var(--ink);line-height:1.5;}
+.card .desc{font-size:14px;color:var(--ink-soft);line-height:1.75;}
+.card .keys{display:flex;flex-direction:column;gap:4px;border-top:1px dashed var(--border);padding-top:10px;margin-top:2px;}
+.card .keys span{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.card .go{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--reg-ink);font-weight:600;margin-top:2px;}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .mono{font-family:'JetBrains Mono',monospace;}
+.status{font-family:'JetBrains Mono',monospace;font-size:12px;padding:3px 10px;border-radius:999px;white-space:nowrap;}
+.status.done{background:var(--reg-soft);color:var(--reg-ink);border:1px solid var(--reg);}
+.status.todo{background:var(--surface-2);color:var(--ink-faint);border:1px solid var(--border);}
+
+.callout{background:var(--reg-soft);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">受験対策ノート</span>
+    <h1>QC検定2級 学習ノート</h1>
+    <p class="lede">過去問の解説と、つまずいた概念の掘り下げをまとめたページ。各資料は図解つきで、公式の暗記ではなく「なぜその式になるのか」と「誤答選択肢が何のミスに対応しているか」まで踏み込んでいる。</p>
+    <div class="meta-row">
+      <div class="meta"><span class="v">43</span><span class="k">資料</span></div>
+      <div class="meta"><span class="v">6</span><span class="k">出題回（第35〜40回）</span></div>
+      <div class="meta"><span class="v">9</span><span class="k">分野</span></div>
+      <div class="meta"><span class="v">2026-09-17</span><span class="k">最終更新</span></div>
+    </div>
+
+    <div class="search-bar">
+      <span class="field">第<input type="number" id="fRound" inputmode="numeric" min="1" placeholder="全て" aria-label="出題回で絞り込み">回</span>
+      <span class="field">問<input type="number" id="fQ" inputmode="numeric" min="1" placeholder="全て" aria-label="問題番号で絞り込み"></span>
+      <button type="button" id="fClear">クリア</button>
+      <span class="f-count" id="fCount"></span>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">資料</span><h2>分野別の一覧</h2></div>
+    <p class="no-results" id="noResults">該当する資料がありません。回・問の番号を確認するか、クリアで全件表示に戻ってください。</p>
+
+    <div class="group">
+      <div class="group-label"><h3>相関分析・回帰分析</h3><span class="rule"></span><span class="count">9件</span></div>
+      <div class="cards">
+        <a class="card" href="correlation-coefficient.html" data-round="35" data-q="3" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">概念の掘り下げ</span><span class="chip src">第35回 問3</span></div>
+          <h4>相関係数はなぜこの式になるのか</h4>
+          <div class="desc">r = S(xy)/√(S(xx)·S(yy))は天下り的な式ではない。「残差平方和は2乗の和だから0以上」という事実だけから分母の形と−1〜1の範囲が導かれることを示し、幾何的には2本の偏差ベクトルがなす角のコサインであることまで掘り下げる。</div>
+          <div class="keys">
+            <span>Se(t)=S(yy)−2tS(xy)+t²S(xx) ≥ 0</span>
+            <span>|S(xy)| ≤ √(S(xx)·S(yy))</span>
+            <span>r = cosθ（偏差ベクトルのなす角）</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="35th-regression.html" data-round="35" data-q="3" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第35回 問3</span><span class="chip">(10)〜(17)</span></div>
+          <h4>相関係数から回帰直線、平方和の分解まで</h4>
+          <div class="desc">S(xx)・S(yy)・S(xy)から相関係数・回帰直線・散布図への当てはめ判定・平方和の分解までを一直線に解く。相関係数rと回帰係数β1を混同させる選択肢の作り方、xとyを取り違える罠の分析つき。</div>
+          <div class="keys">
+            <span>r = S(xy)/√(S(xx)·S(yy))</span>
+            <span>β̂(1)=S(xy)/S(xx)、β̂(0)=ȳ−β̂(1)x̄</span>
+            <span>S(yy) = 残差平方和 + 回帰による平方和</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="40th-regression-anova.html" data-round="40" data-q="4" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第40回 問4</span><span class="chip">(18)〜(25)</span></div>
+          <h4>分散分析表から回帰直線、点推定まで</h4>
+          <div class="desc">S(xx)・S(yy)・S(xy)が与えられている状態から、分散分析表→回帰係数(傾き・切片)→x=25.0での点推定まで一直線に解く。選択肢に「問題文そのままの値」や自由度の取り違え(φ=19 vs 18)が紛れ込む罠の分析つき。</div>
+          <div class="keys">
+            <span>S(R) = S(xy)²/S(xx)、S(e) = S(yy)−S(R)</span>
+            <span>β̂(1)=S(xy)/S(xx)、β̂(0)=ȳ−β̂(1)x̄</span>
+            <span>ŷ = β̂(0) + β̂(1)x</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="regression-anova.html" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">基礎解説</span><span class="chip">分散分析表</span></div>
+          <h4>単回帰分析の分散分析表</h4>
+          <div class="desc">平方和・自由度・平均平方・分散比の4つの用語を、全変動の分解から順に理解する。まずここから読むと、以降の過去問解説が楽になる。</div>
+          <div class="keys">
+            <span>S(T) = S(R) + S(e)</span>
+            <span>φ(R)=1, φ(e)=n−2</span>
+            <span>F(0) = V(R) / V(e)</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="36th-regression.html" data-round="36" data-q="4" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第36回 問4</span><span class="chip">(23)〜(30)</span></div>
+          <h4>平方和の分解から回帰係数・分散分析表まで</h4>
+          <div class="desc">①はS(T)=Σei²+Σ(ŷi−ȳ)²の「残差」の用語と、矢印がデータ点に触れるか(残差)・平均線から回帰直線に伸びるか(回帰による平方和)で図を見分ける知識問題。②は与えられた5つの和から3つの平方和を作り、回帰係数と分散分析表を埋めるまで。誤答選択肢がどの計算ミスに対応するかを逆算した表つき。</div>
+          <div class="keys">
+            <span>残差=点と線の距離、回帰による平方和=線と平均線の距離</span>
+            <span>β(1) = S(xy) / S(xx)</span>
+            <span>H(0): β(1) = 0</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="regression-sr.html" data-round="37" data-q="4" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第37回 問4</span><span class="chip">(22)〜(28)</span><span class="chip">概念の掘り下げ</span></div>
+          <h4>回帰による変動の求め方</h4>
+          <div class="desc">S(R) は4通りの式で書けてどれも同じ値になる。その理由を「回帰直線は必ず(x̄,ȳ)を通る」という性質から解く。データが無くても偏差平方和だけで解ける仕組み。</div>
+          <div class="keys">
+            <span>ŷ−ȳ = b(x−x̄)</span>
+            <span>S(R) = b²·S(xx) = b·S(xy)</span>
+            <span>　　　= S(xy)²/S(xx)</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="38th-regression-anova.html" data-round="38" data-q="4" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第38回 問4</span><span class="chip">(22)〜(29)</span></div>
+          <h4>単回帰の分散分析表〜信頼区間</h4>
+          <div class="desc">S(xx)・S(yy)・S(xy)から分散分析表・寄与率・有意性判定・回帰係数の95%信頼区間まで、単回帰の一連の流れを最初から最後まで通す。選択肢に表の別マスの値が紛れ込む罠の分析つき。</div>
+          <div class="keys">
+            <span>S(R) = S(xy)²/S(xx)</span>
+            <span>R² = S(R)/S(yy)</span>
+            <span>b ± t(n−2)·√(V(e)/S(xx))</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="regression-r2-se.html" data-round="38" data-q="4" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第38回 問4</span><span class="chip">(27)(29)</span><span class="chip">概念の掘り下げ</span></div>
+          <h4>寄与率R²とSE(b)の由来</h4>
+          <div class="desc">R²とSE(b)=√(Ve/Sxx)は計算のやり方は暗記できても由来は素通りしがちな2つの値。R²は平方和の分解S(yy)=S(R)+S(e)から0≤R²≤1が自動的に出ることを示し、SE(b)はb=Σciyi(ci=(xi−x̄)/Sxx)という重み付き和とみなして分散の性質だけから導く。</div>
+          <div class="keys">
+            <span>R² = S(R)/S(yy) = 1−S(e)/S(yy)</span>
+            <span>b = Σci·yi、Σci²=1/S(xx)</span>
+            <span>SE(b) = √(V(e)/S(xx))</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="39th-sign-test.html" data-round="39" data-q="5" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第39回 問5</span><span class="chip">(25)〜(31)</span></div>
+          <h4>散布図の符号検定</h4>
+          <div class="desc">メディアン線で散布図を4象限に分け、少数派の打点数を符号検定表と比較して相関の有無を判定する。計算式を使わず「数えるだけ」で検定できる仕組みと、その正体が二項検定であることまで掘り下げる。</div>
+          <div class="keys">
+            <span>第Ⅰ・第Ⅲ象限 = 右肩上がり側</span>
+            <span>第Ⅱ・第Ⅳ象限 = 右肩下がり側</span>
+            <span>少数派の数 &lt; 符号検定表の値 → 有意</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-label"><h3>分野横断の概念整理</h3><span class="rule"></span><span class="count">4件</span></div>
+      <div class="cards">
+        <a class="card" href="chi-square-why-squared.html" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">概念の掘り下げ</span><span class="chip">横断整理</span></div>
+          <h4>なぜ「カイ二乗」は二乗なのか</h4>
+          <div class="desc">偏差をそのまま足すと0になる→符号を消すには絶対値でなく2乗を選ぶ(微分がなめらか・独立などうしの加法性)→カイ二乗分布は標準正規分布の2乗和として定義される、の順にたどる。ピタゴラスの定理でχが「距離」・χ²が「距離の2乗」であることまで図解。</div>
+          <div class="keys">
+            <span>χ² = Z1²+…+Zk²(標準正規分布の2乗和)</span>
+            <span>2乗を選ぶ理由: 微分可能・加法性χ²(m)+χ²(n)=χ²(m+n)</span>
+            <span>χ=距離、χ²=距離の2乗(ピタゴラスの定理)</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="anova-ve-then-n.html" data-round="35" data-q="4" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">概念の掘り下げ</span><span class="chip src">第35回 問4</span></div>
+          <h4>自由度で割ったのに、なぜまたnで割るのか</h4>
+          <div class="desc">Ve=S(E)/φ(E)は「1個のデータの分散」の推定値、Ve/n₃は「3個を平均したx̄(A3)の分散」——この2つの割り算は別の問いに答えていることを図解。÷n₃を省略すると母平均の区間推定のつもりが1個の新しい部品の予測区間にすり替わることも検証する。</div>
+          <div class="keys">
+            <span>Ve=S(E)/φ(E) → 1個の分散の推定</span>
+            <span>Ve/n(i) → x̄(i)(平均)の分散</span>
+            <span>φ(E)とn(i)は無関係な別の数</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="degrees-of-freedom.html" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">概念の掘り下げ</span><span class="chip">横断整理</span></div>
+          <h4>自由度の正体</h4>
+          <div class="desc">2群のF検定(φ=n−1が2本)と回帰・一元配置分散分析(φ=1とn−2に分かれる)で自由度の引き算の仕方が違って見える混乱を、「独立な2本立て」と「1本を切り分ける」の2パターンに整理して解消する。</div>
+          <div class="keys">
+            <span>パターンA: φ(A)=n(A)−1, φ(B)=n(B)−1</span>
+            <span>パターンB: φ(T)=n−1 = モデル + 残り</span>
+            <span>自分の平均を使うと1個減る</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="t-table-anova-estimate.html" data-round="39" data-q="4" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第39回 問4</span><span class="chip">概念の掘り下げ</span></div>
+          <h4>なぜt表で最適水準を推定するのか</h4>
+          <div class="desc">「点推定」自体にはt表は無関係で、その後の区間推定の幅を決める係数として登場するだけ、という順番の整理から始め、σ²未知でt分布を使う理由・A2単独ではなくφ(E)=11をプールして使う理由まで掘り下げる。</div>
+          <div class="keys">
+            <span>点推定 = ただの平均、t表は区間推定側</span>
+            <span>σ²未知 → Zでなくt分布</span>
+            <span>等分散性の仮定でV(E)・φ(E)をプール</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-label"><h3>検定と推定（計数値）</h3><span class="rule"></span><span class="count">1件</span></div>
+      <div class="cards">
+        <a class="card" href="38th-chi-square.html" data-round="38" data-q="3" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第38回 問3</span><span class="chip">(14)〜(21)</span></div>
+          <h4>分割表のカイ二乗検定</h4>
+          <div class="desc">4製造ライン×2区分の分割表で、期待度数の求め方から検定統計量χ0²、自由度と棄却域の判定まで。「与えられている行の値」が選択肢に紛れ込む罠の分析つき。</div>
+          <div class="keys">
+            <span>E = 行計×列計/総計</span>
+            <span>χ(0)² = Σ(実測−期待)²/期待</span>
+            <span>φ = (行数−1)(列数−1)</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-label"><h3>検定と推定（計量値・分散の検定）</h3><span class="rule"></span><span class="count">6件</span></div>
+      <div class="cards">
+        <a class="card" href="37th-onesided-t-test.html" data-round="37" data-q="1" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第37回 問1</span><span class="chip">(1)〜(5)</span></div>
+          <h4>片側t検定とあわてもの・ぼんやりものの誤り</h4>
+          <div class="desc">母標準偏差が未知のまま「向上したか」を問う片側t検定。σ²ではなく不偏分散Vを使う式の選び方、片側検定の向きの判断に続き、「あわてものの誤り(第一種の過誤・α)」と「ぼんやりものの誤り(第二種の過誤・β)」の見分け方を2×2表で整理する。</div>
+          <div class="keys">
+            <span>t(0) = (x̄−μ0) / √(V/n)</span>
+            <span>「向上したか」= 片側(上側)検定</span>
+            <span>あわてもの=第一種の過誤(α)、ぼんやりもの=第二種の過誤(β)</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="36th-chi-square-variance.html" data-round="36" data-q="3" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第36回 問3</span><span class="chip">(15)〜(22)</span></div>
+          <h4>分布対応表と母分散の両側χ²検定</h4>
+          <div class="desc">検定・推定に使う分布(t・χ²・F・正規)を「平均か分散か」「1つか2つか」「既知か未知か」で整理する対応表と、母分散の両側χ²検定。棄却限界値にα/2を使う理由、対立仮説が≠のとき結論は「差があるといえる」までで方向は言えないことを、第35回問1の片側検定と対比して解説。</div>
+          <div class="keys">
+            <span>母平均(分散未知)→t分布、母分散→χ²分布</span>
+            <span>両側検定はα/2でχ²(φ,0.025)を引く</span>
+            <span>H1:≠ → 結論は「差がある」まで(方向不可)</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="35th-variance-test.html" data-round="35" data-q="1" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第35回 問1</span><span class="chip">(1)〜(4)</span></div>
+          <h4>母分散の片側(下側)χ²検定</h4>
+          <div class="desc">「小さくなったか」を調べる検定は棄却域が分布の左裾に来る片側(下側)検定になる。10個のサンプルの含有率データで検定統計量χ0²を求め、選択肢が正しい値とその逆数のペアで作られていることまで見抜く。</div>
+          <div class="keys">
+            <span>H(0):σ²=σ0², H(1):σ²&lt;σ0²(下側)</span>
+            <span>χ(0)² = S / σ0²</span>
+            <span>χ(0)² &lt; χ²(9,0.95) → 棄却</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="39th-f-test.html" data-round="39" data-q="2" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第39回 問2</span><span class="chip">(8)〜(13)</span></div>
+          <h4>二群の母分散の比較（F検定）</h4>
+          <div class="desc">2つの製造ラインの母分散に違いがあるかを分散比のF検定で調べる。両側検定で「大きい方の分散を分子にしてF0を常に1以上にする」棄却域の作り方のトリックを図解。</div>
+          <div class="keys">
+            <span>F(0) = 大きい方のV / 小さい方のV</span>
+            <span>棄却域は上側α/2だけで済む</span>
+            <span>有意でない ≠ 等しいといえる</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="40th-mean-variance-test.html" data-round="40" data-q="1" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第40回 問1</span><span class="chip">(1)〜(6)</span></div>
+          <h4>母平均のt検定と母分散のχ²検定</h4>
+          <div class="desc">同じ有意水準5%・片側検定でも、母平均はt分布、母分散はχ²分布を使う。「増えたか」は上側検定、「向上した(ばらつきが減った)か」は下側検定と棄却域の向きが逆になる対比を整理。</div>
+          <div class="keys">
+            <span>t(0) = (x̄−μ0) / √(V/n)</span>
+            <span>χ(0)² = S / σ0²</span>
+            <span>「増えた」=上側、「向上した」=下側</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="40th-chi-square-meaning.html" data-round="40" data-q="1" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第40回 問1</span><span class="chip">概念の掘り下げ</span></div>
+          <h4>χ0²=S/σ0²は何を測っているのか</h4>
+          <div class="desc">χ²分布の正体は「標準化した誤差の2乗和」。x̄を使うと自由度が1つ減ってχ²(n−1)になる由来から、分散の点推定V=S/(n−1)は不偏なのに標準偏差√Vは不偏にならない理由まで掘り下げる。</div>
+          <div class="keys">
+            <span>S/σ² ~ χ²(n−1)</span>
+            <span>E[S/(n−1)] = σ² (不偏)</span>
+            <span>E[√V] ≠ σ (√は不偏でない)</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-label"><h3>実験計画法</h3><span class="rule"></span><span class="count">7件</span></div>
+      <div class="cards">
+        <a class="card" href="35th-anova-experiment.html" data-round="35" data-q="4" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第35回 問4</span><span class="chip">(18)〜(24)</span></div>
+          <h4>不揃い一元配置と交互作用のある二元配置</h4>
+          <div class="desc">①は繰返し数が水準ごとに違う一元配置(A3だけ3回)で、合計ではなく実際のnで比較しないと最適水準を誤る罠。②はSS表の合計が3択とも一致するのに配分計算をしないと選べない二元配置で、交互作用が有意なら最適水準の点推定に加法モデルではなく実測セル平均を使う。</div>
+          <div class="keys">
+            <span>合計ではなく水準ごとのnで平均する</span>
+            <span>SS表は合計一致だけでは検算にならない</span>
+            <span>交互作用が有意 → 加法モデルでなく実測セル平均</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="40th-two-way-anova.html" data-round="40" data-q="6" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第40回 問6</span><span class="chip">(31)〜(36)</span></div>
+          <h4>繰返しのある二元配置実験</h4>
+          <div class="desc">因子A(4水準)×因子B(2水準)、繰返し2回の二元配置。S(B)とS(A×B)がほぼ同じ値なのに、自由度の違いでBは1%有意・A×Bは5%止まりと判定が分かれる理由を掘り下げる。</div>
+          <div class="keys">
+            <span>S(A) = Σ(T(i..)²)/(br) − CT</span>
+            <span>φ(A×B) = (a−1)(b−1)、φ(E) = ab(r−1)</span>
+            <span>F(0) = V/V(E)、同じSでもφが小さいほど有意になりやすい</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="two-way-anova-df.html" data-round="40" data-q="6" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">概念の掘り下げ</span><span class="chip src">第40回 問6</span></div>
+          <h4>φ(A×B)とφ(E)はどこから出てくるのか</h4>
+          <div class="desc">(a−1)(b−1)とab(r−1)は暗記する公式ではない。全体の自由度をまず「セル間」と「セル内・誤差」に分け、セル間をさらにA・B・余り(交互作用)に配分する2段階の引き算として導く。</div>
+          <div class="keys">
+            <span>φ(E) = ab(r−1)（1セルあたりr−1個の自由な観測値）</span>
+            <span>φ(A×B) = (ab−1)−(a−1)−(b−1)</span>
+            <span>= (a−1)(b−1)（展開すると一致）</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="36th-anova-oneway.html" data-round="36" data-q="5" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第36回 問5</span><span class="chip">(31)〜(36)</span></div>
+          <h4>一元配置実験と母平均の推定</h4>
+          <div class="desc">繰り返し数が5・4・3と不揃いな一元配置。平方和の作り方、F表の引き方、区間推定まで。誤差の自由度がなぜ9になるのかの補足つき。</div>
+          <div class="keys">
+            <span>S(A) = Σ(T(i)²/n(i)) − CT</span>
+            <span>φ(E) = N − a = Σ(n(i)−1)</span>
+            <span>x̄ ± t·√(V(E)/n(i))</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="37th-anova-ci.html" data-round="37" data-q="5" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第37回 問5</span><span class="chip">(29)〜(32)</span></div>
+          <h4>母平均の点推定と区間推定</h4>
+          <div class="desc">分散分析表はすでに完成した状態で与えられる問題。最良水準の選び方と、「1つの母平均」と「2つの母平均の差」の区間推定の式の違いを、誤答選択肢の逆算つきで解く。</div>
+          <div class="keys">
+            <span>x̄(i) ± t·√(V(E)/n(i))</span>
+            <span>(x̄(i)−x̄(j)) ± t·√{V(E)(1/n(i)+1/n(j))}</span>
+            <span>差の幅 = 1つの幅 × √2</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="38th-anova-graphs.html" data-round="38" data-q="5" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第38回 問5</span><span class="chip">(30)〜(36)</span></div>
+          <h4>グラフの見た目と有意性は別物</h4>
+          <div class="desc">6パターンのグラフから水準効果が最大の図・実験誤差が最大の図を見分け、実際にその誤差最大の図のデータでF検定を行うと有意にならないことを確認する。目で見た印象を検定で裏切られる好例。</div>
+          <div class="keys">
+            <span>S(A) = ΣT(i)²/n(i) − CT</span>
+            <span>F(0) = V(A)/V(E)</span>
+            <span>見た目 ≠ 有意性</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="39th-anova-unequal.html" data-round="39" data-q="4" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第39回 問4</span><span class="chip">(17)〜(24)</span></div>
+          <h4>打ち切られた一元配置実験</h4>
+          <div class="desc">計画16回が15回で打ち切られ、繰り返し数が不揃いになった一元配置。分散分析表・有意性判定に加え、データ数が少ない水準が最良になったときの区間推定の幅の広がりまで扱う。</div>
+          <div class="keys">
+            <span>S(A) = Σ(T(i)²/n(i)) − CT</span>
+            <span>φ(E) = Σ(n(i)−1)</span>
+            <span>差の区間推定: V(E)(1/n(i)+1/n(j))</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-label"><h3>統計的方法の基礎</h3><span class="rule"></span><span class="count">8件</span></div>
+      <div class="cards">
+        <a class="card" href="summary-basic-statistics.html" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">分野別まとめ</span><span class="chip">1/7</span></div>
+          <h4>統計的方法の基礎まとめ</h4>
+          <div class="desc">正規分布・標準誤差・確率分布・変数変換など、他の全分野の土台になる論点を横断整理。論点×出題回(第35〜40回)のヒートマップで頻出度を可視化し、暗記が必要な項目と理解すれば導ける項目を切り分け、誤答選択肢の典型パターンまでまとめた分野別サマリー。</div>
+          <div class="keys">
+            <span>論点×出題回のヒートマップ</span>
+            <span>暗記 vs 導出の切り分け</span>
+            <span>誤答選択肢の典型パターン</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="38th-normal-cp.html" data-round="38" data-q="2" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第38回 問2</span><span class="chip">(9)〜(13)</span></div>
+          <h4>部品合成の正規分布とCp</h4>
+          <div class="desc">独立な2部品(N(40,3²)・N(60,4²))を合成した正規分布のパラメータ(9)から、標準化の式(10)(11)、正規分布表による不適合品率(12)、工程能力指数Cp(13)まで。標準偏差をそのまま足す罠、標本平均用の式(σ/n)との混同、前半のミスが後半のCp計算に伝染する構成を解説。</div>
+          <div class="keys">
+            <span>独立な和は分散が加法的: V[A+B]=σA²+σB²</span>
+            <span>u=(x−μ)/σ で標準化(σ/nの式と混同しない)</span>
+            <span>Cp = 規格幅 / 6σ</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="36th-binomial-normal.html" data-round="36" data-q="2" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第36回 問2</span><span class="chip">(9)〜(14)</span></div>
+          <h4>二項分布と正規分布の確率計算</h4>
+          <div class="desc">二項分布Pr(X=x)=nCxPˣ(1−P)ⁿ⁻ˣをx=0,1,2まで計算し、「3個以上」は余事象1−(9〜11の合計)で求める。四捨五入した中間値を使うため直接計算とわずかにズレる罠つき。正規分布では規格超えの割合(割合→z)と下位10%の境界値(z→値)という逆方向の2計算を対比する。</div>
+          <div class="keys">
+            <span>Pr(X≧3) = 1−{Pr(0)+Pr(1)+Pr(2)}</span>
+            <span>Z=(値−μ)/σ で割合、x=μ+zσ で値に戻す</span>
+            <span>下位◯%のzはマイナス</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="35th-normal-assembly.html" data-round="35" data-q="2" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第35回 問2</span><span class="chip">(5)〜(9)</span></div>
+          <h4>規格外れ確率と部品組立ての分散</h4>
+          <div class="desc">正規分布の規格外れ確率の基本計算に続き、2部品を組み合わせた製品の分散が「意図的に逆に組み合わせる」か「ランダムに組み合わせる」かで、共分散の項が残るか消えるかだけ変わることを図解する。</div>
+          <div class="keys">
+            <span>Z = (規格値−μ) / σ</span>
+            <span>V[x+y] = σx²+σy²+2cov(x,y)（一般式）</span>
+            <span>独立 → cov(x,y)=0 で項が消える</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="40th-normal-composition.html" data-round="40" data-q="3" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第40回 問3</span><span class="chip">(13)〜(17)</span></div>
+          <h4>独立な和と定数倍、分散は4倍か16倍か</h4>
+          <div class="desc">別々の板から4枚選ぶ(独立な和)か、1枚の板を4等分して重ねる(定数倍)かで、同じ「4枚重ねる」でも分散が4σt²と16σt²に分かれる。正規分布の再生性と分散の加法性を対比して図解。</div>
+          <div class="keys">
+            <span>独立な和: V[ΣXi] = Σσ²</span>
+            <span>定数倍: V[aX] = a²σ²</span>
+            <span>差でも分散は必ず足し算</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="37th-sample-mean-sd.html" data-round="37" data-q="2" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第37回 問2</span><span class="chip">(13)</span><span class="chip">概念の掘り下げ</span></div>
+          <h4>なぜ√nで割るのか</h4>
+          <div class="desc">標本平均の標準偏差が σ/√n になる理由。分散が「2乗の世界」の量であること、n²で割る意味を正方形のたとえで解く。後半の単元すべての土台。</div>
+          <div class="keys">
+            <span>σ(x̄) = σ / √n</span>
+            <span>c倍 → 分散は c² 倍</span>
+            <span>足せるのは分散だけ</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="39th-data-summary.html" data-round="39" data-q="1" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第39回 問1</span><span class="chip">(1)〜(7)</span></div>
+          <h4>直接計算・変数変換・度数分布表の比較</h4>
+          <div class="desc">同じ25個のデータを3通りで平均値・標準偏差を求める。線形の変数変換は元に戻せば完全一致するのに、度数分布表(区間の中心値で代表させる近似)は一致しない理由を1対1と多対1の対比で図解。</div>
+          <div class="keys">
+            <span>S = Σx² − (Σx)²/n</span>
+            <span>u=(x−a)b → 完全一致（1対1）</span>
+            <span>度数分布表 → 近似（多対1）</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="39th-probability.html" data-round="39" data-q="3" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第39回 問3</span><span class="chip">(14)〜(16)</span><span class="chip">概念の掘り下げ</span></div>
+          <h4>古典的確率と統計的確率</h4>
+          <div class="desc">10000枚のカードを題材に、数え上げだけで厳密に決まる古典的確率(365/10000)と、実際に試行して得る統計的確率(362/10000)を並べて解く。両者が完全一致しない理由を大数の法則から図解。</div>
+          <div class="keys">
+            <span>P(A) = 条件を満たす数 / 全体の数</span>
+            <span>古典的確率: 数え上げで厳密に決まる</span>
+            <span>統計的確率: 試行するたびブレる</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-label"><h3>管理図</h3><span class="rule"></span><span class="count">5件</span></div>
+      <div class="cards">
+        <a class="card" href="37th-xbar-r-chart.html" data-round="37" data-q="3" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第37回 問3</span><span class="chip">(14)〜(21)</span></div>
+          <h4>X̄-R管理図の管理線を求める</h4>
+          <div class="desc">中心線・管理限界線をまとめて「管理線」と呼ぶ知識問題から、3σ法(μ±3σ/√n)がA₂=3/(d₂√n)という係数に化ける式変形、そして係数表(n=5)を使ったCL・UCL・LCLの計算まで。ΣX̄・ΣRを群数kで割り忘れない、n≦6でR管理図のLCLを考えない、の2点が罠。</div>
+          <div class="keys">
+            <span>A(2) = 3/(d(2)√n)、UCL/LCL = X̄̄ ± A(2)R̄</span>
+            <span>R管理図: UCL = D(4)R̄</span>
+            <span>n=5 ≤ 6 → R管理図のLCLは考えない</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="35th-control-chart.html" data-round="35" data-q="6" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第35回 問6</span><span class="chip">(31)〜(39)</span></div>
+          <h4>管理図の使い分けとc管理図</h4>
+          <div class="desc">計量値・計数値の管理図の名前を語群から埋める知識問題と、キズの数(不適合数)＋群の大きさ一定のデータからc管理図のCL・UCL・LCLを計算し安定状態を判定する。np管理図と式のどこが同じでどこが違うかを対比。</div>
+          <div class="keys">
+            <span>CL = c̄、UCL/LCL = c̄±3√c̄</span>
+            <span>ポアソン分布: 分散=平均</span>
+            <span>LCLが負なら「示されない」</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="control-chart-coefficients.html" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">概念の掘り下げ</span><span class="chip">係数表</span></div>
+          <h4>管理図の係数の正体</h4>
+          <div class="desc">A₂・d₂・D₃・D₄ が何者か。すべて「±3σを引きたいがσが未知」という一つの事情から出てくる。n≦6でR管理図のLCLを引かない理由も数値で示す。</div>
+          <div class="keys">
+            <span>A(2) = 3 / (d(2)·√n)</span>
+            <span>σ ≒ R̄ / d(2)</span>
+            <span>D(4) = 1 + 3d(3)/d(2)</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="40th-np-chart.html" data-round="40" data-q="5" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第40回 問5</span><span class="chip">(26)〜(30)</span></div>
+          <h4>不適合品数のnp管理図</h4>
+          <div class="desc">不適合品数＋群の大きさが一定 → np管理図の選び方から、CL・UCL・LCLの計算、そして管理限界線を1点も越えなくても10点連続の「連」で異常と判定される理由まで。c管理図の式と取り違える罠の分析つき。</div>
+          <div class="keys">
+            <span>CL = np̄、UCL/LCL = np̄±3√(np̄(1−p̄))</span>
+            <span>限界線内でも7点以上の連は異常</span>
+            <span>「越えていない」≠「安定」</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="np-chart-variance.html" data-round="40" data-q="5" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">概念の掘り下げ</span><span class="chip src">第40回 問5</span></div>
+          <h4>np̄(1−p̄)の正体</h4>
+          <div class="desc">np管理図の3σ=√(np̄(1−p̄))はなぜこの形になるのか。製品1個を0/1のベルヌーイ確率変数とみなしXi²=Xiから分散p(1−p)を導き、分散の加法性でn個分を足し合わせて√を取るまでを図解。</div>
+          <div class="keys">
+            <span>V[Xi] = p(1−p)（Xi²=Xiより）</span>
+            <span>V[ΣXi] = n・p(1−p)（分散の加法性）</span>
+            <span>σ = √(np(1−p))</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-label"><h3>ヒストグラム・工程能力指数</h3><span class="rule"></span><span class="count">2件</span></div>
+      <div class="cards">
+        <a class="card" href="37th-histogram-cp.html" data-round="37" data-q="6" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第37回 問6</span><span class="chip">(33)〜(37)</span></div>
+          <h4>区間幅からCp、不適合率まで</h4>
+          <div class="desc">ヒストグラムの区間幅の決め方、平均の偏り・標準偏差の推定、工程能力指数Cp、正規分布での上限規格超え確率までを一直線に解く。最後の選択肢に前設問の答えが紛れ込む罠の分析つき。</div>
+          <div class="keys">
+            <span>h = R/k を m の整数倍に切上げ</span>
+            <span>C(p) = (S(U)−S(L)) / 6s</span>
+            <span>Z = (S(U)−x̄) / s</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="40th-process-capability.html" data-round="40" data-q="2" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第40回 問2</span><span class="chip">(7)〜(12)</span></div>
+          <h4>Cp・CpU・CpL・Cpkの読み分け</h4>
+          <div class="desc">規格95±5mmに対しCp・CpU・CpL・Cpkを並べて計算。CpUだけが極端に小さくなることから、平均が上限規格側に片寄っていると読み取り、対策の方向まで判断する。</div>
+          <div class="keys">
+            <span>Cp = (USL−LSL) / 6σ</span>
+            <span>CpU=(USL−x̄)/3σ, CpL=(x̄−LSL)/3σ</span>
+            <span>Cpk = min(CpU, CpL)</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-label"><h3>QC的問題解決・QC七つ道具</h3><span class="rule"></span><span class="count">1件</span></div>
+      <div class="cards">
+        <a class="card" href="36th-problem-solving.html" data-round="36" data-q="6" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第36回 問6</span><span class="chip">(37)〜(47)</span></div>
+          <h4>層別で真因にたどり着く</h4>
+          <div class="desc">パレート図・工程能力指数・特性要因図・散布図が次々出てくる問題解決事例を、「層別」という一本の軸で読み解く。図の選択肢を数値で絞る手順つき。</div>
+          <div class="keys">
+            <span>C(pk) = (x̄ − S(L)) / 3s</span>
+            <span>特性は「現象」で書く</span>
+            <span>相関が弱い = 他に原因</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">地図</span><h2>資料どうしのつながり</h2></div>
+    <p>ばらばらの単元に見えて、下から積み上がる構造になっている。<b>上の階層でつまずいたときは、下の階層に戻ると原因が見つかる</b>ことが多い。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 660 330" role="img" aria-label="学習内容の階層図。平均と標準偏差を土台に、分散の加法性と平方和の分解が乗り、その上にF検定・区間推定・工程能力指数が乗る構造">
+          <defs>
+            <marker id="up" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <rect x="120" y="264" width="420" height="48" rx="10" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.4" opacity="0.9"/>
+          <text x="330" y="286" font-size="13.5" text-anchor="middle" fill="currentColor" font-weight="600">平均・標準偏差・分散でばらつきを測る</text>
+          <text x="330" y="303" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">すべての土台</text>
+
+          <line x1="235" y1="260" x2="235" y2="230" stroke="currentColor" stroke-width="1.4" marker-end="url(#up)" opacity="0.6"/>
+          <line x1="425" y1="260" x2="425" y2="230" stroke="currentColor" stroke-width="1.4" marker-end="url(#up)" opacity="0.6"/>
+
+          <rect x="120" y="176" width="230" height="50" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.8"/>
+          <text x="235" y="199" font-size="13" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">分散の加法性</text>
+          <text x="235" y="216" font-size="11" text-anchor="middle" fill="var(--reg-ink)" opacity="0.85">足せるのは分散だけ ／ 資料④</text>
+
+          <rect x="366" y="176" width="174" height="50" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.8"/>
+          <text x="453" y="199" font-size="13" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">平方和の分解</text>
+          <text x="453" y="216" font-size="11" text-anchor="middle" fill="var(--reg-ink)" opacity="0.85">S(T)=要因+誤差 ／ 資料①</text>
+
+          <line x1="180" y1="172" x2="150" y2="142" stroke="currentColor" stroke-width="1.4" marker-end="url(#up)" opacity="0.6"/>
+          <line x1="290" y1="172" x2="320" y2="142" stroke="currentColor" stroke-width="1.4" marker-end="url(#up)" opacity="0.6"/>
+          <line x1="453" y1="172" x2="453" y2="142" stroke="currentColor" stroke-width="1.4" marker-end="url(#up)" opacity="0.6"/>
+          <line x1="410" y1="176" x2="360" y2="142" stroke="currentColor" stroke-width="1.4" marker-end="url(#up)" opacity="0.6"/>
+
+          <rect x="34" y="88" width="180" height="52" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.4" opacity="0.85"/>
+          <text x="124" y="110" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">区間推定</text>
+          <text x="124" y="128" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">資料③④</text>
+
+          <rect x="234" y="88" width="180" height="52" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.4" opacity="0.85"/>
+          <text x="324" y="110" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">F検定（分散分析）</text>
+          <text x="324" y="128" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">資料①②③</text>
+
+          <rect x="434" y="88" width="180" height="52" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.4" opacity="0.85"/>
+          <text x="524" y="110" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">工程能力指数</text>
+          <text x="524" y="128" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">資料⑤</text>
+
+          <line x1="324" y1="84" x2="324" y2="56" stroke="var(--res)" stroke-width="1.6" marker-end="url(#up)"/>
+          <line x1="124" y1="84" x2="290" y2="56" stroke="var(--res)" stroke-width="1.4" marker-end="url(#up)" opacity="0.7"/>
+          <line x1="524" y1="84" x2="368" y2="56" stroke="var(--res)" stroke-width="1.4" marker-end="url(#up)" opacity="0.7"/>
+
+          <rect x="196" y="12" width="266" height="44" rx="10" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.8"/>
+          <text x="329" y="32" font-size="13" text-anchor="middle" fill="var(--res-ink)" font-weight="600">QC的問題解決での使い分け</text>
+          <text x="329" y="48" font-size="11" text-anchor="middle" fill="var(--res-ink)" opacity="0.85">資料⑤（第36回 問6）</text>
+        </svg>
+      </div>
+      <figcaption><b>資料番号:</b> ①単回帰の分散分析表 ②第36回問4 ③第36回問5 ④なぜ√nで割るのか ⑤第36回問6。<b>分散分析でつまずいたら「平方和の分解」へ、区間推定でつまずいたら「分散の加法性」へ</b>戻ると、たいてい原因はそこにある。</figcaption>
+    </figure>
+
+    <div class="callout"><b>回帰分析と一元配置は同じ表:</b> どちらも「要因で説明できる変動」と「説明できない誤差」に分け、平均平方の比を取ってF表と比べる、という同一の構造をしている。片方を理解すればもう片方は自由度の数え方が変わるだけ。</div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>回帰分析と一元配置実験の対応</caption>
+        <thead><tr><th></th><th>単回帰分析（資料①②）</th><th>一元配置実験（資料③）</th></tr></thead>
+        <tbody>
+          <tr><td>説明できる変動</td><td><span class="mono">S(R)</span> 回帰による平方和</td><td><span class="mono">S(A)</span> 要因Aの平方和</td></tr>
+          <tr><td>説明できない変動</td><td><span class="mono">S(e)</span> 残差平方和</td><td><span class="mono">S(E)</span> 誤差平方和</td></tr>
+          <tr><td>要因の自由度</td><td><span class="mono">1</span>（説明変数1個）</td><td><span class="mono">a − 1</span>（水準数−1）</td></tr>
+          <tr><td>誤差の自由度</td><td><span class="mono">n − 2</span></td><td><span class="mono">N − a</span></td></tr>
+          <tr><td>分散比</td><td colspan="2"><span class="mono">F(0) = 要因の平均平方 ÷ 誤差の平均平方</span>（共通）</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">範囲</span><h2>出題分野のカバー状況</h2></div>
+    <p>QC検定2級の手法分野に対して、いまどこまで資料があるかの一覧。<b>次に何を作るかの目安</b>として使う。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>手法分野と資料の対応</caption>
+        <thead><tr><th>分野</th><th>状況</th><th>対応する資料 / メモ</th></tr></thead>
+        <tbody>
+          <tr><td>統計的方法の基礎（正規分布・標準誤差・データのまとめ方・確率の定義・正規分布の再生性）</td><td><span class="status done">資料あり</span></td><td>なぜ√nで割るのか / 第35回 問2 / 第38回 問2 / 第39回 問1 / 第39回 問3 / 第40回 問3</td></tr>
+          <tr><td>確率分布（二項分布・正規分布の確率計算）</td><td><span class="status done">資料あり</span></td><td>第36回 問2</td></tr>
+          <tr><td>相関分析・回帰分析</td><td><span class="status done">資料あり</span></td><td>単回帰の分散分析表 / 第35回 問3 / 第36回 問4 / 第37回 問4</td></tr>
+          <tr><td>実験計画法（一元配置）</td><td><span class="status done">資料あり</span></td><td>第35回 問4 / 第36回 問5 / 第37回 問5 / 第38回 問5 / 第39回 問4</td></tr>
+          <tr><td>工程能力指数</td><td><span class="status done">資料あり</span></td><td>第36回 問6 の中で解説 / 第37回 問6 / 第38回 問2 / 第40回 問2（Cpk含む）</td></tr>
+          <tr><td>ヒストグラム</td><td><span class="status done">資料あり</span></td><td>第37回 問6（区間幅の決め方）</td></tr>
+          <tr><td>QC七つ道具・問題解決型QCストーリー</td><td><span class="status done">資料あり</span></td><td>第36回 問6</td></tr>
+          <tr><td>検定と推定（χ²検定・分割表）</td><td><span class="status done">資料あり</span></td><td>第38回 問3</td></tr>
+          <tr><td>検定と推定（分散の検定・F検定・χ²検定）</td><td><span class="status done">資料あり</span></td><td>第35回 問1 / 第36回 問3 / 第39回 問2 / 第40回 問1</td></tr>
+          <tr><td>検定と推定（母平均のt検定）</td><td><span class="status done">資料あり</span></td><td>第37回 問1 / 第40回 問1</td></tr>
+          <tr><td>検定と推定（母不適合品率）</td><td><span class="status todo">未作成</span></td><td>計数値の検定・推定</td></tr>
+          <tr><td>実験計画法（二元配置・繰り返しあり）</td><td><span class="status done">資料あり</span></td><td>第35回 問4 / 第40回 問6</td></tr>
+          <tr><td>管理図（係数 A₂・d₂・D₃・D₄）</td><td><span class="status done">資料あり</span></td><td>管理図の係数の正体</td></tr>
+          <tr><td>管理図（p、np、c、u ／ 異常判定ルール）</td><td><span class="status done">資料あり</span></td><td>第35回 問6（c管理図）／ 第40回 問5（np管理図・連による異常判定）</td></tr>
+          <tr><td>抜取検査・サンプリング</td><td><span class="status todo">未作成</span></td><td>—</td></tr>
+          <tr><td>新QC七つ道具</td><td><span class="status todo">未作成</span></td><td>—</td></tr>
+          <tr><td>品質管理の実践（企業活動の基本・方針管理など）</td><td><span class="status todo">未作成</span></td><td>実践分野</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><b>このページの育て方:</b> 新しい資料を作ったら、分野別一覧にカードを追加し、上の表の状況を更新する。資料が増えても<b>このページのURLは変わらない</b>ので、ここをブックマークしておけば常に最新の目次になる。</div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 目次</span>
+    <span>資料43件 / 最終更新 2026-09-17</span>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var fRound = document.getElementById('fRound');
+  var fQ = document.getElementById('fQ');
+  var fClear = document.getElementById('fClear');
+  var fCount = document.getElementById('fCount');
+  var noResults = document.getElementById('noResults');
+  var groups = Array.prototype.slice.call(document.querySelectorAll('.group'));
+
+  function apply(){
+    var r = fRound.value.trim();
+    var q = fQ.value.trim();
+    var active = !!(r || q);
+    var visible = 0;
+
+    groups.forEach(function(group){
+      var cards = Array.prototype.slice.call(group.querySelectorAll('.card'));
+      var groupVisible = 0;
+      cards.forEach(function(card){
+        var okR = !r || card.dataset.round === r;
+        var okQ = !q || card.dataset.q === q;
+        var match = okR && okQ;
+        card.style.display = match ? '' : 'none';
+        if(match){ groupVisible++; visible++; }
+      });
+      group.style.display = groupVisible > 0 ? '' : 'none';
+    });
+
+    if(active){
+      fCount.textContent = visible + '件ヒット';
+    } else {
+      fCount.textContent = '';
+    }
+    noResults.classList.toggle('show', active && visible === 0);
+  }
+
+  fRound.addEventListener('input', apply);
+  fQ.addEventListener('input', apply);
+  fClear.addEventListener('click', function(){
+    fRound.value = '';
+    fQ.value = '';
+    apply();
+    fRound.focus();
+  });
+})();
+</script>

@@ -1,0 +1,235 @@
+<title>第39回 問3 確率の定義</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第39回 問3</span>
+    <h1>2種類の「確率」を同じテーマで並べる — 古典的確率と統計的確率</h1>
+    <p class="lede">10000枚の4桁カードを題材に、<b>数え上げだけで厳密に決まる確率</b>と、<b>実際に試行して得られる確率</b>を同時に求めさせる問題。2つの値はどちらも「確率」と呼ばれるが、性質がまったく違う。両者が一致しない理由まで理解して初めてこの問題が解けたことになる。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>確率の定義</h2></div>
+    <p>0000から9999までの4桁の数字が1枚ずつ書かれた、合計10000枚のカードがある。この問題全体を通して使う定義はただ1つ。</p>
+
+    <div class="calc">
+      <span class="label">確率の定義(ラプラスの古典的確率)</span>
+      <span class="line">P(A) = 条件Aを満たす場合の数 / 起こり得るすべての場合の数(N)</span>
+    </div>
+
+    <div class="callout info"><b>成立の条件:</b> この定義が使えるのは「起こり得るすべての場合が同様に確からしい」とき、つまり<b>10000枚のどのカードも等確率で引かれる</b>ときに限る。カードを1枚引く試行はまさにこの条件を満たすので、①②では数え上げるだけで確率が厳密に決まる。</p></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">①</span><h2>奇数である確率 — (14)</h2></div>
+    <p>10000枚のうち、奇数のカードと偶数のカードは<b>ちょうど5000枚ずつ</b>ある(下1桁が1,3,5,7,9のものが奇数)。</p>
+
+    <div class="calc">
+      <span class="label">計算</span>
+      <span class="line">P(奇数) = 5000 / 10000 = 0.5</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(14)</span> オ. 5000/10000 = 0.5</span></div>
+
+    <div class="callout"><b>この値は近似ではない:</b> 5000枚と10000枚という数え上げから出てくる<b>厳密に0.5</b>という値。試行を1回もしていなくても、カードの構成さえわかれば正確に決まる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">②</span><h2>月日として読み取れる確率 — (15)</h2></div>
+    <p>4桁の数字を「上2桁=月、下2桁=日」として読んだとき、平年(365日)の実在する月日(0101〜1231)として成立する数字が何通りあるかを数える。0000〜9999のうち<b>実在する月日として読める組み合わせは365通り</b>(1月1日から12月31日まで、うるう日を除く)しかない。</p>
+
+    <div class="calc">
+      <span class="label">計算</span>
+      <span class="line">P(月日として読める) = 365 / 10000 = 0.0365</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(15)</span> イ. 365/10000 = 0.0365</span></div>
+
+    <div class="callout info"><b>①との共通点:</b> ①も②も「全体の中で条件を満たすものが何通りあるか」を<b>数え上げるだけ</b>で確率が決まっている。実際にカードを引く必要は一切ない。これが<b>古典的確率(数学的確率)</b>と呼ばれるゆえん。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">③</span><h2>実際に試行して求めた確率 — (16)</h2></div>
+    <p>①②とは対照的に、③では実際に<b>カードを引いて戻す試行を繰り返し</b>、月日に合致した回数を数えている。</p>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <caption>表3.1 試行の結果</caption>
+        <thead><tr><th>試行回数(観測数)</th><th>100回</th><th>500回</th><th>1000回</th><th>10000回</th></tr></thead>
+        <tbody>
+          <tr><td>1年間(平年)の月日に合致した回数</td><td>4回</td><td>18回</td><td>37回</td><td>362回</td></tr>
+          <tr class="row-reg"><td>相対度数(合致した回数÷試行回数)</td><td class="num">0.0400</td><td class="num">0.0360</td><td class="num">0.0370</td><td class="num hit">0.0362</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>一番多い試行回数(10000回)をとると、相対度数は…</p>
+
+    <div class="calc">
+      <span class="label">計算</span>
+      <span class="line">相対度数 = 362 / 10000 = 0.0362</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(16)</span> ア. 362/10000 = 0.0362</span></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">補足</span><h2>0.0365と0.0362はなぜ完全には一致しないのか</h2></div>
+    <p>②の0.0365は<b>数え上げで決まる、揺らぎのない厳密値</b>(古典的確率)。③の0.0362は<b>実際に有限回試した結果としてたまたま得られた値</b>(統計的確率、相対度数)。試行回数が増えるほど、統計的確率は古典的確率にだんだん近づいていく。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 300" role="img" aria-label="試行回数を100回から10000回まで増やすと、相対度数が古典的確率0.0365に徐々に近づいていく折れ線グラフ">
+          <line x1="70" y1="240" x2="600" y2="240" stroke="currentColor" stroke-width="1.2" opacity="0.45"/>
+          <line x1="70" y1="40" x2="70" y2="240" stroke="currentColor" stroke-width="1.2" opacity="0.45"/>
+
+          <line x1="70" y1="120" x2="600" y2="120" stroke="var(--res)" stroke-width="1.6" stroke-dasharray="5 4"/>
+          <text x="605" y="124" font-size="12" fill="var(--res-ink)" font-weight="600">0.0365 (古典的確率・厳密値)</text>
+
+          <text x="55" y="60" font-size="11" text-anchor="end" fill="currentColor" opacity="0.7">0.040</text>
+          <text x="55" y="120" font-size="11" text-anchor="end" fill="currentColor" opacity="0.7">0.0365</text>
+          <text x="55" y="220" font-size="11" text-anchor="end" fill="currentColor" opacity="0.7">0.030</text>
+
+          <g font-size="12">
+            <circle cx="130" cy="60" r="5" fill="var(--reg)"/><text x="130" y="262" text-anchor="middle" fill="currentColor">100回</text><text x="130" y="45" text-anchor="middle" fill="var(--reg-ink)">0.0400</text>
+            <circle cx="280" cy="135" r="5" fill="var(--reg)"/><text x="280" y="262" text-anchor="middle" fill="currentColor">500回</text><text x="280" y="155" text-anchor="middle" fill="var(--reg-ink)">0.0360</text>
+            <circle cx="420" cy="112" r="5" fill="var(--reg)"/><text x="420" y="262" text-anchor="middle" fill="currentColor">1000回</text><text x="420" y="97" text-anchor="middle" fill="var(--reg-ink)">0.0370</text>
+            <circle cx="560" cy="130" r="6" fill="var(--wrong)"/><text x="560" y="262" text-anchor="middle" fill="var(--wrong)" font-weight="700">10000回</text><text x="560" y="150" text-anchor="middle" fill="var(--wrong)" font-weight="700">0.0362</text>
+          </g>
+          <path d="M130,60 L280,135 L420,112 L560,130" fill="none" stroke="var(--reg)" stroke-width="1.6" opacity="0.7"/>
+
+          <text x="335" y="282" font-size="12.5" text-anchor="middle" fill="currentColor" opacity="0.65">試行回数(横軸は等間隔ではなく模式的な配置)</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 試行回数を増やすほど、相対度数(統計的確率)は上下しながらも点線の0.0365(古典的確率)に近づいていく。10000回でも0.0362と、まだわずかにズレている——これは<b>偶然によるブレがゼロにならないことの表れ</b>で、試行回数を無限に増やせば理論上0.0365に収束する(大数の法則)。</figcaption>
+    </figure>
+
+    <div class="callout"><b>2つの確率の違いのまとめ:</b></div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>古典的確率 と 統計的確率</caption>
+        <thead><tr><th></th><th>古典的確率(数学的確率)</th><th>統計的確率(経験的確率)</th></tr></thead>
+        <tbody>
+          <tr><td>求め方</td><td>場合の数を数え上げる</td><td>実際に試行して相対度数をとる</td></tr>
+          <tr><td>試行の要否</td><td>不要(理論だけで決まる)</td><td>必要(データがないと求まらない)</td></tr>
+          <tr><td>値のブレ</td><td>ない(常に同じ値)</td><td>試行のたびに変わりうる</td></tr>
+          <tr><td>本問での値</td><td class="num">365/10000 = 0.0365</td><td class="num">362/10000 = 0.0362</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn"><b>問題文の一文が核心:</b> 「これらの回数は『試行回数×(15)』とは完全には一致しないが、かなり近い数値となった」——これは<b>統計的確率が古典的確率の近似になっている</b>ことを、まさにこの問題自身が言い当てている一文。①②(古典的確率)と③(統計的確率)を同じ土俵で並べて見せることが、この問題の設計意図そのもの。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>確率の定義は <b>P(A) = 条件を満たす場合の数 / すべての場合の数</b>。「同様に確からしい」設定でのみ使える。</span></div>
+      <div class="step"><span class="mark">2</span><span><b>古典的確率</b>は数え上げだけで厳密に決まる値。試行しなくても求まる(①②)。</span></div>
+      <div class="step"><span class="mark">3</span><span><b>統計的確率(相対度数)</b>は実際に試行して初めて得られる、試行のたびにブレる値(③)。</span></div>
+      <div class="step"><span class="mark">4</span><span>試行回数を増やすほど、統計的確率は古典的確率に近づく(<b>大数の法則</b>)。完全に一致しないズレそのものが「偶然によるばらつき」の証拠。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第39回 問3 / 確率の定義</span>
+    <span>古典的確率 365/10000=0.0365 ・ 統計的確率 362/10000=0.0362</span>
+  </footer>
+
+</div>

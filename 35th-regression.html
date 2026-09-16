@@ -1,0 +1,321 @@
+<title>第35回 問3 溶接部品の単回帰分析</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(26px,4vw,36px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.given{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 22px;display:flex;flex-direction:column;gap:14px;}
+.given-row{display:flex;flex-wrap:wrap;gap:10px;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:14px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--ink);}
+
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第35回 問3</span>
+    <h1>相関係数から回帰直線、平方和の分解まで</h1>
+    <p class="lede">電流値と溶接強度、15組のデータの要約統計量だけから、相関係数→回帰係数→散布図への当てはめ→分散分析のための平方和の分解、という単回帰分析の一連の流れを最初から最後まで解く。相関係数rと回帰係数β1、両者の式の違いを意図的に混同させる選択肢の作り方にも注目する。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>与えられた条件</h2></div>
+    <div class="given">
+      <div style="font-size:14px;color:var(--ink-soft);margin-bottom:2px;">ある溶接部品の電流値xと溶接強度yについて、15組の対応のあるデータから次の値を算出した。</div>
+      <div class="given-row">
+        <span class="chip">n = 15</span>
+        <span class="chip">x̄ = 126.87</span>
+        <span class="chip">ȳ = 11.667</span>
+        <span class="chip">S(xx) = 265.73</span>
+        <span class="chip">S(yy) = 14.27</span>
+        <span class="chip">S(xy) = 58.13</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>相関係数を求める — (10)</h2></div>
+    <p>相関係数は偏差積和を、xとyそれぞれの偏差平方和の<b>幾何平均</b>で割ったもの。分母はS(xx)とS(yy)の積の<b>平方根</b>であり、S(xx)だけで割るものではない。</p>
+
+    <div class="calc">
+      <span class="label">相関係数</span>
+      <span class="line">r = S(xy) / √(S(xx)·S(yy)) = 58.13 / √(265.73 × 14.27) = 58.13 / √3791.97</span>
+      <span class="result">r ≒ 0.944</span>
+    </div>
+    <span class="answer"><span class="qno">(10)</span> オ. 0.944</span>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>(10)の誤答は別の公式と取り違えた値になっている</caption>
+        <thead><tr><th>値</th><th>判定</th><th>原因</th></tr></thead>
+        <tbody>
+          <tr><td class="good">オ. 0.944</td><td>正解</td><td>r = S(xy)/√(S(xx)·S(yy))</td></tr>
+          <tr><td class="bad">ア. 0.219</td><td>誤</td><td>分母の√(S(xx)·S(yy))を忘れ、<b>S(xx)だけ</b>で割った値(58.13/265.73)。実はこれは後で求める回帰係数β1の値そのもの</td></tr>
+          <tr><td class="bad">エ. 0.891</td><td>誤</td><td>r²=0.944²=0.891。<b>寄与率(決定係数)</b>を相関係数と取り違えた値</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout warn"><b>(10)の選択肢ア0.219は、後の設問(11)の正解と同じ数値</b>。相関係数rと回帰係数β1は式が似ているため混同しやすいが、rは無次元で必ず−1〜1に収まるのに対し、β1は単位を持つ量で1を超えることもある。数値が同じに見えても<b>意味が違う量</b>であることを区別すること。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>回帰直線をあてはめる — (11)(12)</h2></div>
+    <p>単回帰モデル y<sub>i</sub>=β0+β1x<sub>i</sub>+ε<sub>i</sub> に最小二乗法をあてはめる。傾きβ1を先に求め、それを使って切片β0を求める順序は崩さない。</p>
+
+    <div class="calc">
+      <span class="label">傾き(回帰係数)</span>
+      <span class="line">β̂1 = S(xy) / S(xx) = 58.13 / 265.73</span>
+      <span class="result">β̂1 ≒ 0.219</span>
+    </div>
+    <span class="answer"><span class="qno">(11)</span> エ. 0.219</span>
+
+    <div class="calc">
+      <span class="label">切片</span>
+      <span class="line">β̂0 = ȳ − β̂1·x̄ = 11.667 − 0.219 × 126.87</span>
+      <span class="result">β̂0 ≒ −16.12</span>
+    </div>
+    <span class="answer"><span class="qno">(12)</span> ウ. −16.12</span>
+
+    <div class="callout"><b>丸めの注意:</b> 与えられたx̄・ȳ・各平方和はすでに小数点以下で丸められた値。これらをそのまま計算すると β̂0≒−16.09 になりやすく、選択肢の−16.12とわずかにずれる。これは元データの丸め誤差の蓄積によるもので、<b>選択肢の中で最も近い値を選べばよい</b>(36th-regression.htmlで扱った丸めの注意と同じ現象)。</div>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>(11)(12)の他の選択肢が対応する典型ミス</caption>
+        <thead><tr><th>β1</th><th>β0</th><th>判定</th><th>原因</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="good">エ. 0.219</td><td class="good">ウ. −16.12</td>
+            <td><span style="color:var(--reg-ink);font-weight:700;">正解</span></td>
+            <td>β1=S(xy)/S(xx)、β0=ȳ−β1·x̄</td>
+          </tr>
+          <tr>
+            <td class="bad">キ. 4.07</td><td class="bad">ケ. 79.34</td>
+            <td>誤(ペア)</td>
+            <td><b>xとyを取り違えた</b>(yに対するxの回帰)。γ1=S(xy)/S(yy)=58.13/14.27=4.07、γ0=x̄−γ1·ȳ=126.87−4.07×11.667≒79.34</td>
+          </tr>
+          <tr>
+            <td class="bad">エ. 0.219</td><td class="bad">コ. 124.31</td>
+            <td>誤</td>
+            <td>正しい傾き0.219を使いながら、切片の式でx̄とȳの役割を取り違えた(x̄−β1·ȳ=126.87−0.219×11.667≒124.31)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout warn"><b>xとyを取り違える罠は単回帰の定番:</b> 「電流値xで溶接強度yを説明する」のか「溶接強度yで電流値xを説明する」のかを逆にすると、傾き・切片ともに全く別の値になる。どちらの変数が原因(x)でどちらが結果(y)かを問題文で確認してから式を立てること。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>散布図への当てはめを判定する — (13)</h2></div>
+    <p>回帰直線 y = −16.12 + 0.219x を、選択肢のグラフ(x軸115〜135、y軸10〜14)の枠内でどう描かれるかを検討する。<b>直線を式で決めてから、グラフの枠に収まる範囲を逆算する</b>のがポイント。</p>
+
+    <div class="calc">
+      <span class="label">グラフの枠(y軸最小値10)に入る前の値を確認</span>
+      <span class="line">x=115 のとき: y = −16.12 + 0.219×115 = −16.12 + 25.19 = 9.07　(枠外、y軸最小値10を下回る)</span>
+      <span class="line">y=10 になるxを逆算: x = (10+16.12)/0.219 ≒ 119.3</span>
+      <span class="line">x=135 のとき: y = −16.12 + 0.219×135 = −16.12 + 29.57 ≒ 13.44</span>
+    </div>
+    <div class="calc">
+      <span class="label">結論</span>
+      <span class="line">グラフに実際に描かれる線分は、x≒119.3の位置でy=10から立ち上がり、x=135でy≒13.4に達する</span>
+    </div>
+    <span class="answer"><span class="qno">(13)</span> エ</span>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 460 300" role="img" aria-label="x軸115から135、y軸10から14の枠内に回帰直線y=-16.12+0.219xを描いた図。線はx=119.3付近でy=10から始まり、x=135でy=13.4付近まで達する">
+          <line x1="60" y1="240" x2="420" y2="240" stroke="currentColor" stroke-width="1.4" opacity="0.7"/>
+          <line x1="60" y1="240" x2="60" y2="20" stroke="currentColor" stroke-width="1.4" opacity="0.7"/>
+
+          <text x="240" y="272" font-size="13" text-anchor="middle" fill="currentColor" opacity="0.8">x (電流値)</text>
+          <text x="26" y="130" font-size="13" text-anchor="middle" fill="currentColor" opacity="0.8" transform="rotate(-90 26 130)">y (溶接強度)</text>
+
+          <text x="60" y="256" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.65">115</text>
+          <text x="420" y="256" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.65">135</text>
+          <text x="48" y="244" font-size="11.5" text-anchor="end" fill="currentColor" opacity="0.65">10</text>
+          <text x="48" y="24" font-size="11.5" text-anchor="end" fill="currentColor" opacity="0.65">14</text>
+
+          <line x1="60" y1="20" x2="60" y2="240" stroke="currentColor" stroke-width="1" stroke-dasharray="2 4" opacity="0.25"/>
+          <line x1="420" y1="20" x2="420" y2="240" stroke="currentColor" stroke-width="1" stroke-dasharray="2 4" opacity="0.25"/>
+
+          <line x1="169" y1="240" x2="420" y2="47" stroke="var(--reg)" stroke-width="2.6"/>
+          <circle cx="169" cy="240" r="4" fill="var(--reg-ink)"/>
+          <circle cx="420" cy="47" r="4" fill="var(--reg-ink)"/>
+          <text x="169" y="262" font-size="11" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">x≒119.3, y=10</text>
+          <text x="380" y="36" font-size="11" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">x=135, y≒13.4</text>
+
+          <text x="240" y="280" font-size="0" opacity="0"> </text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 選択肢エは4つの候補の中で、線分が最も右寄り(x≒119付近)からy=10で立ち上がり、x=135でy≒13付近に達する図。他の候補(ア・イ・ウ)はいずれも左端x=115〜117付近からy=10で始まっており、y=−16.12+0.219×115≒9.07(枠外)という計算結果と矛盾する。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 4</span><h2>平方和の分解 — (14)(15)(16)(17)</h2></div>
+    <p>回帰直線をあてはめることに意味があるかを統計的に判定するため、分散分析を用いる。そのために全変動S(yy)を2つに分解する。</p>
+
+    <div class="calc">
+      <span class="label">平方和の分解</span>
+      <span class="line">S(yy) = Σ(y<sub>i</sub>−ȳ)² = Σ(y<sub>i</sub>−β̂0−β̂1x<sub>i</sub>)² + Σ(β̂0+β̂1x<sub>i</sub>−ȳ)²</span>
+      <span class="line">　　　= (14)平方和 + (15)平方和</span>
+    </div>
+
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>第1項 Σ(y<sub>i</sub>−β̂0−β̂1x<sub>i</sub>)² = Σ(y<sub>i</sub>−ŷ<sub>i</sub>)² … 実測値と回帰直線上の予測値との差の2乗和。これは<b>残差</b>平方和。</span></div>
+      <div class="step"><span class="mark">2</span><span>第2項 Σ(β̂0+β̂1x<sub>i</sub>−ȳ)² = Σ(ŷ<sub>i</sub>−ȳ)² … 回帰直線上の予測値と全体平均との差の2乗和。これは<b>回帰による</b>平方和。</span></div>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(14)</span> カ. 残差</span>
+      <span class="answer"><span class="qno">(15)</span> ウ. 回帰による</span>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 460 300" role="img" aria-label="散布図上の1点(xi,yi)から、回帰直線までの距離Aと、回帰直線から平均yバーまでの距離Bを示す図。A=残差、B=回帰による変動を表す">
+          <line x1="60" y1="240" x2="420" y2="240" stroke="currentColor" stroke-width="1.4" opacity="0.7"/>
+          <line x1="60" y1="240" x2="60" y2="20" stroke="currentColor" stroke-width="1.4" opacity="0.7"/>
+          <text x="430" y="244" font-size="13" fill="currentColor" opacity="0.8">x</text>
+          <text x="52" y="16" font-size="13" fill="currentColor" opacity="0.8">y</text>
+
+          <line x1="60" y1="150" x2="420" y2="150" stroke="currentColor" stroke-width="1" stroke-dasharray="3 4" opacity="0.45"/>
+          <text x="40" y="154" font-size="11.5" text-anchor="end" fill="currentColor" opacity="0.65">ȳ</text>
+
+          <line x1="90" y1="240" x2="380" y2="40" stroke="var(--reg)" stroke-width="2.2"/>
+
+          <line x1="250" y1="240" x2="250" y2="70" stroke="currentColor" stroke-width="1" stroke-dasharray="2 4" opacity="0.35"/>
+          <text x="250" y="256" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.7">x̄</text>
+
+          <line x1="330" y1="240" x2="330" y2="60" stroke="currentColor" stroke-width="1" stroke-dasharray="2 4" opacity="0.35"/>
+          <text x="330" y="256" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.7">x<tspan font-size="9" dy="2">i</tspan></text>
+
+          <circle cx="330" cy="60" r="4.5" fill="var(--wrong)"/>
+          <text x="345" y="55" font-size="11.5" fill="var(--wrong)" font-weight="600">y<tspan font-size="9" dy="2">i</tspan></text>
+
+          <circle cx="330" cy="90" r="3.5" fill="var(--reg-ink)"/>
+
+          <line x1="336" y1="60" x2="336" y2="88" stroke="var(--wrong)" stroke-width="2"/>
+          <text x="362" y="78" font-size="12" fill="var(--wrong)" font-weight="700">A(残差)</text>
+
+          <line x1="336" y1="92" x2="336" y2="148" stroke="var(--res)" stroke-width="2"/>
+          <text x="362" y="124" font-size="12" fill="var(--res-ink)" font-weight="700">B(回帰による)</text>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> Aは実測値y<sub>i</sub>から回帰直線までの縦方向の距離(残差)、Bは回帰直線から全体平均ȳまでの距離(回帰によって説明された変動)。1点についてこの2つを足すと、実測値から平均までの全体の距離(y<sub>i</sub>−ȳ)になる。</figcaption>
+    </figure>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(16)</span> ア. 図3.1のAの長さ</span>
+      <span class="answer"><span class="qno">(17)</span> イ. 図3.1のBの長さ</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">補足</span><h2>回帰による変動S(R)は何通りにも書ける</h2></div>
+    <p>今回のS(15)=回帰による平方和は、Σ(ŷ<sub>i</sub>−ȳ)²という定義そのままの形で出題されたが、実際に計算するときは<b>S(R)=S(xy)²/S(xx)</b>や<b>S(R)=β̂1·S(xy)</b>のように、データを使わず要約統計量だけで求められる。これらが同じ値になる理由は「回帰による変動の求め方」で掘り下げている。また、平方和を要因ごとに分ける発想そのものは<b>単回帰の分散分析表</b>や、一元配置実験の自由度の数え方を整理した「自由度の正体」とも共通する構造である。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>相関係数 r = S(xy)/√(S(xx)·S(yy))。分母はS(xx)だけでなく<b>S(yy)との積の平方根</b>。</span></div>
+      <div class="step"><span class="mark">2</span><span>回帰係数 β1 = S(xy)/S(xx)。rと式が似ているが、意味も値も別の量。</span></div>
+      <div class="step"><span class="mark">3</span><span>散布図への当てはめ問題は、回帰直線の式をまず求め、<b>グラフの枠に入る範囲を逆算</b>してから選択肢を絞る。</span></div>
+      <div class="step"><span class="mark">4</span><span>平方和の分解 S(yy)=S(残差)+S(回帰) は、図で見ると1点ごとの「実測値→回帰直線→平均」の2区間分解に対応する。</span></div>
+      <div class="step"><span class="mark">5</span><span>xとyを取り違える誤答は単回帰全般で頻出。どちらが説明変数(x)でどちらが目的変数(y)かを最初に確認する。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第35回 問3 / 単回帰分析(相関係数・回帰直線・平方和の分解)</span>
+    <span>r=0.944 ・ ŷ=−16.12+0.219x ・ S(yy)=S(残差)+S(回帰による)</span>
+  </footer>
+
+</div>

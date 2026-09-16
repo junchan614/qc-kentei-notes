@@ -1,0 +1,545 @@
+<title>単回帰ANOVA表</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3;
+  --surface:#FFFFFF;
+  --surface-2:#E7EDEB;
+  --ink:#16232A;
+  --ink-soft:#4B5D60;
+  --ink-faint:#7C8D8F;
+  --border:#C9D6D2;
+  --border-strong:#AABAB5;
+  --reg:#1C7C8C;
+  --reg-soft:#DCEEF0;
+  --reg-ink:#0F5B68;
+  --res:#C97A2B;
+  --res-soft:#F5E4D0;
+  --res-ink:#8F5116;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517;
+    --surface:#161F1F;
+    --surface-2:#1D2726;
+    --ink:#E7EFEC;
+    --ink-soft:#A9BAB6;
+    --ink-faint:#78908B;
+    --border:#2E3C3A;
+    --border-strong:#3D4E4A;
+    --reg:#57C6D8;
+    --reg-soft:rgba(87,198,216,0.14);
+    --reg-ink:#8FDCE8;
+    --res:#E3A15B;
+    --res-soft:rgba(227,161,91,0.14);
+    --res-ink:#F0C08A;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517;
+  --surface:#161F1F;
+  --surface-2:#1D2726;
+  --ink:#E7EFEC;
+  --ink-soft:#A9BAB6;
+  --ink-faint:#78908B;
+  --border:#2E3C3A;
+  --border-strong:#3D4E4A;
+  --reg:#57C6D8;
+  --reg-soft:rgba(87,198,216,0.14);
+  --reg-ink:#8FDCE8;
+  --res:#E3A15B;
+  --res-soft:rgba(227,161,91,0.14);
+  --res-ink:#F0C08A;
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
+  line-height:1.8;
+  font-size:16px;
+}
+.sheet{
+  max-width:880px;
+  margin:0 auto;
+  padding:48px 24px 96px;
+  display:flex;
+  flex-direction:column;
+  gap:56px;
+}
+h1,h2,h3{
+  font-family:'Zen Old Mincho', serif;
+  text-wrap:balance;
+  color:var(--ink);
+  margin:0;
+}
+.kicker{
+  font-family:'JetBrains Mono', monospace;
+  font-size:12px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--reg-ink);
+  font-weight:600;
+}
+header.hero{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  padding-bottom:28px;
+  border-bottom:1px solid var(--border);
+}
+header.hero h1{
+  font-size:clamp(28px,4vw,38px);
+  font-weight:600;
+}
+header.hero p.lede{
+  color:var(--ink-soft);
+  font-size:16px;
+  max-width:60ch;
+}
+.badge-row{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:4px;
+}
+.badge{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  padding:4px 10px;
+  border-radius:999px;
+  border:1px solid var(--border-strong);
+  color:var(--ink-soft);
+  letter-spacing:0.02em;
+}
+
+section{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+.sec-head{
+  display:flex;
+  align-items:baseline;
+  gap:12px;
+}
+.sec-num{
+  font-family:'JetBrains Mono', monospace;
+  font-size:13px;
+  color:var(--reg-ink);
+  font-weight:600;
+  min-width:22px;
+}
+.sec-head h2{
+  font-size:22px;
+  font-weight:600;
+}
+p{
+  margin:0;
+  color:var(--ink-soft);
+  max-width:68ch;
+}
+p strong{color:var(--ink);font-weight:700;}
+
+figure{
+  margin:0;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  box-shadow:var(--shadow);
+  padding:20px 20px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+figure .fig-wrap{
+  overflow-x:auto;
+}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{
+  font-size:13px;
+  color:var(--ink-faint);
+  border-top:1px dashed var(--border);
+  padding-top:10px;
+}
+figcaption b{color:var(--ink-soft);}
+
+.mono{font-family:'JetBrains Mono', monospace;}
+.tag-reg{color:var(--reg-ink);font-weight:600;}
+.tag-res{color:var(--res-ink);font-weight:600;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{
+  border-collapse:collapse;
+  width:100%;
+  min-width:640px;
+  background:var(--surface);
+  font-variant-numeric: tabular-nums;
+}
+caption{
+  text-align:left;
+  font-family:'Zen Old Mincho', serif;
+  font-size:15px;
+  padding:14px 18px;
+  color:var(--ink);
+  border-bottom:1px solid var(--border);
+  background:var(--surface-2);
+}
+th,td{
+  padding:14px 18px;
+  text-align:left;
+  border-bottom:1px solid var(--border);
+  vertical-align:top;
+}
+thead th{
+  font-family:'JetBrains Mono', monospace;
+  font-size:12px;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--ink-faint);
+  font-weight:600;
+  background:var(--surface-2);
+}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .formula{font-family:'JetBrains Mono', monospace;color:var(--ink);font-size:14.5px;}
+td .example{font-family:'JetBrains Mono', monospace;color:var(--ink-faint);font-size:12.5px;margin-top:4px;}
+
+.card-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:14px;
+}
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px 20px;
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.card .term-jp{font-family:'Zen Old Mincho',serif;font-size:17px;font-weight:600;}
+.card .term-sym{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink-faint);}
+.card .formula-line{font-family:'JetBrains Mono',monospace;font-size:15px;background:var(--surface-2);padding:8px 10px;border-radius:8px;color:var(--ink);}
+.card p{font-size:14.5px;color:var(--ink-soft);}
+.card .mnemonic{font-size:13px;color:var(--reg-ink);border-top:1px dashed var(--border);padding-top:8px;}
+
+.steps{
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  border-radius:14px;
+  border:1px solid var(--border);
+  overflow:hidden;
+  background:var(--surface);
+  box-shadow:var(--shadow);
+}
+.step{
+  display:grid;
+  grid-template-columns:44px 1fr;
+  gap:14px;
+  padding:16px 20px;
+  border-bottom:1px solid var(--border);
+  align-items:start;
+}
+.step:last-child{border-bottom:none;}
+.step .step-no{
+  font-family:'JetBrains Mono',monospace;
+  font-weight:700;
+  color:var(--reg-ink);
+  font-size:15px;
+}
+.step .step-body b{display:block;font-size:14.5px;color:var(--ink);margin-bottom:2px;}
+.step .step-body span{font-size:14px;color:var(--ink-soft);}
+
+.checklist{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.check-item{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px 16px;
+  box-shadow:var(--shadow);
+}
+.check-item .mark{
+  font-family:'JetBrains Mono',monospace;
+  color:var(--reg);
+  font-weight:700;
+  margin-top:1px;
+}
+.check-item span{font-size:14.5px;color:var(--ink-soft);}
+.check-item span b{color:var(--ink);}
+
+.callout{
+  background:var(--reg-soft);
+  border:1px solid var(--border);
+  border-left:3px solid var(--reg);
+  border-radius:10px;
+  padding:14px 18px;
+  font-size:14.5px;
+  color:var(--ink-soft);
+}
+.callout b{color:var(--ink);}
+
+footer{
+  border-top:1px solid var(--border);
+  padding-top:20px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  color:var(--ink-faint);
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定 2級 対策ノート</span>
+    <h1>単回帰分析の分散分析表</h1>
+    <p class="lede">回帰式が「意味のある関係」かどうかを判定する表。全変動を回帰と残差に分解し、平方和・自由度・平均平方・分散比の4つの数字で有意性を検定する仕組みを、図と数値例で追う。</p>
+    <div class="badge-row">
+      <span class="badge">S: 平方和</span>
+      <span class="badge">φ: 自由度</span>
+      <span class="badge">V: 平均平方</span>
+      <span class="badge">F0: 分散比</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>全変動を「回帰」と「残差」に分解する</h2></div>
+    <p>各データ点の実測値 y<sub>i</sub> は、全体の平均 ȳ からどれだけ離れているか(<b>全体のばらつき</b>)を、回帰直線で説明できる部分(<b>回帰</b>)と、直線でも説明しきれない部分(<b>残差</b>)に分けて考えられる。この分解が分散分析表の土台になる。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 560 340" role="img" aria-label="散布図上で、実測値と平均の差(全体のばらつき)が、回帰直線による説明分(回帰)と直線からのずれ(残差)に分解される様子を示す図">
+          <line x1="70" y1="300" x2="520" y2="300" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+          <line x1="70" y1="300" x2="70" y2="30" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+          <text x="528" y="304" font-size="13" fill="currentColor" opacity="0.7">x</text>
+          <text x="58" y="26" font-size="13" fill="currentColor" opacity="0.7">y</text>
+
+          <line x1="70" y1="205" x2="520" y2="205" stroke="currentColor" stroke-width="1" stroke-dasharray="3 4" opacity="0.5"/>
+          <text x="42" y="209" font-size="13" fill="currentColor" opacity="0.75">ȳ</text>
+
+          <line x1="90" y1="270" x2="500" y2="90" stroke="var(--reg)" stroke-width="2.4"/>
+          <text x="392" y="98" font-size="13" fill="var(--reg)" font-weight="600">回帰直線 ŷ = a + bx</text>
+
+          <g opacity="0.75">
+            <circle cx="92" cy="266" r="4" fill="currentColor"/>
+            <circle cx="140" cy="255" r="4" fill="currentColor"/>
+            <circle cx="180" cy="228" r="4" fill="currentColor"/>
+            <circle cx="230" cy="216" r="4" fill="currentColor"/>
+            <circle cx="270" cy="196" r="4" fill="currentColor"/>
+            <circle cx="310" cy="175" r="4" fill="currentColor"/>
+            <circle cx="390" cy="138" r="4" fill="currentColor"/>
+            <circle cx="430" cy="112" r="4" fill="currentColor"/>
+            <circle cx="465" cy="95" r="4" fill="currentColor"/>
+          </g>
+
+          <line x1="350" y1="300" x2="350" y2="120" stroke="currentColor" stroke-width="1" stroke-dasharray="2 4" opacity="0.4"/>
+          <text x="345" y="316" font-size="13" fill="currentColor" opacity="0.75">x<tspan baseline-shift="sub" font-size="9">i</tspan></text>
+
+          <line x1="70" y1="205" x2="350" y2="205" stroke="currentColor" stroke-width="0.8" stroke-dasharray="1 4" opacity="0.3"/>
+          <line x1="70" y1="156" x2="350" y2="156" stroke="var(--reg)" stroke-width="0.8" stroke-dasharray="1 4" opacity="0.4"/>
+          <line x1="70" y1="120" x2="350" y2="120" stroke="currentColor" stroke-width="0.8" stroke-dasharray="1 4" opacity="0.3"/>
+
+          <rect x="345" y="120" width="10" height="10" fill="var(--reg)"/>
+          <text x="360" y="129" font-size="12" fill="var(--reg)">ŷ<tspan baseline-shift="sub" font-size="9">i</tspan></text>
+
+          <circle cx="350" cy="120" r="6.5" fill="var(--surface)" stroke="currentColor" stroke-width="2"/>
+          <text x="360" y="112" font-size="12" fill="currentColor">y<tspan baseline-shift="sub" font-size="9">i</tspan> (実測値)</text>
+
+          <line x1="365" y1="205" x2="365" y2="156" stroke="var(--reg)" stroke-width="5"/>
+          <line x1="365" y1="156" x2="365" y2="120" stroke="var(--res)" stroke-width="5"/>
+
+          <text x="378" y="184" font-size="13" fill="var(--reg-ink)" font-weight="600">ŷ<tspan baseline-shift="sub" font-size="9">i</tspan>−ȳ (回帰)</text>
+          <text x="378" y="141" font-size="13" fill="var(--res-ink)" font-weight="600">y<tspan baseline-shift="sub" font-size="9">i</tspan>−ŷ<tspan baseline-shift="sub" font-size="9">i</tspan> (残差)</text>
+
+          <line x1="440" y1="205" x2="440" y2="120" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+          <line x1="434" y1="205" x2="446" y2="205" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+          <line x1="434" y1="120" x2="446" y2="120" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+          <text x="450" y="166" font-size="13" fill="currentColor" opacity="0.8">y<tspan baseline-shift="sub" font-size="9">i</tspan>−ȳ (全体)</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 全体のばらつき(y<sub>i</sub>−ȳ)は、回帰直線で説明できる分(ŷ<sub>i</sub>−ȳ)と、直線から外れる残差分(y<sub>i</sub>−ŷ<sub>i</sub>)の和に等しい。これを全データについて2乗して合計したものが、それぞれ S<sub>T</sub>・S<sub>R</sub>・S<sub>e</sub> になる。</figcaption>
+    </figure>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 560 120" role="img" aria-label="平方和の内訳を示す積み上げ棒グラフ。全平方和ST=250が、回帰の平方和SR=180と残差の平方和Se=70に分かれる例">
+          <rect x="40" y="46" width="346" height="36" fill="var(--reg)"/>
+          <rect x="386" y="46" width="134" height="36" fill="var(--res)"/>
+          <rect x="40" y="46" width="480" height="36" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <line x1="386" y1="46" x2="386" y2="82" stroke="var(--surface)" stroke-width="2"/>
+
+          <text x="213" y="40" font-size="13" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">S<tspan baseline-shift="sub" font-size="9">R</tspan> = 180 (回帰)</text>
+          <text x="453" y="40" font-size="13" text-anchor="middle" fill="var(--res-ink)" font-weight="600">S<tspan baseline-shift="sub" font-size="9">e</tspan> = 70 (残差)</text>
+
+          <line x1="40" y1="94" x2="40" y2="100" stroke="currentColor" opacity="0.6"/>
+          <line x1="520" y1="94" x2="520" y2="100" stroke="currentColor" opacity="0.6"/>
+          <line x1="40" y1="97" x2="520" y2="97" stroke="currentColor" opacity="0.6"/>
+          <text x="280" y="114" font-size="13" text-anchor="middle" fill="currentColor" opacity="0.8">S<tspan baseline-shift="sub" font-size="9">T</tspan> = 250 (全体)</text>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> S<sub>T</sub> = S<sub>R</sub> + S<sub>e</sub> は必ず成り立つ恒等式。回帰(青緑)の割合が大きいほど「回帰直線がよく当てはまっている」ことになる — これが後述の寄与率 R² の考え方そのもの。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>分散分析表の構造</h2></div>
+    <p>データ数を n として、上の分解をそのまま表にしたものが分散分析表。<span class="mono">n = 10</span> の数値例を各セルの下段に添えた。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>単回帰分析の分散分析表（n = 10 の例つき）</caption>
+        <thead>
+          <tr><th>要因</th><th>平方和 S</th><th>自由度 φ</th><th>平均平方 V</th><th>分散比 F0</th></tr>
+        </thead>
+        <tbody>
+          <tr class="row-reg">
+            <td>回帰</td>
+            <td><div class="formula">S<sub>R</sub> = Σ(ŷ<sub>i</sub>−ȳ)²</div><div class="example">= 180</div></td>
+            <td><div class="formula">φ<sub>R</sub> = 1</div><div class="example">説明変数が1個だから常に1</div></td>
+            <td><div class="formula">V<sub>R</sub> = S<sub>R</sub> / φ<sub>R</sub></div><div class="example">= 180 / 1 = 180</div></td>
+            <td><div class="formula">F<sub>0</sub> = V<sub>R</sub> / V<sub>e</sub></div><div class="example">= 180 / 8.75 ≈ 20.57</div></td>
+          </tr>
+          <tr class="row-res">
+            <td>残差</td>
+            <td><div class="formula">S<sub>e</sub> = Σ(y<sub>i</sub>−ŷ<sub>i</sub>)²</div><div class="example">= S<sub>T</sub>−S<sub>R</sub> = 70</div></td>
+            <td><div class="formula">φ<sub>e</sub> = n−2</div><div class="example">= 10−2 = 8</div></td>
+            <td><div class="formula">V<sub>e</sub> = S<sub>e</sub> / φ<sub>e</sub></div><div class="example">= 70 / 8 = 8.75</div></td>
+            <td><div class="example" style="margin-top:0;">—</div></td>
+          </tr>
+          <tr class="row-total">
+            <td>計</td>
+            <td><div class="formula">S<sub>T</sub> = Σ(y<sub>i</sub>−ȳ)²</div><div class="example">= S<sub>R</sub>+S<sub>e</sub> = 250</div></td>
+            <td><div class="formula">φ<sub>T</sub> = n−1</div><div class="example">= 10−1 = 9</div></td>
+            <td><div class="example" style="margin-top:0;">—</div></td>
+            <td><div class="example" style="margin-top:0;">—</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><b>検算のコツ:</b> 平方和は S<sub>T</sub>=S<sub>R</sub>+S<sub>e</sub>(250=180+70)、自由度は φ<sub>T</sub>=φ<sub>R</sub>+φ<sub>e</sub>(9=1+8)が必ず一致する。試験ではこの縦の足し算で自分の計算を検算できる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>4つの用語を押さえる</h2></div>
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="term-jp">平方和</div>
+        <div class="term-sym">Sum of Squares — S</div>
+        <div class="formula-line">S = Σ(値 − 平均)²</div>
+        <p>各データが平均からどれだけ離れているかを2乗して合計した「ばらつきの総量」。2乗するのでプラスとマイナスが打ち消し合わない。</p>
+        <div class="mnemonic">覚え方: 差を2乗して足すから必ず0以上。</div>
+      </div>
+
+      <div class="card">
+        <div class="term-jp">自由度</div>
+        <div class="term-sym">Degrees of Freedom — φ</div>
+        <div class="formula-line">φ<sub>T</sub>=n−1, φ<sub>R</sub>=1, φ<sub>e</sub>=n−2</div>
+        <p>独立に動ける情報の数。単回帰は説明変数が1個なので回帰の自由度は常に1、残差はデータ数からパラメータ2個(切片・傾き)を引いた n−2。</p>
+        <div class="mnemonic">覚え方: 単回帰の φ<sub>R</sub> は必ず「1」。</div>
+      </div>
+
+      <div class="card">
+        <div class="term-jp">平均平方</div>
+        <div class="term-sym">Mean Square（不偏分散）— V</div>
+        <div class="formula-line">V = S / φ</div>
+        <p>平方和を自由度で割ったもの。データ数の影響を取り除いた「1自由度あたりのばらつき」で、分散そのものにあたる。</p>
+        <div class="mnemonic">覚え方: 平方和は「量」、平均平方は「密度」。</div>
+      </div>
+
+      <div class="card">
+        <div class="term-jp">分散比</div>
+        <div class="term-sym">Variance Ratio — F<sub>0</sub></div>
+        <div class="formula-line">F<sub>0</sub> = V<sub>R</sub> / V<sub>e</sub></div>
+        <p>回帰で説明できるばらつきが、残差(誤差)のばらつきの何倍あるかを表す。この値をF表の値と比べて回帰の有意性を判定する。</p>
+        <div class="mnemonic">覚え方: 分子は必ず「回帰」、分母は必ず「残差」。</div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>F検定で「回帰に意味があるか」を判定する</h2></div>
+    <p>分散比 F<sub>0</sub> が大きいほど「回帰による説明力が、誤差のばらつきに比べて十分大きい」といえる。実際にどこから「大きい」と判定するかを、F分布の棄却域を使って決める。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 560 260" role="img" aria-label="F分布の図。右に裾を引く曲線上で、有意水準5%に対応する棄却限界値F(1,8;0.05)より、実際の分散比F0=20.57がさらに右側の棄却域に入っており、回帰が有意であることを示す">
+          <line x1="40" y1="220" x2="520" y2="220" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+          <text x="525" y="224" font-size="13" fill="currentColor" opacity="0.7">F</text>
+
+          <path id="fcurve" d="M40,220 C68,142 88,66 128,58 C168,50 202,82 234,124 C280,178 340,208 400,216 C440,219 480,220 520,220" fill="none" stroke="currentColor" stroke-width="2" opacity="0.85"/>
+
+          <path d="M260,218 C300,208 350,205 400,214 C440,219 480,220 520,220 L520,220 L260,220 Z" fill="var(--res)" opacity="0.22"/>
+
+          <line x1="260" y1="220" x2="260" y2="207" stroke="currentColor" stroke-width="1.3" stroke-dasharray="3 3" opacity="0.7"/>
+          <text x="260" y="240" font-size="12.5" text-anchor="middle" fill="currentColor" opacity="0.8">F(1,8;0.05)=5.32</text>
+
+          <line x1="340" y1="220" x2="340" y2="196" stroke="var(--reg)" stroke-width="2.4"/>
+          <polygon points="340,190 335,199 345,199" fill="var(--reg)"/>
+          <text x="340" y="180" font-size="13" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">F<tspan baseline-shift="sub" font-size="9">0</tspan> = 20.57</text>
+
+          <text x="460" y="196" font-size="12.5" fill="var(--res-ink)">棄却域（有意水準5%）</text>
+          <text x="140" y="90" font-size="12.5" fill="currentColor" opacity="0.6">分布の山（大半のF値はここに集まる）</text>
+        </svg>
+      </div>
+      <figcaption><b>図3.</b> F<sub>0</sub> が棄却限界値より右（棄却域の中）に入っているので「回帰は有意」と判定できる。逆に F<sub>0</sub> が棄却限界値より左なら、回帰に意味があるとは言えない。</figcaption>
+    </figure>
+
+    <div class="steps">
+      <div class="step"><span class="step-no">01</span><div class="step-body"><b>仮説を立てる</b><span>H<sub>0</sub>: 回帰係数 β=0（xはyの説明に役立たない） / H<sub>1</sub>: β≠0</span></div></div>
+      <div class="step"><span class="step-no">02</span><div class="step-body"><b>分散分析表から F<sub>0</sub> を求める</b><span>F<sub>0</sub> = V<sub>R</sub> / V<sub>e</sub> を計算する（例: 20.57）</span></div></div>
+      <div class="step"><span class="step-no">03</span><div class="step-body"><b>F表の値と比較する</b><span>自由度 (φ<sub>R</sub>, φ<sub>e</sub>) = (1, n−2) と有意水準からF表を引く（例: F(1,8;0.05)=5.32）</span></div></div>
+      <div class="step"><span class="step-no">04</span><div class="step-body"><b>判定する</b><span>F<sub>0</sub> &gt; F表の値 なら H<sub>0</sub> を棄却し「回帰は有意」。今回は 20.57 &gt; 5.32 なので有意。</span></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2>寄与率（決定係数）R² との関係</h2></div>
+    <p>分散分析表の S<sub>R</sub> と S<sub>T</sub> から、回帰直線の当てはまりの良さを表す<b>寄与率 R²</b>（決定係数）も求まる。単回帰では相関係数 r の2乗に一致する。</p>
+    <div class="callout">
+      <div class="formula-line" style="display:inline-block;margin-bottom:8px;">R² = S<sub>R</sub> / S<sub>T</sub> = 180 / 250 = 0.72</div><br/>
+      <b>意味:</b> yのばらつきの72%はxとの直線関係で説明でき、残り28%は残差（誤差やほかの要因）。R²は0〜1の値をとり、1に近いほど当てはまりが良い。単回帰では R² = r²（相関係数の2乗）が成り立つ。
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">06</span><h2>試験前チェックリスト</h2></div>
+    <div class="checklist">
+      <div class="check-item"><span class="mark">□</span><span><b>S<sub>T</sub>=S<sub>R</sub>+S<sub>e</sub></b> と <b>φ<sub>T</sub>=φ<sub>R</sub>+φ<sub>e</sub></b> は必ず成り立つ恒等式で、検算に使える</span></div>
+      <div class="check-item"><span class="mark">□</span><span>単回帰では説明変数が1個なので <b>φ<sub>R</sub>=1</b>、残差の自由度は <b>φ<sub>e</sub>=n−2</b></span></div>
+      <div class="check-item"><span class="mark">□</span><span>平均平方は「平方和 ÷ 自由度」。<b>分散比 F<sub>0</sub> は必ず V<sub>R</sub>÷V<sub>e</sub></b>（回帰÷残差）で、逆にしない</span></div>
+      <div class="check-item"><span class="mark">□</span><span>判定は片側検定: <b>F<sub>0</sub> &gt; F(φ<sub>R</sub>,φ<sub>e</sub>;α)</b> なら回帰は有意</span></div>
+      <div class="check-item"><span class="mark">□</span><span>寄与率 <b>R²=S<sub>R</sub>/S<sub>T</sub></b> は当てはまりの良さの指標。単回帰では相関係数の2乗 r² に一致する</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 単回帰分析 / 分散分析表</span>
+    <span>回帰分散分析表</span>
+  </footer>
+
+</div>

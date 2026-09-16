@@ -1,0 +1,300 @@
+<title>第38回 問4 単回帰分析の分散分析表</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第38回 問4</span>
+    <h1>単回帰分析 — 分散分析表から信頼区間まで</h1>
+    <p class="lede">物質Aの濃度(x)から物質Bの質量(y)を予測する単回帰分析。<b>偏差平方和 → 分散分析表 → 寄与率 → 有意性判定 → 回帰係数の信頼区間</b>という単回帰の一連の流れを、20組のデータで最初から最後まで通す。「単回帰分析の分散分析表」で学んだ土台がそのまま使える。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>与えられたデータ</h2></div>
+    <p>物質Aの濃度x(%)と物質Bの質量y(kg)のデータが20組(n=20)与えられ、各データのx²・y²・xyまで補助表として計算済み。必要なのはその合計値だけ。</p>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <caption>表4.1 補助表の合計値（n=20）</caption>
+        <thead><tr><th>Σx</th><th>Σy</th><th>Σx²</th><th>Σy²</th><th>Σxy</th></tr></thead>
+        <tbody>
+          <tr><td class="sum">237.9</td><td class="sum">37.2</td><td class="sum">3542.83</td><td class="sum">88.26</td><td class="sum">546.70</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>偏差平方和・偏差積和を求める — (22)(23)(24)</h2></div>
+    <p>単回帰分析の出発点は毎回同じ3つの式。<b>2乗和から「合計²/n」を引く</b>という、これまでの分散分析と全く同じ操作。</p>
+
+    <div class="calc">
+      <span class="label">S(xx) — xの偏差平方和</span>
+      <span class="line">S(xx) = Σx² − (Σx)²/n = 3542.83 − 237.9²/20 = 3542.83 − 2829.8205</span>
+      <span class="result">S(xx) ≒ 713.01</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">S(yy) — yの偏差平方和</span>
+      <span class="line">S(yy) = Σy² − (Σy)²/n = 88.26 − 37.2²/20 = 88.26 − 69.192</span>
+      <span class="result">S(yy) ≒ 19.07</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">S(xy) — xとyの偏差積和</span>
+      <span class="line">S(xy) = Σxy − (Σx)(Σy)/n = 546.70 − (237.9×37.2)/20 = 546.70 − 442.494</span>
+      <span class="result">S(xy) ≒ 104.21</span>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(22)</span> S(xx) = 713.01</span>
+      <span class="answer"><span class="qno">(23)</span> S(yy) = 19.07</span>
+      <span class="answer"><span class="qno">(24)</span> S(xy) = 104.21</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>分散分析表を作る — (25)(26)</h2></div>
+    <p>回帰による変動 S<sub>R</sub> は「<a href="regression-sr.html" target="_blank" rel="noopener">回帰による変動の4通りの求め方</a>」で見た通り、S<sub>xy</sub>²/S<sub>xx</sub> が最短ルート。残差の変動 S<sub>e</sub> は S<sub>yy</sub> からの引き算で出す。そこまで出せば、分散比F<sub>0</sub>まで一気に埋められる。</p>
+
+    <div class="calc">
+      <span class="label">回帰による変動 S(R)</span>
+      <span class="line">S(R) = S(xy)² / S(xx) = 104.21² / 713.01 = 10859.72 / 713.01</span>
+      <span class="result">S(R) ≒ 15.23</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">残差の変動 S(e)（引き算で求める）</span>
+      <span class="line">S(e) = S(yy) − S(R) = 19.07 − 15.23</span>
+      <span class="result">S(e) ≒ 3.84</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">平均平方と分散比F(0)</span>
+      <span class="line">V(R) = S(R)/φ(R) = 15.23/1 = 15.23</span>
+      <span class="line">V(e) = S(e)/φ(e) = 3.84/18 ≒ 0.21</span>
+      <span class="line">F(0) = V(R) / V(e) = 15.23 / 0.21</span>
+      <span class="result">F(0) ≒ 72.52</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>表4.2 分散分析表（完成形）</caption>
+        <thead><tr><th>要因</th><th>平方和S</th><th>自由度φ</th><th>平均平方V</th><th>分散比F<sub>0</sub></th></tr></thead>
+        <tbody>
+          <tr class="row-reg"><td>回帰R</td><td><div class="num hit">15.23</div><div class="sub">…(25)</div></td><td><div class="num">1</div><div class="sub">説明変数1個</div></td><td><div class="num">15.23</div><div class="sub">= 15.23/1</div></td><td><div class="num hit">72.52</div><div class="sub">…(26)</div></td></tr>
+          <tr class="row-res"><td>残差e</td><td><div class="num">3.84</div></td><td><div class="num">18</div><div class="sub">= n−2 = 20−2</div></td><td><div class="num">0.21</div><div class="sub">= 3.84/18</div></td><td></td></tr>
+          <tr class="row-total"><td>合計T</td><td><div class="num">19.07</div></td><td><div class="num">19</div><div class="sub">= n−1</div></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(25)</span> S(R) = 15.23</span>
+      <span class="answer"><span class="qno">(26)</span> F(0) = 72.52</span>
+    </div>
+
+    <div class="callout info"><b>自由度の数え方はいつもの単回帰の型:</b> 回帰の自由度は<b>説明変数の数(=1)</b>で固定、残差はn−2、合計はn−1。<b>n=20のとき残差の自由度は18</b>――これが後の(28)(29)でF表・t表を引くときの行番号になる。V(e)を0.21(小数第2位)に丸めてからF(0)を計算するのがこの表の流儀で、丸めずに計算すると71台の値になり選択肢と合わなくなるので注意。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>寄与率と有意性の判定 — (27)(28)</h2></div>
+    <p>寄与率R²は「全体の変動のうち、回帰で説明できた割合」。<b>S<sub>R</sub>/S<sub>yy</sub></b> で求める――これも分散分析表を作ったときの構造そのもの。</p>
+
+    <div class="calc">
+      <span class="label">寄与率 R²</span>
+      <span class="line">R² = S(R) / S(yy) = 15.23 / 19.07</span>
+      <span class="result">R² ≒ 0.7986</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(27)</span> R² = 0.7986</span></div>
+
+    <div class="calc">
+      <span class="label">F(0)とF表による有意性の判定</span>
+      <span class="line">F表より F(1, 18; 0.01) ≒ 8.29</span>
+      <span class="line">F(0) = 72.52 ≫ 8.29 なので、有意水準1%でも棄却できる</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(28)</span> 高度に有意である</span></div>
+
+    <div class="callout"><b>寄与率0.7986の実感:</b> 「物質Aの濃度のばらつきだけで、物質Bの質量のばらつきの約80%が説明できる」という意味。残り約20%は、この単回帰モデルに含まれない別の要因や測定誤差によるもの。R²が1に近いほど直線関係が強い。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 4</span><h2>回帰係数の95%信頼区間 — (29)</h2></div>
+    <p>回帰係数(傾き) b の区間推定は、「<a href="37th-anova-ci.html" target="_blank" rel="noopener">母平均の区間推定</a>」と同じ<b>「推定値 ± t × 標準誤差」</b>の型。標準誤差の中身だけが回帰特有の形になる。</p>
+
+    <div class="calc">
+      <span class="label">傾き b の推定値</span>
+      <span class="line">b = S(xy) / S(xx) = 104.21 / 713.01</span>
+      <span class="result">b ≒ 0.1461</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">傾きの標準誤差と信頼区間</span>
+      <span class="line">SE(b) = √( V(e) / S(xx) ) = √(0.21 / 713.01) ≒ 0.0172</span>
+      <span class="line">t(18, 0.025) = 2.101</span>
+      <span class="line">β(1) の95%信頼区間 = b ± t×SE(b) = 0.1461 ± 2.101×0.0172 = 0.1461 ± 0.0361</span>
+      <span class="result">0.1100 〜 0.1822</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(29)</span> 0.1101 〜 0.1823</span></div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 200" role="img" aria-label="回帰係数bの点推定値0.1461を中心に、95%信頼区間が0.1101から0.1823まで広がっていることを示す数直線の図">
+          <line x1="60" y1="140" x2="580" y2="140" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+          <g font-size="11.5" fill="currentColor" opacity="0.65" text-anchor="middle">
+            <line x1="100" y1="140" x2="100" y2="146" stroke="currentColor"/><text x="100" y="160">0.08</text>
+            <line x1="220" y1="140" x2="220" y2="146" stroke="currentColor"/><text x="220" y="160">0.12</text>
+            <line x1="340" y1="140" x2="340" y2="146" stroke="currentColor"/><text x="340" y="160">0.16</text>
+            <line x1="460" y1="140" x2="460" y2="146" stroke="currentColor"/><text x="460" y="160">0.20</text>
+          </g>
+          <line x1="222" y1="80" x2="376" y2="80" stroke="var(--reg)" stroke-width="3"/>
+          <line x1="222" y1="70" x2="222" y2="90" stroke="var(--reg)" stroke-width="2.5"/>
+          <line x1="376" y1="70" x2="376" y2="90" stroke="var(--reg)" stroke-width="2.5"/>
+          <circle cx="299" cy="80" r="5" fill="var(--reg)"/>
+          <text x="299" y="58" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">b=0.1461</text>
+          <text x="222" y="105" font-size="11" text-anchor="middle" fill="var(--reg-ink)">0.1101</text>
+          <text x="376" y="105" font-size="11" text-anchor="middle" fill="var(--reg-ink)">0.1823</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 傾きbの点推定値0.1461を中心に、95%信頼区間が0.1101〜0.1823まで広がる。0を含まないので「濃度xが質量yに影響していないとは言えない(=関係がある)」ことも、この区間から読み取れる。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">分析</span><h2>(25)(26)の選択肢は、実は5つとも「本物の値」</h2></div>
+    <p>(25)(26)の5つの選択肢を並べると、<b>どれか1つが計算ミスの産物というわけではなく、5つとも計算の途中で実際に登場する値</b>で構成されている。違うのは「どのマスの値か」だけ。</p>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>(25)(26) の選択肢 — 全部が計算チェーンの中の実在の値</caption>
+        <thead><tr><th>選択肢</th><th>判定</th><th>本当は何の値か</th></tr></thead>
+        <tbody>
+          <tr><td class="bad">ア. 0.21</td><td>誤</td><td>V(e)（誤差の平均平方）。F<sub>0</sub>を求める<b>途中</b>の値であって、F<sub>0</sub>そのものではない</td></tr>
+          <tr><td class="bad">イ. 3.84</td><td>誤</td><td>S(e)（残差の変動）。回帰の行ではなく<b>残差の行</b>の平方和</td></tr>
+          <tr><td class="good">ウ. 15.23</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (25)</span></td><td>S(R) = S(xy)²/S(xx) で正しく計算</td></tr>
+          <tr><td class="bad">エ. 19.07</td><td>誤</td><td>S(yy)そのもの。回帰の行ではなく<b>合計の行</b>の平方和</td></tr>
+          <tr><td class="good">オ. 72.52</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (26)</span></td><td>F(0) = V(R)/V(e) で正しく計算</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><b>読み解き方:</b> ア(V<sub>e</sub>)・イ(S<sub>e</sub>)・エ(S<sub>yy</sub>)は、すべて<b>分散分析表の中の「別のマスの値」</b>であり、計算はどれも正しい。1つの表で複数の値を求める問題では、電卓の答えが合っているかどうかより先に<b>「今どのマスを埋めているか」</b>を指差し確認する方が事故が少ない。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>単回帰の出発点は毎回同じ: <b>S(xx)=Σx²−(Σx)²/n、S(yy)=Σy²−(Σy)²/n、S(xy)=Σxy−ΣxΣy/n</b>。</span></div>
+      <div class="step"><span class="mark">2</span><span>回帰による変動は <b>S(R)=S(xy)²/S(xx)</b>、残差は<b>引き算(S(yy)−S(R))</b>で求めるのが速い。自由度は回帰=1、残差=n−2、合計=n−1で固定。</span></div>
+      <div class="step"><span class="mark">3</span><span>寄与率は <b>R²=S(R)/S(yy)</b>。分散分析表がすでにあれば追加の計算はほぼ不要。</span></div>
+      <div class="step"><span class="mark">4</span><span>有意性の判定は分散分析(F検定)と同じ型: <b>F(0)=V(R)/V(e)</b> をF表と比較する。V(e)を丸めてから割ると選択肢のきれいな値に一致することが多い。</span></div>
+      <div class="step"><span class="mark">5</span><span>回帰係数の信頼区間は <b>b ± t(n−2,0.025)×√(V(e)/S(xx))</b>。「1つの母平均の区間推定」と同じ「点推定 ± t×標準誤差」の型に、回帰特有の標準誤差を当てはめただけ。</span></div>
+      <div class="step"><span class="mark">6</span><span>1つの分散分析表の中で複数の値を問われるときは、<b>選択肢に「表の別のマスの値」が紛れ込む</b>。どの量を求めているかを都度確認する。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第38回 問4 / 単回帰分析</span>
+    <span>F(0)=72.52 ・ R²=0.7986 ・ β(1)の95%CI=0.1101〜0.1823</span>
+  </footer>
+
+</div>

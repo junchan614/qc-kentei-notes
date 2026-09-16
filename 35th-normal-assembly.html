@@ -1,0 +1,252 @@
+<title>第35回 問2 規格外れ確率と部品組立ての分散</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(26px,4vw,36px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第35回 問2</span>
+    <h1>規格外れ確率の計算と、部品を組み合わせたときの分散</h1>
+    <p class="lede">前半は標準正規分布への変換だけの基本問題。後半の(7)〜(9)は同じ一般公式 <b>V[z]=σx²+σy²+2cov(x,y)</b> の使い分けを問うており、「意図的に大小を逆に組み合わせる」か「ランダムに組み合わせる」かで、共分散の項が<b>残るか消えるか</b>だけが変わる。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">①</span><h2>材料強度の規格外れ確率 — (5)(6)</h2></div>
+    <p>ある加工品の材料強度(規格上限なし、規格下限80)は、平均86、分散3²の正規分布に従う。規格外れが発生する確率、およびそれを0.3%にするために必要な標準偏差を求める。</p>
+
+    <div class="calc">
+      <span class="label">標準化して規格外れ確率を求める</span>
+      <span class="line">Z = (S(L) − μ) / σ = (80 − 86) / 3 = −2</span>
+      <span class="line">P(X &lt; 80) = P(Z &lt; −2) = 0.0228　(正規分布表)</span>
+    </div>
+    <span class="answer"><span class="qno">(5)</span> ア. 0.0228</span>
+
+    <div class="calc">
+      <span class="label">規格外れ確率を0.3%にする標準偏差</span>
+      <span class="line">片側の裾確率0.3%に対応するzは、正規分布表からz=2.75</span>
+      <span class="line">(86 − 80) / σ = 2.75 → σ = 6 / 2.75</span>
+      <span class="result">σ ≒ 2.182</span>
+    </div>
+    <span class="answer"><span class="qno">(6)</span> カ. 2.182</span>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 200" role="img" aria-label="正規分布の図。平均86の分布で規格下限80がz=-2の位置にあり、その左側の裾の面積0.0228が規格外れ確率であることを示す。もう一本、より幅の狭い分布は0.3%まで裾を絞った場合を示す">
+          <line x1="40" y1="160" x2="600" y2="160" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+          <path d="M60,160 C110,160 150,30 320,26 C490,30 530,160 580,160" fill="none" stroke="var(--res)" stroke-width="2.2" opacity="0.9"/>
+          <text x="320" y="14" font-size="12" text-anchor="middle" fill="var(--res-ink)" font-weight="700">σ=3 (現状): 裾確率0.0228</text>
+
+          <path d="M150,160 C185,160 220,40 320,36 C420,40 455,160 490,160" fill="none" stroke="var(--reg)" stroke-width="2.2"/>
+          <text x="320" y="180" font-size="12" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">σ≒2.182 (目標): 裾確率0.003</text>
+
+          <path d="M60,159 C80,159 92,150 100,120 C104,105 105,159 105,159 Z" fill="var(--wrong)" opacity="0.35"/>
+          <line x1="105" y1="160" x2="105" y2="34" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+          <text x="105" y="196" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.8">S(L)=80</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 同じ規格下限80でも、σを3から2.182まで小さくすると裾がその分布の中心側に引っ込み、規格外れ確率が2.28%から0.3%まで下がる。</figcaption>
+    </figure>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>(5)(6)の選択肢に混ざる典型的な誤答</caption>
+        <thead><tr><th>値</th><th>判定</th><th>原因の候補</th></tr></thead>
+        <tbody>
+          <tr><td class="good">ア. 0.0228</td><td>正解</td><td>P(Z&lt;−2)</td></tr>
+          <tr><td class="bad">オ. 0.977</td><td>誤</td><td>1−0.0228。「規格を下回らない確率」を答えてしまう<b>補集合の取り違え</b></td></tr>
+          <tr><td class="bad">イ. 0.228</td><td>誤</td><td>0.0228の<b>桁を1つ間違えた</b>だけの値</td></tr>
+          <tr><td class="good">カ. 2.182</td><td>正解</td><td>6/2.75</td></tr>
+          <tr><td class="bad">ク. 13.64</td><td>誤</td><td>6/0.44=13.64。境界のz値を2.75ではなく別の値と取り違えると再現できる</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout"><b>ウ0.458・エ0.749・キ3.190</b>は上記のような桁ズレ・補集合・z値取り違えの系列に含まれない残りの候補で、具体的にどの計算ミスを想定したものかは断定できない。「選択肢の数値だけで正解を絞り込む」のではなく、必ず自分で計算して確認すること。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">②</span><h2>部品A・部品Bを組み合わせた製品Cの分散 — (7)(8)(9)</h2></div>
+    <p>部品Aの寸法xは平均μx・分散σx²、部品Bの寸法yは平均μy・分散σy²の正規分布に従う。製品Cの寸法はz=x+y。組み合わせ方によって、zの分散がどう変わるかを3パターンで問う。</p>
+
+    <div class="calc">
+      <span class="label">a) 平均は組み合わせ方によらず常に成り立つ</span>
+      <span class="line">E[z] = E[x+y] = E[x] + E[y]</span>
+      <span class="result">μz = μx + μy</span>
+    </div>
+    <span class="answer"><span class="qno">(7)</span> ア. μx + μy</span>
+
+    <div class="calc">
+      <span class="label">分散の一般式(xとyが独立とは限らない場合)</span>
+      <span class="line">V[z] = V[x+y] = V[x] + V[y] + 2cov(x,y)</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">b) 意図的に大小を逆に組み合わせる → 独立ではない</span>
+      <span class="line">寸法xの小さなAには寸法yの大きなBを、xの大きなAにはyの小さなBを組み合わせる。<br>これはxが大きいほどyが小さくなる<b>負の相関</b>を人為的に作っており、cov(x,y)は0にならない</span>
+      <span class="result">σz² = σx² + σy² + 2cov(x,y)</span>
+    </div>
+    <span class="answer"><span class="qno">(8)</span> ケ. σx² + σy² + 2cov(x,y)</span>
+
+    <div class="callout info"><b>cov(x,y)は具体的にマイナスの値になる:</b> 共分散の定義は cov(x,y)=E[(x−μx)(y−μy)]。b)の組み合わせ方では、xが大きい(x−μx&gt;0)ペアには必ずyが小さい(y−μy&lt;0)ものが来る(逆も同様)ので、各ペアの(x−μx)(y−μy)は常に負になり、その平均であるcov(x,y)自体が<b>負の値</b>になる。式の「+2cov(x,y)」の「+」は(x+y)²の展開から来る係数であって符号の宣言ではなく、そこへ負の数を代入する形になる。結果としてσz²はσx²+σy²より<b>小さくなる</b>(裾の広がりが打ち消し合う)。「意図的に負の相関を作る」と「式にマイナス記号が現れる」は別物で、一般式の形はb)もc)も変えずに、cov(x,y)という<b>値</b>の方が0か負かで変わる、という点を押さえておく。</div>
+
+    <div class="calc">
+      <span class="label">c) ランダムに組み合わせる → 独立</span>
+      <span class="line">組み合わせ方に規則性がなければxとyは<b>互いに独立</b>となり、cov(x,y)=0</span>
+      <span class="result">σz² = σx² + σy²</span>
+    </div>
+    <span class="answer"><span class="qno">(9)</span> オ. σx² + σy²</span>
+
+    <div class="table-wrap">
+      <table>
+        <caption>b)とc)は同じ一般式の特殊ケース</caption>
+        <thead><tr><th></th><th>b) 意図的に逆に組合せ</th><th>c) ランダムに組合せ</th></tr></thead>
+        <tbody>
+          <tr><td>xとyの関係</td><td>独立でない(負の相関)</td><td>独立</td></tr>
+          <tr><td>cov(x,y)</td><td class="num">≠ 0</td><td class="num">= 0</td></tr>
+          <tr class="row-res"><td>分散</td><td class="num hit">σx²+σy²+2cov(x,y)</td><td class="num hit">σx²+σy² (共分散項が消える)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 190" role="img" aria-label="一般式から出発して、独立でない場合はcov項が残り、独立な場合はcov項が消えて式が簡単になる分岐を示す図">
+          <defs>
+            <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+          <rect x="220" y="14" width="200" height="46" rx="10" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.7"/>
+          <text x="320" y="42" font-size="13" text-anchor="middle" fill="currentColor">一般式: σx²+σy²+2cov(x,y)</text>
+
+          <line x1="270" y1="60" x2="150" y2="106" stroke="currentColor" stroke-width="1.3" marker-end="url(#ar2)" opacity="0.6"/>
+          <line x1="370" y1="60" x2="490" y2="106" stroke="currentColor" stroke-width="1.3" marker-end="url(#ar2)" opacity="0.6"/>
+
+          <rect x="40" y="108" width="220" height="62" rx="10" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.8"/>
+          <text x="150" y="132" font-size="12.5" text-anchor="middle" fill="var(--res-ink)" font-weight="600">b) 意図的に逆に組合せ</text>
+          <text x="150" y="150" font-size="12" text-anchor="middle" fill="var(--res-ink)">cov(x,y)≠0 → 項が残る</text>
+          <text x="150" y="166" font-size="11.5" text-anchor="middle" fill="var(--res-ink)" opacity="0.85">σx²+σy²+2cov(x,y)</text>
+
+          <rect x="380" y="108" width="220" height="62" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.8"/>
+          <text x="490" y="132" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">c) ランダムに組合せ</text>
+          <text x="490" y="150" font-size="12" text-anchor="middle" fill="var(--reg-ink)">cov(x,y)=0 → 項が消える</text>
+          <text x="490" y="166" font-size="11.5" text-anchor="middle" fill="var(--reg-ink)" opacity="0.85">σx²+σy²</text>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> 式の形が違って見えるb)とc)は、実は同じ一般式から出発している。<b>独立かどうか</b>という一点だけが式の見た目を変えている。</figcaption>
+    </figure>
+
+    <div class="callout warn"><b>c)の式にσx²+σy²+cov(x,y)(係数2が付かない選択肢ク)を選ばないこと:</b> V[x+y]=V[x]+V[y]+2cov(x,y)の「2」は(x+y)²=x²+y²+2xyの展開から来る係数であり、独立でも独立でなくても一般式の形自体は変わらない。独立なときはcov(x,y)という<b>値そのもの</b>が0になるのであって、係数2が消えるわけではない。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">補足</span><h2>第40回問3との関係</h2></div>
+    <p>「和の分散が独立なら足し算になる」という基本は、別々の板から4枚選ぶか1枚を4等分するかで分散が4σt²と16σt²に分かれる<b>第40回問3</b>でも扱った。あちらは「独立な4個の和」と「同一の値の4倍」という<b>独立 vs 完全に同じ</b>の対比だったのに対し、本問のb)は「独立ではないが同一でもない、<b>意図的な負の相関</b>」という中間のケースを扱っている点が違う。</p>
+    <div class="callout info"><b>まとめると:</b> 独立(cov=0) → 完全に同じ(相関1、分散はn²倍) → 意図的な負の相関(cov&lt;0、一般式のまま)という3つのパターンを、この2つの過去問で押さえられる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>平均の加法性 E[x+y]=E[x]+E[y] は、xとyが独立かどうかに<b>関係なく常に成り立つ</b>。</span></div>
+      <div class="step"><span class="mark">2</span><span>分散の一般式は V[x+y]=σx²+σy²+2cov(x,y)。<b>独立のときだけ</b>cov(x,y)=0になり、見慣れたσx²+σy²の形になる。</span></div>
+      <div class="step"><span class="mark">3</span><span>「意図的に大小を逆に組み合わせる」ような操作は、独立性を壊して負の相関を作る典型例。式は簡単にならない。</span></div>
+      <div class="step"><span class="mark">4</span><span>規格外れ確率の計算はZ=(規格値−μ)/σの標準化が基本。「求めたい確率」と「その補集合(1−確率)」を取り違えないこと。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第35回 問2 / 正規分布の規格外れ確率と分散の合成</span>
+    <span>P(Z&lt;−2)=0.0228 ・ σz²=σx²+σy²+2cov(x,y)が一般式</span>
+  </footer>
+
+</div>

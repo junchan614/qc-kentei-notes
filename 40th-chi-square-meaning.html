@@ -1,0 +1,215 @@
+<title>χ0²=S/σ0²は何を測っているのか</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+p a{color:var(--reg-ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .hit{color:var(--reg-ink);font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 概念の掘り下げ / 第40回 問1 関連</span>
+    <h1>χ0²=S/σ0²は何を測っているのか — 分散の点推定になぜ標準偏差を使わないか</h1>
+    <p class="lede"><a href="40th-mean-variance-test.html" target="_blank" rel="noopener">第40回 問1②</a>では検定統計量として突然χ0²=S/σ0²という式が出てきて、点推定値も「mm²」という分散の単位で聞かれる。この2つは実は同じ1本の糸でつながっている。<b>χ²分布の正体は「標準化した誤差の2乗和」</b>であり、その糸をたどると、なぜ標準偏差ではなく分散を使うのかまで自然に見えてくる。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">おさらい</span><h2>問題の数値</h2></div>
+    <p>ある工程の加工精度は、従来、母標準偏差が0.95(mm)であった。改善後のデータ: n=8, 平方和 S=1.526。改善後の加工精度(分散)が従来より向上した(=分散が小さくなった)かを有意水準5%で検定し、点推定値も求める。</p>
+    <div class="calc">
+      <span class="line">σ0 = 0.95 → σ0² = 0.9025</span>
+      <span class="line">n = 8 → 自由度 φ = n−1 = 7</span>
+      <span class="line">S = 1.526 (平方和 = Σ(xi−x̄)²)</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>χ²分布の定義 — 「標準化した誤差の2乗和」</h2></div>
+    <p>χ²分布は、標準正規分布N(0,1)に従う確率変数を何個か2乗して足したものが従う分布として定義される。まずは母平均μが<b>既知</b>の理想的な場合から考える。「なぜ2乗するのか」自体を掘り下げたい場合は<a href="chi-square-why-squared.html" target="_blank" rel="noopener">なぜ「カイ二乗」は二乗なのか</a>を参照。</p>
+
+    <div class="calc">
+      <span class="label">母平均μ・母分散σ²が両方既知のとき</span>
+      <span class="line">Z(i) = (x(i) − μ) / σ 　← 各データを標準化(平均0・分散1の物差しで測り直す)</span>
+      <span class="line">Z(1)² + Z(2)² + ... + Z(n)² = Σ((x(i)−μ)/σ)²</span>
+      <span class="result">この和は χ²(n) 分布に従う (自由度n = 足した独立な項の数)</span>
+    </div>
+
+    <p>ところが実際にはμは未知で、代わりに標本平均x̄を使うしかない。ここで1つ制約が生まれる: 「x(i)−x̄」をすべて足すと必ず0になる(平均からの偏差の合計は常に0)という関係が、n個の偏差の中に<b>1本の縛り</b>を作る。この縛りの分だけ、自由に動ける項の数(自由度)が1つ減る。</p>
+
+    <div class="calc">
+      <span class="label">μが未知で、代わりにx̄を使うとき</span>
+      <span class="line">S = Σ(x(i) − x̄)² 　(平方和。母平均μではなく標本平均x̄からの偏差)</span>
+      <span class="line">S / σ² = Σ((x(i)−x̄)/σ)²</span>
+      <span class="result">この和は χ²(n−1) 分布に従う (自由度がn−1に1つ減る)</span>
+    </div>
+
+    <div class="callout info"><b>自由度がn−1になる理由の詳細:</b> なぜ「1つの縛り」が「自由度が1減る」ことに対応するのかは、<a href="degrees-of-freedom.html" target="_blank" rel="noopener">自由度の正体</a>で「独立な2本立て」「1本を切り分ける」の2パターンに整理して解説している。ここでのS=Σ(x(i)−x̄)²は「1本を切り分ける」型で、全体n個の情報からx̄の計算に1個分の情報が使われ、残りn−1個分だけが「ばらつき」として残る。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>検定統計量χ0²の意味</h2></div>
+    <p>STEP1の式で、σ²のところに帰無仮説H(0)の値σ0²を代入すると、そのまま検定統計量になる。</p>
+
+    <div class="calc">
+      <span class="label">検定統計量</span>
+      <span class="line">χ0² = S / σ0² = 1.526 / 0.9025 = 1.691</span>
+      <span class="line">H(0): σ² = σ0² が正しければ、χ0²はχ²(7)分布に従うはず</span>
+    </div>
+
+    <p>つまりχ0²は、<b>「実際に観測されたばらつきSが、従来の分散σ0²の何倍あるか」を測る物差し</b>。H(0)が正しければ、この比はχ²(7)分布が示す「普通の範囲」に収まるはずで、極端に小さければ「分散が縮んだ(向上した)」、極端に大きければ「分散が広がった(悪化した)」と判断できる。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 220" role="img" aria-label="自由度の異なるχ²分布3本の比較。自由度が小さいほど0付近に偏り、自由度が大きいほど山が右へ移動して左右対称に近づく">
+          <line x1="50" y1="180" x2="600" y2="180" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+          <text x="325" y="18" font-size="12.5" text-anchor="middle" fill="currentColor" opacity="0.75">χ²分布は自由度φが増えるほど、山が右へ移動し形が対称に近づく</text>
+
+          <path d="M50,178 C60,178 65,60 90,45 C120,30 150,90 220,150 C280,178 350,180 600,180" fill="none" stroke="var(--res)" stroke-width="2" opacity="0.85"/>
+          <text x="95" y="200" font-size="11.5" text-anchor="middle" fill="var(--res-ink)">φ=2</text>
+
+          <path d="M50,180 C90,180 130,170 170,120 C210,70 240,50 270,55 C320,65 380,130 460,170 C500,178 550,180 600,180" fill="none" stroke="var(--reg)" stroke-width="2.4"/>
+          <text x="270" y="35" font-size="12" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">φ=7 (本問)</text>
+
+          <path d="M50,180 C120,180 200,178 260,160 C320,140 360,90 410,75 C460,90 500,140 540,170 C560,178 580,180 600,180" fill="none" stroke="currentColor" stroke-width="1.8" opacity="0.55"/>
+          <text x="410" y="58" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.7">φ=15</text>
+
+          <line x1="270" y1="180" x2="270" y2="188" stroke="var(--reg-ink)" stroke-width="2"/>
+          <text x="270" y="204" font-size="11" text-anchor="middle" fill="var(--reg-ink)">χ0²=1.691 はこのあたり</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> χ²分布は必ず0以上の値しか取らず、左右非対称。自由度φ=7のとき、χ0²=1.691は分布の左寄りの領域にあり、「Sがσ0²に対して小さすぎる(ばらつきが縮んだ)」という側に位置している。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>(6) なぜ標準偏差でなく分散を点推定するのか</h2></div>
+    <p>STEP1の関係 S/σ² ~ χ²(n−1) から、σ²の不偏推定量が直接手に入る。χ²(n−1)分布の平均はn−1なので、E[S/σ²]=n−1、つまりE[S/(n−1)]=σ²が成り立つ。</p>
+
+    <div class="calc">
+      <span class="label">分散の不偏推定量(点推定値)</span>
+      <span class="line">V = S / (n−1) = 1.526 / 7 = 0.218 (mm²)</span>
+      <span class="line">E[V] = σ² 　← 過大でも過小でもない、ちょうどよい推定量</span>
+    </div>
+    <div class="answer-row"><span class="answer"><span class="qno">(6)</span> イ. 0.218 (mm²)</span></div>
+
+    <p>ここで「じゃあ標準偏差は√Vでいいのでは」と思うかもしれないが、それは<b>不偏推定量にならない</b>。平方根は凹関数なので、平均を取ってから根を取るのと、根を取ってから平均を取るのとでは結果が変わり、必ず<b>過小評価</b>側にずれる(イェンセンの不等式)。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>分散の推定と標準偏差の推定、どちらが素直か</caption>
+        <thead><tr><th></th><th>分散 V=S/(n−1)</th><th>標準偏差 s=√V</th></tr></thead>
+        <tbody>
+          <tr><td>χ²分布との対応</td><td>S/σ² ~ χ²(n−1) から<b>直接</b>出てくる</td><td>χ²分布は分散側の分布。標準偏差側には対応する簡単な分布がない</td></tr>
+          <tr class="row-res"><td>不偏性</td><td class="num hit">E[V] = σ² (不偏)</td><td class="num hit">E[s] ≠ σ (過小評価にバイアス)</td></tr>
+          <tr><td>補正の要否</td><td>不要</td><td>不偏にするには自由度依存の補正係数(c4など)が必要</td></tr>
+          <tr><td>単位</td><td class="num">mm² (分散の単位)</td><td class="num">mm (標準偏差の単位)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn"><b>問題文の「(mm²)」が最大のヒント:</b> 設問はわざわざ単位を(mm²)と明記している。これは「分散の点推定値を答えよ」という指示そのもの。ここでうっかり√0.218=0.467(mm)と標準偏差に変換して答えると、単位が合わず単純ミスになる。さらに言えば、その0.467という値自体も<b>不偏推定量ではない</b>ので、たとえ単位をmmに読み替えても正しい推定値としては扱えない。</div>
+
+    <div class="callout info"><b>管理図の係数A₂・d₂と同じ事情:</b> <a href="control-chart-coefficients.html" target="_blank" rel="noopener">管理図の係数の正体</a>で扱ったd₂(範囲Rからσを推定する補正係数)も、まさに「標準偏差を不偏推定するには補正が要る」問題への対処法の1つ。QC検定2級の範囲では、この種の補正は管理図の係数表という形で与えられるだけで、s(標本標準偏差)側から直接補正する係数(c4)までは扱わない。だからこそ検定・推定の問題では、素直に不偏推定量が手に入る<b>分散のまま</b>答えさせる設計になっている。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この資料から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>χ²分布の正体は「標準化した誤差(標準正規分布)の2乗和」。母平均が未知でx̄を使うと、自由度が1つ減ってχ²(n−1)になる。</span></div>
+      <div class="step"><span class="mark">2</span><span>S/σ0² は「観測されたばらつきが従来の分散の何倍か」を測る物差し。H(0)のもとではχ²(n−1)分布に従うはずの値。</span></div>
+      <div class="step"><span class="mark">3</span><span>S/σ² ~ χ²(n−1) という関係から、σ²の不偏推定量V=S/(n−1)が<b>直接</b>手に入る。これがχ²検定と点推定が同じ問題に同居している理由。</span></div>
+      <div class="step"><span class="mark">4</span><span>標準偏差s=√Vは不偏推定量では<b>ない</b>(平方根を取ると過小評価にバイアスがかかる)。だから点推定は分散のまま答えるのが正しく、単位(mm²)がそのサインになっている。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第40回 問1 関連 / χ²分布の由来と分散の点推定</span>
+    <span>S/σ² ~ χ²(n−1) ・ V=S/(n−1)は不偏、√Vは不偏でない</span>
+  </footer>
+
+</div>

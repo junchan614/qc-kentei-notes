@@ -1,0 +1,383 @@
+<title>管理図の係数の正体</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:58px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .num,td .mono{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+.sym{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--reg-ink);font-size:15px;}
+.coef-table td{text-align:right;font-family:'JetBrains Mono',monospace;}
+.coef-table td:first-child{text-align:center;font-weight:700;color:var(--ink);}
+.coef-table th{text-align:right;}
+.coef-table th:first-child{text-align:center;}
+.coef-table tr.hl td{background:var(--reg-soft);}
+.none{color:var(--ink-faint);font-style:normal;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:30px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 / 管理図</span>
+    <h1>管理図の係数の正体</h1>
+    <p class="lede">A₂・d₂・D₃・D₄ は、暗記させるために置かれた謎の記号ではない。すべて<b>「管理限界を ±3σ に引きたいのに σ がわからない」という一つの事情</b>から出てくる。中身を開ければ、知っている式しか入っていない。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">全体像</span><h2>記号の役割を一枚で</h2></div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>管理図で出てくる記号</caption>
+        <thead><tr><th>記号</th><th>読み・立場</th><th>役割</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="sym">d₂</span></td>
+            <td>係数表の値<br><span class="sub">土台になる係数</span></td>
+            <td><b>範囲 R から標準偏差 σ を推定するための換算率。</b> 「R の平均は σ の d₂ 倍になる」という関係から <span class="mono">σ ≒ R̄ / d₂</span> と使う。</td>
+          </tr>
+          <tr>
+            <td><span class="sym">A₂</span></td>
+            <td>係数表の値<br><span class="sub">X̄管理図で使う</span></td>
+            <td><b>X̄管理図の限界幅をまとめた係数。</b> <span class="mono">UCL/LCL = X̄̄ ± A₂R̄</span>。中身は <span class="mono">3 / (d₂√n)</span>。</td>
+          </tr>
+          <tr>
+            <td><span class="sym">D₄</span></td>
+            <td>係数表の値<br><span class="sub">R管理図で使う</span></td>
+            <td><b>R管理図の上側限界の倍率。</b> <span class="mono">UCL = D₄ R̄</span>。中身は <span class="mono">1 + 3d₃/d₂</span>。</td>
+          </tr>
+          <tr>
+            <td><span class="sym">D₃</span></td>
+            <td>係数表の値<br><span class="sub">R管理図で使う</span></td>
+            <td><b>R管理図の下側限界の倍率。</b> <span class="mono">LCL = D₃ R̄</span>。中身は <span class="mono">1 − 3d₃/d₂</span> で、<b>n ≦ 6 では負になるため「考えない」</b>。</td>
+          </tr>
+          <tr>
+            <td><span class="sym">n</span></td>
+            <td>群の大きさ</td>
+            <td><b>1つの群に入るデータの個数。</b> 係数表はこの n で行を選ぶ。全データ数ではないので注意。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout info"><b>係数は暗記しなくてよい。</b> 試験では巻末の付表が使える。必要なのは<b>「どの記号をどの管理図で使うか」と「n の行を選ぶ」こと</b>だけ。以下はその背景の理解のための説明で、覚える対象ではない。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">出発点</span><h2>なぜ係数が必要になるのか</h2></div>
+    <p>管理図の限界線は<b>中心から ±3σ の位置</b>に引く、と決まっている。ところが現場では母標準偏差 σ は<b>わからない</b>。そこで、計算が簡単な<b>範囲 R（最大値 − 最小値）</b>から σ を間接的に推定する。この橋渡しをするのが d₂ で、そこから A₂・D₃・D₄ が派生する。</p>
+
+    <div class="calc">
+      <span class="label">やりたいこと</span>
+      <span class="line">管理限界 = 中心線 ± 3 × （そこにプロットする値の標準偏差）</span>
+      <span class="label" style="margin-top:8px;">困っていること</span>
+      <span class="line">σ が未知。しかも毎回わざわざ標準偏差を計算するのは現場で手間</span>
+      <span class="label" style="margin-top:8px;">解決策</span>
+      <span class="result">σ ≒ R̄ / d₂　（範囲の平均から σ を推定する）</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">d₂</span><h2>範囲 R から σ を推定する</h2></div>
+    <p>同じ工程からデータを取っても、<b>1群に何個取るかで範囲 R の大きさは変わる</b>。たくさん取るほど端の値を拾いやすく、R は広がる。だから「R が σ の何倍になるか」は n ごとに違い、その倍率が d₂ として表になっている。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 660 300" role="img" aria-label="同じ工程から2個取る場合と5個取る場合の範囲の違いを示す図。5個取ると端の値を拾いやすく範囲が広がる">
+          <text x="20" y="26" font-size="12.5" fill="currentColor" opacity="0.75">同じ工程（同じ σ）から取っても、群の大きさで範囲 R は変わる</text>
+
+          <g>
+            <rect x="80" y="80" width="200" height="120" fill="var(--reg-soft)" opacity="0.5"/>
+            <line x1="80" y1="140" x2="280" y2="140" stroke="currentColor" stroke-width="1.2" stroke-dasharray="4 4" opacity="0.55"/>
+            <text x="66" y="144" font-size="11" text-anchor="end" fill="currentColor" opacity="0.6">中心</text>
+            <text x="180" y="70" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">n = 2（2個取る）</text>
+
+            <circle cx="150" cy="128" r="5" fill="var(--reg)"/>
+            <circle cx="210" cy="152" r="5" fill="var(--reg)"/>
+
+            <line x1="252" y1="128" x2="252" y2="152" stroke="var(--res)" stroke-width="3"/>
+            <line x1="246" y1="128" x2="258" y2="128" stroke="var(--res)" stroke-width="2.5"/>
+            <line x1="246" y1="152" x2="258" y2="152" stroke="var(--res)" stroke-width="2.5"/>
+            <text x="264" y="144" font-size="12.5" fill="var(--res-ink)" font-weight="600">R</text>
+            <text x="180" y="222" font-size="12.5" text-anchor="middle" fill="var(--res-ink)">R の平均 ≒ 1.13 σ</text>
+            <text x="180" y="242" font-size="13" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">d₂ = 1.128</text>
+          </g>
+
+          <g>
+            <rect x="380" y="80" width="200" height="120" fill="var(--reg-soft)" opacity="0.5"/>
+            <line x1="380" y1="140" x2="580" y2="140" stroke="currentColor" stroke-width="1.2" stroke-dasharray="4 4" opacity="0.55"/>
+            <text x="480" y="70" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">n = 5（5個取る）</text>
+
+            <circle cx="420" cy="104" r="5" fill="var(--reg)"/>
+            <circle cx="450" cy="126" r="5" fill="var(--reg)"/>
+            <circle cx="480" cy="140" r="5" fill="var(--reg)"/>
+            <circle cx="510" cy="150" r="5" fill="var(--reg)"/>
+            <circle cx="540" cy="176" r="5" fill="var(--reg)"/>
+
+            <line x1="556" y1="104" x2="556" y2="176" stroke="var(--res)" stroke-width="3"/>
+            <line x1="550" y1="104" x2="562" y2="104" stroke="var(--res)" stroke-width="2.5"/>
+            <line x1="550" y1="176" x2="562" y2="176" stroke="var(--res)" stroke-width="2.5"/>
+            <text x="568" y="144" font-size="12.5" fill="var(--res-ink)" font-weight="600">R</text>
+            <text x="480" y="222" font-size="12.5" text-anchor="middle" fill="var(--res-ink)">R の平均 ≒ 2.33 σ</text>
+            <text x="480" y="242" font-size="13" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">d₂ = 2.326</text>
+          </g>
+
+          <text x="330" y="278" font-size="12.5" text-anchor="middle" fill="currentColor" opacity="0.8">だから σ を戻すときは　σ ≒ R̄ ÷ d₂　（n ごとに割る数が違う）</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> ばらつき（σ）が同じでも、5個取れば2個取るときより広い範囲が出る。<b>d₂ は「R が σ の何倍になるか」の倍率</b>で、n が大きいほど大きくなる。逆に使えば <span class="mono">σ ≒ R̄/d₂</span> で σ を推定できる。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">A₂</span><h2>A₂ は3つの部品でできている</h2></div>
+    <p>X̄管理図の限界を、知っている式だけで組み立ててみる。<b>途中で新しい概念は1つも出てこない</b>。</p>
+
+    <div class="calc">
+      <span class="label">① 管理限界は「プロットする値の ±3σ」</span>
+      <span class="line">UCL / LCL = X̄̄ ± 3 × σ(x̄)　　※プロットするのは群の平均 x̄</span>
+      <span class="label" style="margin-top:10px;">② 群平均のばらつきは σ/√n（標本平均の標準偏差）</span>
+      <span class="line">= X̄̄ ± 3 × σ / √n</span>
+      <span class="label" style="margin-top:10px;">③ σ がわからないので R̄/d₂ で置き換える</span>
+      <span class="line">= X̄̄ ± 3 × R̄ / (d₂ √n)</span>
+      <span class="label" style="margin-top:10px;">④ R̄ 以外をひとまとめにして A₂ と呼ぶ</span>
+      <span class="result">= X̄̄ ± A₂ R̄　　ただし A₂ = 3 / (d₂√n)</span>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 660 250" role="img" aria-label="A2という係数を分解した図。3は3シグマ法の3、d2は範囲から標準偏差への換算、ルートnは群平均のばらつきを表す">
+          <text x="330" y="42" font-size="24" text-anchor="middle" fill="var(--ink)" font-weight="700">
+            <tspan fill="var(--reg-ink)">A₂</tspan><tspan fill="currentColor" opacity="0.7">  =  </tspan><tspan fill="var(--res-ink)">3</tspan><tspan fill="currentColor" opacity="0.7"> ÷ ( </tspan><tspan fill="var(--reg-ink)">d₂</tspan><tspan fill="currentColor" opacity="0.7"> × </tspan><tspan fill="var(--res-ink)">√n</tspan><tspan fill="currentColor" opacity="0.7"> )</tspan>
+          </text>
+
+          <line x1="286" y1="54" x2="150" y2="96" stroke="var(--res)" stroke-width="1.3" opacity="0.7"/>
+          <line x1="352" y1="54" x2="330" y2="96" stroke="var(--reg)" stroke-width="1.3" opacity="0.7"/>
+          <line x1="410" y1="54" x2="516" y2="96" stroke="var(--res)" stroke-width="1.3" opacity="0.7"/>
+
+          <rect x="24" y="100" width="196" height="112" rx="10" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.6"/>
+          <text x="122" y="126" font-size="17" text-anchor="middle" fill="var(--res-ink)" font-weight="700">3</text>
+          <text x="122" y="152" font-size="12.5" text-anchor="middle" fill="var(--res-ink)">3σ法の「3」</text>
+          <text x="122" y="176" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.7">管理限界は中心から</text>
+          <text x="122" y="194" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.7">±3σ に引くと決めている</text>
+
+          <rect x="232" y="100" width="196" height="112" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+          <text x="330" y="126" font-size="17" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">d₂</text>
+          <text x="330" y="152" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)">R から σ への換算</text>
+          <text x="330" y="176" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.7">σ が未知なので</text>
+          <text x="330" y="194" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.7">σ ≒ R̄ / d₂ で代用する</text>
+
+          <rect x="440" y="100" width="196" height="112" rx="10" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.6"/>
+          <text x="538" y="126" font-size="17" text-anchor="middle" fill="var(--res-ink)" font-weight="700">√n</text>
+          <text x="538" y="152" font-size="12.5" text-anchor="middle" fill="var(--res-ink)">群平均のばらつき</text>
+          <text x="538" y="176" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.7">プロットするのは平均なので</text>
+          <text x="538" y="194" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.7">ばらつきは σ/√n に縮む</text>
+
+          <text x="330" y="238" font-size="12.5" text-anchor="middle" fill="currentColor" opacity="0.75">3つとも既に学んだ内容。A₂ はそれを1つの数にまとめただけ</text>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> A₂ は新しい概念ではなく、<b>「3σ法の3」「Rからσへの換算」「標本平均の √n」</b>の3つを掛け合わせた結果に名前を付けたもの。現場で毎回この計算をしなくて済むよう、n ごとに計算済みの値が表になっている。</figcaption>
+    </figure>
+
+    <div class="calc">
+      <span class="label">確認：n = 5 のとき（d₂ = 2.326）</span>
+      <span class="line">A₂ = 3 / (2.326 × √5) = 3 / (2.326 × 2.236) = 3 / 5.201</span>
+      <span class="result">= 0.577　… 係数表の A₂ と一致する</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">D₃ D₄</span><h2>R管理図の上下の限界</h2></div>
+    <p>R管理図では<b>範囲 R そのもの</b>をプロットする。中心線は R̄、限界は「R̄ ± 3 ×（R のばらつき）」。R のばらつきもまた σ に比例し、その倍率が d₃ という係数になる。</p>
+
+    <div class="calc">
+      <span class="label">R管理図の限界</span>
+      <span class="line">UCL = R̄ + 3 d₃ σ = R̄ + 3 d₃ (R̄/d₂) = R̄ (1 + 3d₃/d₂) = <b>D₄ R̄</b></span>
+      <span class="line">LCL = R̄ − 3 d₃ σ = R̄ (1 − 3d₃/d₂) = <b>D₃ R̄</b></span>
+    </div>
+
+    <p>ここで問題が起きる。<b>n が小さいと <span class="mono">3d₃/d₂</span> が 1 を超えてしまい、D₃ が負になる</b>。範囲は絶対に負にならないので、負の下側限界には意味がない。だから<b>n ≦ 6 では R管理図の LCL を引かない</b>（表でも空欄や「—」になっている）。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 660 280" role="img" aria-label="群の大きさごとのD3の値を示す棒グラフ。n=6以下では負の値になりn=7から正に転じる">
+          <line x1="50" y1="90" x2="620" y2="90" stroke="currentColor" stroke-width="1.6" opacity="0.7"/>
+          <text x="36" y="94" font-size="12" text-anchor="end" fill="currentColor" opacity="0.7">0</text>
+
+          <g>
+            <rect x="72" y="90" width="36" height="127" fill="var(--wrong)" opacity="0.55"/>
+            <rect x="132" y="90" width="36" height="57" fill="var(--wrong)" opacity="0.55"/>
+            <rect x="192" y="90" width="36" height="28" fill="var(--wrong)" opacity="0.55"/>
+            <rect x="252" y="90" width="36" height="11" fill="var(--wrong)" opacity="0.55"/>
+            <rect x="312" y="90" width="36" height="4" fill="var(--wrong)" opacity="0.55"/>
+          </g>
+          <g>
+            <rect x="372" y="82" width="36" height="8" fill="var(--reg)"/>
+            <rect x="432" y="76" width="36" height="14" fill="var(--reg)"/>
+            <rect x="492" y="71" width="36" height="19" fill="var(--reg)"/>
+            <rect x="552" y="68" width="36" height="22" fill="var(--reg)"/>
+          </g>
+
+          <g font-size="11.5" fill="currentColor" opacity="0.75" text-anchor="middle">
+            <text x="90" y="234">n=2</text><text x="150" y="164">n=3</text><text x="210" y="135">n=4</text>
+            <text x="270" y="118">n=5</text><text x="330" y="111">n=6</text>
+          </g>
+          <g font-size="11.5" fill="currentColor" opacity="0.75" text-anchor="middle">
+            <text x="390" y="106">n=7</text><text x="450" y="106">n=8</text><text x="510" y="106">n=9</text><text x="570" y="106">n=10</text>
+          </g>
+
+          <g font-size="11" fill="var(--wrong)" text-anchor="middle">
+            <text x="90" y="248">−1.27</text><text x="150" y="178">−0.57</text><text x="210" y="149">−0.28</text>
+            <text x="270" y="132">−0.11</text><text x="330" y="125">−0.00</text>
+          </g>
+          <g font-size="11" fill="var(--reg-ink)" text-anchor="middle" font-weight="600">
+            <text x="390" y="72">0.076</text><text x="450" y="66">0.136</text><text x="510" y="61">0.184</text><text x="570" y="58">0.223</text>
+          </g>
+
+          <line x1="360" y1="30" x2="360" y2="230" stroke="var(--reg)" stroke-width="1.6" stroke-dasharray="5 4"/>
+          <text x="366" y="44" font-size="12.5" fill="var(--reg-ink)" font-weight="700">n = 7 から正になる</text>
+
+          <text x="90" y="266" font-size="12" fill="var(--wrong)" font-weight="600">← 負なので LCL は考えない（表では空欄）</text>
+        </svg>
+      </div>
+      <figcaption><b>図3.</b> D₃ = 1 − 3d₃/d₂ を n ごとに計算した値。n = 6 でほぼ 0、<b>n = 7 で初めて正</b>になる。係数表の D₃ 欄が n ≦ 6 で空いているのは、表の不備ではなく<b>「負の下限に意味がないから」</b>。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">表</span><h2>係数表の読み方</h2></div>
+    <p>試験の付表はこの形。<b>群の大きさ n の行を選び、使う管理図に応じて列を選ぶ</b>だけ。</p>
+
+    <div class="table-wrap">
+      <table class="coef-table">
+        <caption>X̄-R管理図の係数（n = 2〜10）</caption>
+        <thead>
+          <tr><th>n</th><th>d₂</th><th>A₂<br><span class="sub">X̄図の限界</span></th><th>D₃<br><span class="sub">R図のLCL</span></th><th>D₄<br><span class="sub">R図のUCL</span></th></tr>
+        </thead>
+        <tbody>
+          <tr><td>2</td><td>1.128</td><td>1.880</td><td><span class="none">—</span></td><td>3.267</td></tr>
+          <tr><td>3</td><td>1.693</td><td>1.023</td><td><span class="none">—</span></td><td>2.575</td></tr>
+          <tr><td>4</td><td>2.059</td><td>0.729</td><td><span class="none">—</span></td><td>2.282</td></tr>
+          <tr class="hl"><td>5</td><td>2.326</td><td>0.577</td><td><span class="none">—</span></td><td>2.115</td></tr>
+          <tr><td>6</td><td>2.534</td><td>0.483</td><td><span class="none">—</span></td><td>2.004</td></tr>
+          <tr><td>7</td><td>2.704</td><td>0.419</td><td>0.076</td><td>1.924</td></tr>
+          <tr><td>8</td><td>2.847</td><td>0.373</td><td>0.136</td><td>1.864</td></tr>
+          <tr><td>9</td><td>2.970</td><td>0.337</td><td>0.184</td><td>1.816</td></tr>
+          <tr><td>10</td><td>3.078</td><td>0.308</td><td>0.223</td><td>1.777</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><b>数値は付表を優先すること。</b> 上の値は標準的な係数表のものだが、末尾の桁は版によってわずかに違うことがある。試験では必ず<b>配布された付表の値</b>を使う。ここで見てほしいのは値そのものではなく、<b>n が大きいほど A₂ と D₄ が小さくなる</b>（群を大きくすると限界幅が狭まり、異常を検出しやすくなる）という傾向。</div>
+
+    <div class="calc">
+      <span class="label">使い方の例：n = 5、X̄̄ = 20.0、R̄ = 2.0 のとき</span>
+      <span class="line">X̄管理図　CL = 20.0　UCL/LCL = 20.0 ± 0.577 × 2.0 = 20.0 ± 1.154 → <b>21.15 / 18.85</b></span>
+      <span class="line">R管理図 　CL = 2.0 　UCL = 2.115 × 2.0 = <b>4.23</b>　LCL = <b>考えない（n ≦ 6）</b></span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">注意</span><h2>間違えやすいところ</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span><b>n は「群の大きさ」であって全データ数ではない。</b> 5個ずつ25群なら、データは125個でも係数表は <span class="mono">n = 5</span> の行を見る。ここを取り違えると係数が丸ごと変わる。</span></div>
+      <div class="step"><span class="mark">2</span><span><b>A₂ に掛けるのは R̄ であって σ ではない。</b> A₂ の中にすでに「R から σ への換算」が組み込まれているので、σ を掛けると二重に換算してしまう。</span></div>
+      <div class="step"><span class="mark">3</span><span><b>D₃・D₄ に掛けるのも R̄。</b> R管理図の限界は「R̄ の何倍か」で表される。足し算ではなく<b>掛け算</b>である点に注意（<span class="mono">UCL = D₄R̄</span>、<span class="mono">R̄ + D₄</span> ではない）。</span></div>
+      <div class="step"><span class="mark">4</span><span><b>n ≦ 6 で R管理図の LCL を書かない。</b> 表が空欄なのは見落としではなく「考えない」という意味。無理に 0 と書く必要もない。</span></div>
+      <div class="step"><span class="mark">5</span><span><b>X̄管理図と R管理図で使う係数が違う。</b> X̄図は A₂ のみ、R図は D₃ と D₄。d₂ は両者の裏側にいる係数で、単独で問題に出ることは少ない。</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>すべての係数は<b>「±3σ を引きたいが σ が未知」</b>という一つの事情から生まれている。σ の代役が <span class="mono">R̄/d₂</span>。</span></div>
+      <div class="step"><span class="mark">2</span><span><b>A₂ = 3/(d₂√n)</b>。「3σ法の3」「Rからσへの換算」「標本平均の√n」の3部品。<a href="37th-sample-mean-sd.html" target="_blank" rel="noopener">σ/√n の資料</a>がそのままここで効いてくる。</span></div>
+      <div class="step"><span class="mark">3</span><span><b>D₄ = 1 + 3d₃/d₂、D₃ = 1 − 3d₃/d₂</b>。D₃ が n ≦ 6 で負になるから LCL を考えない。</span></div>
+      <div class="step"><span class="mark">4</span><span>係数表は<b>群の大きさ n で行を選ぶ</b>。値の暗記は不要だが、<b>どの管理図でどの記号を使うか</b>は覚えておく。</span></div>
+      <div class="step"><span class="mark">5</span><span>n を大きくすると A₂ も D₄ も小さくなる ＝ <b>限界幅が狭まり異常を見つけやすくなる</b>。係数の大小には意味がある。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 管理図の係数</span>
+    <span>A₂ = 3/(d₂√n) · D₄ = 1+3d₃/d₂</span>
+  </footer>
+
+</div>
