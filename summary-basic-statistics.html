@@ -136,6 +136,71 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
   </header>
 
   <section>
+    <div class="sec-head"><span class="sec-num">地図</span><h2>この分野の地図 — 何がどうつながっているか</h2></div>
+    <p>統計的方法の基礎がやっていることは、突き詰めれば1つ:<b>データのばらつきを数値で捉え、それを組み合わせたり比較したりする</b>こと。ここで作る「平均・分散・標準偏差・正規分布」という道具は、この先のすべての分野(検定と推定・相関分析・実験計画法・管理図・工程能力指数)がそのまま使い回す共通言語になる。公式を覚える前に、まずこの地図で「今どこにいるか」を掴んでおく。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 680 340" role="img" aria-label="生データから平均・分散・標準偏差で要約し、そこから標準誤差・正規分布の標準化・確率の考え方の3方向に分岐し、最終的に検定と推定や相関分析など後続の全分野につながる階層図">
+          <defs>
+            <marker id="mapUp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor" opacity="0.6"/>
+            </marker>
+          </defs>
+
+          <rect x="190" y="292" width="300" height="40" rx="10" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.3" opacity="0.85"/>
+          <text x="340" y="317" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">生データ(測定値の集まり)</text>
+
+          <line x1="340" y1="290" x2="340" y2="256" stroke="currentColor" stroke-width="1.4" marker-end="url(#mapUp)" opacity="0.6"/>
+
+          <rect x="150" y="212" width="380" height="44" rx="10" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.8"/>
+          <text x="340" y="230" font-size="13" text-anchor="middle" fill="var(--res-ink)" font-weight="600">平均 x̄ ・偏差平方和 S ・標準偏差 s</text>
+          <text x="340" y="247" font-size="11" text-anchor="middle" fill="var(--res-ink)" opacity="0.85">データを1つの数値で要約する</text>
+
+          <line x1="230" y1="210" x2="120" y2="178" stroke="currentColor" stroke-width="1.4" marker-end="url(#mapUp)" opacity="0.6"/>
+          <line x1="340" y1="210" x2="340" y2="178" stroke="currentColor" stroke-width="1.4" marker-end="url(#mapUp)" opacity="0.6"/>
+          <line x1="450" y1="210" x2="560" y2="178" stroke="currentColor" stroke-width="1.4" marker-end="url(#mapUp)" opacity="0.6"/>
+
+          <rect x="10" y="130" width="220" height="48" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.8"/>
+          <text x="120" y="150" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">標準誤差 σ/√n</text>
+          <text x="120" y="167" font-size="10.5" text-anchor="middle" fill="var(--reg-ink)" opacity="0.85">平均を取るとばらつきが縮む度合い</text>
+
+          <rect x="240" y="130" width="200" height="48" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.8"/>
+          <text x="340" y="150" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">正規分布・標準化 Z</text>
+          <text x="340" y="167" font-size="10.5" text-anchor="middle" fill="var(--reg-ink)" opacity="0.85">個々の値がどれくらい起こりやすいか</text>
+
+          <rect x="450" y="130" width="220" height="48" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.8"/>
+          <text x="560" y="150" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">確率の考え方</text>
+          <text x="560" y="167" font-size="10.5" text-anchor="middle" fill="var(--reg-ink)" opacity="0.85">古典的/統計的確率・二項分布</text>
+
+          <line x1="120" y1="128" x2="220" y2="82" stroke="var(--res)" stroke-width="1.4" marker-end="url(#mapUp)" opacity="0.7"/>
+          <line x1="340" y1="128" x2="340" y2="82" stroke="var(--res)" stroke-width="1.6" marker-end="url(#mapUp)"/>
+          <line x1="560" y1="128" x2="460" y2="82" stroke="var(--res)" stroke-width="1.4" marker-end="url(#mapUp)" opacity="0.7"/>
+
+          <rect x="110" y="30" width="460" height="52" rx="10" fill="var(--surface)" stroke="var(--res)" stroke-width="1.6" stroke-dasharray="4 3"/>
+          <text x="340" y="52" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">検定と推定・相関分析・実験計画法・管理図・工程能力指数</text>
+          <text x="340" y="70" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.7">→ すべてこの3つの道具の応用にすぎない</text>
+        </svg>
+      </div>
+      <figcaption><b>読み方:</b> データを要約したら(平均・分散)、そこから「平均そのもののばらつき(標準誤差)」「1個の値の起こりやすさ(正規分布)」「起こる/起こらないの確率(確率の考え方)」の3方向に分かれる。この3つが、後続の全分野の材料になる。</figcaption>
+    </figure>
+
+    <div class="table-wrap">
+      <table>
+        <caption>この分野が担っている3つの役割</caption>
+        <thead><tr><th>役割</th><th>使う道具</th><th>後続分野での再利用のされ方</th></tr></thead>
+        <tbody>
+          <tr><td>①データを要約する</td><td class="mono">平均 x̄、偏差平方和 S = Σx²−(Σx)²/n、標準偏差 s</td><td>実験計画法・回帰分析の「平方和の分解」はすべてこのSの考え方の延長</td></tr>
+          <tr><td>②ばらつきの型を仮定する</td><td class="mono">正規分布、標準化 Z=(x−μ)/σ</td><td>管理図の3σ法、工程能力指数Cpの「6σ」は正規分布を前提にした計算</td></tr>
+          <tr><td>③ばらつきを組み合わせる/確率で考える</td><td class="mono">標準誤差σ/√n、分散の合成則、二項分布</td><td>検定と推定のt分布・χ²分布は、まさに「標準誤差」と「2乗和」の応用(検定と推定まとめ参照)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><b>この地図の使い方:</b> 検定や実験計画法の公式で迷ったら、まず「これは平均の話か、分散の話か」に立ち返る。平均の話なら標準誤差(σ/√n)、分散の話なら正規分布の2乗和(χ²分布、<a href="summary-test-estimation.html" target="_blank" rel="noopener">検定と推定まとめ</a>で詳説)にたどり着く。この分野で迷子になったら、必ずこの3つの役割のどれかに戻れる。</div>
+  </section>
+
+  <section>
     <div class="sec-head"><span class="sec-num">傾向</span><h2>出題傾向 — 論点 × 出題回</h2></div>
     <p>6つの論点それぞれが、第35〜40回のどの回で確認できたかを一覧にした。<b>正規分布の標準化</b>が3回、<b>分散の合成則</b>が2回でやや頻出、他は1回ずつの確認にとどまる。第38回は問1(サンプリング法)・問6(新QC七つ道具)が計算を伴わない用語問題だったため、この分野としては問2の1件のみで全回のカバーが確認できた(下表参照)。</p>
 
