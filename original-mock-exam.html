@@ -274,14 +274,14 @@ footer{margin-top:30px;font-size:.78rem;color:var(--muted);text-align:center;pad
 <div class="wrap">
   <header class="masthead">
     <div class="eyebrow">QC検定2級・自己採点ドリル</div>
-    <h1>オリジナル模試 3問</h1>
-    <p class="lede">検定と推定／相関・回帰分析／管理図と工程能力指数の3分野で、本試験の出題傾向を再現して新たに作成した問題です。その場で解答を入力すると自動採点され、解答時間も記録されます。</p>
-    <div class="notice">この3問は<strong>書き下ろしのオリジナル問題</strong>で、過去問題そのものではありません(過去問の解説は<code>projects/qc-kentei/</code>の各回別ファイルを参照)。出題形式・計算の型は過去問と揃えていますが、数値・場面設定はすべて新規に作成しています。</div>
+    <h1>オリジナル模試 大問6問</h1>
+    <p class="lede">検定と推定／相関・回帰分析／管理図と工程能力指数／実験計画法／統計的方法の基礎(確率分布)／QC的問題解決の6分野で、本試験の大問構成(問1〜問6)を再現して新たに作成した問題です。その場で解答を入力すると自動採点され、解答時間も記録されます。</p>
+    <div class="notice">この6問は<strong>書き下ろしのオリジナル問題</strong>で、過去問題そのものではありません(過去問の解説は<code>projects/qc-kentei/</code>の各回別ファイルを参照)。出題形式・計算の型は過去問と揃えていますが、数値・場面設定はすべて新規に作成しています。</div>
   </header>
 
   <div class="bar">
     <span class="clock"><span class="dot" aria-hidden="true"></span><span id="clockText">00:00</span></span>
-    <span class="progress" id="progressText">解答欄 0/34 採点済み</span>
+    <span class="progress" id="progressText">解答欄 0/56 採点済み</span>
     <button class="btn ghost" id="resetBtn" type="button">タイマーをリセット</button>
   </div>
 
@@ -500,6 +500,183 @@ footer{margin-top:30px;font-size:.78rem;color:var(--muted);text-align:center;pad
     </div>
   </section>
 
+  <!-- ============ 問4 ============ -->
+  <section class="problem" id="p4" data-domain="実験計画法">
+    <div class="tag">問4 ・ 実験計画法</div>
+    <h2>一元配置実験(繰返し数が不揃い)</h2>
+    <p class="scenario">触媒の種類(A1・A2・A3)を変えて化学反応の収率(%)に差が出るかを調べるため、水準ごとに繰返し数を変えて実験を行った(A3は原料が足りず3回のみ)。母平均に差があるかを有意水準5%で検定し、最も収率が高い水準の母平均を区間推定する。</p>
+    <table class="datatable">
+      <tr><th>水準</th><th>繰返しデータ</th><th>n</th><th>合計 T</th><th>平均 x̄</th></tr>
+      <tr><td>A1</td><td>82, 85, 80, 84, 79</td><td>5</td><td>410</td><td>82.0</td></tr>
+      <tr><td>A2</td><td>88, 90, 85, 89</td><td>4</td><td>352</td><td>88.0</td></tr>
+      <tr><td>A3</td><td>78, 81, 75</td><td>3</td><td>234</td><td>78.0</td></tr>
+    </table>
+    <div class="given">
+      <div>N=12　総合計 T=996　Σx²=82906</div>
+      <div>数値表(抜粋): F(2, 9; 0.05)=4.26　t(9, 0.025)=2.262</div>
+    </div>
+
+    <ol class="blanks">
+      <li><div class="qtext"><span class="qnum">1・2・3</span>分散分析表の平方和を求めよ(整数に丸める)。</div>
+        <div class="answer-row">S_T = <input class="blank" type="text" inputmode="decimal" id="p4-1" data-ans="238" data-tol="1"> S_A = <input class="blank" type="text" inputmode="decimal" id="p4-2" data-ans="180" data-tol="1"> S_E = <input class="blank" type="text" inputmode="decimal" id="p4-3" data-ans="58" data-tol="1"><span class="mark" id="p4-1-mark"></span><span class="mark" id="p4-2-mark"></span><span class="mark" id="p4-3-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">4</span>誤差の自由度 φ(E) を求めよ。</div>
+        <div class="answer-row">φ(E) = <input class="blank" type="text" inputmode="decimal" id="p4-4" data-ans="9" data-tol="0.4"><span class="mark" id="p4-4-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">5</span>分散比 F0 を求めよ(小数点以下2桁に丸める)。</div>
+        <div class="answer-row">F0 = <input class="blank" type="text" inputmode="decimal" id="p4-5" data-ans="13.97" data-tol="0.3"><span class="mark" id="p4-5-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">6</span>検定の結論として正しいものを選べ。</div>
+        <div class="answer-row">
+          <select class="blank" id="p4-6" data-ans="sig">
+            <option value="">選択してください</option>
+            <option value="sig">有意水準5%で有意である(水準間に差がある)</option>
+            <option value="nosig">有意ではない(差があるとはいえない)</option>
+          </select>
+          <span class="mark" id="p4-6-mark"></span>
+        </div></li>
+      <li><div class="qtext"><span class="qnum">7・8</span>最も収率が高い水準(A2)の母平均の95%信頼区間を求めよ(小数点以下2桁に丸める)。</div>
+        <div class="answer-row">下限 <input class="blank" type="text" inputmode="decimal" id="p4-7" data-ans="85.13" data-tol="0.1"> 〜 上限 <input class="blank" type="text" inputmode="decimal" id="p4-8" data-ans="90.87" data-tol="0.1"><span class="mark" id="p4-7-mark"></span><span class="mark" id="p4-8-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">9・10</span>A2とA3の母平均の差の95%信頼区間を求めよ(小数点以下2桁に丸める)。</div>
+        <div class="answer-row">下限 <input class="blank" type="text" inputmode="decimal" id="p4-9" data-ans="5.61" data-tol="0.15"> 〜 上限 <input class="blank" type="text" inputmode="decimal" id="p4-10" data-ans="14.39" data-tol="0.15"><span class="mark" id="p4-9-mark"></span><span class="mark" id="p4-10-mark"></span></div></li>
+    </ol>
+
+    <div class="actions">
+      <button class="btn" data-grade="p4" type="button">この問だけ採点する</button>
+      <span class="score-readout" id="p4-score"></span>
+      <button class="btn ghost" data-toggle="p4-explain" type="button" disabled>解説を見る</button>
+    </div>
+
+    <div class="explain" id="p4-explain" hidden>
+      <h3>解き方</h3>
+      <p class="step">①②③ CT=T²/N=996²/12=82668。S_T=Σx²−CT=82906−82668=<strong>238</strong>。S_A=Σ(T_i²/n_i)−CT=(410²/5+352²/4+234²/3)−82668=82848−82668=<strong>180</strong>。S_E=S_T−S_A=238−180=<strong>58</strong>。</p>
+      <p class="step">④ φ(E)=N−a=12−3=<strong>9</strong>(合計は不揃いでもΣ(n_i−1)=4+3+2=9と一致する)。</p>
+      <p class="step">⑤ V_A=S_A/φ(A)=180/2=90。V_E=S_E/φ(E)=58/9≒6.444。F0=V_A/V_E=90/6.444≒<strong>13.97</strong>。</p>
+      <p class="step">⑥ F0(13.97)&gt;F(2,9;0.05)(4.26)なので<span class="final">有意水準5%で有意</span>。</p>
+      <p class="step">⑦⑧ x̄(A2)±t(9,0.025)√(V_E/n2)=88.0±2.262×√(6.444/4)=88.0±2.262×1.269=88.0±2.87=[<strong>85.13, 90.87</strong>]。合計ではなく実際のn2=4を使う点に注意(A1・A3のnを混同しない)。</p>
+      <p class="step">⑨⑩ (x̄2−x̄3)±t(9,0.025)√{V_E(1/n2+1/n3)}=10.0±2.262×√(6.444×0.5833)=10.0±2.262×1.939=10.0±4.39=[<strong>5.61, 14.39</strong>]。2つの平均の差の区間は1つの平均の区間よりも幅が広くなる。</p>
+    </div>
+  </section>
+
+  <!-- ============ 問5 ============ -->
+  <section class="problem" id="p5" data-domain="統計的方法の基礎">
+    <div class="tag">問5 ・ 統計的方法の基礎</div>
+    <h2>二項分布と正規分布の確率計算</h2>
+    <p class="scenario">(1) ある部品の工程平均不適合品率は3%である。ロットから10個を抜き取ったとき、不適合品の個数Xは二項分布 B(10, 0.03) に従うとみなせる。(2) 別の工程で生産される製品の重量は正規分布 N(500, 10²)(g) に従う。規格は上限規格USL=515g、下限規格LSL=485gである。</p>
+    <div class="given">
+      <div>二項分布: Pr(X=x) = ₁₀C_x (0.03)^x (0.97)^(10−x)</div>
+      <div>正規分布表(抜粋): P(Z&gt;1.50)=0.0668　z(0.05)(上側5%点)=1.645</div>
+    </div>
+
+    <ol class="blanks">
+      <li><div class="qtext"><span class="qnum">1</span>Pr(X=0) を求めよ(小数点以下3桁に丸める)。</div>
+        <div class="answer-row">Pr(X=0) = <input class="blank" type="text" inputmode="decimal" id="p5-1" data-ans="0.737" data-tol="0.003"><span class="mark" id="p5-1-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">2</span>Pr(X=1) を求めよ(小数点以下3桁に丸める)。</div>
+        <div class="answer-row">Pr(X=1) = <input class="blank" type="text" inputmode="decimal" id="p5-2" data-ans="0.228" data-tol="0.003"><span class="mark" id="p5-2-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">3</span>Pr(X≧2) を余事象を使って求めよ(小数点以下3桁に丸める)。</div>
+        <div class="answer-row">Pr(X≧2) = <input class="blank" type="text" inputmode="decimal" id="p5-3" data-ans="0.035" data-tol="0.003"><span class="mark" id="p5-3-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">4</span>上限規格USLに対応するZ値を求めよ。</div>
+        <div class="answer-row">Z = <input class="blank" type="text" inputmode="decimal" id="p5-4" data-ans="1.50" data-tol="0.02"><span class="mark" id="p5-4-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">5</span>規格(上下限とも)を外れる製品の割合を求めよ(%、小数点以下2桁)。</div>
+        <div class="answer-row"><input class="blank" type="text" inputmode="decimal" id="p5-5" data-ans="13.36" data-tol="0.3">%<span class="mark" id="p5-5-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">6</span>軽い方から数えて下位5%の製品の重量の境界値 x を求めよ(小数点以下2桁)。</div>
+        <div class="answer-row">x = <input class="blank" type="text" inputmode="decimal" id="p5-6" data-ans="483.55" data-tol="0.3">g<span class="mark" id="p5-6-mark"></span></div></li>
+    </ol>
+
+    <div class="actions">
+      <button class="btn" data-grade="p5" type="button">この問だけ採点する</button>
+      <span class="score-readout" id="p5-score"></span>
+      <button class="btn ghost" data-toggle="p5-explain" type="button" disabled>解説を見る</button>
+    </div>
+
+    <div class="explain" id="p5-explain" hidden>
+      <h3>解き方</h3>
+      <p class="step">① Pr(X=0)=(0.97)^10≒<strong>0.737</strong>。② Pr(X=1)=10×0.03×(0.97)^9≒<strong>0.228</strong>。③ Pr(X≧2)=1−(0.737+0.228)=<strong>0.035</strong>(余事象、四捨五入した中間値を使うため直接計算とわずかにズレる)。</p>
+      <p class="step">④ Z=(USL−μ)/σ=(515−500)/10=<strong>1.50</strong>。</p>
+      <p class="step">⑤ 正規分布は左右対称なので、下限規格側もP(Z&lt;−1.50)=0.0668。両側合計=2×0.0668=0.1336=<strong>13.36%</strong>。</p>
+      <p class="step">⑥ 下位5%点はx=μ+z(0.05)×σの符号をマイナスにして(下側なので)、x=500−1.645×10=<strong>483.55</strong>g。上位5%点(500+16.45=516.45)と混同しない。</p>
+    </div>
+  </section>
+
+  <!-- ============ 問6 ============ -->
+  <section class="problem" id="p6" data-domain="QC的問題解決">
+    <div class="tag">問6 ・ QC的問題解決・QC七つ道具</div>
+    <h2>層別で読む不適合の発生状況</h2>
+    <p class="scenario">樹脂成形品の「キズ」の発生について、生産設備(機械A・B・C)と勤務帯(昼勤・夜勤)で層別した発生件数を集計した。この結果から、次の調査の方向性を考える。</p>
+    <table class="datatable">
+      <tr><th></th><th>昼勤</th><th>夜勤</th><th>計</th></tr>
+      <tr><th>機械A</th><td>12</td><td>8</td><td>20</td></tr>
+      <tr><th>機械B</th><td>5</td><td>6</td><td>11</td></tr>
+      <tr><th>機械C</th><td>3</td><td>16</td><td>19</td></tr>
+      <tr><th>計</th><td>20</td><td>30</td><td>50</td></tr>
+    </table>
+
+    <ol class="blanks">
+      <li><div class="qtext"><span class="qnum">1</span>機械×勤務帯の組合せ(層)の中で、発生件数が最も多いのはどれか。</div>
+        <div class="answer-row">
+          <select class="blank" id="p6-1" data-ans="c_night">
+            <option value="">選択してください</option>
+            <option value="a_day">機械A × 昼勤(12件)</option>
+            <option value="c_night">機械C × 夜勤(16件)</option>
+            <option value="b_night">機械B × 夜勤(6件)</option>
+          </select>
+          <span class="mark" id="p6-1-mark"></span>
+        </div></li>
+      <li><div class="qtext"><span class="qnum">2</span>機械別合計が最も多いのはどれか。</div>
+        <div class="answer-row">
+          <select class="blank" id="p6-2" data-ans="a">
+            <option value="">選択してください</option>
+            <option value="a">機械A(20件)</option>
+            <option value="b">機械B(11件)</option>
+            <option value="c">機械C(19件)</option>
+          </select>
+          <span class="mark" id="p6-2-mark"></span>
+        </div></li>
+      <li><div class="qtext"><span class="qnum">3</span>勤務帯別合計が最も多いのはどれか。</div>
+        <div class="answer-row">
+          <select class="blank" id="p6-3" data-ans="night">
+            <option value="">選択してください</option>
+            <option value="day">昼勤(20件)</option>
+            <option value="night">夜勤(30件)</option>
+          </select>
+          <span class="mark" id="p6-3-mark"></span>
+        </div></li>
+      <li><div class="qtext"><span class="qnum">4</span>機械Aは昼勤(12)が夜勤(8)より多いのに対し、機械Cは夜勤(16)が昼勤(3)より圧倒的に多い。この層別結果から読み取れることとして最も適切なものを選べ。</div>
+        <div class="answer-row">
+          <select class="blank" id="p6-4" data-ans="stratify">
+            <option value="">選択してください</option>
+            <option value="stratify">機械別・勤務帯別を合計しただけでは気づけない、機械Cと夜勤の組合せに固有の原因がある可能性が高い</option>
+            <option value="machine_only">不適合は機械の違いだけで説明でき、勤務帯は無関係である</option>
+            <option value="no_diff">勤務帯による差はなく、たまたまのばらつきである</option>
+          </select>
+          <span class="mark" id="p6-4-mark"></span>
+        </div></li>
+      <li><div class="qtext"><span class="qnum">5</span>機械別件数を多い順に並べたパレート図を作るとき、上位2機械(A・C)で全体の何%を占めるか(小数点以下0桁)。</div>
+        <div class="answer-row"><input class="blank" type="text" inputmode="decimal" id="p6-5" data-ans="78" data-tol="1">%<span class="mark" id="p6-5-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">6</span>次にとるべき調査として最も適切なものはどれか。</div>
+        <div class="answer-row">
+          <select class="blank" id="p6-6" data-ans="focus">
+            <option value="">選択してください</option>
+            <option value="focus">機械C×夜勤の組合せに絞って、作業者・照明・保全状態などをさらに層別して調べる</option>
+            <option value="all_volume">全機械・全勤務帯の生産量をまとめて調べ直す</option>
+            <option value="staffing">品質保証部門の人員を増やす</option>
+          </select>
+          <span class="mark" id="p6-6-mark"></span>
+        </div></li>
+    </ol>
+
+    <div class="actions">
+      <button class="btn" data-grade="p6" type="button">この問だけ採点する</button>
+      <span class="score-readout" id="p6-score"></span>
+      <button class="btn ghost" data-toggle="p6-explain" type="button" disabled>解説を見る</button>
+    </div>
+
+    <div class="explain" id="p6-explain" hidden>
+      <h3>解き方</h3>
+      <p class="step">①②③ 表を素直に読む。最多の層は<strong>機械C×夜勤(16件)</strong>、機械別合計の最大は<strong>機械A(20件)</strong>、勤務帯別合計の最大は<strong>夜勤(30件)</strong>。</p>
+      <p class="step">④ 機械別だけ・勤務帯別だけの合計を見ても、機械Aと機械Cで「昼夜どちらが多いか」が逆転していることには気づけない。<span class="final">層別してクロス集計する</span>ことで初めて、機械Cと夜勤の組合せに固有の原因がありそうだと分かる。これが「層別で真因にたどり着く」というQC的問題解決の考え方の核心。</p>
+      <p class="step">⑤ 機械別上位2つ(A=20, C=19)の合計=39。39/50=0.78=<strong>78%</strong>。</p>
+      <p class="step">⑥ ④の示唆を受けて、次は<span class="final">機械C×夜勤に絞ってさらに層別データを集める</span>のが合理的。母集団を広げる(全機械・全勤務帯を調べ直す)のは、すでに得られている手がかりを無視することになる。</p>
+    </div>
+  </section>
+
   <div class="actions" style="margin-top:24px;">
     <button class="btn primary" id="gradeAllBtn" type="button">全問まとめて採点して終了</button>
   </div>
@@ -547,8 +724,8 @@ footer{margin-top:30px;font-size:.78rem;color:var(--muted);text-align:center;pad
     clockEl.textContent = '00:00';
   });
 
-  var PROBLEMS = ['p1','p2','p3'];
-  var TOTAL_BLANKS = 34;
+  var PROBLEMS = ['p1','p2','p3','p4','p5','p6'];
+  var TOTAL_BLANKS = 56;
 
   function gradeOne(input){
     var val = input.value.trim();
