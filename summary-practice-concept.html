@@ -1,0 +1,443 @@
+<title>品質の概念・QC的ものの見方・倫理と社会的責任まとめ</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+  --shadow-lift: 0 2px 4px rgba(22,35,42,0.08), 0 14px 32px -14px rgba(22,35,42,0.22);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:900px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:52px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+p{margin:0;color:var(--ink-soft);}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+a:focus-visible{outline:2px solid var(--reg);outline-offset:3px;border-radius:4px;}
+
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:26px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4.2vw,40px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+.meta-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:4px;}
+.meta{display:flex;flex-direction:column;gap:2px;}
+.meta .v{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--ink);line-height:1.2;}
+.meta .k{font-size:11.5px;color:var(--ink-faint);letter-spacing:0.04em;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:56px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:middle;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .mono{font-family:'JetBrains Mono',monospace;}
+
+.heat-table th.rc,.heat-table td.rc{text-align:center;width:44px;}
+.heat-table td.rc.hit{background:var(--reg-soft);}
+.heat-table td.rc.hit span{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--reg);}
+.heat-table td.rc.miss span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--border-strong);opacity:0.6;}
+.heat-table td.topic{font-size:13.5px;}
+.heat-table td.cnt{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--reg-ink);text-align:center;}
+
+.callout{background:var(--reg-soft);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+.callout.warn b{color:var(--wrong);}
+
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;}
+.panel{border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);background:var(--surface);overflow:hidden;display:flex;flex-direction:column;}
+.panel .ph{padding:14px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:0.06em;font-weight:700;display:flex;align-items:center;gap:8px;}
+.panel.memo .ph{background:var(--res-soft);color:var(--res-ink);border-bottom:1px solid var(--res);}
+.panel.under .ph{background:var(--reg-soft);color:var(--reg-ink);border-bottom:1px solid var(--reg);}
+.panel ul{margin:0;padding:16px 20px 18px 34px;display:flex;flex-direction:column;gap:10px;}
+.panel li{font-size:14.5px;color:var(--ink-soft);}
+.panel li b{color:var(--ink);}
+.panel li .mono{font-family:'JetBrains Mono',monospace;font-size:13.5px;}
+
+.trap-table td.tag{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--wrong);font-weight:700;white-space:nowrap;}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
+.card{
+  display:flex;flex-direction:column;gap:10px;
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:18px 20px;box-shadow:var(--shadow);
+  text-decoration:none;color:inherit;
+  transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+}
+.card:hover{box-shadow:var(--shadow-lift);border-color:var(--border-strong);transform:translateY(-2px);}
+@media (prefers-reduced-motion: reduce){.card{transition:none;} .card:hover{transform:none;}}
+.card .chips{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.04em;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--ink-faint);border:1px solid var(--border);}
+.chip.src{background:var(--reg-soft);color:var(--reg-ink);border-color:var(--reg);}
+.card h4{font-family:'Zen Old Mincho',serif;font-size:17px;font-weight:600;margin:0;color:var(--ink);line-height:1.5;}
+.card .desc{font-size:13.5px;color:var(--ink-soft);line-height:1.7;}
+.card .go{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--reg-ink);font-weight:600;margin-top:2px;}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+
+details{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 16px;box-shadow:var(--shadow);}
+details + details{margin-top:2px;}
+details summary{cursor:pointer;font-size:14.5px;color:var(--ink);font-weight:600;list-style:none;display:flex;gap:10px;align-items:baseline;}
+details summary::-webkit-details-marker{display:none;}
+details summary::before{content:"Q";font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--reg-ink);background:var(--reg-soft);border-radius:6px;padding:1px 6px;flex-shrink:0;}
+details[open] summary{margin-bottom:8px;}
+details .qbody{font-size:14px;color:var(--ink-soft);}
+details .ans{margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);font-size:13.5px;color:var(--ink-soft);}
+details .ans b{color:var(--reg-ink);}
+.qgrid{display:flex;flex-direction:column;gap:10px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 実践編 ／ 分野別まとめ 1/7</span>
+    <h1>品質の概念・QC的ものの見方・倫理と社会的責任</h1>
+    <p class="lede">この3分野は独立した知識ではなく、扱う<b>スコープ(範囲)の広さ</b>が違うだけの一つながりの考え方。「品質の概念」は製品・サービス単位の話(ねらいの品質・できばえの品質・狩野モデルなど)、「QC的ものの見方・考え方」はそれを組織全体でどう実践するかという行動原則(重点指向・全員参加・事実に基づく管理など)、「倫理・社会的責任」はさらに組織の外(社会・法律)まで広げた話。他の分野を勉強していて出てくる前提知識でもある。過去問そのものは掲載していません。お手元の過去問題集と合わせて読む前提です。</p>
+    <div class="meta-row">
+      <div class="meta"><span class="v">9</span><span class="k">元資料</span></div>
+      <div class="meta"><span class="v">5/6</span><span class="k">出題を確認できた回</span></div>
+      <div class="meta"><span class="v">17</span><span class="k">論点の出現回数(延べ)</span></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">地図</span><h2>3分野はスコープの広さの違い</h2></div>
+    <p>3つの分野は「誰にとっての品質か」という視点の広がりで並べると理解しやすい。中心にあるのは<b>1つの製品・サービスの品質</b>(ねらいの品質・できばえの品質・狩野モデル)。それを実現するための<b>組織としての行動原則</b>がQC的ものの見方・考え方(重点指向、全員参加、事実に基づく管理、後工程はお客様、など)。さらにその外側、<b>組織の外の社会</b>に対する責任が倫理・社会的責任(コンプライアンス、CSR、PL法、環境配慮)にあたる。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 260" role="img" aria-label="中心に製品・サービスの品質、その外側に組織全体のQC的なものの見方・考え方、さらに外側に社会に対する倫理・社会的責任という3重の同心円で、視点のスコープが広がっていく様子を示す図">
+          <circle cx="320" cy="130" r="118" fill="none" stroke="var(--border-strong)" stroke-width="1.4" stroke-dasharray="3 4"/>
+          <circle cx="320" cy="130" r="78" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+          <circle cx="320" cy="130" r="40" fill="var(--surface)" stroke="var(--reg)" stroke-width="1.8"/>
+
+          <text x="320" y="126" font-size="12.5" text-anchor="middle" fill="var(--ink)" font-weight="700">品質の概念</text>
+          <text x="320" y="142" font-size="10.5" text-anchor="middle" fill="var(--ink-faint)">1つの製品/サービス</text>
+
+          <text x="320" y="70" font-size="11.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">QC的ものの見方・考え方</text>
+          <text x="320" y="84" font-size="10" text-anchor="middle" fill="var(--ink-faint)">組織全体の行動原則</text>
+
+          <text x="320" y="26" font-size="11.5" text-anchor="middle" fill="var(--ink-soft)" font-weight="700">倫理・社会的責任</text>
+          <text x="320" y="40" font-size="10" text-anchor="middle" fill="var(--ink-faint)">社会・法律に対する責任</text>
+
+          <text x="140" y="230" font-size="10.5" fill="var(--ink-faint)">狭い ← スコープ → 広い</text>
+          <line x1="200" y1="225" x2="440" y2="225" stroke="currentColor" stroke-width="1" opacity="0.35" marker-end="url(#arrow)"/>
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="currentColor" opacity="0.5"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+      <figcaption><b>読み方:</b> 内側の円の話(品質の概念)ができていないと外側の円(組織の行動原則、社会的責任)も成り立たない。逆に外側だけ立派でも中心の製品・サービスの品質が伴わなければ意味がない、という一方向の依存関係ではなく相互に支え合う関係として出題される。</figcaption>
+    </figure>
+
+    <p>もう一つの軸として、<b>マーケットイン</b>(顧客の声を起点に商品を作る)と<b>プロダクトアウト</b>(自社の技術・シーズを起点に作る)という「どちらの方向で企画するか」の対立軸がある。QC的ものの見方・考え方では、後工程はお客様・源流管理・事実に基づく管理などの各原則が、最終的にはすべて「顧客に満足してもらう」という一点に収束するように作られている。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">傾向</span><h2>出題傾向 — 論点 × 出題回</h2></div>
+    <p>過去問資料が確認できたのは第35・36・37・38・40回。第39回はこの3分野に対応する資料が見当たらなかった(この回に出題自体が無かったのか、資料が未取得なのかは判別できていない)。よく出る順トップ3は「①ねらいの品質・できばえの品質」「②顧客満足・顧客ロイヤリティ・顧客志向の使い分け」「③従業員満足(ES)と顧客満足(CS)の関係」。出方のクセとして、品質の概念は文章の正誤とその理由を選ばせる形式、QC的ものの見方・考え方は会話・企業事例の文章に用語を埋める形式が多い。</p>
+
+    <div class="table-wrap">
+      <table class="heat-table">
+        <caption>論点別の出題確認状況(第35〜40回)</caption>
+        <thead>
+          <tr>
+            <th>論点</th>
+            <th class="rc">35</th><th class="rc">36</th><th class="rc">37</th>
+            <th class="rc">38</th><th class="rc">39</th><th class="rc">40</th>
+            <th class="rc">回数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="topic">ねらいの品質とできばえの品質</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">2</td>
+          </tr>
+          <tr>
+            <td class="topic">狩野モデル(当たり前品質・一元的品質・無関心品質)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">品質の定義(明示・暗黙のニーズ)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">社会的品質</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">全部門・全員参加で品質を作り込む考え方</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">2</td>
+          </tr>
+          <tr>
+            <td class="topic">サービスの品質の特性(異質性など)</td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">顧客満足・顧客ロイヤリティ・顧客志向</td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">2</td>
+          </tr>
+          <tr>
+            <td class="topic">従業員満足(ES)と顧客満足・社会満足</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">2</td>
+          </tr>
+          <tr>
+            <td class="topic">重点指向・事実に基づく管理・三現主義</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">管理のサイクル(PDCA)と継続的改善</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">コンプライアンス(秘匿性・透明性・CSR・リスクマネジメント)</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">PL法(製造物責任)と3R</td>
+            <td class="rc hit"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">2</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><b>出方のクセ:</b> 「品質に対する認識は正しいか誤りか、その理由はどれか」という2段構えの正誤問題(第35回)、企業の会合や社内報告の会話文に用語を埋めさせる文章題(第36・38・40回)が中心。単純な用語の穴埋めよりも、文脈から適切な言葉を選ばせる出方が多い。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">対比</span><h2>紛らわしい用語の対比</h2></div>
+    <p>過去問で誤答の選択肢として並べられていた語を優先して収録した。セットで覚えると取り違えにくい。</p>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>紛らわしい用語の対比</caption>
+        <thead><tr><th>用語</th><th>ひとことで</th><th>見分けるキーワード</th><th>取り違えやすい相手</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">マーケットイン</td><td>顧客ニーズを起点に商品・サービスを作る考え方</td><td class="tag">顧客の声/アンケート</td><td>プロダクトアウト</td></tr>
+          <tr><td class="mono">プロダクトアウト</td><td>自社の技術・シーズを起点に作る考え方</td><td class="tag">技術力/シーズ</td><td>マーケットイン</td></tr>
+          <tr><td class="mono">顧客満足(CS)</td><td>期待と実績の差で測る満足の度合い</td><td class="tag">期待と実績の差</td><td>顧客ロイヤリティ・顧客志向</td></tr>
+          <tr><td class="mono">顧客ロイヤリティ</td><td>顧客が継続して買いたいと思う意思</td><td class="tag">継続的に購入したい</td><td>顧客満足</td></tr>
+          <tr><td class="mono">顧客志向(顧客重視)</td><td>顧客を判断の中心に置くという考え方そのもの</td><td class="tag">考え方/原則</td><td>顧客満足(結果の指標)</td></tr>
+          <tr><td class="mono">ねらいの品質(設計品質)</td><td>設計段階で目指す目標としての品質</td><td class="tag">設計/目標</td><td>できばえの品質</td></tr>
+          <tr><td class="mono">できばえの品質(適合品質)</td><td>実際に作られた製品が持つ品質</td><td class="tag">実際/適合</td><td>ねらいの品質</td></tr>
+          <tr><td class="mono">当たり前品質</td><td>満たされて当然、欠けると不満だけが出る要素</td><td class="tag">当然/不充足で不満のみ</td><td>一元的品質</td></tr>
+          <tr><td class="mono">一元的品質</td><td>満たせば満足、欠ければ不満と、比例して反応が出る要素</td><td class="tag">満足も不満も両方出る</td><td>当たり前品質・魅力的品質</td></tr>
+          <tr><td class="mono">無関心品質</td><td>あってもなくても満足度に影響しない要素</td><td class="tag">どちらでも変化なし</td><td>当たり前品質・逆品質</td></tr>
+          <tr><td class="mono">魅力的品質</td><td>なくても不満は出ないが、あれば満足につながる要素</td><td class="tag">あれば嬉しい</td><td>一元的品質・当たり前品質</td></tr>
+          <tr><td class="mono">重点指向</td><td>効果の大きい問題に絞って資源を集中する考え方</td><td class="tag">集中/パレート図</td><td>全員参加・継続的改善</td></tr>
+          <tr><td class="mono">継続的改善</td><td>現状で満足せず、一段上の水準を目指し続ける活動</td><td class="tag">一段高い水準</td><td>重点指向</td></tr>
+          <tr><td class="mono">人間性尊重</td><td>従業員の自主性や能力の発揮を尊重する考え方</td><td class="tag">ES/自主性</td><td>全員参加</td></tr>
+          <tr><td class="mono">全員参加(全部門)</td><td>品質保証を組織全体・全部門で行うという考え方</td><td class="tag">全社全部門</td><td>人間性尊重</td></tr>
+          <tr><td class="mono">秘匿性</td><td>相談者の個人情報や相談内容を漏らさないこと</td><td class="tag">デリケートな問題</td><td>透明性</td></tr>
+          <tr><td class="mono">透明性</td><td>制度や運用状況を広く公開し信頼を得ること</td><td class="tag">広く公開</td><td>秘匿性</td></tr>
+          <tr><td class="mono">リスクマネジメント</td><td>問題を早期に把握し、大きな損失になる前に手を打つ活動</td><td class="tag">未然防止/会社存亡</td><td>CSR</td></tr>
+          <tr><td class="mono">CSR(企業の社会的責任)</td><td>法令遵守にとどまらず社会全体に対して企業が果たす責任</td><td class="tag">重点実施項目/社会</td><td>リスクマネジメント・コンプライアンス</td></tr>
+          <tr><td class="mono">PL法(製造物責任法)</td><td>欠陥製品による被害に対する無過失の賠償責任を定めた法律</td><td class="tag">無過失責任/1995年施行</td><td>労働安全衛生法</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><b>狩野モデルは4分類セットで覚える:</b> 当たり前品質・一元的品質・無関心品質・魅力的品質(逆品質を含めれば5分類)。過去問では「満たされれば満足/満たされなくても不満は出ない」「満たされても当然/満たされなくても不満」のように、<b>2つの条件(充足時・不充足時)の組み合わせ</b>で説明文を作ってくるので、表で整理して覚えると迷わない。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">未出題</span><h2>過去6回で確認できなかった範囲</h2></div>
+    <p>出題範囲表の小項目のうち、過去6回の担当分野の空欄には出てこなかったもの。次の回に出てもおかしくない範囲として押さえておく。</p>
+
+    <div class="split">
+      <div class="panel under">
+        <div class="ph">品質の概念</div>
+        <ul>
+          <li><b>要求品質と品質要素</b>: 顧客が製品・サービスに求める性質(要求品質)を、設計・製造で扱える具体的な特性(品質要素)に置き換えていく考え方。品質機能展開(QFD)ともつながる。</li>
+          <li><b>品質特性と代用特性</b>: 顧客が実際に求めている性質(品質特性)を、測定しやすい別の特性(代用特性)に置き換えて管理すること。「対比」の項の当たり前品質などとは別の切り口。</li>
+        </ul>
+      </div>
+      <div class="panel under">
+        <div class="ph">QC的ものの見方・考え方</div>
+        <ul>
+          <li><b>後工程はお客様</b>: 次の工程やその先の顧客を「お客様」とみなし、不良を送らないという考え方。全員参加・重点指向と並ぶ基本原則の一つ。</li>
+          <li><b>プロセス重視</b>: 結果だけでなく、結果を生み出す工程(プロセス)そのものを管理・改善の対象にする考え方。「品質は工程で作り込む」という広い意味で使われる。</li>
+          <li><b>特性と要因・因果関係</b>: 結果(特性)とその原因(要因)の関係を明らかにしてから対策を打つという、QC的な問題解決の基本姿勢。</li>
+          <li><b>応急対策・再発防止・未然防止・予測予防</b>: 不適合が起きた後の対応(応急対策→再発防止)と、起きる前の備え(未然防止→予測予防)の段階の違い。</li>
+          <li><b>源流管理</b>: 問題が発生してから対処するのではなく、企画・設計など上流の段階で品質を作り込む考え方。</li>
+          <li><b>目的志向</b>: 手段そのものが目的化しないよう、常に「何のためにやるのか」を意識する考え方。</li>
+          <li><b>QCD+PSME</b>: 品質(Q)・コスト(C)・納期(D)に加え、生産性(P)・安全(S)・モラール(M)などを含めて経営の対象を広くとらえる考え方。</li>
+          <li><b>見える化・潜在トラブルの顕在化</b>: 管理のための状況をグラフや図解で誰にでも分かる形にし、隠れた問題を早期に見つけられるようにすること。</li>
+          <li><b>ばらつきに注目する考え方</b>: 平均値だけでなく、データのばらつき(分布)そのものに着目して工程を見る考え方。統計的方法の基礎ともつながる。</li>
+        </ul>
+      </div>
+      <div class="panel under">
+        <div class="ph">倫理・社会的責任</div>
+        <ul>
+          <li><b>品質管理に携わる人の倫理</b>: データの改ざん・検査の不正など、品質にかかわる個人の職業倫理。コンプライアンスの土台にある個人の姿勢。</li>
+          <li><b>社会的責任の広がり</b>: 過去問ではPL法・3R・CSR・コンプライアンス窓口が出題されたが、人権への配慮や地域社会への貢献など、社会的責任のより広い範囲は今のところ確認できていない。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">確認</span><h2>新鮮な確認問題</h2></div>
+    <p>過去問の文をそのまま使わず、形式を変えて出題する。開いて答え合わせをすること。</p>
+
+    <div class="qgrid">
+
+      <details>
+        <summary>コンプライアンス相談窓口で「相談内容を第三者に漏らさない」という性質を何と呼ぶか。ア: 透明性 / イ: 秘匿性 / ウ: CSR / エ: リスクマネジメント</summary>
+        <div class="ans"><b>イ: 秘匿性</b>。個人情報を含むデリケートな内容を安心して相談してもらうには、内容が漏れない秘匿性が鍵になる。「広く公開して信頼を得る」透明性とは向きが逆の性質なので対で覚える。</div>
+      </details>
+
+      <details>
+        <summary>狩野モデルで「あってもなくても顧客満足度にほとんど影響を与えない」品質要素を何と呼ぶか。ア: 当たり前品質 / イ: 一元的品質 / ウ: 無関心品質 / エ: 魅力的品質</summary>
+        <div class="ans"><b>ウ: 無関心品質</b>。当たり前品質は「不充足のときだけ不満が出る」、一元的品質は「充足・不充足の両方に反応が出る」、無関心品質は「どちらでも反応が変わらない」要素。</div>
+      </details>
+
+      <details>
+        <summary>正誤: 「ねらいの品質は設計段階で目標として定めるものなので、実際の工程に作り込む実力があるかどうかは、その時点で考える必要はない」。この記述は正しいか誤りか。誤りならどこが誤りか。</summary>
+        <div class="ans"><b>誤り</b>。ねらいの品質(設計品質)は顧客の要望から展開して決められるものであり、工程にそれを作り込む実力の有無を確認しないまま量産に移行してはいけない。設計と製造が切り離された話ではなく、両方が揃って初めて顧客満足につながる。</div>
+      </details>
+
+      <details>
+        <summary>ある企業が、新商品の企画で自社の技術シーズを起点に「これを応用すれば何ができるか」を検討した。この進め方に最も近い考え方はどれか。ア: マーケットイン / イ: プロダクトアウト / ウ: 後工程はお客様 / エ: 源流管理</summary>
+        <div class="ans"><b>イ: プロダクトアウト</b>。顧客の声やアンケートを起点にするマーケットインとは逆に、自社の技術・強みを起点に企画する進め方。どちらか一方が正解というわけではなく、両方の視点をバランスさせる企業が多い。</div>
+      </details>
+
+      <details>
+        <summary>工程で不適合が見つかったとき、まず不適合品を取り除き(応急対策)、その後で「同じ原因で二度と不適合が起きないよう」工程を改善した。この2番目の活動を何と呼ぶか。ア: 応急対策 / イ: 再発防止 / ウ: 未然防止 / エ: 予測予防</summary>
+        <div class="ans"><b>イ: 再発防止</b>。「すでに起きた問題」の原因を取り除くのが再発防止、「まだ起きていない問題」を想定して手を打つのが未然防止・予測予防。段階の順番(応急対策→再発防止→未然防止)で覚える。</div>
+      </details>
+
+      <details>
+        <summary>第36回では「顧客が製品・サービスを継続的に購入したいと望む意思」を指す言葉が、第40回では「常にお客様の視点に立って行動する」考え方が問われた。それぞれに当てはまる用語を選べ。ア: 顧客満足 / イ: 顧客ロイヤリティ / ウ: 顧客志向(顧客重視) / エ: 顧客価値</summary>
+        <div class="ans">第36回は<b>イ: 顧客ロイヤリティ</b>、第40回は<b>ウ: 顧客志向(顧客重視)</b>。顧客満足(CS)の蓄積が長期的に顧客ロイヤリティに影響するという流れと、そもそも顧客を判断の中心に置くという考え方そのものである顧客志向は別物として区別する。</div>
+      </details>
+
+      <details>
+        <summary>複数ある問題点の中から、効果の大きいものに絞って資源を集中投入する考え方を何と呼ぶか。ア: 重点指向 / イ: 全員参加 / ウ: 継続的改善 / エ: 人間性尊重</summary>
+        <div class="ans"><b>ア: 重点指向</b>。パレート図を使って「どこに絞るか」を決めるときの基本的な考え方。似た言葉の全員参加は「誰が取り組むか」、継続的改善は「いつまで続けるか」という別の軸の話。</div>
+      </details>
+
+      <details>
+        <summary>正誤: 「CSR(企業の社会的責任)は、法令を守ってさえいれば十分に果たされる」。この記述は正しいか誤りか。誤りならどこが誤りか。</summary>
+        <div class="ans"><b>誤り</b>。法令遵守(コンプライアンス)はCSRの土台の一部にすぎない。CSRはそれに加えて、環境保全や地域社会への貢献など、法律で義務付けられていない範囲まで含めて企業が果たすべき責任を指す。</div>
+      </details>
+
+      <details>
+        <summary>ある企業が「不適合の再発を防ぐだけでなく、まだ一度も起きていないトラブルもあらかじめ想定して手を打つ」活動に力を入れている。これは何と呼ばれる考え方か。ア: 再発防止 / イ: 未然防止 / ウ: 応急対策 / エ: 源流管理</summary>
+        <div class="ans"><b>イ: 未然防止</b>。再発防止は「一度起きたことを繰り返さない」対応であるのに対し、未然防止は「まだ起きていないことを想定する」点が異なる。さらに先回りして予測するのが予測予防。</div>
+      </details>
+
+      <details>
+        <summary>実際に測定・評価するのが難しい品質特性の代わりに、測定しやすい別の特性を使って評価すること、またはその特性を何と呼ぶか。ア: 品質特性 / イ: 代用特性 / ウ: 要求品質 / エ: 社会的品質</summary>
+        <div class="ans"><b>イ: 代用特性</b>。例えば「使いやすさ」という品質特性を直接数値化しにくいとき、操作にかかる時間などの測定しやすい代用特性に置き換えて管理する。</div>
+      </details>
+
+      <details>
+        <summary>第37回では「性能などが満たされれば満足、満たされなければ不満をもたらす」品質要素が問われた。狩野モデルでこれに当てはまるものを選べ。ア: 当たり前品質 / イ: 一元的品質 / ウ: 無関心品質 / エ: 魅力的品質</summary>
+        <div class="ans"><b>イ: 一元的品質</b>。当たり前品質は「満たされて当然、満たされなければ不満」という片方向の反応であるのに対し、一元的品質は充足度に比例して満足・不満の両方が動く点が違う。</div>
+      </details>
+
+      <details>
+        <summary>ある製造業者の製品の欠陥が原因で消費者がけがをした場合、被害者が製造業者の過失を証明できなくても賠償責任を問える根拠となる法律はどれか。ア: 労働安全衛生法 / イ: 製造物責任法(PL法) / ウ: 品質マネジメントシステム / エ: 消費者基本法</summary>
+        <div class="ans"><b>イ: 製造物責任法(PL法)</b>。1995年施行。製造物責任は無過失責任であり、被害者ではなく製造業者ら(製造物を引き渡した側)に立証の負担が求められる点が特徴。</div>
+      </details>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">出典</span><h2>この分野が出た回と大問</h2></div>
+    <div class="table-wrap">
+      <table>
+        <caption>出題回と大問(参照のみ・過去問の転記なし)</caption>
+        <thead><tr><th>回</th><th>大問</th><th>テーマ</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">第35回</td><td class="mono">問11</td><td>品質に対する認識の正誤(設計品質・社会的品質・全部門)</td></tr>
+          <tr><td class="mono">第35回</td><td class="mono">問12</td><td>新製品開発の品質保証(PL法)</td></tr>
+          <tr><td class="mono">第35回</td><td class="mono">問17</td><td>コンプライアンス(秘匿性・透明性・CSR)</td></tr>
+          <tr><td class="mono">第36回</td><td class="mono">問10</td><td>サービスの品質・顧客満足・顧客ロイヤリティ</td></tr>
+          <tr><td class="mono">第36回</td><td class="mono">問11</td><td>新製品開発の品質保証(3R)</td></tr>
+          <tr><td class="mono">第37回</td><td class="mono">問12</td><td>品質の定義と狩野モデル(当たり前品質・一元的品質・無関心品質)</td></tr>
+          <tr><td class="mono">第38回</td><td class="mono">問9</td><td>顧客満足と再発防止(従業員満足)</td></tr>
+          <tr><td class="mono">第38回</td><td class="mono">問10</td><td>ねらいの品質とできばえの品質</td></tr>
+          <tr><td class="mono">第40回</td><td class="mono">問10</td><td>QC的ものの見方・考え方</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 分野別まとめ「品質の概念・QC的ものの見方・倫理と社会的責任」</span>
+    <span>元資料9件 / 実践編まとめ 1/7</span>
+  </footer>
+
+</div>

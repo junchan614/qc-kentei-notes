@@ -1,0 +1,465 @@
+<title>管理の方法まとめ</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+  --shadow-lift: 0 2px 4px rgba(22,35,42,0.08), 0 14px 32px -14px rgba(22,35,42,0.22);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:900px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:52px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+p{margin:0;color:var(--ink-soft);}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+a:focus-visible{outline:2px solid var(--reg);outline-offset:3px;border-radius:4px;}
+
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:26px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4.2vw,40px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+.meta-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:4px;}
+.meta{display:flex;flex-direction:column;gap:2px;}
+.meta .v{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--ink);line-height:1.2;}
+.meta .k{font-size:11.5px;color:var(--ink-faint);letter-spacing:0.04em;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:56px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:middle;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .mono{font-family:'JetBrains Mono',monospace;}
+
+.heat-table th.rc,.heat-table td.rc{text-align:center;width:44px;}
+.heat-table td.rc.hit{background:var(--reg-soft);}
+.heat-table td.rc.hit span{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--reg);}
+.heat-table td.rc.miss span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--border-strong);opacity:0.6;}
+.heat-table td.topic{font-size:13.5px;}
+.heat-table td.cnt{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--reg-ink);text-align:center;}
+
+.callout{background:var(--reg-soft);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+.callout.warn b{color:var(--wrong);}
+
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;}
+.panel{border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);background:var(--surface);overflow:hidden;display:flex;flex-direction:column;}
+.panel .ph{padding:14px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:0.06em;font-weight:700;display:flex;align-items:center;gap:8px;}
+.panel.memo .ph{background:var(--res-soft);color:var(--res-ink);border-bottom:1px solid var(--res);}
+.panel.under .ph{background:var(--reg-soft);color:var(--reg-ink);border-bottom:1px solid var(--reg);}
+.panel ul{margin:0;padding:16px 20px 18px 34px;display:flex;flex-direction:column;gap:10px;}
+.panel li{font-size:14.5px;color:var(--ink-soft);}
+.panel li b{color:var(--ink);}
+.panel li .mono{font-family:'JetBrains Mono',monospace;font-size:13.5px;}
+
+.trap-table td.tag{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--wrong);font-weight:700;white-space:nowrap;}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
+.card{
+  display:flex;flex-direction:column;gap:10px;
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:18px 20px;box-shadow:var(--shadow);
+  text-decoration:none;color:inherit;
+  transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+}
+.card:hover{box-shadow:var(--shadow-lift);border-color:var(--border-strong);transform:translateY(-2px);}
+@media (prefers-reduced-motion: reduce){.card{transition:none;} .card:hover{transform:none;}}
+.card .chips{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.04em;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--ink-faint);border:1px solid var(--border);}
+.chip.src{background:var(--reg-soft);color:var(--reg-ink);border-color:var(--reg);}
+.card h4{font-family:'Zen Old Mincho',serif;font-size:17px;font-weight:600;margin:0;color:var(--ink);line-height:1.5;}
+.card .desc{font-size:13.5px;color:var(--ink-soft);line-height:1.7;}
+.card .go{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--reg-ink);font-weight:600;margin-top:2px;}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+
+details{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 18px;box-shadow:var(--shadow);}
+details + details{margin-top:2px;}
+.qwrap{display:flex;flex-direction:column;gap:12px;}
+summary{cursor:pointer;font-weight:600;color:var(--ink);list-style:none;display:flex;align-items:baseline;gap:8px;font-size:14.5px;}
+summary::-webkit-details-marker{display:none;}
+summary::before{content:"▸";color:var(--reg-ink);font-family:'JetBrains Mono',monospace;flex:none;transition:transform .15s ease;}
+details[open] summary::before{transform:rotate(90deg);}
+.qtag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.04em;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--ink-faint);border:1px solid var(--border);flex:none;}
+.qbody{color:var(--ink-soft);}
+details .ans{margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);font-size:14.5px;color:var(--ink-soft);}
+details .ans b{color:var(--reg-ink);}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 実践編 ／ 分野別まとめ 2/7</span>
+    <h1>管理の方法</h1>
+    <p class="lede">問題が起きたときに「まず何をし」「次に何をし」「将来にどう活かすか」という、対応の順番と広がり方を扱う分野。日常管理や品質保証:プロセス保証で説明される「異常への対応」の土台であり、方針管理の運用の中にも組み込まれる考え方。過去問では、応急対策・再発防止・未然防止・予測予防という4つの段階の区別と、問題解決型・課題達成型という2つのQCストーリーの手順の違いが繰り返し問われている。過去問そのものは掲載していません。お手元の過去問題集と合わせて読む前提です。</p>
+    <div class="meta-row">
+      <div class="meta"><span class="v">8</span><span class="k">元資料</span></div>
+      <div class="meta"><span class="v">5/6</span><span class="k">出題を確認できた回</span></div>
+      <div class="meta"><span class="v">20</span><span class="k">論点の出現回数(延べ)</span></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">地図</span><h2>処置は時間とともに「対象」が広がっていく</h2></div>
+    <p>異常が起きたときの対応は、思いつきで並んでいるのではなく、<b>「今の被害を止める」→「同じ原因での再発を止める」→「まだ起きていない所にも先回りする」</b>という順番で対象が広がっていく一本の流れになっている。まずこの流れを掴むと、個々の用語が迷子にならない。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 700 210" role="img" aria-label="異常発生の後、応急対策で被害を止め、再発防止で同じ原因の再発を止め、未然防止で類似の対象に先回りし、予測予防でまだ経験のない問題まで想定するという4段階の流れを示す図。対象の広がりは個別の現象から仕組み全体、さらに未来の可能性へと広がっていく">
+          <line x1="20" y1="150" x2="680" y2="150" stroke="currentColor" stroke-width="1" opacity="0.25"/>
+
+          <circle cx="60" cy="150" r="7" fill="var(--wrong)"/>
+          <text x="60" y="120" font-size="12" text-anchor="middle" fill="var(--wrong)" font-weight="700">異常発生</text>
+
+          <line x1="70" y1="150" x2="200" y2="150" stroke="var(--ink-faint)" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <rect x="150" y="70" width="130" height="46" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="215" y="93" font-size="12.5" text-anchor="middle" fill="var(--ink)" font-weight="600">応急対策</text>
+          <text x="215" y="109" font-size="10.5" text-anchor="middle" fill="var(--ink-faint)">(暫定処置)</text>
+          <text x="215" y="185" font-size="10.5" text-anchor="middle" fill="var(--ink-faint)">対象: 今起きている現象</text>
+
+          <line x1="280" y1="150" x2="360" y2="150" stroke="var(--ink-faint)" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <rect x="290" y="70" width="140" height="46" rx="8" fill="var(--reg-soft)" stroke="var(--reg)"/>
+          <text x="360" y="93" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">再発防止</text>
+          <text x="360" y="109" font-size="10.5" text-anchor="middle" fill="var(--reg-ink)">(恒久処置/是正処置)</text>
+          <text x="360" y="185" font-size="10.5" text-anchor="middle" fill="var(--ink-faint)">対象: 個別→類似原因→根本原因</text>
+
+          <line x1="430" y1="150" x2="500" y2="150" stroke="var(--ink-faint)" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <rect x="440" y="70" width="130" height="46" rx="8" fill="var(--reg-soft)" stroke="var(--reg)"/>
+          <text x="505" y="93" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">未然防止</text>
+          <text x="505" y="109" font-size="10.5" text-anchor="middle" fill="var(--reg-ink)">(予防処置)</text>
+          <text x="505" y="185" font-size="10.5" text-anchor="middle" fill="var(--ink-faint)">対象: 類似の他対象(未経験)</text>
+
+          <line x1="570" y1="150" x2="610" y2="150" stroke="var(--ink-faint)" stroke-width="1.4" marker-end="url(#arrow)"/>
+          <rect x="580" y="70" width="100" height="46" rx="8" fill="var(--res-soft)" stroke="var(--res)"/>
+          <text x="630" y="93" font-size="12.5" text-anchor="middle" fill="var(--res-ink)" font-weight="600">予測予防</text>
+          <text x="630" y="185" font-size="10.5" text-anchor="middle" fill="var(--ink-faint)">対象: 未来の可能性</text>
+
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="var(--ink-faint)"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+      <figcaption><b>矢印は時間の流れであり、対象の広がりでもある。</b> 応急対策は「今の現象」だけを見るが、再発防止は「原因」まで掘り下げ、未然防止・予測予防は「まだ起きていない所」まで視野を広げる。段階が進むほど対象は広く、実行までの時間は長くなる。</figcaption>
+    </figure>
+
+    <div class="callout"><b>再発防止の中にも3段階ある:</b> ①個別(今回の現物・現象そのものへの対策) → ②類似原因(同じ原因を持つ他の対象にも横展開) → ③根本原因/システム(仕組みや教育・標準そのものを直す)。段階が上がるほど、対策は「モノ」から「仕組み」へと抽象度が上がっていく。</div>
+
+    <p>この4段階に加えて、品質管理には仕事の進め方そのものを表す<b>維持と改善</b>という軸もある。維持は決めた通りに仕事を回すこと(SDCA)、改善は水準そのものを引き上げること(PDCA)であり、応急対策〜予測予防はどちらかといえば「維持を守れなかったときの立て直し」に近い。改善の進め方には、既にある悪さを減らす<b>問題解決型QCストーリー</b>と、ありたい姿を新しく実現する<b>課題達成型QCストーリー</b>の2種類があり、どちらも「歯止め」(標準化して定着させる)で締めくくる点は共通している。</p>
+
+    <div class="split">
+      <div class="panel memo">
+        <div class="ph">問題解決型 QCストーリー</div>
+        <ul>
+          <li><b>出発点:</b> 既にある目標未達のギャップ(悪さ)</li>
+          <li>現状把握 → 要因の解析 → 対策の立案 → 対策の実施 → 効果の確認 → 標準化・歯止め</li>
+          <li>特性要因図・パレート図などで「今ある原因」を絞り込む動き方が中心。</li>
+        </ul>
+      </div>
+      <div class="panel under">
+        <div class="ph">課題達成型 QCストーリー</div>
+        <ul>
+          <li><b>出発点:</b> 新たに設定した、ありたい姿(達成目標)</li>
+          <li>攻め所と目標の設定 → 方策の立案 → 成功シナリオの追究 → 対策の実施 → 効果の確認 → 標準化・歯止め</li>
+          <li>ブレーンストーミングなどの発想法でアイデアを広げ、実現性は後から評価する動き方が中心。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">傾向</span><h2>出題傾向 — 論点 × 出題回</h2></div>
+    <p>第37回だけこの分野の空欄が見つかっていない。それ以外の5回では毎回何らかの形で出題されており、実践編の中でも顔を出す頻度が高い分野。</p>
+
+    <div class="table-wrap">
+      <table class="heat-table">
+        <caption>論点別の出題確認状況(第35〜40回)</caption>
+        <thead>
+          <tr>
+            <th>論点</th>
+            <th class="rc">35</th><th class="rc">36</th><th class="rc">37</th>
+            <th class="rc">38</th><th class="rc">39</th><th class="rc">40</th>
+            <th class="rc">回数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="topic">応急対策・応急措置(暫定処置)</td>
+            <td class="rc hit"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">3</td>
+          </tr>
+          <tr>
+            <td class="topic">再発防止・恒久措置(恒久処置の基本定義)</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">3</td>
+          </tr>
+          <tr>
+            <td class="topic">再発防止の3段階(個別→類似原因→根本原因)</td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">なぜなぜ分析・真の原因追究</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">2</td>
+          </tr>
+          <tr>
+            <td class="topic">未然防止(類似性の汎用化)</td>
+            <td class="rc hit"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">3</td>
+          </tr>
+          <tr>
+            <td class="topic">予測予防</td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">是正処置・予防処置(JISの恒久処置の内訳)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">エラープルーフ(フェイルセーフとの対比)</td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">潜在トラブルの顕在化</td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">課題達成型QCストーリーの手順</td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">2</td>
+          </tr>
+          <tr>
+            <td class="topic">応急処置の具体策(全数検査などの選別)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">暫定処置の要件(現象を戻す・指示権限)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><b>よく出る順トップ3:</b> ①応急対策・応急措置(暫定処置) ②再発防止・恒久措置(恒久処置の基本定義) ③未然防止(類似性の汎用化) — いずれも3/6回で出題を確認。</p>
+    <div class="callout">出方のクセ: 係長と現場リーダー、Q課長と部下、といった<b>会話形式</b>で進み、セリフの中の空欄を埋めさせる形式が多い。具体的な業種(製菓工場・精密機器メーカー・家電メーカー・保険会社など)の事例を挙げて「これは応急対策か再発防止か未然防止か」を分類させる問題も繰り返し出ている。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">対比</span><h2>紛らわしい用語の対比</h2></div>
+    <p>この分野の紛らわしさの多くは、「似た言葉が違う軸(時間軸・対象の広さ・JISの用語法)で定義されている」ことから生まれる。過去問の選択肢群で、正解と並んで誤答として置かれていた語を優先して並べた。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>紛らわしい用語の見分け方</caption>
+        <thead><tr><th>用語</th><th>ひとことで</th><th>見分けるキーワード</th><th>取り違えやすい相手</th></tr></thead>
+        <tbody>
+          <tr><td><b>応急対策</b>(応急処置・暫定処置)</td><td>原因究明の前に、症状の悪化をまず止める一時しのぎ</td><td class="mono">迅速/その場しのぎ/損失を広げない</td><td>再発防止(恒久処置)</td></tr>
+          <tr><td><b>再発防止</b>(恒久処置・恒久措置)</td><td>真の原因を取り除き、同じ原因での再発を止める</td><td class="mono">原因の除去/歯止め</td><td>応急対策、未然防止</td></tr>
+          <tr><td><b>未然防止</b></td><td>過去の類似トラブルの原因を汎用化し、まだ経験していない対象にも先回りする</td><td class="mono">類似性/汎用的に適用/事前</td><td>再発防止、予測予防、予防処置</td></tr>
+          <tr><td><b>予測予防</b></td><td>未然防止をさらに進め、起こり得るトラブルそのものを個別に想定して防ぐ</td><td class="mono">想定する/精度を高める</td><td>未然防止</td></tr>
+          <tr><td><b>是正処置</b>(JIS Q 9000)</td><td>既に発生した不適合の原因を除去する処置</td><td class="mono">発生した不適合/除去</td><td>予防処置</td></tr>
+          <tr><td><b>予防処置</b>(JIS Q 9000)</td><td>まだ発生していないが、起こり得る不適合の原因を除去する処置</td><td class="mono">起こり得る/未発生</td><td>是正処置、未然防止</td></tr>
+          <tr><td><b>個別の再発防止</b></td><td>今回発生した現物・現象そのものへの対策(3段階の1段目)</td><td class="mono">当該製品/その部品</td><td>類似原因、根本原因</td></tr>
+          <tr><td><b>類似原因の再発防止</b></td><td>同じ原因を持つ他の対象にも対策を横展開する(2段目)</td><td class="mono">他の製品/横展開</td><td>個別、根本原因</td></tr>
+          <tr><td><b>根本原因の再発防止</b></td><td>仕組み・教育・標準そのものを直す(3段目)</td><td class="mono">仕組みの悪さ/標準の見直し</td><td>個別、類似原因</td></tr>
+          <tr><td><b>なぜなぜ分析</b></td><td>「なぜ」を繰り返し問い、表面的な原因の奥にある真の原因まで掘り下げる手法</td><td class="mono">繰り返し問う/掘り下げる</td><td>特性要因図、マトリックス分析</td></tr>
+          <tr><td><b>エラープルーフ</b></td><td>人がミスをしようとしても、仕組み的にできないようにする</td><td class="mono">ミスの発生自体を防ぐ</td><td>フェイルセーフ</td></tr>
+          <tr><td><b>フェイルセーフ</b></td><td>ミスや故障が起きても、被害が広がらないよう安全側に働く設計</td><td class="mono">起きた後の被害を抑える</td><td>エラープルーフ</td></tr>
+          <tr><td><b>潜在トラブルの顕在化</b></td><td>まだ表面化していない問題を意図的に掘り起こす活動</td><td class="mono">氷山の一角/表面化していない</td><td>未然防止(対象の見つけ方という関係)</td></tr>
+          <tr><td><b>問題解決型QCストーリー</b></td><td>既にある悪さを減らす活動。現状把握→要因の解析→対策の立案・実施→効果の確認→歯止め</td><td class="mono">現状把握/要因の解析</td><td>課題達成型QCストーリー</td></tr>
+          <tr><td><b>課題達成型QCストーリー</b></td><td>ありたい姿を新しく実現する活動。攻め所と目標の設定→方策の立案→成功シナリオの追究→効果の確認→歯止め</td><td class="mono">攻め所と目標の設定/方策の立案</td><td>問題解決型QCストーリー</td></tr>
+          <tr><td><b>問題</b> と <b>課題</b></td><td>問題=既にある目標未達のギャップ(悪さ)、課題=新たに設定した、ありたい姿に向けた達成目標</td><td class="mono">悪さ vs ありたい姿</td><td>(対になる2語)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn"><b>一般的な理解とのズレに注意:</b> 「未然防止」と「予防処置」は日常語としてはほぼ同じ意味で使われがちだが、この分野では出所が違う。未然防止は<b>過去の類似トラブルを整理して汎用化する</b>という進め方を指す言葉として、予防処置は<b>JIS Q 9000が定義する「起こり得る不適合の原因除去」</b>という制度上の処置区分として、それぞれ別の角度から説明されている。試験では文脈(社内活動の進め方の話か、マネジメントシステム上の処置区分の話か)で判断する。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">未出題</span><h2>過去6回に出ていない範囲</h2></div>
+    <p>出題範囲表のうち、この分野の土台にあたる「維持と改善」まわりの言葉は、過去6回では空欄そのものとして問われていない。次の回に出てもおかしくない範囲として押さえておく。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>未出題の小項目</caption>
+        <thead><tr><th>項目</th><th>要点</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">維持と管理(維持と改善)</td><td>既にある水準を守り続ける「維持」と、水準そのものを引き上げる「改善」の違い。応急対策〜未然防止は、この「維持」が崩れたときの立て直しに位置づけられる。</td></tr>
+          <tr><td class="mono">PDCA・SDCA・PDCAS</td><td>PDCAは改善のサイクル、SDCAは標準化した仕事のやり方を守り安定させるサイクル(Standardize→Do→Check→Act)。PDCASはPDCAに標準化(Standardize)の視点を加えた言い方として紹介されることがある。</td></tr>
+          <tr><td class="mono">継続的改善</td><td>一度の改善で終わらせず、維持と改善のサイクルを回し続けて水準を上げ続けるという考え方。</td></tr>
+          <tr><td class="mono">問題と課題の定義そのもの</td><td>課題達成型QCストーリーの手順は繰り返し問われているが、「問題」と「課題」という言葉の定義自体を直接埋めさせる空欄はまだ出ていない。</td></tr>
+          <tr><td class="mono">問題解決型QCストーリーの手順そのもの</td><td>課題達成型の手順(攻め所と目標の設定など)は複数回出ているが、対になる問題解決型の手順名(現状把握・要因の解析など)を直接埋めさせる問題はまだ出ていない。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">確認</span><h2>確認問題</h2></div>
+    <p>過去問の文章はそのまま使わず、形式を変えて同じ知識を別角度から確認する。</p>
+
+    <div class="qwrap">
+      <details>
+        <summary><span class="qtag">逆引き</span><span class="qbody">発生した不具合の真の原因を除去し、同じ原因で二度と問題を起こさないようにする処置を何と呼ぶか。①応急対策 ②再発防止 ③予測予防 ④品質監査</span></summary>
+        <div class="ans"><b>正解: ②再発防止</b><br>再発防止は原因を取り除いて歯止めをかける恒久処置。①は原因究明前の一時しのぎ、③はまだ経験していない問題への先回り、④は仕組みの評価活動であり、いずれも「原因を除去して歯止めをかける」動きそのものではない。</div>
+      </details>
+
+      <details>
+        <summary><span class="qtag">正誤</span><span class="qbody">「未然防止とは、これから起こりうる問題を担当者の勘と経験だけに頼って予測し対処することである」。この文章の誤りを指摘せよ。</span></summary>
+        <div class="ans"><b>誤り。</b> 未然防止の核は、過去に発生した類似トラブルの原因を整理・汎用化し、それを事前に当てはめるという体系立った進め方であり、個人の勘や経験だけに依存するものではない。</div>
+      </details>
+
+      <details>
+        <summary><span class="qtag">場面適用</span><span class="qbody">工場で不良品が見つかり、原因調査の前にまず出荷済みロットを回収して流出を止めた。この行動はどの段階にあたるか。</span></summary>
+        <div class="ans"><b>応急対策(応急処置)。</b> 原因が分かる前に、被害をこれ以上広げないための一時的な処置であり、原因を取り除く再発防止とは区別される。</div>
+      </details>
+
+      <details>
+        <summary><span class="qtag">回またぎ比較</span><span class="qbody">ある回では再発防止の3段階の最終段階を「根本原因」と表現し、別の回では「真の原因を探し出して取り除く」という表現で恒久処置を説明していた。この2つの言葉は同じことを指しているか。</span></summary>
+        <div class="ans">どちらも「対症療法で終わらせず、奥にある原因を掴む」という考え方は共通している。ただし「根本原因」は再発防止の3段階のうち<b>仕組み・システムを直す最終段階</b>を指す文脈で、「真の原因」はより一般的に<b>対策すべき本当の原因</b>を指す文脈で使われている。試験では、3段階の説明の中で使われていれば根本原因、単に「本当の原因」という意味で使われていれば真の原因、と読み分ければよい。</div>
+      </details>
+
+      <details>
+        <summary><span class="qtag">逆引き</span><span class="qbody">「人がミスをしようとしても、仕組み的にできないようにする」考え方はどちらか。①エラープルーフ ②フェイルセーフ</span></summary>
+        <div class="ans"><b>正解: ①エラープルーフ</b><br>ミスの発生自体を防ぐのがエラープルーフ。フェイルセーフはミスや故障が起きた後、被害が広がらないよう安全側に働かせる設計であり、防ぐ段階が異なる。</div>
+      </details>
+
+      <details>
+        <summary><span class="qtag">逆引き</span><span class="qbody">「ミスや故障が起きても、被害が広がらないよう安全側に働く仕組み」を何と呼ぶか。①エラープルーフ ②フェイルセーフ</span></summary>
+        <div class="ans"><b>正解: ②フェイルセーフ</b><br>発生自体を防ぐエラープルーフに対し、フェイルセーフは「起きてしまった後」に備える考え方。</div>
+      </details>
+
+      <details>
+        <summary><span class="qtag">正誤</span><span class="qbody">「是正処置と予防処置は同じ意味で、どちらも既に発生した不適合の原因を取り除く処置である」。誤りを指摘せよ。</span></summary>
+        <div class="ans"><b>誤り。</b> 是正処置は「既に発生した」不適合の原因を除去する処置。予防処置は「まだ発生していないが起こり得る」不適合の原因を除去する処置であり、対象の時点が異なる。</div>
+      </details>
+
+      <details>
+        <summary><span class="qtag">場面適用</span><span class="qbody">ある製品で見つかった不具合と同じ原因を持つ他の機種についても、念のため対策を横展開した。これは再発防止の3段階のどれにあたるか。</span></summary>
+        <div class="ans"><b>類似原因の再発防止。</b> 今回の現物だけに対応する「個別」の一段上、仕組みそのものを直す「根本原因」の一段下にあたる、対象を広げる段階。</div>
+      </details>
+
+      <details>
+        <summary><span class="qtag">逆引き</span><span class="qbody">課題達成型QCストーリーで「ありたい姿と現状のギャップを明確にする」ステップを何と呼ぶか。</span></summary>
+        <div class="ans"><b>攻め所と目標の設定。</b> 問題解決型の「現状把握」に相当する最初のステップだが、悪さの原因を探すのではなく、ありたい姿とのギャップから取り組む的を絞る点が異なる。</div>
+      </details>
+
+      <details>
+        <summary><span class="qtag">回またぎ比較</span><span class="qbody">課題達成型QCストーリーの「方策の立案」と、問題解決型QCストーリーの「対策の立案」は同じ位置づけか。</span></summary>
+        <div class="ans">名前は似ているが位置づけが異なる。課題達成型の方策の立案は、アイデア発想法でできるだけ多くの候補を出し、<b>実現性は後から評価する</b>という順番が特徴。問題解決型の対策の立案は、既に絞り込んだ真の原因に対して直接手を打つ対策を考える段階であり、出発点(ありたい姿からの発想か、原因からの発想か)が違う。</div>
+      </details>
+
+      <details>
+        <summary><span class="qtag">正誤</span><span class="qbody">「潜在トラブルの顕在化とは、既に報告されている不具合だけを一覧に整理することである」。誤りを指摘せよ。</span></summary>
+        <div class="ans"><b>誤り。</b> 潜在トラブルは「まだ表面化していない」問題を指す。氷山の一角として既に見えている問題の奥に隠れた、まだ報告されていない問題を意図的に掘り起こす活動が顕在化にあたる。</div>
+      </details>
+
+      <details>
+        <summary><span class="qtag">場面適用</span><span class="qbody">新しい業務プロセスを立ち上げる際、過去の類似業務のトラブル事例を整理して、計画段階であらかじめ対策を織り込んだ。この進め方は何と呼ぶか。</span></summary>
+        <div class="ans"><b>未然防止。</b> 過去に発生した問題を汎用化して整理し、それを新しい対象にあらかじめ適用する進め方がポイント。想定される問題そのものを個別に洗い出して備える段階まで進めば、予測予防の色合いが強くなる。</div>
+      </details>
+
+      <details>
+        <summary><span class="qtag">逆引き</span><span class="qbody">「問題」と「課題」のうち、「新たに設定した、ありたい姿に向けた達成目標」に当たるのはどちらか。</span></summary>
+        <div class="ans"><b>課題。</b> 問題は既にある目標未達のギャップ(悪さ)を指し、問題解決型QCストーリーの対象になる。課題は新しく設定するありたい姿への達成目標であり、課題達成型QCストーリーの対象になる。</div>
+      </details>
+
+      <details>
+        <summary><span class="qtag">正誤</span><span class="qbody">「なぜなぜ分析は、応急対策を決めるための手法である」。誤りを指摘せよ。</span></summary>
+        <div class="ans"><b>誤り。</b> なぜなぜ分析は「なぜ」を繰り返し問い、表面的な原因の奥にある真の原因・根本原因を特定するための手法。応急対策(その場しのぎ)ではなく、再発防止(恒久処置)を決めるために使う。</div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">出典</span><h2>この分野が出た回と大問</h2></div>
+    <div class="table-wrap">
+      <table>
+        <caption>出題実績(第35〜40回)</caption>
+        <thead><tr><th>回</th><th>大問</th><th>テーマ</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">第35回</td><td class="mono">問9</td><td>応急対策・再発防止・未然防止の区別</td></tr>
+          <tr><td class="mono">第36回</td><td class="mono">問8</td><td>再発防止(個別・類似原因・根本原因)と未然防止・予測予防</td></tr>
+          <tr><td class="mono">第36回</td><td class="mono">問9</td><td>課題達成型QCストーリー(方策の立案・アイデア発想法・方策の評価)</td></tr>
+          <tr><td class="mono">第38回</td><td class="mono">問9</td><td>顧客満足と再発防止(なぜなぜ分析)</td></tr>
+          <tr><td class="mono">第38回</td><td class="mono">問11</td><td>工程異常への対応と再発防止(全数検査・真の原因)</td></tr>
+          <tr><td class="mono">第39回</td><td class="mono">問9</td><td>暫定処置・恒久処置(是正処置・予防処置)と未然防止</td></tr>
+          <tr><td class="mono">第39回</td><td class="mono">問11</td><td>課題達成型QCストーリーの手順</td></tr>
+          <tr><td class="mono">第40回</td><td class="mono">問14</td><td>顧客要求への対応と内部監査(応急措置・恒久措置)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 分野別まとめ「管理の方法」</span>
+    <span>元資料8件 / 実践編まとめ 2/7</span>
+  </footer>
+
+</div>

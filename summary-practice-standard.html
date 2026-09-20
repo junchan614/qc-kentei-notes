@@ -1,0 +1,441 @@
+<title>標準化・小集団活動・人材育成まとめ</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+  --shadow-lift: 0 2px 4px rgba(22,35,42,0.08), 0 14px 32px -14px rgba(22,35,42,0.22);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:900px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:52px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+p{margin:0;color:var(--ink-soft);}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+a:focus-visible{outline:2px solid var(--reg);outline-offset:3px;border-radius:4px;}
+
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:26px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4.2vw,40px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+.meta-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:4px;}
+.meta{display:flex;flex-direction:column;gap:2px;}
+.meta .v{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--ink);line-height:1.2;}
+.meta .k{font-size:11.5px;color:var(--ink-faint);letter-spacing:0.04em;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:56px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:middle;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .mono{font-family:'JetBrains Mono',monospace;}
+
+.heat-table th.rc,.heat-table td.rc{text-align:center;width:44px;}
+.heat-table td.rc.hit{background:var(--reg-soft);}
+.heat-table td.rc.hit span{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--reg);}
+.heat-table td.rc.miss span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--border-strong);opacity:0.6;}
+.heat-table td.topic{font-size:13.5px;}
+.heat-table td.cnt{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--reg-ink);text-align:center;}
+
+.callout{background:var(--reg-soft);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+.callout.warn b{color:var(--wrong);}
+
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;}
+.panel{border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);background:var(--surface);overflow:hidden;display:flex;flex-direction:column;}
+.panel .ph{padding:14px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:0.06em;font-weight:700;display:flex;align-items:center;gap:8px;}
+.panel.memo .ph{background:var(--res-soft);color:var(--res-ink);border-bottom:1px solid var(--res);}
+.panel.under .ph{background:var(--reg-soft);color:var(--reg-ink);border-bottom:1px solid var(--reg);}
+.panel ul{margin:0;padding:16px 20px 18px 34px;display:flex;flex-direction:column;gap:10px;}
+.panel li{font-size:14.5px;color:var(--ink-soft);}
+.panel li b{color:var(--ink);}
+.panel li .mono{font-family:'JetBrains Mono',monospace;font-size:13.5px;}
+
+.trap-table td.tag{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--wrong);font-weight:700;white-space:nowrap;}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
+.card{
+  display:flex;flex-direction:column;gap:10px;
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:18px 20px;box-shadow:var(--shadow);
+  text-decoration:none;color:inherit;
+  transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+}
+.card:hover{box-shadow:var(--shadow-lift);border-color:var(--border-strong);transform:translateY(-2px);}
+@media (prefers-reduced-motion: reduce){.card{transition:none;} .card:hover{transform:none;}}
+.card .chips{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.04em;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--ink-faint);border:1px solid var(--border);}
+.chip.src{background:var(--reg-soft);color:var(--reg-ink);border-color:var(--reg);}
+.card h4{font-family:'Zen Old Mincho',serif;font-size:17px;font-weight:600;margin:0;color:var(--ink);line-height:1.5;}
+.card .desc{font-size:13.5px;color:var(--ink-soft);line-height:1.7;}
+.card .go{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--reg-ink);font-weight:600;margin-top:2px;}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+
+/* 確認問題(details/summary)用の追加スタイル。既存トークンのみ使用 */
+.qa-list{display:flex;flex-direction:column;gap:14px;}
+.qa-item{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 20px;box-shadow:var(--shadow);}
+.qtag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.04em;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--ink-faint);border:1px solid var(--border);margin-right:8px;vertical-align:middle;}
+.qa-q{font-size:14.5px;color:var(--ink);margin:6px 0 0;}
+.qa-item details{margin-top:10px;}
+.qa-item summary{cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--reg-ink);font-weight:600;list-style:none;}
+.qa-item summary::-webkit-details-marker{display:none;}
+.qa-item summary::before{content:"▸ ";}
+.qa-item details[open] summary::before{content:"▾ ";}
+.qa-ans{margin-top:8px;padding-top:10px;border-top:1px dashed var(--border);font-size:14px;color:var(--ink-soft);}
+.qa-ans b{color:var(--ink);}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 実践編 ／ 分野別まとめ 5/7</span>
+    <h1>標準化・小集団活動・人材育成</h1>
+    <p class="lede">この3つは、どれも「品質経営の要素」の中で日常管理を下支えする仕組み。<b>標準化</b>は良いやり方を明文化して誰でも再現できるようにする手段、<b>小集団活動(QCサークル)</b>はその標準を現場で実践しながら異常や改善点に気づき改善する活動、<b>人材育成</b>は標準を使いこなし改善できる人を育てる仕組み。「標準を作る→現場で使い改善する→改善できる人を育てる→育った人が標準を見直す」という一つの循環でつながっている。</p>
+    <p style="font-size:13.5px;">過去問そのものは掲載していません。お手元の過去問題集と合わせて読む前提です。</p>
+    <div class="meta-row">
+      <div class="meta"><span class="v">6/6</span><span class="k">出題を確認できた回</span></div>
+      <div class="meta"><span class="v">12</span><span class="k">大問数(累計)</span></div>
+      <div class="meta"><span class="v">65</span><span class="k">空欄数(累計)</span></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">地図</span><h2>3つがどうつながっているか</h2></div>
+    <p>標準化・小集団活動・人材育成は、それぞれ独立した知識ではなく、一つの循環の中の役割分担として理解すると覚えやすい。標準化が「仕組みを作る」、小集団活動が「現場で回し、気づき、改善する」、人材育成が「それを担える人を育てる」を担当し、育った人がまた標準を見直す。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 300" role="img" aria-label="社内標準化・小集団活動・人材育成が三角形の循環でつながる図。社内標準化から小集団活動へ実践・順守の矢印、小集団活動から人材育成へ経験を教育に活かす矢印、人材育成から社内標準化へ育った人材が標準を見直す矢印が伸びている">
+          <defs>
+            <marker id="arrowh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="var(--reg)"/>
+            </marker>
+          </defs>
+
+          <rect x="210" y="18" width="220" height="66" rx="10" fill="var(--surface-2)" stroke="var(--border-strong)"/>
+          <text x="320" y="45" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">社内標準化</text>
+          <text x="320" y="65" text-anchor="middle" font-size="11" fill="var(--ink-soft)">やり方を決めて明文化する</text>
+
+          <rect x="26" y="204" width="230" height="70" rx="10" fill="var(--surface-2)" stroke="var(--border-strong)"/>
+          <text x="141" y="233" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">小集団活動</text>
+          <text x="141" y="252" text-anchor="middle" font-size="11" fill="var(--ink-soft)">現場で実践し、気づき、改善する</text>
+
+          <rect x="384" y="204" width="230" height="70" rx="10" fill="var(--surface-2)" stroke="var(--border-strong)"/>
+          <text x="499" y="233" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">人材育成</text>
+          <text x="499" y="252" text-anchor="middle" font-size="11" fill="var(--ink-soft)">標準を使い改善できる人を育てる</text>
+
+          <line x1="252" y1="86" x2="160" y2="202" stroke="var(--reg)" stroke-width="1.6" marker-end="url(#arrowh)"/>
+          <text x="150" y="145" font-size="11" fill="var(--ink-faint)">実践・順守</text>
+
+          <line x1="258" y1="239" x2="382" y2="239" stroke="var(--reg)" stroke-width="1.6" marker-end="url(#arrowh)"/>
+          <text x="270" y="228" font-size="11" fill="var(--ink-faint)">現場の経験を教育に活かす</text>
+
+          <line x1="490" y1="202" x2="392" y2="86" stroke="var(--reg)" stroke-width="1.6" marker-end="url(#arrowh)"/>
+          <text x="430" y="145" font-size="11" fill="var(--ink-faint)">育った人が標準を見直す</text>
+        </svg>
+      </div>
+      <figcaption><b>循環の要点:</b> 標準化だけ・教育だけ・活動だけを単独で覚えるより、「決める→使う・改善する→育てる→また決め直す」の順番で押さえると、大問をまたいだ設問(例: OJTとQCサークルの勉強会の関係)にも対応しやすい。</figcaption>
+    </figure>
+
+    <p>この3つは「品質経営の要素」と呼ばれる分類の一部で、方針管理や日常管理などと並ぶ。位置づけを整理すると次のとおり。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>品質経営の要素の全体像とこのページの範囲</caption>
+        <thead><tr><th>要素</th><th>この分野との関係</th></tr></thead>
+        <tbody>
+          <tr><td>方針管理</td><td>中長期の目標を打ち出し組織全体に展開する仕組み(このページの対象外)</td></tr>
+          <tr><td>日常管理</td><td>日々の業務を維持・改善する仕組み。標準化はその実行手段そのもの</td></tr>
+          <tr><td>機能別管理</td><td>部門横断の重要機能(品質・原価など)を管理する仕組み(このページの対象外)</td></tr>
+          <tr><td><b>標準化</b></td><td>良いやり方を明文化し、誰がやっても再現できるようにする(本ページの対象)</td></tr>
+          <tr><td><b>小集団活動</b></td><td>標準を実践しながら現場で異常や改善点に気づき、改善する活動(本ページの対象)</td></tr>
+          <tr><td><b>人材育成</b></td><td>標準を使いこなし改善できる人を育てる仕組み(本ページの対象)</td></tr>
+          <tr><td>診断・監査</td><td>標準や仕組みが機能しているかを第三者的に確認する仕組み(このページの対象外)</td></tr>
+          <tr><td>品質マネジメントシステム</td><td>上記全体を包む枠組み(ISO9001など)(このページの対象外)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">傾向</span><h2>出題傾向 — 論点 × 出題回</h2></div>
+    <p>第35〜40回のすべての回でこの分野の大問が確認できる。論点を12にまとめて回ごとの出題有無を示す。</p>
+
+    <div class="table-wrap">
+      <table class="heat-table">
+        <caption>論点別の出題確認状況(第35〜40回)</caption>
+        <thead>
+          <tr>
+            <th>論点</th>
+            <th class="rc">35</th><th class="rc">36</th><th class="rc">37</th>
+            <th class="rc">38</th><th class="rc">39</th><th class="rc">40</th>
+            <th class="rc">回数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="topic">標準化の効果・役割(互換性・信頼性・可視化・ばらつき低減など)</td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">2</td></tr>
+          <tr><td class="topic">社内標準の分類(製造技術標準/製造作業標準・仕様・標準書)</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">3</td></tr>
+          <tr><td class="topic">社内標準化のPDCA(制定→実施→点検→改訂)</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td></tr>
+          <tr><td class="topic">社内標準化の推進と課題(経営層の関与・企業モラル・実行計画)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td></tr>
+          <tr><td class="topic">産業標準化・国際標準化(JIS・JAS・ISO・IEC)</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td></tr>
+          <tr><td class="topic">QCサークルの定義と基本理念</td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td></tr>
+          <tr><td class="topic">導入期・展開期・定着期の推進</td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td></tr>
+          <tr><td class="topic">小集団活動の運営(適正人数・自主性・連携協力・勉強会)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">2</td></tr>
+          <tr><td class="topic">教育体系(階層別・分野別・自己啓発)</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td></tr>
+          <tr><td class="topic">OJT・OFF-JT</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">2</td></tr>
+          <tr><td class="topic">品質方針・行動原理とダイバーシティ&amp;インクルージョン</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td></tr>
+          <tr><td class="topic">力量</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><b>よく出る順トップ3:</b> ①社内標準の分類(3/6回、製造技術標準/製造作業標準や仕様・標準書などの区別) ②標準化の効果・役割/小集団活動の運営/OJT・OFF-JTが同率で続く(いずれも2/6回)。</p>
+    <div class="callout"><b>出方のクセ:</b> 実践編のこの分野は、職場の会話形式(リーダー・推進者・事務局のやり取りなど)や、具体的な組織の場面設定から用語を埋めさせる形が多い。1つの大問の中で前半のグループ(A)が考え方・概念系、後半のグループ(B)が固有名詞・数値系という構成になりやすい。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">対比</span><h2>紛らわしい用語の対比</h2></div>
+    <p>過去問の語群で、正解の隣に誤答として置かれていた語をなるべく優先して集めた。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>紛らわしい用語の対比(全20項目)</caption>
+        <thead><tr><th>用語</th><th>ひとことで</th><th>見分けるキーワード</th><th>取り違えやすい相手</th></tr></thead>
+        <tbody>
+          <tr><td>標準作業</td><td>現場で検証され、一定の手続きを経て決められた"最適な作業のやり方"そのもの</td><td>最適化された内容/一定の手続き</td><td>作業標準(書)</td></tr>
+          <tr><td>作業標準(書)</td><td>標準作業の内容を明文化した文書(作業指示票を含む分類の総称)</td><td>明文化/文書</td><td>標準作業</td></tr>
+          <tr><td>製造技術標準</td><td>生産の技術的な事項(材料・設備条件など)、主に"物"を対象にした標準</td><td>物/技術的事項</td><td>製造作業標準</td></tr>
+          <tr><td>製造作業標準</td><td>生産の作業方法に関する事項、主に"人"の動きを対象にした標準</td><td>人/作業方法</td><td>製造技術標準</td></tr>
+          <tr><td>JIS(日本産業規格)</td><td>鉱工業品・データ・サービスなどを対象にした日本の国家標準</td><td>日本の国家標準/鉱工業</td><td>JAS</td></tr>
+          <tr><td>JAS(日本農林規格)</td><td>飲食料品・林産物などを対象にした日本の国家標準</td><td>農林/食品</td><td>JIS</td></tr>
+          <tr><td>ISO(国際標準化機構)</td><td>分野を問わず工業製品・マネジメントシステムなどを扱う国際標準化団体</td><td>分野を問わない/規格全般</td><td>IEC</td></tr>
+          <tr><td>IEC(国際電気標準会議)</td><td>電気・電子技術の分野を専門に扱う国際標準化団体</td><td>電気/電子</td><td>ISO</td></tr>
+          <tr><td>OJT</td><td>上司・先輩が現場での実務を通じて行う教育・訓練</td><td>現場/実務を通じて</td><td>OFF-JT</td></tr>
+          <tr><td>OFF-JT</td><td>現在の職務・職場を離れて行う集合研修などの教育・訓練</td><td>職場を離れる/セミナー・講習会</td><td>OJT</td></tr>
+          <tr><td>階層別教育</td><td>新入社員・管理職など役職や職位ごとに実施する教育</td><td>役職別/新入社員・管理職</td><td>職能別(分野別)教育</td></tr>
+          <tr><td>職能別(分野別)教育</td><td>設計・営業・製造など専門機能ごとに実施する教育</td><td>専門機能別/業務ごと</td><td>階層別教育</td></tr>
+          <tr><td>自己啓発</td><td>個人が自発的に行う学習(資格取得など、業務上必須とは限らない)</td><td>個人の自発的/必須ではない</td><td>自主性</td></tr>
+          <tr><td>自主性(QCサークルの基本原則)</td><td>強制されず、自らの意志でテーマや進め方を決めて取り組む姿勢</td><td>決め事があっても自らの意志</td><td>自己啓発</td></tr>
+          <tr><td>QCサークル(小集団活動)</td><td>同じ職場で働く人が継続的に品質改善を行う小グループ</td><td>同じ職場/継続的</td><td>プロジェクトチーム(CFT)</td></tr>
+          <tr><td>プロジェクトチーム(CFT)</td><td>部門を超えた横断的な課題に取り組むための組織</td><td>部門を超えた/横断的</td><td>QCサークル</td></tr>
+          <tr><td>ダイバーシティ</td><td>性別・年齢・国籍など人材の多様性を受け入れること</td><td>多様性を受け入れる</td><td>インクルージョン</td></tr>
+          <tr><td>インクルージョン</td><td>多様な人材がそれぞれの力を発揮し、一体感を持って機能している状態</td><td>力を発揮/一体感</td><td>ダイバーシティ</td></tr>
+          <tr><td>力量</td><td>知識・技能を仕事に適用し、意図した結果を出す個人の能力</td><td>適用して結果を出す</td><td>教育・訓練</td></tr>
+          <tr><td>教育・訓練</td><td>力量を身につけさせるための組織的な活動(OJT・OFF-JTなど)</td><td>身につけさせる活動</td><td>力量</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">未出題</span><h2>過去6回でまだ確認できていない範囲</h2></div>
+    <p>出題範囲表(2級)のうち、この分野の小項目自体は過去6回でほぼ一通り触れられているが、その中でも次の切り口はまだ空欄として確認できていない。次の回に出てもおかしくない。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>未出題(次に出てもおかしくない切り口)</caption>
+        <thead><tr><th>項目</th><th>要点</th></tr></thead>
+        <tbody>
+          <tr><td>QCサークル基本理念の3本目の柱</td><td>「人間の能力を発揮し無限の可能性を引き出す」「人間性を尊重し生きがいのある明るい職場をつくる」の2つは過去問で確認できたが、3本目の「企業の体質改善・発展に寄与する」はまだ確認できていない。3本セットで覚えておく。</td></tr>
+          <tr><td>QCサークル活動の基本原則「相互啓発」</td><td>自主性・全員参加・継続的実施に近い言葉は過去問に痕跡があるが、「相互啓発」そのものはまだ空欄になっていない。</td></tr>
+          <tr><td>社内標準の文書体系(規程・基準・要領・手順書などの階層)</td><td>社内標準化のPDCAや、技術標準/作業標準という分類軸は出題済みだが、標準類がどのような文書の階層で構成されるかを直接問う形はまだ見当たらない。</td></tr>
+          <tr><td>力量の定義そのもの</td><td>「力量」という語自体は空欄で問われたが、「知識及び技能を仕事に適用して意図した結果を達成する能力」という定義文まで埋めさせる形はまだ確認できていない。</td></tr>
+          <tr><td>教育の有効性評価・力量評価の仕組み</td><td>教育体系やOJT・OFF-JTの区分は繰り返し出題されているが、教育を行った後の効果測定・評価の仕組みそのものはまだ出ていない。</td></tr>
+          <tr><td>国際標準の"できかた"の違い</td><td>JIS・JAS・ISO・IECという組織名を埋めさせる形は出題済みだが、公的な手続きを経て制定される標準と、市場で広く使われた結果として事実上の標準になったものとの違いを問う形はまだ見当たらない。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">確認</span><h2>確認問題(新規作成・14問)</h2></div>
+    <p>過去問の文はそのまま使わず、逆引き・正誤・場面適用・回またぎ比較を混ぜて出題する。</p>
+
+    <div class="qa-list">
+
+      <div class="qa-item">
+        <p class="qa-q"><span class="qtag">逆引き</span><b>Q1.</b> 次のうち、「監督者や作業者に対して具体的な作業指示を行うための実務文書」はどれか。 ア.標準作業 イ.作業標準書 ウ.作業指示票</p>
+        <details><summary>正解を見る</summary><div class="qa-ans"><b>正解: ウ.</b> 作業標準(書)は標準類の分類上の総称で、そのうち現場での具体的な指示にまで落とし込んだものが作業指示票にあたる。標準作業は「決められた最適なやり方」そのものであり、文書の名前ではない。</div></details>
+      </div>
+
+      <div class="qa-item">
+        <p class="qa-q"><span class="qtag">正誤</span><b>Q2.</b> 「製造技術標準は生産上の主に人を対象とした作業方法に関する事項を、製造作業標準は主に物を対象とした技術的な事項を定めたものである。」この文の正誤を判断し、誤りならどこが誤りか答えよ。</p>
+        <details><summary>正解を見る</summary><div class="qa-ans"><b>正解: 誤り。</b> 対象が入れ替わっている。製造技術標準は主に"物"(材料・設備条件など)を対象にした技術的な事項、製造作業標準は主に"人"の作業方法に関する事項を定めたものである。</div></details>
+      </div>
+
+      <div class="qa-item">
+        <p class="qa-q"><span class="qtag">場面適用</span><b>Q3.</b> 新人作業者に対し、先輩が実際の生産ラインで手順を見せながら教え、その場で仕事を覚えさせている。これは教育・訓練のどの手段にあたるか。</p>
+        <details><summary>正解を見る</summary><div class="qa-ans"><b>正解: OJT。</b> 現在の職務・職場の中で、日常の業務を通じて行う教育・訓練がOJTである。職場を離れて行うセミナーや講習会はOFF-JTにあたる。</div></details>
+      </div>
+
+      <div class="qa-item">
+        <p class="qa-q"><span class="qtag">回またぎ比較</span><b>Q4.</b> ある回の過去問では、国際標準を制定している組織として「国際標準化機構」と並んで電気・電子分野を専門とする組織名が空欄になっていた。この組織名と、電気・電子に限らず分野を問わず規格を扱う組織との違いを説明せよ。</p>
+        <details><summary>正解を見る</summary><div class="qa-ans"><b>正解: IEC(国際電気標準会議)。</b> IECは電気・電子技術の分野を専門に扱う国際標準化団体であるのに対し、ISO(国際標準化機構)は分野を問わず工業製品・マネジメントシステムなど全般を扱う点が異なる。</div></details>
+      </div>
+
+      <div class="qa-item">
+        <p class="qa-q"><span class="qtag">逆引き</span><b>Q5.</b> 現場の第一線で働く人たちが同じ職場単位で集まり、自分たちの仕事の質を継続して見直し、良くしていく小グループ活動を何と呼ぶか。</p>
+        <details><summary>正解を見る</summary><div class="qa-ans"><b>正解: QCサークル(小集団活動)。</b> 1962年に日本で誕生し、現場への品質管理の定着だけでなく、人を育て職場の活力を高める効果があることから、TQMの一角として展開されてきた。</div></details>
+      </div>
+
+      <div class="qa-item">
+        <p class="qa-q"><span class="qtag">正誤</span><b>Q6.</b> 「QCサークル活動の基本理念は、人間の能力を発揮し無限の可能性を引き出すことと、人間性を尊重して生きがいのある明るい職場をつくることの2つである。」正誤を判断せよ。</p>
+        <details><summary>正解を見る</summary><div class="qa-ans"><b>正解: 誤り。</b> 基本理念はこの2つに加えて、「企業の体質改善・発展に寄与する」を含めた3つで構成される。</div></details>
+      </div>
+
+      <div class="qa-item">
+        <p class="qa-q"><span class="qtag">場面適用</span><b>Q7.</b> QCサークル活動を導入して間もない組織で、経営トップが推進手引きの整備や品質管理の基礎教育、活動時間の確保に力を入れている。これは導入期・展開期・定着期のどれにあたり、特に何が重要とされるか。</p>
+        <details><summary>正解を見る</summary><div class="qa-ans"><b>正解: 導入期。</b> 推進の仕組みづくりと実践の段階であり、組織トップのリーダーシップが活動の定着に大きく影響する。</div></details>
+      </div>
+
+      <div class="qa-item">
+        <p class="qa-q"><span class="qtag">場面適用</span><b>Q8.</b> 活動開始から数年が経ち、職場内の問題解決にとどまらず、方針の達成を目的として活動するチームと連携を始めた組織がある。これは導入期・展開期・定着期のどれにあたるか。</p>
+        <details><summary>正解を見る</summary><div class="qa-ans"><b>正解: 定着期。</b> 部門を超えた横断的な課題に取り組み、方針達成を目的とするプロジェクトチームと連携を図る段階である。</div></details>
+      </div>
+
+      <div class="qa-item">
+        <p class="qa-q"><span class="qtag">逆引き</span><b>Q9.</b> 「新入社員・管理職など役職や職位に応じて実施する教育」と「設計・営業・製造など専門分野に応じて実施する教育」を、それぞれ何と呼ぶか。</p>
+        <details><summary>正解を見る</summary><div class="qa-ans"><b>正解: 階層別教育、職能別(分野別)教育。</b> 教育体系はこの2種類を柱に、個人が自発的に行う自己啓発を組み合わせて構成されることが多い。</div></details>
+      </div>
+
+      <div class="qa-item">
+        <p class="qa-q"><span class="qtag">正誤</span><b>Q10.</b> 「自己啓発とは、企業が業務上必須と定めた教育プログラムのことである。」正誤を判断せよ。</p>
+        <details><summary>正解を見る</summary><div class="qa-ans"><b>正解: 誤り。</b> 自己啓発は個人が自発的に行う学習であり、資格取得など業務上いますぐ必須とは限らない内容も含む。教育体系にどこまで組み込むかは組織ごとの判断になる。</div></details>
+      </div>
+
+      <div class="qa-item">
+        <p class="qa-q"><span class="qtag">回またぎ比較</span><b>Q11.</b> ある回の過去問ではOJTを補うものとして職場を離れた教育手段が空欄になり、別の回では「現在の職務・職場を離れて行う」教育手段が空欄になっていた。この2つは同じものか、違うものか。</p>
+        <details><summary>正解を見る</summary><div class="qa-ans"><b>正解: 同じ(OFF-JT)。</b> 「OJTを補うもの」という角度と、「職場を離れて行う」という定義そのものの角度で、異なる回に問われている。同じ用語が違う文脈で繰り返し出る典型例。</div></details>
+      </div>
+
+      <div class="qa-item">
+        <p class="qa-q"><span class="qtag">場面適用</span><b>Q12.</b> ダイバーシティ経営を進める企業で、多様な人材がそれぞれの力を発揮し、組織に一体感を持って貢献している状態を指す言葉は何か。</p>
+        <details><summary>正解を見る</summary><div class="qa-ans"><b>正解: インクルージョン。</b> ダイバーシティ(多様性を受け入れること)の先にある、多様な人材が実際に活かされている状態を指す。</div></details>
+      </div>
+
+      <div class="qa-item">
+        <p class="qa-q"><span class="qtag">逆引き</span><b>Q13.</b> 「力量」の定義に最も近いものを選べ。 ア.資格や学歴の高さ イ.知識及び技能を仕事に適用して意図した結果を達成する能力 ウ.勤続年数の長さ</p>
+        <details><summary>正解を見る</summary><div class="qa-ans"><b>正解: イ.</b> 力量は知識と技能を実際の仕事に適用し、結果を出せる能力を指す。資格や経験年数はそれを裏付ける要素の一つにすぎず、力量そのものの定義ではない。</div></details>
+      </div>
+
+      <div class="qa-item">
+        <p class="qa-q"><span class="qtag">正誤</span><b>Q14.</b> 「社内標準化のPDCAでは、Check(点検)の段階で標準の改訂を行う。」正誤を判断せよ。</p>
+        <details><summary>正解を見る</summary><div class="qa-ans"><b>正解: 誤り。</b> Checkの段階は標準に問題がないかを検討するところまでで、原因を追究し必要であれば標準を改訂するのはAct(処置)の段階である。</div></details>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">出典</span><h2>この分野が出た回と大問</h2></div>
+    <div class="table-wrap">
+      <table>
+        <caption>出題回一覧(第35〜40回)</caption>
+        <thead><tr><th>回・問</th><th>テーマ</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">第35回 問10</td><td>標準作業・作業標準と作業管理</td></tr>
+          <tr><td class="mono">第35回 問14</td><td>社内標準化のPDCAと社外標準</td></tr>
+          <tr><td class="mono">第35回 問15</td><td>人材育成の教育体系(階層別・分野別・自己啓発)</td></tr>
+          <tr><td class="mono">第36回 問10</td><td>サービスの品質・顧客志向・顧客満足・顧客ロイヤリティ(標準化に一部言及)</td></tr>
+          <tr><td class="mono">第36回 問14</td><td>標準化の効果と役割</td></tr>
+          <tr><td class="mono">第36回 問15</td><td>QCサークル活動の基本理念と導入期・展開期・定着期の推進</td></tr>
+          <tr><td class="mono">第37回 問14</td><td>教育・訓練(OJT・OFF-JT・QCサークル勉強会・力量)</td></tr>
+          <tr><td class="mono">第38回 問14</td><td>社内標準化の目的と効果、社内標準の分類</td></tr>
+          <tr><td class="mono">第38回 問15</td><td>小集団活動(QCサークル活動)の運営と進め方</td></tr>
+          <tr><td class="mono">第39回 問13</td><td>社内標準化の推進と運用</td></tr>
+          <tr><td class="mono">第39回 問14</td><td>OJT/OFF-JT・階層別/職能別教育・ダイバーシティ</td></tr>
+          <tr><td class="mono">第40回 問14</td><td>顧客要求への対応と内部監査(標準書に一部言及)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 分野別まとめ「標準化・小集団活動・人材育成」</span>
+    <span>元資料12件 / 実践編まとめ 5/7</span>
+  </footer>
+
+</div>

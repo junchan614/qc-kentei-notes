@@ -1,0 +1,472 @@
+<title>品質保証まとめ</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+  --shadow-lift: 0 2px 4px rgba(22,35,42,0.08), 0 14px 32px -14px rgba(22,35,42,0.22);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:900px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:52px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+p{margin:0;color:var(--ink-soft);}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+a:focus-visible{outline:2px solid var(--reg);outline-offset:3px;border-radius:4px;}
+
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:26px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4.2vw,40px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+.meta-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:4px;}
+.meta{display:flex;flex-direction:column;gap:2px;}
+.meta .v{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--ink);line-height:1.2;}
+.meta .k{font-size:11.5px;color:var(--ink-faint);letter-spacing:0.04em;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:56px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:middle;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .mono{font-family:'JetBrains Mono',monospace;}
+
+.heat-table th.rc,.heat-table td.rc{text-align:center;width:44px;}
+.heat-table td.rc.hit{background:var(--reg-soft);}
+.heat-table td.rc.hit span{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--reg);}
+.heat-table td.rc.miss span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--border-strong);opacity:0.6;}
+.heat-table td.topic{font-size:13.5px;}
+.heat-table td.cnt{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--reg-ink);text-align:center;}
+
+.callout{background:var(--reg-soft);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+.callout.warn b{color:var(--wrong);}
+
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;}
+.panel{border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);background:var(--surface);overflow:hidden;display:flex;flex-direction:column;}
+.panel .ph{padding:14px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:0.06em;font-weight:700;display:flex;align-items:center;gap:8px;}
+.panel.memo .ph{background:var(--res-soft);color:var(--res-ink);border-bottom:1px solid var(--res);}
+.panel.under .ph{background:var(--reg-soft);color:var(--reg-ink);border-bottom:1px solid var(--reg);}
+.panel ul{margin:0;padding:16px 20px 18px 34px;display:flex;flex-direction:column;gap:10px;}
+.panel li{font-size:14.5px;color:var(--ink-soft);}
+.panel li b{color:var(--ink);}
+.panel li .mono{font-family:'JetBrains Mono',monospace;font-size:13.5px;}
+
+.trap-table td.tag{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--wrong);font-weight:700;white-space:nowrap;}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
+.card{
+  display:flex;flex-direction:column;gap:10px;
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:18px 20px;box-shadow:var(--shadow);
+  text-decoration:none;color:inherit;
+  transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+}
+.card:hover{box-shadow:var(--shadow-lift);border-color:var(--border-strong);transform:translateY(-2px);}
+@media (prefers-reduced-motion: reduce){.card{transition:none;} .card:hover{transform:none;}}
+.card .chips{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.04em;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--ink-faint);border:1px solid var(--border);}
+.chip.src{background:var(--reg-soft);color:var(--reg-ink);border-color:var(--reg);}
+.card h4{font-family:'Zen Old Mincho',serif;font-size:17px;font-weight:600;margin:0;color:var(--ink);line-height:1.5;}
+.card .desc{font-size:13.5px;color:var(--ink-soft);line-height:1.7;}
+.card .go{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--reg-ink);font-weight:600;margin-top:2px;}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+
+.quiz{display:flex;flex-direction:column;gap:12px;}
+.quiz details{background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:14px 18px;}
+.quiz details[open]{border-color:var(--border-strong);}
+.quiz summary{cursor:pointer;font-size:14.5px;color:var(--ink);display:flex;gap:10px;align-items:baseline;list-style:none;}
+.quiz summary::-webkit-details-marker{display:none;}
+.quiz summary .qn{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--reg-ink);font-weight:700;flex:none;}
+.quiz summary .qtag{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-faint);border:1px solid var(--border);border-radius:999px;padding:1px 8px;flex:none;}
+.quiz .qopts{margin:10px 0 0;padding-left:1.4em;font-size:14px;color:var(--ink-soft);display:flex;flex-direction:column;gap:4px;}
+.quiz .qans{margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);font-size:14px;color:var(--ink-soft);}
+.quiz .qans b{color:var(--reg-ink);}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 実践編 ／ 分野別まとめ 3/7</span>
+    <h1>品質保証 — 新製品開発とプロセス保証</h1>
+    <p class="lede">品質保証は、できあがった製品を検査して不良を取り除く「結果の保証」から、工程そのものを作り込んで最初から不良を出さない「プロセスによる保証」へと重心を移してきた。新製品開発は企画・設計段階で問題を未然に防ぐ活動、プロセス保証は量産段階で決めた通りに作り続ける活動であり、この2つは品質保証体系図の中で時系列に並ぶひとつながりの活動として描かれる。過去問そのものは掲載していません。お手元の過去問題集と合わせて読む前提です。</p>
+    <div class="meta-row">
+      <div class="meta"><span class="v">11</span><span class="k">元資料(大問)</span></div>
+      <div class="meta"><span class="v">6/6</span><span class="k">出題を確認できた回</span></div>
+      <div class="meta"><span class="v">22</span><span class="k">論点の出現回数(延べ)</span></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">地図</span><h2>企画から廃棄まで — どこまでが新製品開発で、どこからがプロセス保証か</h2></div>
+    <p>新製品開発は「企画→設計・開発→量産準備」を受け持ち、専門家が集まって設計上の問題を事前につぶすデザインレビュー(DR)や、FMEA・FTAといった未然防止の手法を使う。プロセス保証は「量産準備→量産・工程管理→市場→回収」を受け持ち、決めた手順(作業標準書・QC工程図)通りに作り、検査で確認する。量産準備段階の初期流動管理は、両者の橋渡しにあたる。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 760 250" role="img" aria-label="企画・設計開発・量産準備を新製品開発が受け持ち、量産準備から量産・市場・回収までをプロセス保証が受け持つ流れを示す図。市場で得た品質情報が設計・開発へフィードバックされる矢印も示す。">
+          <defs>
+            <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="currentColor" opacity="0.55"/>
+            </marker>
+            <marker id="arrowhead-wrong" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="var(--wrong)"/>
+            </marker>
+          </defs>
+
+          <!-- upper bracket: 新製品開発 -->
+          <path d="M12,86 L12,76 L372,76 L372,86" fill="none" stroke="var(--reg)" stroke-width="1.4"/>
+          <text x="192" y="64" font-size="12" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">新製品開発が受け持つ範囲</text>
+
+          <!-- lower bracket: プロセス保証 -->
+          <path d="M262,168 L262,178 L748,178 L748,168" fill="none" stroke="var(--res)" stroke-width="1.4"/>
+          <text x="505" y="196" font-size="12" text-anchor="middle" fill="var(--res-ink)" font-weight="700">プロセス保証が受け持つ範囲</text>
+
+          <!-- boxes -->
+          <g font-size="12.5">
+            <rect x="12" y="95" width="110" height="54" rx="8" fill="var(--surface)" stroke="var(--border-strong)"/>
+            <text x="67" y="117" text-anchor="middle" fill="var(--ink)">企画</text>
+            <text x="67" y="134" text-anchor="middle" fill="var(--ink-soft)" font-size="10.5">潜在ニーズ把握</text>
+
+            <rect x="137" y="95" width="120" height="54" rx="8" fill="var(--surface)" stroke="var(--border-strong)"/>
+            <text x="197" y="117" text-anchor="middle" fill="var(--ink)">設計・開発</text>
+            <text x="197" y="134" text-anchor="middle" fill="var(--ink-soft)" font-size="10.5">DR・FMEA・FTA</text>
+
+            <rect x="272" y="95" width="110" height="54" rx="8" fill="var(--surface)" stroke="var(--border-strong)"/>
+            <text x="327" y="117" text-anchor="middle" fill="var(--ink)">量産準備</text>
+            <text x="327" y="134" text-anchor="middle" fill="var(--ink-soft)" font-size="10.5">初期流動管理</text>
+
+            <rect x="397" y="95" width="130" height="54" rx="8" fill="var(--surface)" stroke="var(--border-strong)"/>
+            <text x="462" y="117" text-anchor="middle" fill="var(--ink)">量産・工程管理</text>
+            <text x="462" y="134" text-anchor="middle" fill="var(--ink-soft)" font-size="10.5">QC工程図・検査</text>
+
+            <rect x="542" y="95" width="115" height="54" rx="8" fill="var(--surface)" stroke="var(--border-strong)"/>
+            <text x="599" y="117" text-anchor="middle" fill="var(--ink)">市場・使用</text>
+            <text x="599" y="134" text-anchor="middle" fill="var(--ink-soft)" font-size="10.5">製品安全・PL</text>
+
+            <rect x="672" y="95" width="76" height="54" rx="8" fill="var(--surface)" stroke="var(--border-strong)"/>
+            <text x="710" y="117" text-anchor="middle" fill="var(--ink)">回収・</text>
+            <text x="710" y="130" text-anchor="middle" fill="var(--ink)">廃棄</text>
+            <text x="710" y="143" text-anchor="middle" fill="var(--ink-soft)" font-size="9.5">環境配慮</text>
+          </g>
+
+          <!-- arrows between boxes -->
+          <g stroke="currentColor" stroke-width="1.3" opacity="0.55">
+            <line x1="122" y1="122" x2="135" y2="122" marker-end="url(#arrowhead)"/>
+            <line x1="257" y1="122" x2="270" y2="122" marker-end="url(#arrowhead)"/>
+            <line x1="382" y1="122" x2="395" y2="122" marker-end="url(#arrowhead)"/>
+            <line x1="527" y1="122" x2="540" y2="122" marker-end="url(#arrowhead)"/>
+            <line x1="657" y1="122" x2="670" y2="122" marker-end="url(#arrowhead)"/>
+          </g>
+
+          <!-- feedback loop -->
+          <path d="M599,149 C 640,215 240,215 197,149" fill="none" stroke="var(--wrong)" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#arrowhead-wrong)"/>
+          <text x="418" y="230" text-anchor="middle" font-size="11.5" fill="var(--wrong)">市場・工程で得た品質情報のフィードバック(設計・開発へ)</text>
+        </svg>
+      </div>
+      <figcaption><b>橋渡し役の量産準備:</b> 量産開始直後だけ通常と異なる特別体制で品質情報を密に集める初期流動管理は、新製品開発の最後の活動でありプロセス保証の最初の活動でもある。品質保証体系図は、この一連の流れを「段階(時系列)を縦軸、部門を横軸」にとって俯瞰できるようにした図。</figcaption>
+    </figure>
+
+    <div class="split">
+      <div class="panel memo">
+        <div class="ph">結果の保証</div>
+        <ul>
+          <li>できあがった製品を<b>検査</b>して、不適合品を後工程・顧客に渡さないようにする考え方。</li>
+          <li>工程の作り込みが不十分なほど、検査に頼る割合が増え、コストと手間がかさむ。</li>
+        </ul>
+      </div>
+      <div class="panel under">
+        <div class="ph">プロセスによる保証</div>
+        <ul>
+          <li>決めた手順(作業標準書・QC工程図)通りに作れば、良品しかできない状態を工程側で作り込む考え方。</li>
+          <li>新製品開発段階のデザインレビューやFMEA・FTAは、量産に入る前にこの「作り込み」を仕上げる活動にあたる。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">傾向</span><h2>出題傾向 — 論点 × 出題回</h2></div>
+    <p>この分野は第35〜40回のすべてで、実践編の大問として毎回出題されている。1つの大問の中で新製品開発とプロセス保証の用語が混在することも多く、どちらの話をしているかを文脈から見分ける力が必要になる。</p>
+
+    <div class="table-wrap">
+      <table class="heat-table">
+        <caption>論点別の出題確認状況(第35〜40回)</caption>
+        <thead>
+          <tr>
+            <th>論点</th>
+            <th class="rc">35</th><th class="rc">36</th><th class="rc">37</th>
+            <th class="rc">38</th><th class="rc">39</th><th class="rc">40</th>
+            <th class="rc">回数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="topic">潜在ニーズ把握・デザインレビュー(DR)と関係部署の参画</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">3</td></tr>
+          <tr><td class="topic">初期流動管理(量産立上げの特別体制)</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td></tr>
+          <tr><td class="topic">製品安全と意図しない使用への配慮</td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td></tr>
+          <tr><td class="topic">信頼性設計と経年変化</td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td></tr>
+          <tr><td class="topic">製造物責任(PL)と欠陥の3種類・予防活動</td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">2</td></tr>
+          <tr><td class="topic">FMEA・FTAによる未然防止</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">2</td></tr>
+          <tr><td class="topic">品質保証体系図(段階×部門・起点から俯瞰まで)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">2</td></tr>
+          <tr><td class="topic">プロセス(工程)の考え方と部門分担・異常検出</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">2</td></tr>
+          <tr><td class="topic">QC工程図と工程図記号(管理項目・管理方法)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">2</td></tr>
+          <tr><td class="topic">検査の定義と分類(特性値・基準・官能・全数・抜取)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td></tr>
+          <tr><td class="topic">検査基準の運用と品質情報のフィードバック</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">2</td></tr>
+          <tr><td class="topic">工程解析と作業標準書</td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td></tr>
+          <tr><td class="topic">環境配慮設計と製品ライフサイクル(3R・LCA)</td>
+            <td class="rc hit"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">2</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><b>よく出る順トップ3:</b> ①QC工程図とその記載内容(第39・40回で計8空欄と特に厚い) ②品質保証体系図(第38・40回で計7空欄、起点から俯瞰まで一気に問われる) ③潜在ニーズ把握・デザインレビュー関連(第35・37・38回の3回にわたって形を変えて出題)。</p>
+    <div class="callout"><b>出方のクセ:</b> 単純な語群穴埋めより、経営者と部長の座談会・現場の会話・提案書といった<b>会話形式・場面設定形式</b>で出ることが多い。第38回問8や第39回問10のように、選択肢自体が単語ではなく<b>文章まるごと</b>用意されているパターンもあり、語句だけでなく前後の文脈を読んで一番自然な文をつなげる力が必要。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">対比</span><h2>紛らわしい用語の対比</h2></div>
+    <p>過去問の選択肢群では、似た響き・似た場面の言葉がわざと並べられる。正解と一緒に置かれていた紛らわしい語を中心にまとめる。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>紛らわしい用語の対比</caption>
+        <thead><tr><th>用語</th><th>ひとことで</th><th>見分けるキーワード</th><th>取り違えやすい相手</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">デザインレビュー(DR)</td><td>開発の節目ごとに専門家が集まり設計上の問題を未然防止する会議体</td><td>開発段階ごと・関係職能が参画・事前予測</td><td>初期流動管理</td></tr>
+          <tr><td class="mono">初期流動管理</td><td>量産立上げ直後だけ特別体制で品質情報を密に集める活動</td><td>量産立上げ段階・特別な体制・期間限定</td><td>デザインレビュー</td></tr>
+          <tr><td class="mono">潜在ニーズ</td><td>顧客自身もまだ言葉にできていない欲求</td><td>意識されていない・製品を見て初めて気づく</td><td>顕在ニーズ</td></tr>
+          <tr><td class="mono">コンカレントエンジニアリング</td><td>複数部門が直列ではなく同時並行で開発を進める方式</td><td>同時並行・情報共有・期間短縮</td><td>従来の順番に部門を回す進め方</td></tr>
+          <tr><td class="mono">製造物責任(PL)</td><td>製品の欠陥が原因の損害について製造業者らが負う賠償責任</td><td>欠陥が原因・無過失責任</td><td>製造物責任予防</td></tr>
+          <tr><td class="mono">製造物責任予防(PLP)</td><td>欠陥による事故を未然に防ぎ、訴訟時の損害を最小化する事前活動</td><td>未然に防止・事前に講じる</td><td>製造物責任そのもの</td></tr>
+          <tr><td class="mono">欠陥の3分類</td><td>設計上・製造上・警告表示上の3種類でとらえる</td><td>設計/製造/警告表示(取扱説明)</td><td>FMEAの評価3要素</td></tr>
+          <tr><td class="mono">FMEA</td><td>個々の故障モードを洗い出し影響を評価するボトムアップ型手法</td><td>故障モードごと・重大性×発生頻度×検知難易度</td><td>FTA</td></tr>
+          <tr><td class="mono">FTA</td><td>望ましくない事象から原因を樹形図でさかのぼるトップダウン型手法</td><td>事象から原因へ・樹形図</td><td>FMEA</td></tr>
+          <tr><td class="mono">品質機能展開(QFD)</td><td>顧客の要求品質を技術的な品質特性に変換して設計に反映する手法</td><td>要求品質→品質特性への変換</td><td>品質保証体系図(下欄・未出題)</td></tr>
+          <tr><td class="mono">品質保証体系図</td><td>時系列の段階を縦軸、部門を横軸にとり活動と情報の流れを示す図</td><td>段階×部門・時系列的・俯瞰</td><td>QC工程図</td></tr>
+          <tr><td class="mono">QC工程図</td><td>個別の製造工程ごとに管理項目・管理方法を工程図記号で示した文書</td><td>工程ごと・管理項目と管理方法・工程図記号</td><td>作業標準書、品質保証体系図</td></tr>
+          <tr><td class="mono">作業標準書</td><td>個々の作業者が従う具体的な作業手順を定めた文書</td><td>作業者向け・手順そのもの</td><td>QC工程図</td></tr>
+          <tr><td class="mono">全数検査</td><td>ロットのすべての製品を検査する方式</td><td>工程能力が不十分・見逃すと重大な結果</td><td>抜取検査</td></tr>
+          <tr><td class="mono">抜取検査</td><td>ロットからサンプルを取り合否を判定する方式</td><td>ある程度の不適合品混入を許容できる場合</td><td>無試験検査</td></tr>
+          <tr><td class="mono">官能検査</td><td>人間の感覚を測定器代わりに使って品質を判定する検査</td><td>視覚・聴覚・味覚・嗅覚をセンサーとして使う</td><td>感性品質(未出題)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn"><b>製造物責任の「立証」の向き:</b> 過去問(第35回)の基準解答は「製造物責任は無過失責任であり、立証が求められるのは製造業者らの側」という文脈で「製造業者ら」を正解としている。<b>試験対策としてはこの通り覚える。</b>一般的な法律の整理では、無過失責任によって不要になるのは製造業者側の過失の立証であり、欠陥・損害・因果関係そのものの立証は被害者側が行う、と説明されることが多い。両方を知っておくと、言い回しが変わっても対応しやすい。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">未出題</span><h2>過去6回に出ていない範囲</h2></div>
+    <p>出題範囲表の2級レベルのうち、過去6回のこの分野の空欄では問われていない項目。次の回に出てもおかしくない範囲として押さえておく。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>未出題の小項目</caption>
+        <thead><tr><th>項目</th><th>要点</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">保証と補償の違い</td><td>「保証」は品質そのものを約束すること、「補償」は損害が出た後の金銭的な埋め合わせを指す。似た読みだが意味は別。</td></tr>
+          <tr><td class="mono">品質機能展開(QFD)</td><td>顧客の要求品質を技術的な品質特性に変換して設計へ落とし込む手法。過去問では正解にはならず、選択肢の中の紛らわしい語として置かれたのみ。</td></tr>
+          <tr><td class="mono">保証の網(QAネットワーク)</td><td>品質保証体系図をさらに細かくし、各段階・各部門の保証項目を漏れなく網羅する考え方。これも選択肢止まりで、正解としては出ていない。</td></tr>
+          <tr><td class="mono">市場トラブル対応・苦情とその処理</td><td>顧客からの苦情を受け付け、原因を調べ、再発防止につなげる一連の流れ。個別の言葉(測定器の精度など)は出たが、流れ全体としてはまだ問われていない。</td></tr>
+          <tr><td class="mono">変更管理・変化点管理</td><td>工程の条件・材料・設備・作業者などが変わるとき、変化点を明示して異常の発生を早期に見つける考え方。管理図・工程管理分野と合わせて出やすい。</td></tr>
+          <tr><td class="mono">計測の基本・測定誤差の評価</td><td>測定機器の精度や測定方法そのものの妥当性を扱う範囲。第38回で「正しい測定機器や測定方法を選定する」という形でかすった程度で、定義としてはまだ問われていない。</td></tr>
+          <tr><td class="mono">感性品質</td><td>人の感覚に訴える、数値化しにくい品質特性。官能検査(判定の手段)とセットで問われる可能性がある。</td></tr>
+          <tr><td class="mono">工程異常の発見と処置の手順</td><td>異常を検出したあと、どういう順番で処置するかという手順そのもの。「異常検出力の向上」という言葉は出たが、発見後の処置手順は未出題。</td></tr>
+          <tr><td class="mono">工程能力調査</td><td>工程が安定して規格内に収まる力を持っているかどうかを調べる活動。似た言葉の「工程解析(条件と特性の関係を調べる)」は出題済みだが、こちらは未出題。</td></tr>
+          <tr><td class="mono">フローチャート</td><td>作業や判断の流れを記号でつなげた図。QC工程図と並んで出題範囲に挙がっているが、単独では問われていない。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">確認</span><h2>確認問題</h2></div>
+    <p>過去問の文そのままではない、新しい角度からの確認問題。開くと正解と理由が出る。</p>
+
+    <div class="quiz">
+      <details>
+        <summary><span class="qn">Q1</span><span class="qtag">逆引き</span>次の説明に当てはまる用語を選べ。「量産立上げの直後だけ、通常の量産安定期とは異なる特別な体制で品質情報を密に集め、量産前の品質保証ステップを着実に実施する活動」</summary>
+        <div class="qopts">ア. デザインレビュー　イ. 初期流動管理　ウ. QC工程図　エ. 品質保証体系図</div>
+        <div class="qans"><b>正解: イ</b> 初期流動管理。デザインレビューは開発設計段階の活動であり、量産立上げ後の活動ではない点で区別する。</div>
+      </details>
+
+      <details>
+        <summary><span class="qn">Q2</span><span class="qtag">逆引き</span>顧客自身もまだ自覚していない欲求のことを何というか。</summary>
+        <div class="qopts">ア. 潜在ニーズ　イ. 顕在ニーズ　ウ. 要求品質　エ. 当たり前品質</div>
+        <div class="qans"><b>正解: ア</b> 潜在ニーズ。アンケートなどの調査には出てこないが、実際に製品を目にして初めて「これが欲しかった」と気づかれる欲求を指す。</div>
+      </details>
+
+      <details>
+        <summary><span class="qn">Q3</span><span class="qtag">正誤</span>次の文の正誤を判定せよ。「製造物責任(PL)は過失責任であり、被害者は製造業者の不注意(過失)を立証しなければならない」</summary>
+        <div class="qopts">ア. 正しい　イ. 誤り(どこが誤りか答えよ)</div>
+        <div class="qans"><b>正解: イ(誤り)</b> 製造物責任は<b>無過失責任</b>である。過去問(第35回)の基準解答では、この無過失責任の説明に続けて「立証が求められるのは製造業者らの側」としており、試験対策としてはその通り覚える。一般的な法律の整理では、無過失責任によって不要になるのは製造業者側の過失の立証であり、欠陥・損害・因果関係そのものの立証は被害者側が行うとされる。</div>
+      </details>
+
+      <details>
+        <summary><span class="qn">Q4</span><span class="qtag">場面適用</span>新製品の量産を開始した直後、通常の量産に比べて特に品質情報を密に集めて素早く設計・製造側にフィードバックする体制を敷きたい。これは新製品開発のどの活動にあたるか。</summary>
+        <div class="qopts">ア. デザインレビュー　イ. 初期流動管理　ウ. コンカレントエンジニアリング　エ. FTA</div>
+        <div class="qans"><b>正解: イ</b> 初期流動管理。量産安定期とは異なる特別な体制を、立上げ直後の一定期間だけ敷く活動。</div>
+      </details>
+
+      <details>
+        <summary><span class="qn">Q5</span><span class="qtag">場面適用</span>工場の課長が、QC工程図に記載されている管理項目の中に「労働災害の調査」という項目案を見つけて違和感を覚えた。適切な指摘はどれか。</summary>
+        <div class="qopts">ア. QC工程図の管理対象として自然なので、そのまま残す　イ. QC工程図の管理対象から離れ過ぎているので、見直す　ウ. 労働災害は最重要なので、他の項目より優先して残す</div>
+        <div class="qans"><b>正解: イ</b> QC工程図は製品・工程の品質にかかわる管理項目を扱う文書であり、労働災害の調査はその対象から外れる。安全管理は別の資料・活動で扱う。</div>
+      </details>
+
+      <details>
+        <summary><span class="qn">Q6</span><span class="qtag">逆引き</span>工程ごとに管理項目と管理方法を工程図記号で示した文書を何というか。</summary>
+        <div class="qopts">ア. 作業標準書　イ. QC工程図　ウ. 品質保証体系図　エ. フローチャート</div>
+        <div class="qans"><b>正解: イ</b> QC工程図。個々の作業者向けの手順を示す作業標準書、全社・全段階を俯瞰する品質保証体系図とは対象の広さが違う。</div>
+      </details>
+
+      <details>
+        <summary><span class="qn">Q7</span><span class="qtag">逆引き</span>工程図記号のうち、円の中にひし形を重ねた「複合記号」が示す工程の意味はどれか。</summary>
+        <div class="qopts">ア. 加工だけを行う工程　イ. 検査だけを行う工程　ウ. 加工と検査を同時に行う工程　エ. 何もしない待ち時間</div>
+        <div class="qans"><b>正解: ウ</b> 加工と検査を同時に行う工程を示す。加工(丸)と検査(ひし形)、それぞれの記号を組み合わせたもの。</div>
+      </details>
+
+      <details>
+        <summary><span class="qn">Q8</span><span class="qtag">正誤</span>次の文の正誤を判定せよ。「抜取検査は全数検査より常に検査コストが安いので、工程能力にかかわらず優先して採用すべきである」</summary>
+        <div class="qopts">ア. 正しい　イ. 誤り(どこが誤りか答えよ)</div>
+        <div class="qans"><b>正解: イ(誤り)</b> 工程の実力が要求される品質水準に届かず不適合品率が高くなりがちな場合や、ごくわずかな不良の混入でも致命的な事故につながりかねない場合は、コストにかかわらず全数検査を選ぶ必要がある。抜取検査は、ある程度の不適合品混入が許容できる場合に使うものであり、常に優先されるわけではない。</div>
+      </details>
+
+      <details>
+        <summary><span class="qn">Q9</span><span class="qtag">場面適用</span>新製品開発の設計審査(デザインレビュー)に、営業部門の担当者を参加させるべきかどうかで意見が割れている。適切な考え方はどれか。</summary>
+        <div class="qopts">ア. 営業は技術がわからないので参加させるべきでない　イ. 営業は市場のニーズを最もよく知る立場であり、開発の早い段階から参加させるべきである　ウ. 営業は量産開始後にだけ関わればよい</div>
+        <div class="qans"><b>正解: イ</b> 市場のニーズを肌で感じている営業部門が、新製品開発の早い段階でニーズを関係者にインプットしておくことが、後工程での手戻りを防ぐ。</div>
+      </details>
+
+      <details>
+        <summary><span class="qn">Q10</span><span class="qtag">回またぎ比較</span>FMEAとFTAの違いを最もよく表しているものはどれか。</summary>
+        <div class="qopts">ア. 両方ともトップダウン型の解析手法である　イ. FMEAはボトムアップ型、FTAはトップダウン型である　ウ. FMEAはトップダウン型、FTAはボトムアップ型である　エ. 両方ともボトムアップ型の解析手法である</div>
+        <div class="qans"><b>正解: イ</b> FMEAは個々の故障モードを積み上げて影響を評価するボトムアップ型、FTAは望ましくない事象から原因をさかのぼるトップダウン型。第37回はFMEAの評価要素(重大性・発生頻度・検知難易度)、第38回はFMEAとFTAの併用がそれぞれ問われている。</div>
+      </details>
+
+      <details>
+        <summary><span class="qn">Q11</span><span class="qtag">回またぎ比較</span>品質保証体系図(第38回・第40回で出題)とQC工程図(第39回・第40回で出題)は、対象とする範囲の広さの点でどう違うか。</summary>
+        <div class="qopts">ア. 品質保証体系図は1つの工程内の管理項目、QC工程図は全社の段階を示す図である　イ. 品質保証体系図は時系列の段階×部門を俯瞰する全社的な図、QC工程図は個別の製造工程ごとの管理項目を示す図である　ウ. 両者はまったく同じ範囲を対象にした、呼び方だけ違う図である</div>
+        <div class="qans"><b>正解: イ</b> 品質保証体系図は「段階を縦軸、部門を横軸」にとって組織全体を俯瞰する図、QC工程図はそのうちの1つの製造工程を取り出して管理項目・管理方法を示す図。範囲の広さが違う。</div>
+      </details>
+
+      <details>
+        <summary><span class="qn">Q12</span><span class="qtag">正誤</span>次の文の正誤を判定せよ。「製造物責任(PL)における欠陥は、設計上の欠陥と製造上の欠陥の2種類に分類される」</summary>
+        <div class="qopts">ア. 正しい　イ. 誤り(どこが誤りか答えよ)</div>
+        <div class="qans"><b>正解: イ(誤り)</b> 欠陥は一般に「設計上」「製造上」「警告表示上」の3種類に分類される。取扱説明や注意表示が不十分なために生じる欠陥(警告表示上の欠陥)が抜けている。</div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">出典</span><h2>この分野が出た回と大問</h2></div>
+    <div class="table-wrap">
+      <table>
+        <caption>出題回一覧(第35〜40回)</caption>
+        <thead><tr><th>回</th><th>問</th><th>テーマ</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">第35回</td><td class="mono">問12</td><td>新製品開発における品質保証(デザインレビュー・初期流動管理・製品ライフサイクル)</td></tr>
+          <tr><td class="mono">第36回</td><td class="mono">問11</td><td>新製品開発における品質保証(製品安全・信頼性設計・製造物責任予防・環境配慮設計)</td></tr>
+          <tr><td class="mono">第36回</td><td class="mono">問14</td><td>標準化の効果と役割(工程解析を含む)</td></tr>
+          <tr><td class="mono">第37回</td><td class="mono">問9</td><td>検査の役割と種類(計測検査・官能検査・全数検査・抜取検査)</td></tr>
+          <tr><td class="mono">第37回</td><td class="mono">問10</td><td>新製品開発(潜在ニーズ・設計審査・コンカレントエンジニアリング・製造物責任・FMEA)</td></tr>
+          <tr><td class="mono">第38回</td><td class="mono">問8</td><td>品質保証体系と生産段階の検査</td></tr>
+          <tr><td class="mono">第38回</td><td class="mono">問9</td><td>顧客満足と再発防止(経営者・部長の意見)</td></tr>
+          <tr><td class="mono">第38回</td><td class="mono">問12</td><td>新製品開発における未然防止(潜在ニーズ・ボトルネック技術・FMEA/FTA)</td></tr>
+          <tr><td class="mono">第39回</td><td class="mono">問10</td><td>QC工程図の活用と記載内容</td></tr>
+          <tr><td class="mono">第40回</td><td class="mono">問9</td><td>品質保証体系図とプロセス保証</td></tr>
+          <tr><td class="mono">第40回</td><td class="mono">問11</td><td>プロセス保証(工程図記号・QC工程図・工程能力指数)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 分野別まとめ「品質保証 — 新製品開発とプロセス保証」</span>
+    <span>元資料11件 / 実践編まとめ 3/7</span>
+  </footer>
+
+</div>

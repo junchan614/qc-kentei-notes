@@ -1,0 +1,478 @@
+<title>新QC七つ道具・抜取検査・信頼性工学</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+  --shadow-lift: 0 2px 4px rgba(22,35,42,0.08), 0 14px 32px -14px rgba(22,35,42,0.22);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:900px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:52px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+p{margin:0;color:var(--ink-soft);}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+a:focus-visible{outline:2px solid var(--reg);outline-offset:3px;border-radius:4px;}
+
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:26px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4.2vw,40px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+.meta-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:4px;}
+.meta{display:flex;flex-direction:column;gap:2px;}
+.meta .v{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--ink);line-height:1.2;}
+.meta .k{font-size:11.5px;color:var(--ink-faint);letter-spacing:0.04em;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:56px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:middle;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .mono{font-family:'JetBrains Mono',monospace;}
+
+.heat-table th.rc,.heat-table td.rc{text-align:center;width:44px;}
+.heat-table td.rc.hit{background:var(--reg-soft);}
+.heat-table td.rc.hit span{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--reg);}
+.heat-table td.rc.miss span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--border-strong);opacity:0.6;}
+.heat-table td.topic{font-size:13.5px;}
+.heat-table td.cnt{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--reg-ink);text-align:center;}
+
+.callout{background:var(--reg-soft);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+.callout.warn b{color:var(--wrong);}
+
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;}
+.panel{border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);background:var(--surface);overflow:hidden;display:flex;flex-direction:column;}
+.panel .ph{padding:14px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:0.06em;font-weight:700;display:flex;align-items:center;gap:8px;}
+.panel.memo .ph{background:var(--res-soft);color:var(--res-ink);border-bottom:1px solid var(--res);}
+.panel.under .ph{background:var(--reg-soft);color:var(--reg-ink);border-bottom:1px solid var(--reg);}
+.panel ul{margin:0;padding:16px 20px 18px 34px;display:flex;flex-direction:column;gap:10px;}
+.panel li{font-size:14.5px;color:var(--ink-soft);}
+.panel li b{color:var(--ink);}
+.panel li .mono{font-family:'JetBrains Mono',monospace;font-size:13.5px;}
+
+.trap-table td.tag{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--wrong);font-weight:700;white-space:nowrap;}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
+.card{
+  display:flex;flex-direction:column;gap:10px;
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:18px 20px;box-shadow:var(--shadow);
+  text-decoration:none;color:inherit;
+  transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+}
+.card:hover{box-shadow:var(--shadow-lift);border-color:var(--border-strong);transform:translateY(-2px);}
+@media (prefers-reduced-motion: reduce){.card{transition:none;} .card:hover{transform:none;}}
+.card .chips{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.04em;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--ink-faint);border:1px solid var(--border);}
+.chip.src{background:var(--reg-soft);color:var(--reg-ink);border-color:var(--reg);}
+.card h4{font-family:'Zen Old Mincho',serif;font-size:17px;font-weight:600;margin:0;color:var(--ink);line-height:1.5;}
+.card .desc{font-size:13.5px;color:var(--ink-soft);line-height:1.7;}
+.card .go{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--reg-ink);font-weight:600;margin-top:2px;}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+
+.disclaimer{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.quiz-list{display:flex;flex-direction:column;gap:14px;}
+.quiz-item{display:flex;flex-direction:column;gap:10px;padding:16px 18px;border:1px solid var(--border);border-radius:12px;background:var(--surface);box-shadow:var(--shadow);}
+.quiz-item .q-body{color:var(--ink);font-size:15px;}
+.quiz-item .q-body b{color:var(--ink);}
+details{margin-top:2px;}
+details summary{cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--reg-ink);font-weight:600;list-style:none;}
+details summary::-webkit-details-marker{display:none;}
+details summary::before{content:'▸ ';}
+details[open] summary::before{content:'▾ ';}
+details .ans{margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);color:var(--ink-soft);font-size:14px;}
+details .ans b{color:var(--reg-ink);}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 手法編・知識問題 ／ 分野別まとめ 7/7</span>
+    <h1>新QC七つ道具・抜取検査・信頼性工学</h1>
+    <p class="lede">この3分野は性格の違う道具の寄せ集めに見えるが、根っこは同じ発想でつながっている。新QC七つ道具は主に問題解決や方針管理の場面で<b>言語データを整理する</b>ための道具、抜取検査と信頼性工学はどちらも<b>許容できるリスク(危険率)を決めて統計的に線を引く</b>道具である。違うのは判定の対象で、抜取検査は「今このロットを受け入れるか」という一時点の判定、信頼性工学は「時間の経過とともにどれだけ壊れずに使えるか」という時間軸の判定になる。手法編の中でも計算より用語・対応関係の知識を問われることが多い分野。</p>
+    <p class="disclaimer">過去問そのものは掲載していません。お手元の過去問題集と合わせて読む前提です。</p>
+    <div class="meta-row">
+      <div class="meta"><span class="v">13</span><span class="k">元資料(大問)</span></div>
+      <div class="meta"><span class="v">5/6</span><span class="k">出題を確認できた回</span></div>
+      <div class="meta"><span class="v">37</span><span class="k">論点の出現回数(延べ)</span></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">地図</span><h2>3つの分野はどうつながっているか</h2></div>
+    <p>新QC七つ道具は、まだ数値になっていない「言葉」を整理して問題の構造を見えるようにする道具。多くの教材では、混沌とした状況を把握する段階から実行計画を立てる段階まで、次のような順で使われることが多い(厳密な決まりではなく、覚えるための目安)。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 870 170" role="img" aria-label="新QC七つ道具の典型的な使用順を示す図。親和図法から連関図法、系統図法、マトリックス図法、アローダイアグラム法とPDPC法、マトリックス・データ解析法へと矢印でつながっている">
+          <rect x="10" y="50" width="130" height="70" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="75" y="80" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">親和図法</text>
+          <text x="75" y="100" text-anchor="middle" font-size="10.5" fill="var(--ink-faint)">混沌を整理</text>
+
+          <text x="145" y="90" text-anchor="middle" font-size="15" fill="var(--ink-faint)">→</text>
+
+          <rect x="150" y="50" width="130" height="70" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="215" y="80" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">連関図法</text>
+          <text x="215" y="100" text-anchor="middle" font-size="10.5" fill="var(--ink-faint)">原因を絞る</text>
+
+          <text x="285" y="90" text-anchor="middle" font-size="15" fill="var(--ink-faint)">→</text>
+
+          <rect x="290" y="50" width="130" height="70" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="355" y="80" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">系統図法</text>
+          <text x="355" y="100" text-anchor="middle" font-size="10.5" fill="var(--ink-faint)">手段に展開</text>
+
+          <text x="425" y="90" text-anchor="middle" font-size="15" fill="var(--ink-faint)">→</text>
+
+          <rect x="430" y="50" width="130" height="70" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="495" y="80" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">マトリックス図法</text>
+          <text x="495" y="100" text-anchor="middle" font-size="10.5" fill="var(--ink-faint)">要素を照合</text>
+
+          <text x="565" y="90" text-anchor="middle" font-size="15" fill="var(--ink-faint)">→</text>
+
+          <rect x="570" y="50" width="130" height="70" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="635" y="76" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)">アロー・PDPC法</text>
+          <text x="635" y="100" text-anchor="middle" font-size="10.5" fill="var(--ink-faint)">実行計画</text>
+
+          <text x="705" y="90" text-anchor="middle" font-size="15" fill="var(--ink-faint)">→</text>
+
+          <rect x="710" y="50" width="150" height="70" rx="10" fill="var(--reg-soft)" stroke="var(--reg)"/>
+          <text x="785" y="76" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--reg-ink)">マトリックス・</text>
+          <text x="785" y="92" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--reg-ink)">データ解析法</text>
+          <text x="785" y="110" text-anchor="middle" font-size="10" fill="var(--reg-ink)">数値で検証</text>
+        </svg>
+      </div>
+      <figcaption><b>唯一の例外はマトリックス・データ解析法。</b> 新QC七つ道具のうち、これだけが言語データではなく数値データを扱う定量的な手法。他の6つはすべて言語データを図式化する定性的な手法。</figcaption>
+    </figure>
+
+    <div class="split">
+      <div class="panel memo">
+        <div class="ph">◆ 抜取検査 — 一時点の合否判定</div>
+        <ul>
+          <li>判定の対象は<b>ロット</b>(生産された集まり)</li>
+          <li>基準は<b>生産者危険α・消費者危険β</b>という2種類の誤判定確率</li>
+          <li>結果は<b>合格・不合格</b>の二択</li>
+        </ul>
+      </div>
+      <div class="panel under">
+        <div class="ph">◆ 信頼性工学 — 時間軸での壊れ方</div>
+        <ul>
+          <li>判定の対象は<b>個々のアイテム</b>(製品・部品)の時間経過</li>
+          <li>基準は<b>信頼度・MTBF・故障率</b>など時間に紐づく指標</li>
+          <li>結果は<b>まだ壊れていない確率</b>や<b>平均してどれだけ持つか</b></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">傾向</span><h2>出題傾向 — 論点 × 出題回</h2></div>
+    <p>第35〜40回のうち、この3分野に対応する資料が確認できたのは35・37・38・39・40回。第36回はこの3分野(新QC七つ道具・抜取検査・信頼性工学)に対応する資料が見当たらず、実践科目の問題のみが手元にある状態。</p>
+
+    <div class="table-wrap">
+      <table class="heat-table">
+        <caption>論点別の出題確認状況(第35〜40回)</caption>
+        <thead>
+          <tr>
+            <th>論点</th>
+            <th class="rc">35</th><th class="rc">36</th><th class="rc">37</th>
+            <th class="rc">38</th><th class="rc">39</th><th class="rc">40</th>
+            <th class="rc">回数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="topic">親和図法</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">4</td></tr>
+          <tr><td class="topic">連関図法</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">3</td></tr>
+          <tr><td class="topic">系統図法</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">3</td></tr>
+          <tr><td class="topic">マトリックス図法</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">3</td></tr>
+          <tr><td class="topic">アローダイアグラム法</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">3</td></tr>
+          <tr><td class="topic">PDPC法</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">3</td></tr>
+          <tr><td class="topic">マトリックス・データ解析法</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">2</td></tr>
+          <tr><td class="topic">生産者危険・消費者危険とOC曲線</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">2</td></tr>
+          <tr><td class="topic">計数規準型一回抜取検査(JIS Z 9002)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">2</td></tr>
+          <tr><td class="topic">計量規準型一回抜取検査(JIS Z 9003)</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">3</td></tr>
+          <tr><td class="topic">信頼度・保全度・アベイラビリティ</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">2</td></tr>
+          <tr><td class="topic">MTTF・MTBF・MTTRと故障率</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">3</td></tr>
+          <tr><td class="topic">信頼性ブロック図(直列・並列)と故障率曲線</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc hit"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">3</td></tr>
+          <tr><td class="topic">FTA・FMEA</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">1</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><b>よく出る順トップ3:</b> ①親和図法(6回中4回) ②新QC七つ道具の残り基本手法(系統図法・マトリックス図法・アローダイアグラム法・連関図法・PDPC法。いずれも6回中3回でほぼ同率) ③信頼性工学の計算論点(MTTF・MTBF・故障率、信頼性ブロック図もいずれも6回中3回)。</p>
+    <p>出方のクセ: 新QC七つ道具は「手法名を答える穴埋め」(第35・39回)と「目的・関連用語の対応表」(第38回)が交互に出ている。抜取検査は用語(生産者危険・消費者危険)と計算(n・c、n・k)がセットで出る。信頼性工学は用語だけでなく信頼度%・保全度%・アベイラビリティ%・MTBFの数値計算を求められることが多く、公式を覚えていないと解けない。</p>
+
+    <div class="callout warn"><b>資料の抜けの疑い:</b> 第36回にこの3分野に対応する資料が無い。もし該当回の手法科目(多くは問6〜8に配置される)の過去問写真が手元にあれば、追加で確認できる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">対比</span><h2>紛らわしい用語の対比</h2></div>
+    <p>過去問の選択肢群で、正解と並んで誤答として置かれていた語を中心に並べた。</p>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>用語の対比(20項目)</caption>
+        <thead><tr><th>用語</th><th>ひとことで</th><th>見分けるキーワード</th><th>取り違えやすい相手</th></tr></thead>
+        <tbody>
+          <tr><td class="tag">親和図法</td><td>混沌とした言語データを類似性でグループ化し全体像をつかむ</td><td>言語データ・類似性でまとめる</td><td>連関図法</td></tr>
+          <tr><td class="tag">連関図法</td><td>複雑に絡み合った原因と結果の関係を矢線で論理的に展開する</td><td>複雑に絡み合う・矢線でつなぐ</td><td>親和図法・系統図法</td></tr>
+          <tr><td class="tag">系統図法</td><td>目的を達成する手段を1次・2次・3次と多段階に展開する</td><td>目的と手段・多段階に展開</td><td>アローダイアグラム法</td></tr>
+          <tr><td class="tag">マトリックス図法</td><td>行と列に要素を配置し交点で関連の有無・度合いを見る</td><td>行と列・交点</td><td>マトリックス・データ解析法</td></tr>
+          <tr><td class="tag">アローダイアグラム法</td><td>作業の前後関係を矢線で表し日程・進捗を管理する</td><td>作業の前後関係・クリティカルパス</td><td>PDPC法</td></tr>
+          <tr><td class="tag">PDPC法</td><td>事態の進展で起こりうる結果を予測し望ましい方向に導く事前対策</td><td>事態の進展・望ましい方向</td><td>アローダイアグラム法</td></tr>
+          <tr><td class="tag">マトリックス・データ解析法</td><td>新QC七つ道具で唯一、数値データを扱う定量的な手法</td><td>数値データ・唯一の定量手法</td><td>マトリックス図法</td></tr>
+          <tr><td class="tag">生産者危険(α)</td><td>良いロットを誤って不合格にしてしまう確率</td><td>良いロット・不合格にしてしまう</td><td>消費者危険</td></tr>
+          <tr><td class="tag">消費者危険(β)</td><td>悪いロットを誤って合格にしてしまう確率</td><td>悪いロット・合格にしてしまう</td><td>生産者危険</td></tr>
+          <tr><td class="tag">計数規準型抜取検査(JIS Z 9002)</td><td>不適合品の個数で合否を判定。サンプル数は多め</td><td>個数で数える</td><td>計量規準型抜取検査</td></tr>
+          <tr><td class="tag">計量規準型抜取検査(JIS Z 9003)</td><td>測定値の平均で合否を判定。サンプル数は少なめ</td><td>測定値の平均・サンプル数が少ない</td><td>計数規準型抜取検査</td></tr>
+          <tr><td class="tag">MTTF</td><td>修理せず使い切るアイテムの平均故障寿命</td><td>修理しない・寿命</td><td>MTBF</td></tr>
+          <tr><td class="tag">MTBF</td><td>修理して使い続けるアイテムの平均故障間隔</td><td>修理して使う・間隔</td><td>MTTF</td></tr>
+          <tr><td class="tag">MTTR</td><td>保全1回あたりに要する平均時間</td><td>保全・修復時間</td><td>MTBF・MTTF</td></tr>
+          <tr><td class="tag">信頼度</td><td>規定の時間内に故障しない確率</td><td>故障しない確率</td><td>保全度</td></tr>
+          <tr><td class="tag">保全度</td><td>規定の時間内に保全(修理)が完了する確率</td><td>修理が完了する確率</td><td>信頼度</td></tr>
+          <tr><td class="tag">アベイラビリティ</td><td>ある時点でアイテムが使用できる状態にある割合</td><td>アップ時間/(アップ+ダウン)</td><td>信頼度</td></tr>
+          <tr><td class="tag">直列系の信頼度</td><td>構成要素の信頼度をすべて掛け合わせる。要素が増えるほど下がる</td><td>1つでも壊れたら全体停止</td><td>並列系の信頼度</td></tr>
+          <tr><td class="tag">並列系の信頼度</td><td>1から全要素が同時に故障する確率を引いて求める。要素が増えるほど上がる</td><td>全部壊れないと止まらない</td><td>直列系の信頼度</td></tr>
+          <tr><td class="tag">FTA・FMEA</td><td>FTAはトップイベントから原因をAND/ORゲートで遡るトップダウン、FMEAは部品の故障モードから影響を洗い出すボトムアップ</td><td>トップダウン(FTA)/ボトムアップ(FMEA)</td><td>互いに</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">計算</span><h2>計算問題の型と小さな数値例</h2></div>
+    <p>いずれも自作の数値による例。過去問の数値そのものではない。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>信頼性工学・抜取検査の主な計算式</caption>
+        <thead><tr><th>論点</th><th>式</th><th>数値例(自作)</th></tr></thead>
+        <tbody>
+          <tr><td>MTBF・故障率</td><td class="mono">MTBF=総稼働時間÷故障回数、故障率λ=1/MTBF</td><td class="mono">2000時間で4回故障 → MTBF=500時間、λ=0.002</td></tr>
+          <tr><td>運用アベイラビリティ</td><td class="mono">アップ時間÷(アップ時間+ダウン時間)</td><td class="mono">1日のうちアップ20時間・ダウン4時間 → 20/24=83.3%</td></tr>
+          <tr><td>直列系の信頼度</td><td class="mono">R = R1 × R2</td><td class="mono">信頼度0.9の要素を2つ直列 → 0.9×0.9=0.81</td></tr>
+          <tr><td>並列系の信頼度</td><td class="mono">R = 1 − (1−R1)(1−R2)</td><td class="mono">信頼度0.9の要素を2つ並列 → 1−0.1×0.1=0.99</td></tr>
+          <tr><td>計量規準型抜取検査の合格判定値</td><td class="mono">下限規格の場合 X̄L = SL + kσ</td><td class="mono">SL=10.0mm、k=1.5、σ=0.2mm → X̄L=10.3mm。標本平均が10.3mm以上なら合格</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout"><b>抜取表の引き方(考え方):</b> ①なるべく合格にしたい不適合品率p0と、なるべく不合格にしたい不適合品率p1を決める。②p0・p1の組からJIS Z 9002(計数規準型)またはZ 9003(計量規準型)の表を引き、サンプルの大きさnと合格判定個数c(または合格判定係数k)を読み取る。③実際にn個抜き取って判定する。表から読み取る具体的な数値は規格表本体を参照。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">未出題</span><h2>出題範囲にあるが過去6回で確認できなかった論点</h2></div>
+    <p>QC検定2級の出題範囲表(手法編)に載っているが、第35〜40回の担当分野の空欄では正解として問われていない項目。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>未出題(または出題確認できず)の論点</caption>
+        <thead><tr><th>論点</th><th>要点</th></tr></thead>
+        <tbody>
+          <tr><td>OC曲線(検査特性曲線)</td><td>ロットの不適合品率と合格確率の関係を示す曲線。抜取検査の考え方の土台だが、過去6回では「バスタブ曲線」の誤答選択肢として一度登場しただけで、OC曲線自体を正解として問う出題は確認できていない。</td></tr>
+          <tr><td>冗長系(待機冗長系)</td><td>普段は使わない予備の要素を待機させておき、稼働中の要素が故障したら切り替えて使う構成。第39回で選択肢の一つとして登場したが正解にはならず、直列系・並列系ほど計算問題としては出ていない。</td></tr>
+          <tr><td>ワイブル分布・ワイブル解析</td><td>故障までの時間のばらつきを表す代表的な分布で、信頼性データの解析に使われる。第40回で誤答選択肢として名前だけ登場しており、計算問題としての出題は確認できていない。</td></tr>
+          <tr><td>耐久性・設計信頼性という用語そのもの</td><td>出題範囲表には明記されているが、過去問では信頼度・保全度・アベイラビリティの計算が中心で、「耐久性」「設計信頼性」という言葉の定義そのものを問う出題は見当たらない。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">確認</span><h2>確認問題</h2></div>
+    <p>過去問の文をそのまま使わず、別の角度から同じ知識を確認する問題。</p>
+
+    <div class="quiz-list">
+
+      <div class="quiz-item">
+        <p class="q-body"><span class="chip">逆引き</span> 原因と結果など複雑に絡み合った関係を、矢線でつないで論理的に展開し重要要因を絞り込む新QC七つ道具の手法はどれか。次から選べ:親和図法/連関図法/系統図法/PDPC法</p>
+        <details><summary>正解と解説</summary><div class="ans"><b>連関図法。</b> 親和図法は言語データを類似性でグループ化するだけで因果関係を展開しない。系統図法は目的と手段の階層展開、PDPC法は事態の進展予測が主眼で、いずれも「絡み合った原因と結果を矢線で論理展開する」点は連関図法だけの特徴。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <p class="q-body"><span class="chip">正誤</span> 「PDPC法は、目標を達成するための手段を1次手段・2次手段・3次手段へと多段階に展開する手法である」。この文は正しいか。</p>
+        <details><summary>正解と解説</summary><div class="ans"><b>誤り。</b> これは系統図法の説明。PDPC法は、方策を進める過程で起こりうる望ましくない事態をあらかじめ予測し、できるだけ望ましい方向にプロセスを導くための手法。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <p class="q-body"><span class="chip">場面適用</span> 新製品の量産開始前に、工程で起こりうるトラブルとその回避策をあらかじめ図にしておきたい。どの新QC七つ道具を使うのが適切か。</p>
+        <details><summary>正解と解説</summary><div class="ans"><b>PDPC法。</b> 事態の進展によって様々な結果が想定される場面で、望ましい結果に至るプロセスを事前に検討しておく手法だから、量産前のリスク想定に向いている。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <p class="q-body"><span class="chip">回またぎ比較</span> ある過去問では系統図法を「目的に対する方策を多段階に展開する手法」、別の回では「目標を達成する手段を1次手段・2次手段・3次手段へ展開する手法」と表現していた。この2つの表現に共通するキーワードは何か。</p>
+        <details><summary>正解と解説</summary><div class="ans"><b>「手段を段階的に展開する」こと。</b> 言い回しは回によって変わるが、系統図法の核は「目的(ゴール)から手段(やること)へ、階層を追って具体化していく」という一点に尽きる。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <p class="q-body"><span class="chip">逆引き</span> 良いロットを誤って不合格にしてしまう確率のことを何と呼ぶか。</p>
+        <details><summary>正解と解説</summary><div class="ans"><b>生産者危険(α)。</b> 逆に、悪いロットを誤って合格にしてしまう確率は消費者危険(β)と呼ばれる。「良品を落とす損は生産者側が負う、悪品を通す損は消費者側が被る」と覚えると向きを間違えない。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <p class="q-body"><span class="chip">正誤</span> 「計数規準型一回抜取検査(JIS Z 9002)では、サンプルの測定値の平均を計算して合否を判定する」。この文は正しいか。</p>
+        <details><summary>正解と解説</summary><div class="ans"><b>誤り。</b> 測定値の平均を使って判定するのは計量規準型一回抜取検査(JIS Z 9003)。計数規準型は、サンプル中の不適合品の「個数」で合否を判定する。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <p class="q-body"><span class="chip">場面適用</span> 検査対象の特性値が連続した測定値(長さ・重さなど)で、正規分布に従うことがわかっている場合、計数規準型・計量規準型のどちらの抜取検査方式を選ぶのが適しているか。</p>
+        <details><summary>正解と解説</summary><div class="ans"><b>計量規準型一回抜取検査(JIS Z 9003)。</b> 検査単位の品質を計量値で表せて、特性値が正規分布に従うと扱えることが適用の前提条件になっている。計量規準型は同じ精度をより少ないサンプル数で達成できる。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <p class="q-body"><span class="chip">逆引き</span> 規定の時間内に保全(修理)が完了する確率のことを何と呼ぶか。</p>
+        <details><summary>正解と解説</summary><div class="ans"><b>保全度。</b> 似た言葉の「信頼度」は逆方向で、規定の時間内に故障しない確率を表す。信頼度は「壊れない」側、保全度は「直る」側の指標。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <p class="q-body"><span class="chip">正誤</span> 「MTBFは、一度使ったら修理せず廃棄するアイテムの平均寿命を表す指標である」。この文は正しいか。</p>
+        <details><summary>正解と解説</summary><div class="ans"><b>誤り。</b> それはMTTF(平均故障寿命)の説明。MTBFは、故障しても修理して使い続けるアイテムの平均故障間隔を表す。「修理しない前提」ならMTTF、「修理して使う前提」ならMTBF。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <p class="q-body"><span class="chip">場面適用</span> ある電気製品で、長期間使用したあとにクレームが集中して発生した。故障率曲線(バスタブ曲線)のどの期間に該当し、どのような故障として分類されるか。</p>
+        <details><summary>正解と解説</summary><div class="ans"><b>摩耗故障(バスタブ曲線の右側、故障率が増加していく期間)。</b> 経年劣化が原因で起きる故障で、使用期間が長くなるほど発生しやすくなる。これに対し、使い始めてすぐの期間に多いのは初期故障、真ん中の安定期に一定の確率で起きるのは偶発故障。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <p class="q-body"><span class="chip">回またぎ比較</span> ある過去問では「故障率は0以上の値、故障確率は0以上1以下の値」という区別が問われ、別の過去問では「FMEAのリスク評価は影響度×発生頻度×検知の難易度の掛け算」と問われた。この2つに共通する信頼性工学の考え方は何か。</p>
+        <details><summary>正解と解説</summary><div class="ans"><b>「起こりやすさ」を数値化して判断材料にするという考え方。</b> 故障率・発生頻度はどちらも単位時間・単位条件あたりの故障の起こりやすさを表す指標で、それを掛け算や比較に使うことで、感覚ではなく数値でリスクの大小を判断できるようにしている。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <p class="q-body"><span class="chip">計算</span> 信頼度0.9の要素を2つ直列につないだシステムの信頼度を求めよ。また、同じ2つの要素を並列につないだ場合はどうなるか。</p>
+        <details><summary>正解と解説</summary><div class="ans"><b>直列:0.81(0.9×0.9)。並列:0.99(1−0.1×0.1)。</b> 直列系は「1つでも壊れたら全体が止まる」ため要素を増やすほど信頼度は下がり、並列系は「全部壊れないと止まらない」ため要素を増やすほど信頼度は上がる。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <p class="q-body"><span class="chip">逆引き</span> 2つの原因事象が両方そろって初めて上位の事象が発生する場合に用いる、FTAの論理記号はどちらか。ANDゲート/ORゲート</p>
+        <details><summary>正解と解説</summary><div class="ans"><b>ANDゲート。</b> 「両方そろって」の条件はAND(かつ)。逆に、どちらか一方だけで上位の事象が発生する場合はORゲート(または)を使う。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <p class="q-body"><span class="chip">場面適用</span> FTAとFMEAはどちらも信頼性工学の分析手法だが、検討を始める出発点が逆になっている。それぞれどこから出発するか。</p>
+        <details><summary>正解と解説</summary><div class="ans"><b>FTAは「好ましくない事象(トップイベント)」から出発して原因を遡るトップダウン、FMEAは「部品・工程の故障モード」から出発して影響を洗い出すボトムアップ。</b> 同じ「なぜ壊れるか」を扱っていても、たどる方向が逆であることが最大の違い。</div></details>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">出典</span><h2>この分野が出た回と大問</h2></div>
+    <div class="table-wrap">
+      <table>
+        <caption>第35〜40回・該当大問一覧</caption>
+        <thead><tr><th>回</th><th>問</th><th>テーマ</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">第35回</td><td class="mono">問7</td><td>新QC七つ道具の各手法の説明</td></tr>
+          <tr><td class="mono">第35回</td><td class="mono">問8</td><td>計量規準型一回抜取検査(JIS Z 9003)</td></tr>
+          <tr><td class="mono">第37回</td><td class="mono">問7</td><td>親和図法(親和カードのグループ化と上位カードの命名)</td></tr>
+          <tr><td class="mono">第37回</td><td class="mono">問8</td><td>信頼度・保全度・運用アベイラビリティとMTTF/MTBF/MTTR</td></tr>
+          <tr><td class="mono">第38回</td><td class="mono">問6</td><td>新QC七つ道具の各手法の目的と関連用語</td></tr>
+          <tr><td class="mono">第38回</td><td class="mono">問7</td><td>故障率(瞬間故障率・平均故障率)と故障確率</td></tr>
+          <tr><td class="mono">第38回</td><td class="mono">問11</td><td>工程異常への対応と再発防止(会話形式、連関図法への言及を含む)</td></tr>
+          <tr><td class="mono">第39回</td><td class="mono">問6</td><td>新QC七つ道具の各手法の定義</td></tr>
+          <tr><td class="mono">第39回</td><td class="mono">問7</td><td>MTBF・故障率と信頼性ブロック図(直列・並列・直並列)</td></tr>
+          <tr><td class="mono">第39回</td><td class="mono">問8</td><td>生産者危険・消費者危険と計数/計量規準型一回抜取検査</td></tr>
+          <tr><td class="mono">第39回</td><td class="mono">問11</td><td>課題達成型QCストーリーの手順(PDPC法・親和図法への言及を含む)</td></tr>
+          <tr><td class="mono">第40回</td><td class="mono">問7</td><td>FTAとFMEA、故障率曲線(バスタブ曲線)</td></tr>
+          <tr><td class="mono">第40回</td><td class="mono">問8</td><td>抜取検査の用語(不適合品率・計数値/計量値抜取検査・生産者危険/消費者危険)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 分野別まとめ「新QC七つ道具・抜取検査・信頼性工学」</span>
+    <span>元資料13件 / 手法編・知識問題まとめ 7/7</span>
+  </footer>
+
+</div>

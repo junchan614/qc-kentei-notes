@@ -1,0 +1,497 @@
+<title>方針管理・機能別管理・日常管理まとめ</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+  --shadow-lift: 0 2px 4px rgba(22,35,42,0.08), 0 14px 32px -14px rgba(22,35,42,0.22);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:900px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:52px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+p{margin:0;color:var(--ink-soft);}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+a:focus-visible{outline:2px solid var(--reg);outline-offset:3px;border-radius:4px;}
+
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:26px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4.2vw,40px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+.meta-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:4px;}
+.meta{display:flex;flex-direction:column;gap:2px;}
+.meta .v{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--ink);line-height:1.2;}
+.meta .k{font-size:11.5px;color:var(--ink-faint);letter-spacing:0.04em;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:56px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:middle;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .mono{font-family:'JetBrains Mono',monospace;}
+
+.heat-table th.rc,.heat-table td.rc{text-align:center;width:44px;}
+.heat-table td.rc.hit{background:var(--reg-soft);}
+.heat-table td.rc.hit span{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--reg);}
+.heat-table td.rc.miss span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--border-strong);opacity:0.6;}
+.heat-table td.topic{font-size:13.5px;}
+.heat-table td.cnt{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--reg-ink);text-align:center;}
+
+.callout{background:var(--reg-soft);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+.callout.warn b{color:var(--wrong);}
+
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;}
+.panel{border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);background:var(--surface);overflow:hidden;display:flex;flex-direction:column;}
+.panel .ph{padding:14px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:0.06em;font-weight:700;display:flex;align-items:center;gap:8px;}
+.panel.memo .ph{background:var(--res-soft);color:var(--res-ink);border-bottom:1px solid var(--res);}
+.panel.under .ph{background:var(--reg-soft);color:var(--reg-ink);border-bottom:1px solid var(--reg);}
+.panel ul{margin:0;padding:16px 20px 18px 34px;display:flex;flex-direction:column;gap:10px;}
+.panel li{font-size:14.5px;color:var(--ink-soft);}
+.panel li b{color:var(--ink);}
+.panel li .mono{font-family:'JetBrains Mono',monospace;font-size:13.5px;}
+
+.trap-table td.tag{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--wrong);font-weight:700;white-space:nowrap;}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
+.card{
+  display:flex;flex-direction:column;gap:10px;
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:18px 20px;box-shadow:var(--shadow);
+  text-decoration:none;color:inherit;
+  transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+}
+.card:hover{box-shadow:var(--shadow-lift);border-color:var(--border-strong);transform:translateY(-2px);}
+@media (prefers-reduced-motion: reduce){.card{transition:none;} .card:hover{transform:none;}}
+.card .chips{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.04em;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--ink-faint);border:1px solid var(--border);}
+.chip.src{background:var(--reg-soft);color:var(--reg-ink);border-color:var(--reg);}
+.card h4{font-family:'Zen Old Mincho',serif;font-size:17px;font-weight:600;margin:0;color:var(--ink);line-height:1.5;}
+.card .desc{font-size:13.5px;color:var(--ink-soft);line-height:1.7;}
+.card .go{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--reg-ink);font-weight:600;margin-top:2px;}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+
+.quiz{display:flex;flex-direction:column;gap:14px;}
+.quiz-item{border:1px solid var(--border);border-radius:12px;background:var(--surface);box-shadow:var(--shadow);padding:16px 18px;}
+.quiz-item .qhead{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px;}
+.quiz-item .qn{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--reg-ink);font-weight:700;}
+.quiz-item .qtag{font-family:'JetBrains Mono',monospace;font-size:10.5px;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--ink-faint);border:1px solid var(--border);}
+.quiz-item p.qtext{color:var(--ink);margin-top:8px;font-size:14.5px;}
+.quiz-item .choices{margin:10px 0 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:4px;}
+.quiz-item .choices li{font-size:14px;color:var(--ink-soft);}
+.quiz-item details{margin-top:10px;}
+.quiz-item summary{cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--reg-ink);font-weight:600;list-style:none;}
+.quiz-item summary::-webkit-details-marker{display:none;}
+.quiz-item summary::before{content:"▸ ";}
+.quiz-item details[open] summary::before{content:"▾ ";}
+.quiz-item .answer{margin-top:8px;padding:12px 14px;background:var(--reg-soft);border-radius:8px;font-size:13.5px;color:var(--ink-soft);}
+.quiz-item .answer b{color:var(--ink);}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 実践編 ／ 分野別まとめ 4/7</span>
+    <h1>方針管理・機能別管理・日常管理</h1>
+    <p class="lede">組織を回している三つの管理活動の性格の違いを問う分野。方針管理は重点課題を絞り込み一年単位で改善・革新を狙う活動、日常管理は決められた業務を毎日確実にこなして水準を維持する活動で、この二つは「事業計画を実現する両輪」と説明される。機能別管理は品質・コスト・納期・安全・人材育成などの経営基本要素ごとに部門を横断して全社目標を追いかける活動で、各部門が自分の持ち場を守る部門別管理(日常管理の集合)とは視点が違う。方針管理の年度末反省が翌年度の日常管理への定着判断につながるなど、三つは一つのサイクルとしてつながっている。</p>
+    <div class="meta-row">
+      <div class="meta"><span class="v">13</span><span class="k">元資料(大問数)</span></div>
+      <div class="meta"><span class="v">6/6</span><span class="k">出題を確認できた回</span></div>
+      <div class="meta"><span class="v">20</span><span class="k">論点の出現回数(延べ)</span></div>
+    </div>
+  </header>
+
+  <p class="callout">過去問そのものは掲載していません。お手元の過去問題集と合わせて読む前提です。</p>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">地図</span><h2>三つの管理活動はどう役割分担しているか</h2></div>
+    <p>組織の活動を大きく分けると、決められたことを守り抜く「維持」の活動と、新しい課題に挑んで水準そのものを引き上げる「改善・革新」の活動がある。前者を担うのが<b>日常管理</b>で、サイクルはSDCA(標準化→実施→確認→処置)。後者を担うのが<b>方針管理</b>で、サイクルはPDCA(計画→実施→確認→処置)。事業計画を実現させるにはこの二つが両輪として必要になる。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 220" role="img" aria-label="左に方針管理のPDCAサイクル、右に日常管理のSDCAサイクルを円で示し、方針管理は改善・革新、日常管理は維持を担う両輪であること、方針管理の成果が定着すると標準化されて日常管理へ移行することを示す図">
+          <text x="320" y="22" text-anchor="middle" font-size="12.5" fill="currentColor" opacity="0.65">事業計画を実現する両輪</text>
+
+          <circle cx="170" cy="122" r="72" fill="none" stroke="var(--reg)" stroke-width="2"/>
+          <text x="170" y="60" text-anchor="middle" font-size="11" fill="var(--reg-ink)" font-weight="700">P</text>
+          <text x="236" y="126" text-anchor="middle" font-size="11" fill="var(--reg-ink)" font-weight="700">D</text>
+          <text x="170" y="192" text-anchor="middle" font-size="11" fill="var(--reg-ink)" font-weight="700">C</text>
+          <text x="104" y="126" text-anchor="middle" font-size="11" fill="var(--reg-ink)" font-weight="700">A</text>
+          <text x="170" y="116" text-anchor="middle" font-size="16" font-weight="700" fill="var(--reg-ink)">方針管理</text>
+          <text x="170" y="136" text-anchor="middle" font-size="11" fill="currentColor" opacity="0.75">改善・革新(ブレークスルー)</text>
+
+          <circle cx="470" cy="122" r="72" fill="none" stroke="var(--res)" stroke-width="2"/>
+          <text x="470" y="60" text-anchor="middle" font-size="11" fill="var(--res-ink)" font-weight="700">S</text>
+          <text x="536" y="126" text-anchor="middle" font-size="11" fill="var(--res-ink)" font-weight="700">D</text>
+          <text x="470" y="192" text-anchor="middle" font-size="11" fill="var(--res-ink)" font-weight="700">C</text>
+          <text x="404" y="126" text-anchor="middle" font-size="11" fill="var(--res-ink)" font-weight="700">A</text>
+          <text x="470" y="116" text-anchor="middle" font-size="16" font-weight="700" fill="var(--res-ink)">日常管理</text>
+          <text x="470" y="136" text-anchor="middle" font-size="11" fill="currentColor" opacity="0.75">維持(当たり前を当たり前に)</text>
+
+          <path d="M246,150 Q320,196 394,150" fill="none" stroke="currentColor" stroke-width="1.4" stroke-dasharray="4 3"/>
+          <path d="M394,150 l-10,-3 l2,10 z" fill="currentColor"/>
+          <text x="320" y="212" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.75">改善が定着したら標準化して日常管理へ引き渡す(年度末反省)</text>
+        </svg>
+      </div>
+      <figcaption><b>両輪の関係:</b> 方針管理だけでは組織は「改善しては元に戻る」を繰り返し、日常管理だけでは水準が固定化して伸びない。方針管理の成果を標準化し日常管理に組み込むことで、初めて水準が階段状に上がっていく。</figcaption>
+    </figure>
+
+    <p>この二つとは別の軸で、<b>機能別管理</b>がある。各部門が自分の持ち場の標準を守るだけの「部門別管理」(=日常管理の集合)に対して、品質・コスト・納期・安全・人材育成などの経営基本要素は一つの部門だけでは完結しない。機能別管理は、これらの要素ごとに全社的な目標を立て、部門をまたいで連携・協力する活動である。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 240" role="img" aria-label="営業・設計・製造・購買・品証という部門ごとの縦の帯が部門別管理(日常管理の集合)を表し、品質・コスト・納期という横の帯がそれらを横断する機能別管理を表す格子状の図。機能別委員会が横の帯を統括する様子も示す">
+          <text x="320" y="20" text-anchor="middle" font-size="12.5" fill="currentColor" opacity="0.65">部門別管理(縦)と機能別管理(横)の交差</text>
+
+          <g fill="var(--surface-2)" stroke="var(--border)">
+            <rect x="60" y="40" width="100" height="160"/>
+            <rect x="160" y="40" width="100" height="160"/>
+            <rect x="260" y="40" width="100" height="160"/>
+            <rect x="360" y="40" width="100" height="160"/>
+            <rect x="460" y="40" width="100" height="160"/>
+          </g>
+          <text x="110" y="34" text-anchor="middle" font-size="11" fill="currentColor" opacity="0.75">営業</text>
+          <text x="210" y="34" text-anchor="middle" font-size="11" fill="currentColor" opacity="0.75">設計</text>
+          <text x="310" y="34" text-anchor="middle" font-size="11" fill="currentColor" opacity="0.75">製造</text>
+          <text x="410" y="34" text-anchor="middle" font-size="11" fill="currentColor" opacity="0.75">購買</text>
+          <text x="510" y="34" text-anchor="middle" font-size="11" fill="currentColor" opacity="0.75">品証</text>
+
+          <rect x="60" y="46" width="500" height="40" fill="var(--reg-soft)" opacity="0.85"/>
+          <rect x="60" y="96" width="500" height="40" fill="var(--reg-soft)" opacity="0.55"/>
+          <rect x="60" y="146" width="500" height="40" fill="var(--reg-soft)" opacity="0.85"/>
+          <text x="40" y="70" text-anchor="end" font-size="11" fill="var(--reg-ink)" font-weight="700">品質</text>
+          <text x="40" y="120" text-anchor="end" font-size="11" fill="var(--reg-ink)" font-weight="700">コスト</text>
+          <text x="40" y="170" text-anchor="end" font-size="11" fill="var(--reg-ink)" font-weight="700">納期</text>
+
+          <text x="320" y="216" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="0.75">縦=各部門が日常管理で守る持ち場 ／ 横=機能別委員会が全社目標で束ねる機能別管理</text>
+        </svg>
+      </div>
+      <figcaption><b>機能別委員会の役割:</b> 品質・コスト・納期などの機能ごとの全社目標を追う仕事は、本来はトップマネジメントの職務だが、部門を横断する委員会がこれを代行する。委員長は関連する経営指標を担当する役員が務めることが多い。</figcaption>
+    </figure>
+
+    <div class="table-wrap">
+      <table>
+        <caption>三つの管理活動の性格</caption>
+        <thead><tr><th>活動</th><th>サイクル</th><th>性格</th><th>典型的な問い</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">方針管理</td><td class="mono">PDCA</td><td>改善・革新(ブレークスルー)</td><td>今年度、絞り込むべき重点課題は何か</td></tr>
+          <tr><td class="mono">日常管理</td><td class="mono">SDCA</td><td>維持(当たり前を当たり前に)</td><td>決められた通りに業務が回っているか</td></tr>
+          <tr><td class="mono">機能別管理</td><td>部門横断のPDCA(委員会主導)</td><td>全体最適(経営基本要素ごと)</td><td>品質・コスト・納期は全社で守られているか</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">傾向</span><h2>出題傾向 — 論点 × 出題回</h2></div>
+    <p>第35〜40回の実践編で、方針管理・機能別管理・日常管理のどれかに関わる大問・空欄が確認できたのは全6回すべて。特に方針管理は毎回のように出ており、単独の定義穴埋めだけでなく、日常管理や機能別管理の説明文をわざと誤答選択肢として混ぜてくる作り方が目立つ。</p>
+
+    <div class="table-wrap">
+      <table class="heat-table">
+        <caption>論点別の出題確認状況(第35〜40回)</caption>
+        <thead>
+          <tr>
+            <th>論点</th>
+            <th class="rc">35</th><th class="rc">36</th><th class="rc">37</th>
+            <th class="rc">38</th><th class="rc">39</th><th class="rc">40</th>
+            <th class="rc">回数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="topic">方針管理とは何か(重点指向・全部門全階層)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">2</td>
+          </tr>
+          <tr>
+            <td class="topic">方針管理の仕組み全体図(使命→組織方針→管理項目→トップ診断)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">方針の構成要素(重点課題・目標・方策)と管理項目・管理水準</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">3</td>
+          </tr>
+          <tr>
+            <td class="topic">方針展開のキャッチボール(上位下位間のすり合わせ)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">2</td>
+          </tr>
+          <tr>
+            <td class="topic">方針管理の年度末反省(結果×プロセスの4分類)</td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">トップ診断(方針管理の一環としてPDCAを確認)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">方針管理と日常管理の使い分け(改善・革新と維持の両輪)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">2</td>
+          </tr>
+          <tr>
+            <td class="topic">機能別管理とは何か(経営基本要素ごとに部門横断)</td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">2</td>
+          </tr>
+          <tr>
+            <td class="topic">機能別管理と部門別管理の違い(全社的視点 vs 現状維持)</td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="cnt">1</td>
+          </tr>
+          <tr>
+            <td class="topic">機能別委員会とマトリックス管理</td>
+            <td class="rc miss"><span></span></td><td class="rc hit"><span></span></td><td class="rc miss"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">2</td>
+          </tr>
+          <tr>
+            <td class="topic">日常管理の実施手順(業務分掌→管理項目→標準化→異常処置)</td>
+            <td class="rc hit"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="rc miss"><span></span></td><td class="rc miss"><span></span></td><td class="rc hit"><span></span></td>
+            <td class="cnt">3</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><b>よく出る順トップ3:</b> 1位(3回)は「方針の構成要素と管理項目・管理水準」「日常管理の実施手順」の同率。2位(2回)は「方針管理とは何か」「キャッチボール」「方針管理と日常管理の使い分け」「機能別管理とは何か」「機能別委員会とマトリックス管理」の5論点が並ぶ。</p>
+    <div class="callout"><b>出方のクセ:</b> 機能別管理は役員や専務・常務の対話形式で問われることが多い。方針管理は定義文そのものの穴埋めが中心で、選択肢の中に日常管理や機能別管理、診断・監査の言葉をわざと混ぜて紛らわせてくる。日常管理は「手順1→手順7」のように一連の流れを順番に埋めさせる整序型が多い。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">対比</span><h2>紛らわしい用語の対比</h2></div>
+    <p>過去問の語群では、方針管理の説明文の中に日常管理や機能別管理の言葉が誤答として置かれる、逆に機能別管理の空欄に方針管理の説明文が置かれる、といった「役割の説明文そのものを入れ替える」トラップが繰り返し使われている。</p>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>取り違えやすい用語ペア</caption>
+        <thead><tr><th>用語</th><th>ひとことで</th><th>見分けるキーワード</th><th>取り違えやすい相手</th></tr></thead>
+        <tbody>
+          <tr><td class="tag">方針管理</td><td>重点課題を絞り込み全部門全階層で達成する活動</td><td>重点指向・ベクトルを合わせる・PDCA</td><td>機能別管理(第36回で説明文が入れ替わって出題)</td></tr>
+          <tr><td class="tag">機能別管理</td><td>経営基本要素ごとに部門横断で全社目標を追う活動</td><td>部門横断・全社的視点・委員会</td><td>方針管理、部門別管理</td></tr>
+          <tr><td class="tag">日常管理</td><td>決められた分掌業務を毎日確実に回す活動</td><td>維持・SDCA・業務分掌</td><td>方針管理(第38回でPDCAとSDCAが同じ選択肢群)</td></tr>
+          <tr><td class="tag">部門別管理</td><td>各部門が自分の標準を守り現状維持を図ること</td><td>現状維持・部門最適</td><td>機能別管理(全社的視点・革新との対比)</td></tr>
+          <tr><td class="tag">トップ診断</td><td>経営者自らが方針の展開・浸透状況を見て回ること</td><td>現場百遍・方針管理の一環</td><td>品質監査(内部監査)、経営診断</td></tr>
+          <tr><td class="tag">品質監査(内部監査)</td><td>規定・基準への適合を確認する監査活動</td><td>基準への適合・監査人</td><td>トップ診断</td></tr>
+          <tr><td class="tag">管理項目</td><td>目標達成を測るために選んだ評価尺度そのもの</td><td>ものさし・評価尺度</td><td>管理水準</td></tr>
+          <tr><td class="tag">管理水準</td><td>その評価尺度における安定・計画どおりとみなせる値や範囲</td><td>合格ライン・値または範囲</td><td>管理項目</td></tr>
+          <tr><td class="tag">重点課題</td><td>優先順位をつけて絞り込んだ取組テーマ</td><td>優先順位・絞り込み</td><td>目標</td></tr>
+          <tr><td class="tag">目標(値)</td><td>重点課題で追求する到達点・数値</td><td>到達点・測定可能</td><td>管理項目(第40回で誤答として同居)</td></tr>
+          <tr><td class="tag">すり合わせ(キャッチボール)</td><td>上位下位・関係部門間で意見を行き来させる方針展開のやり方</td><td>双方向・職場第一線の意見</td><td>トップダウンのみの展開(片方向)</td></tr>
+          <tr><td class="tag">業務分掌</td><td>各職場に割り当てられた役割・仕事の範囲</td><td>役割分担・日常管理の出発点</td><td>使命・理念・ビジョン(方針管理の出発点、第37回で誤答として同居)</td></tr>
+          <tr><td class="tag">応急処置(応急対策)</td><td>異常が起きた直後にまず正常な状態へ戻す処置</td><td>すぐ戻す・その場しのぎ</td><td>再発防止、未然防止</td></tr>
+          <tr><td class="tag">再発防止(恒久措置)</td><td>異常の真因を突き止め同じ異常を二度と起こさない処置</td><td>真因追究・恒久</td><td>応急処置、未然防止</td></tr>
+          <tr><td class="tag">未然防止</td><td>まだ起きていない不具合を予測して先回りする活動</td><td>予測・先回り</td><td>再発防止(すでに起きた異常への対応)</td></tr>
+          <tr><td class="tag">機能別委員会</td><td>経営基本要素ごとにトップマネジメントの職務を代行する組織</td><td>委員長は担当役員またはトップ自身</td><td>マトリックス管理、クロスファンクショナルチーム</td></tr>
+          <tr><td class="tag">マトリックス管理</td><td>機能別管理(横糸)と部門別管理(縦糸)を組み合わせて整合させる考え方</td><td>横糸と縦糸・全体最適</td><td>機能別委員会(組織そのものではなく考え方を指す言葉)</td></tr>
+          <tr><td class="tag">管理点</td><td>管理項目のうち結果側の特性を扱うもの(慣用表現)</td><td>結果系・責任者が持つ</td><td>点検点</td></tr>
+          <tr><td class="tag">点検点(点検項目)</td><td>結果に影響が大きく直接制御できる原因側を定常的に監視する項目</td><td>原因系・日常的に監視</td><td>管理点</td></tr>
+          <tr><td class="tag">変化点管理</td><td>人・材料・設備などの変化を事前に把握し注意を払う先回りの活動</td><td>交代・切替え・保全のタイミング</td><td>異常処置(すでに起きた後の対応)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">未出題</span><h2>過去6回に出ていない範囲</h2></div>
+    <p>2級の出題範囲表(品質経営の要素:機能別管理・日常管理)のうち、過去6回の担当分野の空欄には出てこなかった項目。次の回に出てもおかしくない範囲として押さえておく。</p>
+
+    <div class="split">
+      <div class="panel under">
+        <div class="ph">◎ 用語としてまだ出ていない</div>
+        <ul>
+          <li><b>クロスファンクショナルチーム(CFT)</b>: 特定のテーマ・プロジェクトのために各部門から人を集めて編成する部門横断チーム。機能別委員会より小規模・期間限定であることが多い。</li>
+          <li><b>マトリックス管理</b>という用語そのもの: 機能×部門の二次元表による説明は出題済みだが、「マトリックス管理」という呼び方自体は問われていない。</li>
+          <li><b>管理点・点検点</b>という呼び方: 「管理項目」は繰り返し出ているが、結果系(管理点)と原因系(点検点)を分けて問う形はまだ見られない。</li>
+          <li><b>変化点(管理)</b>という用語: 朝夕のミーティングのような実務例は出たが、「変化点」という言葉自体を穴埋めさせる形は出ていない。</li>
+        </ul>
+      </div>
+      <div class="panel memo">
+        <div class="ph">⚠ まとまった形ではまだ出ていない</div>
+        <ul>
+          <li><b>管理項目一覧表</b>: 個々の管理項目そのものは出題されているが、一覧表として整備・運用する話としてはまだ出ていない。</li>
+          <li><b>JIS Q 9026(日常管理の指針)</b>という規格番号: 方針管理側のJIS Q 9023は名指しで出題されたが、日常管理側の規格番号そのものは出ていない。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">確認</span><h2>確認問題</h2></div>
+
+    <div class="quiz">
+      <div class="quiz-item">
+        <div class="qhead"><span class="qn">Q1</span><span class="qtag">逆引き</span></div>
+        <p class="qtext">「方針を全部門・全階層が参加してベクトルを合わせ、重点を絞り込んで達成していく活動」と定義される活動はどれか。</p>
+        <ul class="choices"><li>① 機能別管理</li><li>② 方針管理</li><li>③ 日常管理</li><li>④ 品質マネジメントシステム</li></ul>
+        <details><summary>正解と解説</summary><div class="answer"><b>②方針管理。</b> 「全部門・全階層」「重点を絞り込む」がキーワード。①機能別管理は経営基本要素ごとの部門横断管理、③日常管理は日々の分掌業務を確実にこなす活動で、どちらも定義の主語が違う。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <div class="qhead"><span class="qn">Q2</span><span class="qtag">正誤</span></div>
+        <p class="qtext">「機能別管理とは、各部門が自部門の標準類を守り、現状維持を図る活動である。」この記述は正しいか。</p>
+        <details><summary>正解と解説</summary><div class="answer"><b>誤り。</b> これは部門別管理(日常管理側の性格)の説明。機能別管理は品質・コスト・納期などの経営基本要素ごとに全社的視点・部門横断で目標を達成する活動で、革新的な課題達成の性格も含む。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <div class="qhead"><span class="qn">Q3</span><span class="qtag">場面適用</span></div>
+        <p class="qtext">ある工場で「品質」「コスト」「納期」それぞれについて全社目標を立て、各部門の代表を集めた委員会が横串で進捗を確認する仕組みを作った。これはどの活動にあたるか。</p>
+        <ul class="choices"><li>① 日常管理</li><li>② 方針管理</li><li>③ 機能別管理</li></ul>
+        <details><summary>正解と解説</summary><div class="answer"><b>③機能別管理。</b> 経営基本要素(品質・コスト・納期)ごとに部門横断で管理する典型例。委員会がトップマネジメントの職務を代行する機能別委員会にあたる。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <div class="qhead"><span class="qn">Q4</span><span class="qtag">回またぎ比較</span></div>
+        <p class="qtext">過去問の選択肢群には「PDCAサイクル」と「SDCAサイクル」が並んで置かれたことがある。それぞれどの活動と結びつくか、正しい組合せを選べ。</p>
+        <ul class="choices"><li>① PDCA=日常管理、SDCA=方針管理</li><li>② PDCA=方針管理、SDCA=日常管理</li><li>③ どちらも方針管理</li><li>④ どちらも日常管理</li></ul>
+        <details><summary>正解と解説</summary><div class="answer"><b>②。</b> 方針管理は新たな課題を設定して改善・革新するのでP(計画)から回すPDCA、日常管理は決められた標準を維持するのでS(標準化)から回すSDCAになる。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <div class="qhead"><span class="qn">Q5</span><span class="qtag">逆引き</span></div>
+        <p class="qtext">工程が安定している、あるいは計画のとおりに進んでいるとみなせる状態を、数値や範囲で表したものを何と呼ぶか。</p>
+        <ul class="choices"><li>① 管理項目</li><li>② 管理水準</li><li>③ 目標値</li><li>④ 重点課題</li></ul>
+        <details><summary>正解と解説</summary><div class="answer"><b>②管理水準。</b> 管理項目は「評価尺度として選んだ項目」そのもの(ものさし)であり、管理水準はその物差しの上での合格ライン(値や範囲)にあたる。似ているが指しているものが違う。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <div class="qhead"><span class="qn">Q6</span><span class="qtag">正誤</span></div>
+        <p class="qtext">「重点課題の目標設定にあたっては、測定可能である必要はなく、関係者が納得していればよい。」この記述は正しいか。</p>
+        <details><summary>正解と解説</summary><div class="answer"><b>誤り。</b> 目標は達成できたか否かを評価するために測定可能であることが望ましいとされる。関係者との納得感(すり合わせ)は別の留意点であり、測定可能性の要件を打ち消すものではない。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <div class="qhead"><span class="qn">Q7</span><span class="qtag">場面適用</span></div>
+        <p class="qtext">経営層が作った来年度方針案を各事業部・各部課で検討し、現場の意見を反映したうえで経営層にフィードバックし、最終的な方針を決定した。この双方向のやり取りを何と呼ぶか。</p>
+        <ul class="choices"><li>① トップ診断</li><li>② すり合わせ(キャッチボール)</li><li>③ 期末のレビュー</li><li>④ 品質監査</li></ul>
+        <details><summary>正解と解説</summary><div class="answer"><b>②すり合わせ(キャッチボール)。</b> 方針展開は経営層から一方的に下ろすだけでなく、現場の意見を汲み上げて経営層に返す双方向のやり取りで行う。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <div class="qhead"><span class="qn">Q8</span><span class="qtag">場面適用</span></div>
+        <p class="qtext">年度末の反省で、ある施策が「目標を達成し、計画どおりに実行できていた」と評価された。この場合、次にとるべきアクションとして最も適切なものはどれか。</p>
+        <ul class="choices"><li>① 効果的だった改善事項を標準化し、日常管理に移行できるか検討する</li><li>② 方針展開そのものをやり直す</li><li>③ 重点施策が未実施だった理由を調査する</li><li>④ 特に何もしない</li></ul>
+        <details><summary>正解と解説</summary><div class="answer"><b>①。</b> 結果もプロセスも良好な場合は、その取組みを標準化して日常管理に組み込めるかを検討するのが年度末反省の基本的な考え方。方針管理の成果を日常管理に引き渡す接続点にあたる。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <div class="qhead"><span class="qn">Q9</span><span class="qtag">逆引き</span></div>
+        <p class="qtext">プロセスの結果への影響が大きく、直接制御できる原因側の中から定常的に監視する項目として選ぶものを何と呼ぶか。</p>
+        <ul class="choices"><li>① 点検項目(点検点)</li><li>② 管理水準</li><li>③ 重点課題</li><li>④ 品質目標</li></ul>
+        <details><summary>正解と解説</summary><div class="answer"><b>①点検項目(点検点)。</b> 結果側の特性を扱う管理項目(慣用的に「管理点」と呼ばれる)と対になる、原因側(プロセス側)を定常監視するための項目。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <div class="qhead"><span class="qn">Q10</span><span class="qtag">場面適用</span></div>
+        <p class="qtext">ある職場で、担当者の交代・原材料ロットの切替え・設備の定期保全などのタイミングを事前にリストアップし、その時期は特に注意して監視するようにした。これは何という考え方の実践か。</p>
+        <ul class="choices"><li>① 変化点管理</li><li>② トップ診断</li><li>③ 方針展開</li><li>④ 機能別管理</li></ul>
+        <details><summary>正解と解説</summary><div class="answer"><b>①変化点管理。</b> 人・部品材料・設備などの重要な要因の変化を事前に把握し、特別に注意を払って監視することで異常の発生を未然に防ぐ、日常管理側の実務。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <div class="qhead"><span class="qn">Q11</span><span class="qtag">正誤</span></div>
+        <p class="qtext">「機能別委員会の委員長は、必ず社外の第三者機関から選ばなければならない。」この記述は正しいか。</p>
+        <details><summary>正解と解説</summary><div class="answer"><b>誤り。</b> 機能別委員会は本来トップマネジメントの職務を代行する組織で、委員長は関連する経営指標を担当する役員が務めることが多く、場合によってはトップマネジメント自身が担当することもある。社外の第三者機関の関与は定められていない。</div></details>
+      </div>
+
+      <div class="quiz-item">
+        <div class="qhead"><span class="qn">Q12</span><span class="qtag">回またぎ比較</span></div>
+        <p class="qtext">次のうち、過去問で「方針管理」に関する穴埋めの誤答選択肢として実際に置かれたことがある言葉を、当てはまるだけ選べ。</p>
+        <ul class="choices"><li>① 機能別管理の説明文</li><li>② 業務分掌</li><li>③ 応急処置・標準化</li><li>④ トップダウンとボトムアップ</li></ul>
+        <details><summary>正解と解説</summary><div class="answer"><b>①〜④すべて該当。</b> 方針管理に関する穴埋めの語群には、機能別管理の説明文、業務分掌、応急処置・標準化、トップダウンとボトムアップといった、日常管理や展開方法に関する言葉がたびたび紛れ込む。方針管理は「重点指向」「全部門全階層」「ベクトルを合わせる」というキーワードで見分けるのが安全。</div></details>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">出典</span><h2>この分野が出た回と大問</h2></div>
+    <div class="table-wrap">
+      <table>
+        <caption>出題回・大問・テーマ</caption>
+        <thead><tr><th>回</th><th>問</th><th>テーマ</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">第35回</td><td class="mono">問10</td><td>標準作業・作業標準と作業管理(日常管理に関連する空欄を含む)</td></tr>
+          <tr><td class="mono">第35回</td><td class="mono">問13</td><td>方針管理(方針設定の留意点・重点課題と目標設定)</td></tr>
+          <tr><td class="mono">第36回</td><td class="mono">問12</td><td>方針管理の年度末反省(結果×プロセスの4分類)</td></tr>
+          <tr><td class="mono">第36回</td><td class="mono">問13</td><td>機能別管理(機能×部門の二次元表)</td></tr>
+          <tr><td class="mono">第37回</td><td class="mono">問11</td><td>方針管理の定義と仕組み</td></tr>
+          <tr><td class="mono">第37回</td><td class="mono">問13</td><td>日常管理の実施手順</td></tr>
+          <tr><td class="mono">第37回</td><td class="mono">問14</td><td>教育・訓練(日常管理のミーティングに関する空欄を含む)</td></tr>
+          <tr><td class="mono">第38回</td><td class="mono">問13</td><td>部門別管理と機能別管理(経営会議の議事)</td></tr>
+          <tr><td class="mono">第38回</td><td class="mono">問16</td><td>トップ診断と品質監査(方針管理に関する空欄を含む)</td></tr>
+          <tr><td class="mono">第39回</td><td class="mono">問12</td><td>方針管理と日常管理の関係・方針管理の要素(JIS Q 9023)</td></tr>
+          <tr><td class="mono">第40回</td><td class="mono">問12</td><td>方針管理(品質方針・キャッチボール・方針の構成)</td></tr>
+          <tr><td class="mono">第40回</td><td class="mono">問13</td><td>機能別管理と機能別委員会</td></tr>
+          <tr><td class="mono">第40回</td><td class="mono">問14</td><td>顧客要求への対応と内部監査(日常管理の管理項目に関する空欄を含む)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 分野別まとめ「方針管理・機能別管理・日常管理」</span>
+    <span>元資料13件 / 実践編まとめ 4/7</span>
+  </footer>
+
+</div>
