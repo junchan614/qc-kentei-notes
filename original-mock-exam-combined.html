@@ -147,6 +147,7 @@ h1{
 .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
 .btn.primary:hover{background:var(--accent-strong);}
 .btn.ghost{background:transparent;}
+.btn.ghost.active{background:var(--warn-soft);border-color:var(--warn);color:var(--warn);}
 .btn:disabled{opacity:.45;cursor:default;}
 .btn:disabled:hover{border-color:var(--border);}
 
@@ -299,6 +300,7 @@ footer{margin-top:30px;font-size:.78rem;color:var(--muted);text-align:center;pad
     <span class="clock"><span class="dot" id="clockDot" aria-hidden="true"></span><span id="clockText">00:00</span></span>
     <span class="stage" id="stageText">問 1 / 17</span>
     <span class="progress" id="progressText">解答欄 0/148 採点済み</span>
+    <button class="btn ghost" id="pauseBtn" type="button">タイマーストップ</button>
     <button class="btn ghost" id="resetBtn" type="button">タイマーをリセット</button>
     <div class="progress-track" style="flex-basis:100%;"><div class="fill" id="progressFill"></div></div>
   </div>
@@ -1534,6 +1536,7 @@ footer{margin-top:30px;font-size:.78rem;color:var(--muted);text-align:center;pad
   var clockEl = document.getElementById('clockText');
   var clockDot = document.getElementById('clockDot');
   var stageEl = document.getElementById('stageText');
+  var pauseBtn = document.getElementById('pauseBtn');
   var accumulatedMs = 0;
   var runStart = Date.now();
   var currentIndex = 0;
@@ -1552,14 +1555,21 @@ footer{margin-top:30px;font-size:.78rem;color:var(--muted);text-align:center;pad
     if(runStart){ accumulatedMs += Date.now()-runStart; runStart = null; }
     clockEl.textContent = fmt(accumulatedMs);
     clockDot.classList.add('paused');
+    if(!finished){ pauseBtn.textContent = '再開'; pauseBtn.classList.add('active'); }
   }
   function resumeTimer(){
     if(!runStart){ runStart = Date.now(); }
     clockDot.classList.remove('paused');
+    if(!finished){ pauseBtn.textContent = 'タイマーストップ'; pauseBtn.classList.remove('active'); }
   }
   setInterval(function(){
     if(runStart){ clockEl.textContent = fmt(elapsedNow()); }
   }, 500);
+
+  pauseBtn.addEventListener('click', function(){
+    if(finished) return;
+    if(runStart) pauseTimer(); else resumeTimer();
+  });
 
   document.getElementById('resetBtn').addEventListener('click', function(){
     accumulatedMs = 0;
@@ -1652,6 +1662,7 @@ footer{margin-top:30px;font-size:.78rem;color:var(--muted);text-align:center;pad
 
   function finishExam(){
     finished = true;
+    pauseBtn.disabled = true;
     var totalCorrect = 0, totalCount = 0;
     var domainTotals = {};
     var domainOrder = [];

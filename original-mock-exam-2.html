@@ -138,6 +138,7 @@ h1{
 .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
 .btn.primary:hover{background:var(--accent-strong);}
 .btn.ghost{background:transparent;}
+.btn.ghost.active{background:var(--warn-soft);border-color:var(--warn);color:var(--warn);}
 .refbox{
   margin-top:18px;
   border:1px solid var(--border);
@@ -282,6 +283,7 @@ footer{margin-top:30px;font-size:.78rem;color:var(--muted);text-align:center;pad
   <div class="bar">
     <span class="clock"><span class="dot" aria-hidden="true"></span><span id="clockText">00:00</span></span>
     <span class="progress" id="progressText">解答欄 0/53 採点済み</span>
+    <button class="btn ghost" id="pauseBtn" type="button">タイマーストップ</button>
     <button class="btn ghost" id="resetBtn" type="button">タイマーをリセット</button>
   </div>
 
@@ -737,7 +739,9 @@ footer{margin-top:30px;font-size:.78rem;color:var(--muted);text-align:center;pad
   "use strict";
   var startTime = Date.now();
   var elapsedFrozen = null;
+  var manualPauseStart = null;
   var clockEl = document.getElementById('clockText');
+  var pauseBtn = document.getElementById('pauseBtn');
 
   function fmt(ms){
     var s = Math.floor(ms/1000);
@@ -746,15 +750,37 @@ footer{margin-top:30px;font-size:.78rem;color:var(--muted);text-align:center;pad
     return String(m).padStart(2,'0')+':'+String(r).padStart(2,'0');
   }
   function tick(){
-    if(elapsedFrozen===null){
+    if(elapsedFrozen===null && manualPauseStart===null){
       clockEl.textContent = fmt(Date.now()-startTime);
     }
   }
   setInterval(tick,500);
 
+  function pauseClock(){
+    if(elapsedFrozen!==null || manualPauseStart!==null) return;
+    manualPauseStart = Date.now();
+    pauseBtn.textContent = '再開';
+    pauseBtn.classList.add('active');
+  }
+  function resumeClock(){
+    if(manualPauseStart===null) return;
+    startTime += Date.now()-manualPauseStart;
+    manualPauseStart = null;
+    pauseBtn.textContent = 'タイマーストップ';
+    pauseBtn.classList.remove('active');
+  }
+  pauseBtn.addEventListener('click', function(){
+    if(elapsedFrozen!==null) return;
+    if(manualPauseStart===null) pauseClock(); else resumeClock();
+  });
+
   document.getElementById('resetBtn').addEventListener('click', function(){
     startTime = Date.now();
     elapsedFrozen = null;
+    manualPauseStart = null;
+    pauseBtn.disabled = false;
+    pauseBtn.textContent = 'タイマーストップ';
+    pauseBtn.classList.remove('active');
     clockEl.textContent = '00:00';
   });
 
@@ -826,9 +852,11 @@ footer{margin-top:30px;font-size:.78rem;color:var(--muted);text-align:center;pad
   });
 
   document.getElementById('gradeAllBtn').addEventListener('click', function(){
+    resumeClock();
     if(elapsedFrozen===null){
       elapsedFrozen = Date.now()-startTime;
       clockEl.textContent = fmt(elapsedFrozen);
+      pauseBtn.disabled = true;
     }
     var totalCorrect = 0, totalCount = 0;
     var rows = '';
