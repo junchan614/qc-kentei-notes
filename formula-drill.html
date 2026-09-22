@@ -163,7 +163,7 @@ footer{margin-top:26px;font-size:.76rem;color:var(--muted);text-align:center;pad
   <header class="masthead">
     <div class="eyebrow">QC検定2級・暗記ドリル</div>
     <h1>公式暗記ドリル</h1>
-    <p class="lede">6分野・39項目の「丸暗記するしかない公式・ルール」を、答えを見る前に思い出せるかセルフチェックする無限ループ形式のドリルです。間違えたカードは近いうちにまた出てきます。</p>
+    <p class="lede">7分野・64項目の「丸暗記するしかない公式・ルール」を、答えを見る前に思い出せるかセルフチェックする無限ループ形式のドリルです。間違えたカードは近いうちにまた出てきます。</p>
   </header>
 
   <div class="statbar">
@@ -225,6 +225,7 @@ footer{margin-top:26px;font-size:.76rem;color:var(--muted);text-align:center;pad
     exp:   {label:'実験計画法',       short:'実験計画', bonus:false},
     chart: {label:'管理図',           short:'管理図', bonus:false},
     cpk:   {label:'ヒストグラム・工程能力指数', short:'工程能力', bonus:false},
+    rel:   {label:'信頼性工学',       short:'信頼性', bonus:false},
     z:     {label:'頻出z値(ボーナス)', short:'z値', bonus:true}
   };
 
@@ -236,6 +237,11 @@ footer{margin-top:26px;font-size:.76rem;color:var(--muted);text-align:center;pad
     {id:'bs5', dom:'basic', prompt:'X,Yが独立のとき cov(X,Y) はどうなる?', answer:'cov(X,Y) = 0', note:'定義から導けるが、試験中は結論だけ即答できるように。', refs:['35th-normal-assembly.html','38th-normal-cp.html']},
     {id:'bs6', dom:'basic', prompt:'二項分布 B(n,P) で Pr(X=x) を求める式は?', answer:'Pr(X=x) = ₙCₓ Pˣ (1−P)ⁿ⁻ˣ', note:'', refs:['36th-binomial-normal.html']},
     {id:'bs7', dom:'basic', prompt:'古典的確率 P(A) の定義は?', answer:'P(A) = 条件を満たす場合の数 / 全体の場合の数', note:'実際に試行して得る統計的確率(相対度数)とは別物。', refs:['39th-probability.html']},
+    {id:'bs8', dom:'basic', prompt:'変動係数(CV)の式は?', answer:'CV = σ / x̄', note:'単位や平均水準の違う集団同士のばらつきを比較するときに使う相対指標。', refs:[]},
+    {id:'bs9', dom:'basic', prompt:'二項分布 B(n,P) の期待値・分散は?', answer:'E(X) = nP、V(X) = nP(1−P)', note:'bs6の確率式とセットで覚える。', refs:['36th-binomial-normal.html']},
+    {id:'bs10', dom:'basic', prompt:'ポアソン分布の確率・期待値・分散は?', answer:'Pr(X=x) = λˣ e⁻λ / x!、E(X) = V(X) = λ', note:'期待値と分散が同じλになるのがポアソン分布の特徴。', refs:[]},
+    {id:'bs11', dom:'basic', prompt:'期待値の4つの性質(定数c)は?', answer:'E(c)=c、E(X+c)=E(X)+c、E(cX)=cE(X)、E(X+Y)=E(X)+E(Y)', note:'分散の性質(bs3・bs12)とセットで覚える。', refs:[]},
+    {id:'bs12', dom:'basic', prompt:'X,Yが独立のとき V(X+Y) はどうなる?', answer:'V(X+Y) = V(X) + V(Y)', note:'独立でなければ+2cov(X,Y)が付く(bs4)。', refs:['35th-normal-assembly.html','38th-normal-cp.html']},
 
     {id:'te1', dom:'test', prompt:'母平均のt検定の検定統計量 t0 は?', answer:'t0 = (x̄ − μ0) / √(V/n)', note:'σ²ではなく不偏分散Vを使う。', refs:['37th-onesided-t-test.html','40th-mean-variance-test.html']},
     {id:'te2', dom:'test', prompt:'母分散のχ²検定の検定統計量 χ0² は?', answer:'χ0² = S / σ0²', note:'Sは偏差平方和(分散ではない)。', refs:['35th-variance-test.html','40th-mean-variance-test.html','40th-chi-square-meaning.html']},
@@ -244,6 +250,14 @@ footer{margin-top:26px;font-size:.76rem;color:var(--muted);text-align:center;pad
     {id:'te5', dom:'test', prompt:'分割表のχ0²とその自由度は?', answer:'χ0² = Σ(実測−期待)²/期待、自由度=(行数−1)(列数−1)', note:'', refs:['38th-chi-square.html']},
     {id:'te6', dom:'test', prompt:'対立仮説の不等号と、片側/両側検定の対応は?', answer:'< または > なら片側(向きは不等号の方向)、≠ なら両側でα/2を使う', note:'', refs:['36th-chi-square-variance.html','35th-variance-test.html','37th-onesided-t-test.html']},
     {id:'te7', dom:'test', prompt:'「あわてもの」と「ぼんやりもの」は、それぞれ第何種の過誤?', answer:'あわてもの = 第一種の過誤(α)、ぼんやりもの = 第二種の過誤(β)', note:'あわてもの=無いのに「ある」と早とちり。', refs:['37th-onesided-t-test.html']},
+    {id:'te8', dom:'test', prompt:'母分散既知のときの母平均の検定統計量Zは?', answer:'Z0 = (x̄ − μ0) / √(σ0²/n)', note:'分散が未知ならt検定(te1)を使う。', refs:[]},
+    {id:'te9', dom:'test', prompt:'母分散既知のときの母平均の区間推定は?', answer:'μ = x̄ ± Z(α/2) · σ0/√n', note:'', refs:[]},
+    {id:'te10', dom:'test', prompt:'t検定における母平均の区間推定は?', answer:'μ = x̄ ± t(φ,α) · √(V/n)', note:'φ = n−1。', refs:[]},
+    {id:'te11', dom:'test', prompt:'母分散の区間推定(χ²)の式は?', answer:'S/χ²(φ,α/2) ≦ σ² ≦ S/χ²(φ,1−α/2)', note:'', refs:[]},
+    {id:'te12', dom:'test', prompt:'母不良率(二項分布)の検定統計量Zは?', answer:'Z0 = (p − P0) / √(P0(1−P0)/n)', note:'', refs:[]},
+    {id:'te13', dom:'test', prompt:'2つの母不良率の差の検定統計量Zは?', answer:'Z0 = (pA−pB) / √{p̄(1−p̄)(1/nA+1/nB)}、p̄=(xA+xB)/(nA+nB)', note:'', refs:[]},
+    {id:'te14', dom:'test', prompt:'母欠点数(ポアソン分布)の検定統計量Zは?', answer:'Z0 = (x̄/n − λ0) / √(λ0/n)', note:'', refs:[]},
+    {id:'te15', dom:'test', prompt:'2つの母欠点数の差の検定統計量Zは?', answer:'Z0 = (λA−λB) / √{λ̄(1/nA+1/nB)}', note:'', refs:[]},
 
     {id:'rg1', dom:'reg', prompt:'相関係数 r の式は?', answer:'r = S(xy) / √(S(xx)·S(yy))', note:'', refs:['35th-regression.html','correlation-coefficient.html']},
     {id:'rg2', dom:'reg', prompt:'回帰直線の傾きβ̂1と切片β̂0の式は?', answer:'β̂1 = S(xy)/S(xx)、β̂0 = ȳ − β̂1x̄', note:'', refs:['35th-regression.html','36th-regression.html']},
@@ -252,6 +266,8 @@ footer{margin-top:26px;font-size:.76rem;color:var(--muted);text-align:center;pad
     {id:'rg5', dom:'reg', prompt:'寄与率 R² の式は?', answer:'R² = S(R) / S(yy)', note:'', refs:['38th-regression-anova.html','regression-r2-se.html']},
     {id:'rg6', dom:'reg', prompt:'回帰係数bの信頼区間の式は?', answer:'b ± t(n−2) · √(V(e)/S(xx))', note:'', refs:['38th-regression-anova.html','regression-r2-se.html']},
     {id:'rg7', dom:'reg', prompt:'符号検定で「相関あり」と判定する条件は?', answer:'少数派の打点数が符号検定表の値より小さければ有意(相関あり)', note:'', refs:['39th-sign-test.html']},
+    {id:'rg8', dom:'reg', prompt:'偏差積和 S(xy) の計算式は?', answer:'S(xy) = Σxy − (Σx)(Σy)/n', note:'S(xx)・S(yy)も同じ形(Σx²−(Σx)²/nなど)。', refs:[]},
+    {id:'rg9', dom:'reg', prompt:'回帰の変動分解、全変動S(T)と誤差変動S(E)は?', answer:'S(T) = S(yy)、S(E) = S(T) − S(R)', note:'S(R)はrg3の回帰による平方和。', refs:['regression-anova.html']},
 
     {id:'ex1', dom:'exp', prompt:'一元配置実験の要因平方和 S(A) の式は?', answer:'S(A) = Σ(T(i)²/n(i)) − CT', note:'T(i)=水準iの合計、CT=修正項。', refs:['35th-anova-experiment.html','36th-anova-oneway.html','39th-anova-unequal.html']},
     {id:'ex2', dom:'exp', prompt:'一元配置実験の自由度φ(A)・φ(E)は?', answer:'φ(A) = a−1、φ(E) = N−a = Σ(n(i)−1)', note:'', refs:['36th-anova-oneway.html','39th-anova-unequal.html']},
@@ -260,6 +276,10 @@ footer{margin-top:26px;font-size:.76rem;color:var(--muted);text-align:center;pad
     {id:'ex5', dom:'exp', prompt:'2水準の母平均の差の区間推定の式は?', answer:'(x̄(i)−x̄(j)) ± t(φ(E)) · √{V(E)(1/n(i)+1/n(j))}', note:'', refs:['37th-anova-ci.html','39th-anova-unequal.html']},
     {id:'ex6', dom:'exp', prompt:'二元配置実験の自由度φ(A×B)・φ(E)は?', answer:'φ(A×B) = (a−1)(b−1)、φ(E) = ab(r−1)', note:'', refs:['40th-two-way-anova.html','two-way-anova-df.html']},
     {id:'ex7', dom:'exp', prompt:'交互作用が有意なとき、最適水準の点推定に使う値は?', answer:'加法モデルではなく、そのセルの実測平均をそのまま使う', note:'', refs:['35th-anova-experiment.html']},
+    {id:'ex8', dom:'exp', prompt:'一元配置の修正項CTと総平方和S(T)の式は?', answer:'CT = (総合計)²/総データ数、S(T) = Σ(データ²) − CT', note:'S(A)=ex1、S(E)=S(T)−S(A)。', refs:[]},
+    {id:'ex9', dom:'exp', prompt:'二元配置(交互作用なし)のS(A)・S(B)・S(E)は?', answer:'S(A),S(B) = Σ(水準合計²/該当データ数) − CT(要因ごと)、S(E) = S(T) − S(A) − S(B)', note:'', refs:[]},
+    {id:'ex10', dom:'exp', prompt:'二元配置(交互作用あり)のS(A×B)とS(E)は?', answer:'S(AB) = Σ(セル合計²/繰返し数) − CT、S(A×B) = S(AB) − S(A) − S(B)、S(E) = S(T) − S(AB)', note:'', refs:[]},
+    {id:'ex11', dom:'exp', prompt:'有効反復数 nE(伊藤の式)の式は?', answer:'nE = abn / (a + φA + φB + φA×B)', note:'区間推定(ex4・ex5)の n(i) の代わりに使う一般式。', refs:[]},
 
     {id:'ch1', dom:'chart', prompt:'X̄管理図のUCL/LCLの式は?', answer:'UCL/LCL = X̄̄ ± A2 · R̄', note:'', refs:['37th-xbar-r-chart.html']},
     {id:'ch2', dom:'chart', prompt:'R管理図のUCLの式と、LCLの注意点は?', answer:'UCL = D4 · R̄。n≤6のときLCLは考えない', note:'D3が定義されない/0になるため。', refs:['37th-xbar-r-chart.html','control-chart-coefficients.html']},
@@ -267,12 +287,19 @@ footer{margin-top:26px;font-size:.76rem;color:var(--muted);text-align:center;pad
     {id:'ch4', dom:'chart', prompt:'c管理図のCL・UCL/LCLの式は?', answer:'CL = c̄、UCL/LCL = c̄ ± 3√c̄', note:'ポアソン分布は分散=平均なので(1−p̄)が付かない。', refs:['35th-control-chart.html']},
     {id:'ch5', dom:'chart', prompt:'計算上LCLが負になったらどう扱う?', answer:'0ではなく「限界線を考えない(示さない)」として扱う', note:'', refs:['35th-control-chart.html','40th-np-chart.html']},
     {id:'ch6', dom:'chart', prompt:'限界線内でも異常と判定される「連」のルールは?', answer:'中心線の片側に7点以上連続すれば異常と判定する', note:'', refs:['40th-np-chart.html']},
+    {id:'ch7', dom:'chart', prompt:'p管理図のCL・UCL/LCLは?', answer:'CL = p̄、UCL/LCL = p̄ ± 3√(p̄(1−p̄)/n)', note:'不良率(比率)を管理する。nが群ごとに違ってもよい。', refs:[]},
+    {id:'ch8', dom:'chart', prompt:'u管理図のCL・UCL/LCLは?', answer:'CL = ū、UCL/LCL = ū ± 3√(ū/n)', note:'uは単位あたりの欠点数、nはサンプルの大きさ。', refs:[]},
 
     {id:'cp1', dom:'cpk', prompt:'ヒストグラムの区間幅hの決め方は?', answer:'h = R/k を、測定単位mの整数倍に切り上げる', note:'', refs:['37th-histogram-cp.html']},
     {id:'cp2', dom:'cpk', prompt:'工程能力指数 Cp の式は?', answer:'Cp = (SU − SL) / 6σ', note:'両側規格。中心のズレは考えない。', refs:['37th-histogram-cp.html','38th-normal-cp.html','40th-process-capability.html']},
     {id:'cp3', dom:'cpk', prompt:'CpU・CpLの式は?', answer:'CpU = (SU−x̄)/3σ、CpL = (x̄−SL)/3σ', note:'', refs:['40th-process-capability.html']},
     {id:'cp4', dom:'cpk', prompt:'Cpk の式は?', answer:'Cpk = min(CpU, CpL)', note:'狭い方(悪い方)に合わせる。', refs:['40th-process-capability.html','36th-problem-solving.html']},
     {id:'cp5', dom:'cpk', prompt:'Cp(Cpk)の一般的な判断の目安は?', answer:'≥1.33で十分、1.00〜1.33で不足気味、1.00未満で不足', note:'', refs:['summary-histogram-cpk.html']},
+
+    {id:'re1', dom:'rel', prompt:'MTBF(平均故障間隔)の式は?', answer:'MTBF = 総稼働時間 / 総故障件数', note:'修理して使い続ける前提。修理せず使い切る前提ならMTTF(同じ式)。', refs:['summary-practice-methods-knowledge.html']},
+    {id:'re2', dom:'rel', prompt:'故障率λの式は?', answer:'λ = 総故障件数 / 総稼働時間 = 1 / MTBF', note:'', refs:['summary-practice-methods-knowledge.html']},
+    {id:'re3', dom:'rel', prompt:'MTTR(平均修復時間)の式は?', answer:'MTTR = 総修理時間 / 総修理件数', note:'', refs:['summary-practice-methods-knowledge.html']},
+    {id:'re4', dom:'rel', prompt:'アベイラビリティAの式は?', answer:'A = MTBF / (MTBF + MTTR)', note:'稼働率(動作時間/時間全体)を故障間隔と修復時間から表す式。', refs:['summary-practice-methods-knowledge.html']},
 
     {id:'z1', dom:'z', prompt:'z値: 裾の確率10%(片側)に対応するzは?', answer:'z = 1.28', note:'下位/上位10%点の計算に使う。', refs:['36th-binomial-normal.html']},
     {id:'z2', dom:'z', prompt:'z値: 片側5%(有意水準5%の片側検定)に対応するzは?', answer:'z = 1.645', note:'', refs:['37th-onesided-t-test.html','40th-mean-variance-test.html']},
@@ -329,7 +356,8 @@ footer{margin-top:26px;font-size:.76rem;color:var(--muted);text-align:center;pad
     'summary-regression-correlation.html': {label:'分野別まとめ(相関回帰)', url:'summary-regression-correlation.html'},
     'summary-experiment-design.html': {label:'分野別まとめ(実験計画)', url:'summary-experiment-design.html'},
     'summary-control-chart.html': {label:'分野別まとめ(管理図)', url:'summary-control-chart.html'},
-    'summary-histogram-cpk.html': {label:'分野別まとめ(工程能力)', url:'summary-histogram-cpk.html'}
+    'summary-histogram-cpk.html': {label:'分野別まとめ(工程能力)', url:'summary-histogram-cpk.html'},
+    'summary-practice-methods-knowledge.html': {label:'分野別まとめ(信頼性工学ほか)', url:'summary-practice-methods-knowledge.html'}
   };
 
   var STORE_KEY = 'qc-formula-drill-v1';
