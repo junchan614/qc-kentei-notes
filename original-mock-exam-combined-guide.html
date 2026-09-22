@@ -1,0 +1,712 @@
+<title>統合模試ウォークスルー</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --good:#2F8F5F; --good-soft:#E2F5EA;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+  --shadow-lift: 0 2px 4px rgba(22,35,42,0.08), 0 14px 32px -14px rgba(22,35,42,0.22);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --good:#4FBF82; --good-soft:rgba(79,191,130,0.14);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --good:#4FBF82; --good-soft:rgba(79,191,130,0.14);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:920px;margin:0 auto;padding:48px 20px 96px;display:flex;flex-direction:column;gap:52px;}
+h1,h2,h3,h4{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+p{margin:0;color:var(--ink-soft);}
+p b, li b{color:var(--ink);}
+a{color:var(--reg-ink);}
+a:focus-visible{outline:2px solid var(--reg);outline-offset:3px;border-radius:4px;}
+
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:26px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4.2vw,40px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:70ch;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+.meta-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:4px;}
+.meta{display:flex;flex-direction:column;gap:2px;}
+.meta .v{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--ink);line-height:1.2;}
+.meta .k{font-size:11.5px;color:var(--ink-faint);letter-spacing:0.04em;}
+
+.callout{background:var(--reg-soft);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:10px;padding:14px 18px;font-size:14px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+.callout.warn b{color:var(--wrong);}
+
+nav.jump{display:flex;flex-wrap:wrap;gap:8px;}
+nav.jump a{font-family:'JetBrains Mono',monospace;font-size:12.5px;padding:6px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--border);color:var(--ink-soft);text-decoration:none;}
+nav.jump a:hover{border-color:var(--reg);color:var(--reg-ink);}
+
+section{display:flex;flex-direction:column;gap:18px;scroll-margin-top:16px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:56px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+.sec-tag{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-faint);background:var(--surface-2);border:1px solid var(--border);border-radius:999px;padding:2px 10px;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:520px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:10px 13px;text-align:left;border-bottom:1px solid var(--border);vertical-align:middle;font-size:13.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.05em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .mono, .mono{font-family:'JetBrains Mono',monospace;}
+.ov-table td:first-child, .ov-table th:first-child{white-space:nowrap;}
+.ov-table a{text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.cases{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
+.case{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);}
+.case-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+.case-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--reg-ink);background:var(--reg-soft);padding:3px 9px;border-radius:999px;font-weight:700;white-space:nowrap;}
+.case h4{font-size:16px;font-weight:600;line-height:1.5;}
+.case-scenario{font-size:13.5px;line-height:1.75;}
+.case-given{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);background:var(--surface-2);padding:8px 12px;border-radius:8px;overflow-x:auto;white-space:nowrap;}
+.case-steps{margin:0;padding-left:1.15em;display:flex;flex-direction:column;gap:7px;}
+.case-steps li{font-size:13.5px;color:var(--ink-soft);line-height:1.7;}
+.case-final{background:var(--res-soft);border-left:3px solid var(--res);border-radius:8px;padding:10px 14px;font-size:13.5px;color:var(--ink);}
+.case-final b{color:var(--res-ink);}
+.case-trap{background:var(--wrong-soft);border-left:3px solid var(--wrong);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--ink-soft);}
+.case-trap b{color:var(--wrong);}
+
+.heatgrid rect.hi{stroke-width:2;}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 ／ 統合模試の解説ガイド</span>
+    <h1>統合模試ウォークスルー</h1>
+    <p class="lede"><a href="original-mock-exam-combined.html">オリジナル模試 統合版(大問17問・148空欄)</a>を、6つの出題分野ごとに横断して読み解くための資料。同じ分野の問題を模試1・2・3の間で並べると、毎回「状況は変わっても解き方の骨格は同じ」であることが見えてくる。各分野に図解と3問(QC的問題解決は2問)の比較を置いた。個別の計算の途中式は統合模試ページ内の「採点する」ボタンでも確認できるので、ここでは<b>その分野に共通する型と、間違えやすい分岐点</b>に絞って整理する。</p>
+    <div class="meta-row">
+      <div class="meta"><span class="v">17</span><span class="k">大問(模試1〜3の合算)</span></div>
+      <div class="meta"><span class="v">6</span><span class="k">出題分野</span></div>
+      <div class="meta"><span class="v">148</span><span class="k">空欄</span></div>
+    </div>
+    <div class="callout">この資料が扱う「オリジナル模試」は、QC検定の実際の過去問ではなくこのノート用に書き下ろした問題(出題形式のみ再現)。統合版ページ自体がすでに公開されているため、この解説では設問の数値やデータをそのまま引用している。</div>
+    <nav class="jump" aria-label="分野へのジャンプ">
+      <a href="#test-estimation">検定と推定</a>
+      <a href="#regression">相関・回帰分析</a>
+      <a href="#control-chart">管理図と工程能力指数</a>
+      <a href="#experiment">実験計画法</a>
+      <a href="#basic-stats">統計的方法の基礎</a>
+      <a href="#qc-solving">QC的問題解決</a>
+    </nav>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">全体</span><h2>17問の一覧</h2></div>
+    <p>統合模試は、模試1(問1〜6)・模試2(問7〜12)・模試3(問13〜17)の順に、同じ6分野をローテーションする構成になっている(模試3のみQC的問題解決を含まず5問)。下の一覧は分野ごとに並べ替えたもの。</p>
+    <div class="table-wrap">
+      <table class="ov-table">
+        <caption>統合模試17問 ― 分野別の一覧</caption>
+        <thead><tr><th>分野</th><th>問</th><th>出典</th><th>タイトル</th><th>解説へ</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="3">検定と推定</td><td class="mono">問1</td><td>模試1</td><td>2つの母平均の差の検定(片側・独立2標本)</td><td><a href="#q1">→ 見る</a></td></tr>
+          <tr><td class="mono">問7</td><td>模試2</td><td>対応のあるデータの差の検定(片側)</td><td><a href="#q7">→ 見る</a></td></tr>
+          <tr><td class="mono">問13</td><td>模試3</td><td>母不適合品率の検定と区間推定</td><td><a href="#q13">→ 見る</a></td></tr>
+          <tr><td rowspan="3">相関・回帰分析</td><td class="mono">問2</td><td>模試1</td><td>単回帰分析(一本道の基本形)</td><td><a href="#q2">→ 見る</a></td></tr>
+          <tr><td class="mono">問8</td><td>模試2</td><td>単回帰分析と無相関の検定</td><td><a href="#q8">→ 見る</a></td></tr>
+          <tr><td class="mono">問14</td><td>模試3</td><td>母平均の信頼区間と個々の値の予測区間</td><td><a href="#q14">→ 見る</a></td></tr>
+          <tr><td rowspan="3">管理図と工程能力指数</td><td class="mono">問3</td><td>模試1</td><td>X̄-R管理図と工程能力指数</td><td><a href="#q3">→ 見る</a></td></tr>
+          <tr><td class="mono">問9</td><td>模試2</td><td>np管理図と工程能力指数</td><td><a href="#q9">→ 見る</a></td></tr>
+          <tr><td class="mono">問15</td><td>模試3</td><td>群の大きさが一定でないp管理図</td><td><a href="#q15">→ 見る</a></td></tr>
+          <tr><td rowspan="3">実験計画法</td><td class="mono">問4</td><td>模試1</td><td>一元配置実験(繰返し数が不揃い)</td><td><a href="#q4">→ 見る</a></td></tr>
+          <tr><td class="mono">問10</td><td>模試2</td><td>繰返しのある二元配置実験</td><td><a href="#q10">→ 見る</a></td></tr>
+          <tr><td class="mono">問16</td><td>模試3</td><td>繰返しのない二元配置実験(ブロック)</td><td><a href="#q16">→ 見る</a></td></tr>
+          <tr><td rowspan="3">統計的方法の基礎</td><td class="mono">問5</td><td>模試1</td><td>二項分布と正規分布の確率計算</td><td><a href="#q5">→ 見る</a></td></tr>
+          <tr><td class="mono">問11</td><td>模試2</td><td>超幾何分布と中心極限定理</td><td><a href="#q11">→ 見る</a></td></tr>
+          <tr><td class="mono">問17</td><td>模試3</td><td>ポアソン分布による欠点数の確率計算</td><td><a href="#q17">→ 見る</a></td></tr>
+          <tr><td rowspan="2">QC的問題解決</td><td class="mono">問6</td><td>模試1</td><td>層別で読む不適合の発生状況(機械×勤務帯)</td><td><a href="#q6">→ 見る</a></td></tr>
+          <tr><td class="mono">問12</td><td>模試2</td><td>層別で読む「色ムラ」の発生状況(機械×用紙)</td><td><a href="#q12">→ 見る</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="test-estimation">
+    <div class="sec-head"><span class="sec-num">1/6</span><h2>検定と推定</h2><span class="sec-tag">問1・問7・問13</span></div>
+    <p>「2つの数値を比べて差があると言えるか」を確かめる分野だが、<b>比べる相手の"形"</b>によって使う検定が変わる。統合模試はこの3パターンをちょうど1問ずつ当てている。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 230" role="img" aria-label="2つの数値の差を確かめたいという根から、対象が別々の2標本か、同じ対象を2回測った差か、比率かで3つの検定に枝分かれする決定木">
+          <defs>
+            <marker id="ar1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor" opacity="0.5"/>
+            </marker>
+          </defs>
+          <rect x="190" y="14" width="260" height="42" rx="10" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.8"/>
+          <text x="320" y="40" font-size="12.5" text-anchor="middle" fill="var(--res-ink)" font-weight="600">2つの数値に差があるか確かめたい</text>
+
+          <line x1="230" y1="56" x2="110" y2="100" stroke="currentColor" stroke-width="1.3" marker-end="url(#ar1)" opacity="0.55"/>
+          <line x1="320" y1="56" x2="320" y2="100" stroke="currentColor" stroke-width="1.3" marker-end="url(#ar1)" opacity="0.55"/>
+          <line x1="410" y1="56" x2="530" y2="100" stroke="currentColor" stroke-width="1.3" marker-end="url(#ar1)" opacity="0.55"/>
+
+          <text x="110" y="80" font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.7">対象が別々の2標本</text>
+          <text x="320" y="80" font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.7">同じ対象を条件を変え2回測定</text>
+          <text x="530" y="80" font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.7">比べたいのが比率</text>
+
+          <rect x="20" y="102" width="180" height="58" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.3" opacity="0.9"/>
+          <text x="110" y="126" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">独立2標本の t検定</text>
+          <text x="110" y="144" font-size="11" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">問1(模試1)</text>
+
+          <rect x="230" y="102" width="180" height="58" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.3" opacity="0.9"/>
+          <text x="320" y="120" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">対応のあるデータの</text>
+          <text x="320" y="136" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">t検定(差dの1標本検定)</text>
+          <text x="320" y="152" font-size="11" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">問7(模試2)</text>
+
+          <rect x="440" y="102" width="180" height="58" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.3" opacity="0.9"/>
+          <text x="530" y="126" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">母比率の検定(正規近似)</text>
+          <text x="530" y="144" font-size="11" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">問13(模試3)</text>
+
+          <text x="320" y="200" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.65">検定の結論には帰無仮説の値(μ0・p0)を、区間推定には手元のデータ(x̄・d̄・p̂)を使う ― この対応はどの形でも共通</text>
+        </svg>
+      </div>
+      <figcaption><b>図.</b> 3問とも「棄却域と比較する検定統計量」と「幅を作る信頼区間」の2段構えは共通。違うのは分母に何を使うか(プールした分散Ve、差の分散sd、比率の分散p(1−p)/n)だけ。</figcaption>
+    </figure>
+
+    <div class="table-wrap">
+      <table>
+        <caption>3つの検定の違い</caption>
+        <thead><tr><th></th><th>問1 独立2標本</th><th>問7 対応のあるデータ</th><th>問13 母比率</th></tr></thead>
+        <tbody>
+          <tr><td>データの形</td><td>ラインA(n=10)とラインB(n=8)、別々のサンプル</td><td>同じ8個のワークを新旧の治具で測定(差dを使う)</td><td>同じ工程の不適合品率を、新標準の前後で比較</td></tr>
+          <tr><td>検定統計量</td><td class="mono">t0=(x̄A−x̄B)/√{Ve(1/nA+1/nB)}</td><td class="mono">t0=d̄/(sd/√n)</td><td class="mono">z0=(p̂−p0)/√{p0(1−p0)/n}</td></tr>
+          <tr><td>自由度・近似</td><td class="mono">φ=nA+nB−2=16</td><td class="mono">φ=n−1=7</td><td>標本サイズが大きいので正規近似</td></tr>
+          <tr><td>対立仮説の向き</td><td>片側(上側): μA&gt;μB</td><td>片側(上側): μd&gt;0</td><td>片側(下側): 不適合品率が下がったか</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cases">
+      <div class="case" id="q1">
+        <div class="case-head"><span class="case-num">問1・模試1</span><h4>2つの母平均の差の検定(片側)</h4></div>
+        <p class="case-scenario">旧ラインA(n=10, x̄=52.3, V=4.20)と新ラインB(n=8, x̄=49.8, V=3.60)の破断強度。母分散が等しいとみなし、μA&gt;μBといえるかを有意水準5%で検定する。</p>
+        <div class="case-given">t(16,0.05)=1.746　t(16,0.025)=2.120</div>
+        <ol class="case-steps">
+          <li>φ = nA+nB−2 = <b>16</b></li>
+          <li>Ve = {(nA−1)VA+(nB−1)VB}/φ = 63/16 = <b>3.94</b></li>
+          <li>t0 = (x̄A−x̄B)/√{Ve(1/nA+1/nB)} = 2.5/0.9412 ≒ <b>2.656</b></li>
+        </ol>
+        <div class="case-final">t0(2.656) &gt; t(16,0.05)(1.746) → <b>有意水準5%で有意</b>(AがBより優れているといえる)。差の95%信頼区間は [0.50, 4.50] で0をまたがず、結論と整合する。</div>
+        <div class="case-trap"><b>ここに注意:</b> 片側の対立仮説なので棄却判定はt(16,0.05)。信頼区間は両側なのでt(16,0.025)を使う ― 同じ検定でも段階によって表引きの列が変わる。</div>
+      </div>
+
+      <div class="case" id="q7">
+        <div class="case-head"><span class="case-num">問7・模試2</span><h4>対応のあるデータの差の検定(片側)</h4></div>
+        <p class="case-scenario">同一8個のワークを旧治具・新治具の順に測定した寸法差d(Σd=18, Σd²=52)。μd=μ(新)−μ(旧)&gt;0といえるかを有意水準5%で検定する。</p>
+        <div class="case-given">t(7,0.05)=1.895　t(7,0.025)=2.365</div>
+        <ol class="case-steps">
+          <li>φ = n−1 = <b>7</b>。Sd = Σd²−(Σd)²/n = 52−40.5 = <b>11.5</b></li>
+          <li>Vd = Sd/(n−1) ≒ 1.6429、d̄ = 2.25、t0 = d̄/(√Vd/√n) ≒ <b>4.965</b></li>
+        </ol>
+        <div class="case-final">t0(4.965) &gt; t(7,0.05)(1.895) → <b>有意水準5%で有意</b>。95%信頼区間は [1.18, 3.32]。</div>
+        <div class="case-trap"><b>ここに注意:</b> 同一ワークを2つの治具で測るとワーク自体の個体差は両方の測定に同じように乗る。差dをとるとその個体差が打ち消され、治具の違いだけを高精度に検出できる ― これが2標本t検定でなく1標本の検定として扱う理由。</div>
+      </div>
+
+      <div class="case" id="q13">
+        <div class="case-head"><span class="case-num">問13・模試3</span><h4>母不適合品率の検定と区間推定</h4></div>
+        <p class="case-scenario">従来p0=5%だった不適合品率が、新標準導入後n=200個中x=6個(3.0%)になった。下がったといえるかを有意水準5%の片側(下側)検定で確かめる。</p>
+        <div class="case-given">z(0.05)=1.645　z(0.025)=1.96</div>
+        <ol class="case-steps">
+          <li>p̂ = x/n = 6/200 = <b>0.030</b></li>
+          <li>z0 = (p̂−p0)/√{p0(1−p0)/n} = −0.020/0.01541 ≒ <b>−1.298</b></li>
+        </ol>
+        <div class="case-final">棄却域は z0&lt;−1.645。z0(−1.298)は棄却域に入らず<b>有意ではない</b>(下がったとはいえない)。区間推定はp̂を使い、95%CI=[0.64%, 5.36%]。</div>
+        <div class="case-trap"><b>ここに注意:</b> 検定は帰無仮説p0の下での起こりにくさを測るのでp0を使い、区間推定は手元のデータから真の値を見積もるのでp̂を使う。母平均の検定でμ0を、信頼区間でx̄を使う関係とまったく同じ構造。</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="regression">
+    <div class="sec-head"><span class="sec-num">2/6</span><h2>相関・回帰分析</h2><span class="sec-tag">問2・問8・問14</span></div>
+    <p>出発点は毎回同じ3つの平方和 <b>S(xx)・S(yy)・S(xy)</b>。そこから相関係数・回帰式・分散分析表までは一本道で求まる。統合模試の3問は、この一本道を①基本形で通しで使う(問2)、②無相関の検定とF0の関係まで掘り下げる(問8)、③信頼区間と予測区間の違いに焦点を当てる(問14)、という3方向に分けて出題している。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 250" role="img" aria-label="S(xx)・S(yy)・S(xy)から相関係数・回帰係数・分散分析表が枝分かれし、分散分析表からさらに母平均の信頼区間と個々の値の予測区間へ分岐する図">
+          <defs>
+            <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor" opacity="0.5"/>
+            </marker>
+          </defs>
+          <rect x="230" y="10" width="180" height="42" rx="10" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.8"/>
+          <text x="320" y="36" font-size="12.5" text-anchor="middle" fill="var(--res-ink)" font-weight="600">S(xx)・S(yy)・S(xy)</text>
+
+          <line x1="280" y1="52" x2="130" y2="90" stroke="currentColor" stroke-width="1.3" marker-end="url(#ar2)" opacity="0.5"/>
+          <line x1="320" y1="52" x2="320" y2="90" stroke="currentColor" stroke-width="1.3" marker-end="url(#ar2)" opacity="0.5"/>
+          <line x1="360" y1="52" x2="510" y2="90" stroke="currentColor" stroke-width="1.3" marker-end="url(#ar2)" opacity="0.5"/>
+
+          <rect x="40" y="92" width="180" height="46" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.3" opacity="0.9"/>
+          <text x="130" y="120" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">相関係数r・回帰係数a,b</text>
+
+          <rect x="230" y="92" width="180" height="46" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.3" opacity="0.9"/>
+          <text x="320" y="114" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">分散分析表</text>
+          <text x="320" y="130" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.75">S_R・S_e・F0(=t0²)</text>
+
+          <rect x="420" y="92" width="180" height="46" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.3" opacity="0.9"/>
+          <text x="510" y="120" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">寄与率R²・bの信頼区間</text>
+
+          <line x1="320" y1="138" x2="320" y2="175" stroke="var(--reg)" stroke-width="1.4" marker-end="url(#ar2)"/>
+          <rect x="150" y="177" width="190" height="50" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+          <text x="245" y="198" font-size="11.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">母平均の95%信頼区間</text>
+          <text x="245" y="214" font-size="10.5" text-anchor="middle" fill="var(--reg-ink)">問14(a)</text>
+
+          <rect x="360" y="177" width="200" height="50" rx="10" fill="var(--wrong-soft)" stroke="var(--wrong)" stroke-width="1.6"/>
+          <text x="460" y="198" font-size="11.5" text-anchor="middle" fill="var(--wrong)" font-weight="600">個々の値の95%予測区間</text>
+          <text x="460" y="214" font-size="10.5" text-anchor="middle" fill="var(--wrong)">問14(b) ― 式の中に「+1」</text>
+        </svg>
+      </div>
+      <figcaption><b>図.</b> 分散分析表まではどの問題でも同じ道。その先で「回帰直線そのものの位置の不確かさ」だけを見るか(信頼区間)、そこに「新しい1個がばらつく誤差」も上乗せするか(予測区間、式に+1が付く分だけ必ず広い)で分かれる。</figcaption>
+    </figure>
+
+    <div class="table-wrap">
+      <table>
+        <caption>3問の比較</caption>
+        <thead><tr><th></th><th>問2 基本形</th><th>問8 無相関の検定</th><th>問14 信頼区間 vs 予測区間</th></tr></thead>
+        <tbody>
+          <tr><td>n</td><td>10</td><td>8</td><td>8</td></tr>
+          <tr><td>r</td><td>0.988</td><td>0.995</td><td>(区間推定が主題)</td></tr>
+          <tr><td>F0</td><td>324.01</td><td>601.04</td><td>―</td></tr>
+          <tr><td>見どころ</td><td>Sxx→r→b,a→S_R,S_e→F0→R²→bの信頼区間→予測値、を一本道で全部計算</td><td>F0=t0²の関係(自由度も1対1で対応)を確認できる</td><td>同じŷに対し信頼区間[40.33,42.67]と予測区間[39.34,43.66]を並べ、+1の分だけ予測区間が広いことを確認</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cases">
+      <div class="case" id="q2">
+        <div class="case-head"><span class="case-num">問2・模試1</span><h4>単回帰分析(一本道の基本形)</h4></div>
+        <p class="case-scenario">金型温度x(10水準)と収縮率yの関係(n=10)。相関係数から回帰式、分散分析表、信頼区間、予測値までを一通り求める。</p>
+        <div class="case-given">Σx=55 Σy=185 Σx²=385 Σy²=4165 Σxy=1262</div>
+        <ol class="case-steps">
+          <li>Sxx=82.5、Sxy=244.5、Syy=742.5 → r=244.5/247.5≒<b>0.988</b></li>
+          <li>b=Sxy/Sxx≒<b>2.96</b>、a=ȳ−bx̄=<b>2.20</b></li>
+          <li>S_R=Sxy²/Sxx≒724.61、S_e=Syy−S_R≒17.89 → F0≒<b>324.01</b>(有意)</li>
+          <li>R²=S_R/Syy≒0.976(r²と一致)。bの95%CI=[2.58, 3.34]</li>
+        </ol>
+        <div class="case-final">x=7を代入した予測値 ŷ = a+7b ≒ <b>22.95</b>。</div>
+        <div class="case-trap"><b>ここに注意:</b> R²(寄与率)はr²と一致することを検算に使える。丸めた係数でなく、丸める前の値で最終計算をすると誤差が出にくい。</div>
+      </div>
+
+      <div class="case" id="q8">
+        <div class="case-head"><span class="case-num">問8・模試2</span><h4>単回帰分析と無相関の検定</h4></div>
+        <p class="case-scenario">処理時間x(8水準)とめっき厚みyの関係(n=8)。回帰の有意性を検定し、F0とt0の関係を確認する。</p>
+        <div class="case-given">Σx=72 Σy=197 Σx²=816 Σy²=5575 Σxy=2120</div>
+        <ol class="case-steps">
+          <li>Sxx=168.0、Sxy=347.0、Syy≒723.88 → r≒<b>0.995</b></li>
+          <li>b≒<b>2.07</b>、a≒<b>6.04</b></li>
+          <li>S_R≒716.72、S_e≒7.15 → F0≒<b>601.04</b>(F(1,6;0.05)=5.99を大きく上回り有意)</li>
+        </ol>
+        <div class="case-final">R²=S_R/Syy≒0.990。x=9での予測値 ŷ≒<b>24.63</b>。</div>
+        <div class="case-trap"><b>ここに注意:</b> 単回帰では無相関の検定の統計量t0とこのF0の間に <span class="mono">F0=t0²</span> の関係が成り立つ(自由度も1:1対応)。どちらで検定しても同じ結論になる。</div>
+      </div>
+
+      <div class="case" id="q14">
+        <div class="case-head"><span class="case-num">問14・模試3</span><h4>母平均の信頼区間と個々の値の予測区間</h4></div>
+        <p class="case-scenario">熱処理炉の設定温度xと硬さyの関係(n=8)。x=8における(a)回帰直線上の母平均の95%信頼区間と(b)新たに1個測定したときの95%予測区間を両方求め、違いを確認する。</p>
+        <div class="case-given">Σx=36 Σy=246 Σx²=204 Σy²=7964 Σxy=1236</div>
+        <ol class="case-steps">
+          <li>Sxx=42.00、Sxy=129.00、Syy=399.50 → b≒<b>3.07</b>、a≒<b>16.93</b></li>
+          <li>Ve=S_e/(n−2)≒<b>0.55</b>、x̄=4.5、ŷ(x=8)≒<b>41.50</b></li>
+        </ol>
+        <div class="case-final">母平均の95%信頼区間: ŷ±t√{Ve(1/n+(x0−x̄)²/Sxx)} = [<b>40.33, 42.67</b>]。個々の値の95%予測区間: 式の中に「+1」が入り Ve(<b>1</b>+1/n+(x0−x̄)²/Sxx) = [<b>39.34, 43.66</b>]。</div>
+        <div class="case-trap"><b>ここに注意:</b> 信頼区間は「回帰直線そのものの位置」の不確かさだけを表す。予測区間はそれに加えて「1個の新しい観測値が平均のまわりにばらつく誤差」も上乗せする必要があり、これが式の+1に対応する。だから予測区間は必ず信頼区間より広い。</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="control-chart">
+    <div class="sec-head"><span class="sec-num">3/6</span><h2>管理図と工程能力指数</h2><span class="sec-tag">問3・問9・問15</span></div>
+    <p>管理図は「工程が安定しているか」を時系列で見張る道具、工程能力指数は「規格に対してどれだけ余裕があるか」を数値化する道具。統合模試はX̄-R(計量値・群の大きさ一定)/np(計数値・群の大きさ一定)/p(計数値・群の大きさ不定)を1つずつ当てている。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 210" role="img" aria-label="3種類の管理図の模式図。UCL・CL・LCLの帯とその外に出た異常点を示し、np管理図はLCLが引けないこと、p管理図は群の大きさによってUCLの高さが変わることを表す">
+          <text x="105" y="18" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">X̄-R管理図(問3)</text>
+          <line x1="30" y1="45" x2="180" y2="45" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3" opacity="0.6"/>
+          <text x="185" y="49" font-size="9.5" fill="currentColor" opacity="0.7">UCL</text>
+          <line x1="30" y1="80" x2="180" y2="80" stroke="currentColor" stroke-width="1.4" opacity="0.8"/>
+          <text x="185" y="84" font-size="9.5" fill="currentColor" opacity="0.7">CL</text>
+          <line x1="30" y1="115" x2="180" y2="115" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3" opacity="0.6"/>
+          <text x="185" y="119" font-size="9.5" fill="currentColor" opacity="0.7">LCL</text>
+          <polyline points="35,95 55,75 75,88 95,60 115,70 135,50 155,32" fill="none" stroke="var(--reg)" stroke-width="1.6"/>
+          <circle cx="155" cy="32" r="5" fill="var(--wrong)"/>
+          <text x="105" y="150" font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.7">第15群がUCL超え → 異常</text>
+
+          <text x="320" y="18" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">np管理図(問9)</text>
+          <line x1="245" y1="45" x2="395" y2="45" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3" opacity="0.6"/>
+          <text x="400" y="49" font-size="9.5" fill="currentColor" opacity="0.7">UCL</text>
+          <line x1="245" y1="80" x2="395" y2="80" stroke="currentColor" stroke-width="1.4" opacity="0.8"/>
+          <text x="400" y="84" font-size="9.5" fill="currentColor" opacity="0.7">CL</text>
+          <line x1="245" y1="115" x2="395" y2="115" stroke="currentColor" stroke-width="1.1" stroke-dasharray="1 4" opacity="0.35"/>
+          <text x="400" y="119" font-size="9.5" fill="currentColor" opacity="0.5">LCLなし</text>
+          <polyline points="250,90 270,85 290,78 310,70 330,55 350,60 370,25" fill="none" stroke="var(--reg)" stroke-width="1.6"/>
+          <circle cx="370" cy="25" r="5" fill="var(--wrong)"/>
+          <text x="320" y="150" font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.7">下限が負になるため引かない</text>
+
+          <text x="535" y="18" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">p管理図・群サイズ不定(問15)</text>
+          <line x1="460" y1="40" x2="610" y2="40" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3" opacity="0.6"/>
+          <text x="613" y="35" font-size="9" fill="currentColor" opacity="0.6">UCL(n小)</text>
+          <line x1="460" y1="60" x2="610" y2="60" stroke="currentColor" stroke-width="1.1" stroke-dasharray="2 3" opacity="0.45"/>
+          <text x="613" y="64" font-size="9" fill="currentColor" opacity="0.5">UCL(n大)</text>
+          <line x1="460" y1="85" x2="610" y2="85" stroke="currentColor" stroke-width="1.4" opacity="0.8"/>
+          <text x="613" y="89" font-size="9.5" fill="currentColor" opacity="0.7">CL(p̄)</text>
+          <polyline points="465,70 490,75 510,20 535,88 560,80" fill="none" stroke="var(--reg)" stroke-width="1.6"/>
+          <circle cx="510" cy="20" r="5" fill="var(--wrong)"/>
+          <text x="535" y="150" font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.7">同じp̄でもnが小さい日ほどUCLが高い</text>
+        </svg>
+      </div>
+      <figcaption><b>図.</b> どの管理図も「帯の外に出たら異常」という判定は共通。違うのは帯の作り方 ― X̄-R管理図はA2・D4の係数、np管理図はnp̄±3√(np̄(1−p̄))、p管理図はp̄±3√{p̄(1−p̄)/n}で、nが群ごとに変わるp管理図だけ帯の高さが日によって変わる。</figcaption>
+    </figure>
+
+    <div class="table-wrap">
+      <table>
+        <caption>3問の比較</caption>
+        <thead><tr><th></th><th>問3 X̄-R管理図</th><th>問9 np管理図</th><th>問15 p管理図(群サイズ不定)</th></tr></thead>
+        <tbody>
+          <tr><td>管理対象</td><td>外径(計量値)</td><td>不適合品数(計数値)</td><td>不適合品率(計数値)</td></tr>
+          <tr><td>群の大きさ</td><td>n=5、20群とも一定</td><td>n=100、20群とも一定</td><td>60〜120、日によって変動</td></tr>
+          <tr><td>CL</td><td class="mono">X̄̄=24.80</td><td class="mono">np̄=4.00</td><td class="mono">p̄=0.0533</td></tr>
+          <tr><td>UCL/LCL</td><td class="mono">24.80±A2R̄ → [23.76, 25.84]</td><td class="mono">4.00±3√(np̄(1−p̄))≒9.88(LCLは負→引かない)</td><td class="mono">p̄±3√{p̄(1−p̄)/n}(nは日ごとに使う)</td></tr>
+          <tr><td>工程能力</td><td>Cp=1.51, Cpk=1.38 → <b>能力十分</b>(≧1.33)</td><td>Cp=0.60, Cpk=0.48 → <b>能力不足</b>(&lt;1.00)</td><td>―</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cases">
+      <div class="case" id="q3">
+        <div class="case-head"><span class="case-num">問3・模試1</span><h4>X̄-R管理図と工程能力指数</h4></div>
+        <p class="case-scenario">樹脂パイプの外径(mm)、n=5×20日。規格はUSL=28.0mm、LSL=21.0mm。</p>
+        <div class="case-given">ΣX̄=496.0 ΣR=36.0 A2=0.577 D4=2.114 d2=2.326</div>
+        <ol class="case-steps">
+          <li>X̄̄=496.0/20=<b>24.80</b>、R̄=36.0/20=<b>1.80</b></li>
+          <li>UCL/LCL(X̄)=24.80±0.577×1.80=[<b>23.76, 25.84</b>]。UCL(R)=D4R̄≒<b>3.81</b>、n≦6ではLCL(R)は引かない</li>
+          <li>第15群 X̄=27.90 はUCL超え → <b>異常</b></li>
+          <li>σ̂=R̄/d2≒0.774、Cp=(USL−LSL)/6σ̂≒<b>1.51</b>、CPU≒1.38、CPL≒1.64 → Cpk=min=<b>1.38</b></li>
+        </ol>
+        <div class="case-final">Cpk=1.38≧1.33 → <b>工程能力は十分である</b>。ただしCPUがCPLより小さく、平均はやや上限規格側に寄っている。</div>
+        <div class="case-trap"><b>ここに注意:</b> n=5(n≦6)ではR管理図のD3が定義されずLCLを引かない ― 不適合を作る方向にしか変動しないと考えるため。</div>
+      </div>
+
+      <div class="case" id="q9">
+        <div class="case-head"><span class="case-num">問9・模試2</span><h4>np管理図と工程能力指数</h4></div>
+        <p class="case-scenario">毎日n=100個を検査、20日間の不適合品数合計80個。別特性はσ̂=0.42mm、X̄̄=24.90mm、USL=25.50mm、LSL=24.00mm。</p>
+        <div class="case-given">n=100(一定) k=20 Σ(np)=80</div>
+        <ol class="case-steps">
+          <li>np̄=80/20=<b>4.00</b>、p̄=0.04</li>
+          <li>UCL=4.00+3√(4.00×0.96)≒<b>9.88</b>。LCLは負になるため<b>引かない</b>(np管理図でも同じ発想)</li>
+          <li>21日目のnp=11はUCL超え → <b>異常</b></li>
+          <li>Cp=(1.50)/(6×0.42)≒<b>0.60</b>、CPU≒0.48、CPL≒0.71 → Cpk=<b>0.48</b></li>
+        </ol>
+        <div class="case-final">Cpk=0.48&lt;1.00 → <b>工程能力は不足している</b>。上限規格側の外れが多く出ている可能性が高い。</div>
+        <div class="case-trap"><b>ここに注意:</b> Cpkが低いとき、CPUとCPLのどちらが効いているかを見れば「平均がどちら側に寄っているか」まで読み取れる ― Cpの1つの数字だけでは分からない情報。</div>
+      </div>
+
+      <div class="case" id="q15">
+        <div class="case-head"><span class="case-num">問15・模試3</span><h4>群の大きさが一定でないp管理図</h4></div>
+        <p class="case-scenario">5日分の検査数n_iと不適合品数x_iが日によって変動する(n=80〜120)。p管理図では日ごとにUCL/LCLが変わる。</p>
+        <div class="case-given">N=450 X=24 → p̄=0.0533</div>
+        <ol class="case-steps">
+          <li>3日目(n=60): UCL=0.0533+3√(0.0533×0.9467/60)≒<b>0.1404</b>(LCLは負のため引かない)</li>
+          <li>4日目(n=120): UCL=0.0533+3√(0.0533×0.9467/120)≒<b>0.1149</b></li>
+        </ol>
+        <div class="case-final">3日目のp=0.150はUCL(0.1404)を<b>超え異常</b>。4日目のp=0.050はUCL(0.1149)以下で<b>安定</b>。</div>
+        <div class="case-trap"><b>ここに注意:</b> 標準誤差√{p̄(1−p̄)/n}はnが大きいほど小さくなるため、群の大きさが変わるp管理図では同じp̄でも日によって管理限界の幅が変わる ― 検査数が小さい日ほど帯が広くなる。</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experiment">
+    <div class="sec-head"><span class="sec-num">4/6</span><h2>実験計画法</h2><span class="sec-tag">問4・問10・問16</span></div>
+    <p>共通の発想は「全体のばらつき S_T を要因の効果と誤差に配分する」こと(回帰分析でS_TをS_RとS_eに分けるのと同じ構造)。統合模試は一元配置(繰返し不揃い)/二元配置(繰返しあり、交互作用を検定できる)/二元配置(繰返しなし=ブロック要因、交互作用が誤差と分離できない)という3パターンを出している。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 220" role="img" aria-label="全体のばらつきS_Tを要因の効果と誤差に配分する様子を示す3本の積み上げ棒グラフ。一元配置はS_AとS_Eの2区分、繰返しのある二元配置はS_A・S_B・S(A×B)・S_eの4区分、繰返しのない二元配置はS_A・S_Bと交互作用込みのS_eの3区分に分かれる">
+          <text x="105" y="18" font-size="11.5" text-anchor="middle" fill="currentColor" font-weight="600">一元配置・繰返し不揃い(問4)</text>
+          <rect x="30" y="40" width="144" height="26" fill="var(--reg)" opacity="0.85"/>
+          <rect x="174" y="40" width="46" height="26" fill="var(--res)" opacity="0.85"/>
+          <text x="105" y="80" font-size="10" text-anchor="middle" fill="currentColor" opacity="0.75">S_A(180) : S_E(58)</text>
+          <text x="105" y="96" font-size="10" text-anchor="middle" fill="currentColor" opacity="0.6">S_T=238、F0(A)≒13.97 有意</text>
+
+          <text x="320" y="18" font-size="11.5" text-anchor="middle" fill="currentColor" font-weight="600">二元配置・繰返しあり(問10)</text>
+          <rect x="245" y="40" width="137" height="26" fill="var(--reg)" opacity="0.85"/>
+          <rect x="382" y="40" width="43" height="26" fill="var(--res)" opacity="0.85"/>
+          <rect x="425" y="40" width="3" height="26" fill="var(--wrong)" opacity="0.9"/>
+          <rect x="428" y="40" width="7" height="26" fill="currentColor" opacity="0.3"/>
+          <text x="320" y="80" font-size="9.5" text-anchor="middle" fill="currentColor" opacity="0.75">S_A(273):S_B(85):S(A×B)(4.7):S_e(12)</text>
+          <text x="320" y="96" font-size="10" text-anchor="middle" fill="currentColor" opacity="0.6">S_T≒374.67、交互作用は有意でない</text>
+
+          <text x="535" y="18" font-size="11.5" text-anchor="middle" fill="currentColor" font-weight="600">二元配置・繰返しなし=ブロック(問16)</text>
+          <rect x="460" y="40" width="133" height="26" fill="var(--reg)" opacity="0.85"/>
+          <rect x="593" y="40" width="38" height="26" fill="var(--res)" opacity="0.85"/>
+          <rect x="460" y="40" width="171" height="26" fill="none" stroke="var(--wrong)" stroke-width="1.6" stroke-dasharray="4 3"/>
+          <text x="535" y="80" font-size="10" text-anchor="middle" fill="currentColor" opacity="0.75">S_A(179) : S_B(51.5)</text>
+          <text x="535" y="96" font-size="9.5" text-anchor="middle" fill="var(--wrong)">S_eに交互作用が混入(分離不可)</text>
+
+          <line x1="30" y1="130" x2="610" y2="130" stroke="currentColor" stroke-width="0.7" opacity="0.25"/>
+          <text x="320" y="152" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.7">帯の幅は実際の平方和の値に比例(緑=要因A、橙=要因B、赤=交互作用、灰=誤差)</text>
+          <text x="320" y="172" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.7">繰返しが1回(r=1)だと「同じ条件を繰り返す誤差」が測れず、交互作用と誤差を区別できない</text>
+        </svg>
+      </div>
+      <figcaption><b>図.</b> 3つの帯はいずれも実際の計算値に比例した幅で描いている。問16だけ交互作用の区分がなく、点線の枠でS_eに交互作用が混ざり込んでいることを示した。</figcaption>
+    </figure>
+
+    <div class="table-wrap">
+      <table>
+        <caption>3問の比較</caption>
+        <thead><tr><th></th><th>問4 一元配置(不揃い)</th><th>問10 二元配置(繰返しあり)</th><th>問16 二元配置(繰返しなし)</th></tr></thead>
+        <tbody>
+          <tr><td>要因</td><td>触媒A(3水準、n=5,4,3)</td><td>温度A(3水準)×触媒B(2水準)、各r=2</td><td>処理A(4水準)×ロットB(3水準、ブロック)、r=1</td></tr>
+          <tr><td>分解</td><td class="mono">S_T=S_A+S_E</td><td class="mono">S_T=S_A+S_B+S(A×B)+S_e</td><td class="mono">S_T=S_A+S_B+S_e(交互作用込み)</td></tr>
+          <tr><td>結論</td><td>F0(A)≒13.97で有意</td><td>A・Bとも有意、交互作用は有意でない→主効果だけで最適水準を選べる</td><td>A(処理)・B(ブロック)とも有意</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cases">
+      <div class="case" id="q4">
+        <div class="case-head"><span class="case-num">問4・模試1</span><h4>一元配置実験(繰返し数が不揃い)</h4></div>
+        <p class="case-scenario">触媒A1(n=5)・A2(n=4)・A3(n=3、原料不足)の収率(%)。母平均に差があるかを検定し、最良水準の母平均を区間推定する。</p>
+        <div class="case-given">N=12 T=996 Σx²=82906</div>
+        <ol class="case-steps">
+          <li>CT=T²/N=82668。S_T=82906−CT=<b>238</b>。S_A=Σ(T_i²/n_i)−CT=<b>180</b>。S_E=S_T−S_A=<b>58</b></li>
+          <li>φ(E)=N−a=<b>9</b>(合計はΣ(n_i−1)=9と一致)。F0=V_A/V_E=90/6.444≒<b>13.97</b>(有意)</li>
+        </ol>
+        <div class="case-final">最良水準A2の母平均95%CI = [<b>85.13, 90.87</b>](実際のn2=4を使う)。A2とA3の差の95%CI = [<b>5.61, 14.39</b>]。</div>
+        <div class="case-trap"><b>ここに注意:</b> 区間推定の分母には合計n(=12)ではなく、その水準の実際のn(A2ならn2=4)を使う。他水準のnと混同しやすい。</div>
+      </div>
+
+      <div class="case" id="q10">
+        <div class="case-head"><span class="case-num">問10・模試2</span><h4>繰返しのある二元配置実験</h4></div>
+        <p class="case-scenario">温度A(3水準)×触媒B(2水準)、各組合せr=2、N=12。主効果と交互作用A×Bを有意水準5%で検定する。</p>
+        <div class="case-given">N=12 T=896 Σx²=67276</div>
+        <ol class="case-steps">
+          <li>S_T≒374.67、S_A≒<b>272.67</b>、S_B≒<b>85.33</b>、S(A×B)≒<b>4.67</b>、S_e=<b>12.00</b></li>
+          <li>F0(A)≒68.17(有意)、F0(B)≒42.67(有意)、F0(A×B)≒1.17(有意でない)</li>
+        </ol>
+        <div class="case-final">交互作用が有意でないため、AとBの効果は独立(加法的)とみなせ、<b>それぞれの主効果だけで最適水準を選んでよい</b>。A2×B2が最適(実測セル平均も83.0で最大)。</div>
+        <div class="case-trap"><b>ここに注意:</b> 交互作用が有意な場合は主効果だけで最適水準を選べない(水準ごとの効果が独立に効かないため)。この判定を先にすることが、最適水準を選ぶ手順の分かれ目になる。</div>
+      </div>
+
+      <div class="case" id="q16">
+        <div class="case-head"><span class="case-num">問16・模試3</span><h4>繰返しのない二元配置実験</h4></div>
+        <p class="case-scenario">処理条件A(4水準)×原料ロットB(3水準、ブロック要因)、各組合せ1回のみ(N=12)。ロットの影響を取り除いたうえでAとBを検定する。</p>
+        <div class="case-given">N=12 T=642 Σx²=34602</div>
+        <ol class="case-steps">
+          <li>S_T=<b>255.00</b>、S_A≒<b>179.00</b>、S_B≒<b>51.50</b>、S_e=S_T−S_A−S_B=<b>24.50</b></li>
+          <li>φ(A)=3、φ(B)=2、φ(e)=(a−1)(b−1)=6。F0(A)≒14.61(有意)、F0(B)≒6.31(有意)</li>
+        </ol>
+        <div class="case-final">処理条件A・原料ロットBともに<b>有意</b>。ブロック要因Bが有意ということは、ロットの違いを取り除いたことで誤差を小さくできたと解釈できる。</div>
+        <div class="case-trap"><b>ここに注意:</b> 繰返しが1回(r=1)だと各セルにデータが1個しかなく、「同じ条件を繰り返す誤差」を測る手段がない。交互作用A×Bの変動と誤差の変動を区別できないため、この配置では通常「交互作用はない」と仮定して分析するしかない。</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="basic-stats">
+    <div class="sec-head"><span class="sec-num">5/6</span><h2>統計的方法の基礎</h2><span class="sec-tag">問5・問11・問17</span></div>
+    <p>「観測される値がどんな確率分布に従うか」を見極め、確率や区間を計算する分野。抽出の仕方(復元か非復元か、有限母集団か)と、稀な事象か連続量かで使う分布が決まる。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 220" role="img" aria-label="何が起きる確率を知りたいかという根から、超幾何分布・二項分布・正規分布(中心極限定理)・ポアソン分布の4つに枝分かれする図">
+          <defs>
+            <marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor" opacity="0.5"/>
+            </marker>
+          </defs>
+          <rect x="185" y="10" width="270" height="40" rx="10" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.8"/>
+          <text x="320" y="35" font-size="12" text-anchor="middle" fill="var(--res-ink)" font-weight="600">何が起きる確率を知りたいか</text>
+
+          <line x1="220" y1="50" x2="95" y2="85" stroke="currentColor" stroke-width="1.2" marker-end="url(#ar3)" opacity="0.5"/>
+          <line x1="280" y1="50" x2="245" y2="85" stroke="currentColor" stroke-width="1.2" marker-end="url(#ar3)" opacity="0.5"/>
+          <line x1="360" y1="50" x2="395" y2="85" stroke="currentColor" stroke-width="1.2" marker-end="url(#ar3)" opacity="0.5"/>
+          <line x1="420" y1="50" x2="545" y2="85" stroke="currentColor" stroke-width="1.2" marker-end="url(#ar3)" opacity="0.5"/>
+
+          <rect x="15" y="87" width="160" height="70" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.3" opacity="0.9"/>
+          <text x="95" y="108" font-size="11" text-anchor="middle" fill="currentColor" font-weight="600">有限ロットから</text>
+          <text x="95" y="123" font-size="11" text-anchor="middle" fill="currentColor" font-weight="600">非復元で抜き取る</text>
+          <text x="95" y="141" font-size="11" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">超幾何分布</text>
+          <text x="95" y="153" font-size="9.5" text-anchor="middle" fill="var(--ink-faint)">問11前半</text>
+
+          <rect x="165" y="87" width="160" height="70" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.3" opacity="0.9"/>
+          <text x="245" y="108" font-size="11" text-anchor="middle" fill="currentColor" font-weight="600">独立試行の繰返し</text>
+          <text x="245" y="123" font-size="11" text-anchor="middle" fill="currentColor" font-weight="600">(不適合/適合)</text>
+          <text x="245" y="141" font-size="11" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">二項分布</text>
+          <text x="245" y="153" font-size="9.5" text-anchor="middle" fill="var(--ink-faint)">問5前半</text>
+
+          <rect x="315" y="87" width="160" height="70" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.3" opacity="0.9"/>
+          <text x="395" y="103" font-size="10.5" text-anchor="middle" fill="currentColor" font-weight="600">連続量の実測、または</text>
+          <text x="395" y="118" font-size="10.5" text-anchor="middle" fill="currentColor" font-weight="600">標本平均の分布(σ既知)</text>
+          <text x="395" y="139" font-size="11" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">正規分布(中心極限定理)</text>
+          <text x="395" y="153" font-size="9.5" text-anchor="middle" fill="var(--ink-faint)">問5後半・問11後半</text>
+
+          <rect x="465" y="87" width="160" height="70" rx="10" fill="var(--surface)" stroke="currentColor" stroke-width="1.3" opacity="0.9"/>
+          <text x="545" y="103" font-size="10.5" text-anchor="middle" fill="currentColor" font-weight="600">単位面積・単位時間</text>
+          <text x="545" y="118" font-size="10.5" text-anchor="middle" fill="currentColor" font-weight="600">あたりの稀な事象の数</text>
+          <text x="545" y="139" font-size="11" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">ポアソン分布</text>
+          <text x="545" y="153" font-size="9.5" text-anchor="middle" fill="var(--ink-faint)">問17</text>
+
+          <text x="320" y="188" font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.65">ポアソン分布は、二項分布でn→大・p→小・np=λ一定という極限をとった分布</text>
+        </svg>
+      </div>
+      <figcaption><b>図.</b> 4つとも「何を数えているか」を確認すれば分布は自動的に決まる。母集団が有限で後戻りできない抜取りなら超幾何分布、独立試行の繰返しなら二項分布、単位あたりの発生数ならポアソン分布、標本平均そのものの分布は中心極限定理により正規分布に近づく。</figcaption>
+    </figure>
+
+    <div class="cases">
+      <div class="case" id="q5">
+        <div class="case-head"><span class="case-num">問5・模試1</span><h4>二項分布と正規分布の確率計算</h4></div>
+        <p class="case-scenario">(1)不適合品率3%の工程からn=10個抜取り。(2)重量が正規分布N(500,10²)、USL=515g、LSL=485g。</p>
+        <div class="case-given">B(10,0.03)　N(500, 10²)</div>
+        <ol class="case-steps">
+          <li>Pr(X=0)=(0.97)^10≒<b>0.737</b>、Pr(X=1)≒<b>0.228</b>、Pr(X≧2)=1−(0.737+0.228)≒<b>0.035</b>(余事象)</li>
+          <li>Z=(515−500)/10=<b>1.50</b> → 片側外れ確率0.0668、左右対称なので両側合計=2×0.0668=<b>13.36%</b></li>
+        </ol>
+        <div class="case-final">下位5%点 = 500−1.645×10 = <b>483.55g</b>(上位5%点500+16.45=516.45gと混同しない)。</div>
+        <div class="case-trap"><b>ここに注意:</b> Pr(X≧2)を余事象で求めるとき、四捨五入した中間値を使うため直接計算とわずかにズレる ― 丸め誤差の範囲であり計算ミスではない。</div>
+      </div>
+
+      <div class="case" id="q11">
+        <div class="case-head"><span class="case-num">問11・模試2</span><h4>超幾何分布と中心極限定理</h4></div>
+        <p class="case-scenario">(1)ロット20個中不良品3個から5個抜取り(非復元)。(2)σ=15gの工程からn=25個、x̄=120g。</p>
+        <div class="case-given">₂₀C₅=15504</div>
+        <ol class="case-steps">
+          <li>Pr(X=0)=₃C₀・₁₇C₅/₂₀C₅≒<b>0.399</b>、Pr(X=1)≒<b>0.461</b>、Pr(X≧1)=1−0.399=<b>0.601</b></li>
+          <li>標準誤差=σ/√n=15/5=<b>3.00g</b>。母標準偏差既知なのでt分布でなくz(0.025)=1.96を使う</li>
+        </ol>
+        <div class="case-final">95%CI = 120±1.96×3.00 = [<b>114.12, 125.88</b>]g。</div>
+        <div class="case-trap"><b>ここに注意:</b> 中心極限定理により、母集団の分布の形によらず標本サイズnが十分大きければ標本平均の分布は近似的に正規分布N(μ,σ²/n)に従う ― これがσ既知ならz値で区間推定できる根拠。</div>
+      </div>
+
+      <div class="case" id="q17">
+        <div class="case-head"><span class="case-num">問17・模試3</span><h4>ポアソン分布による欠点数の確率計算</h4></div>
+        <p class="case-scenario">織物1m²あたりの欠点数がλ=2.5のポアソン分布に従う。</p>
+        <div class="case-given">Pr(X=k)=e^(−λ)λ^k/k!　λ=2.5</div>
+        <ol class="case-steps">
+          <li>Pr(X=0)=e^(−2.5)≒<b>0.082</b>、Pr(X=1)≒<b>0.205</b>、Pr(X=2)≒<b>0.257</b></li>
+          <li>Pr(X≧3)=1−(0.082+0.205+0.257)≒<b>0.456</b>(余事象)</li>
+        </ol>
+        <div class="case-final">面積が4倍になれば期待値も比例して4倍 → λ=2.5×4=<b>10.0個</b>。</div>
+        <div class="case-trap"><b>ここに注意:</b> ポアソン分布は「試行回数nが非常に大きく、事象の起こる確率pが非常に小さい」という条件で、np=λを一定に保ったまま二項分布の極限をとったときに得られる ― 理論上の試行回数を数えにくい現象(単位面積あたりの欠点数など)に向く。</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="qc-solving">
+    <div class="sec-head"><span class="sec-num">6/6</span><h2>QC的問題解決</h2><span class="sec-tag">問6・問12</span></div>
+    <p>層別してクロス集計して初めて見える「真因」を読む問題。行合計・列合計だけを見ても、実際に効いている組合せは見えない ― これがこの分野の核心で、問6・問12は同じ構造の題材を別のデータで出題している。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg class="heatgrid" viewBox="0 0 640 260" role="img" aria-label="機械A・B・Cと昼勤・夜勤のクロス集計表。機械別合計の最大は機械A(20件)、勤務帯別合計の最大は夜勤(30件)だが、実際に発生件数が突出しているのは機械C×夜勤(16件)のセルであることを示す">
+          <text x="320" y="18" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">問6の元データ ― キズの発生件数(機械×勤務帯)</text>
+
+          <g font-size="11.5" text-anchor="middle">
+            <rect x="190" y="35" width="60" height="30" fill="var(--surface-2)" stroke="var(--border)"/>
+            <rect x="250" y="35" width="70" height="30" fill="var(--surface-2)" stroke="var(--border)"/><text x="285" y="55" fill="currentColor">昼勤</text>
+            <rect x="320" y="35" width="70" height="30" fill="var(--res-soft)" stroke="var(--res)"/><text x="355" y="55" fill="var(--res-ink)" font-weight="700">夜勤</text>
+            <rect x="390" y="35" width="60" height="30" fill="var(--surface-2)" stroke="var(--border)"/><text x="420" y="55" fill="currentColor">計</text>
+
+            <rect x="190" y="65" width="60" height="30" fill="var(--surface-2)" stroke="var(--border)"/><text x="220" y="85" fill="currentColor">機械A</text>
+            <rect x="250" y="65" width="70" height="30" fill="var(--surface)" stroke="var(--border)"/><text x="285" y="85" fill="currentColor">12</text>
+            <rect x="320" y="65" width="70" height="30" fill="var(--surface)" stroke="var(--border)"/><text x="355" y="85" fill="currentColor">8</text>
+            <rect x="390" y="65" width="60" height="30" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.6" class="hi"/><text x="420" y="85" fill="var(--res-ink)" font-weight="700">20</text>
+
+            <rect x="190" y="95" width="60" height="30" fill="var(--surface-2)" stroke="var(--border)"/><text x="220" y="115" fill="currentColor">機械B</text>
+            <rect x="250" y="95" width="70" height="30" fill="var(--surface)" stroke="var(--border)"/><text x="285" y="115" fill="currentColor">5</text>
+            <rect x="320" y="95" width="70" height="30" fill="var(--surface)" stroke="var(--border)"/><text x="355" y="115" fill="currentColor">6</text>
+            <rect x="390" y="95" width="60" height="30" fill="var(--surface-2)" stroke="var(--border)"/><text x="420" y="115" fill="currentColor">11</text>
+
+            <rect x="190" y="125" width="60" height="30" fill="var(--surface-2)" stroke="var(--border)"/><text x="220" y="145" fill="currentColor">機械C</text>
+            <rect x="250" y="125" width="70" height="30" fill="var(--surface)" stroke="var(--border)"/><text x="285" y="145" fill="currentColor">3</text>
+            <rect x="320" y="125" width="70" height="30" fill="var(--wrong-soft)" stroke="var(--wrong)" stroke-width="2.2" class="hi"/><text x="355" y="145" fill="var(--wrong)" font-weight="700">16</text>
+            <rect x="390" y="125" width="60" height="30" fill="var(--surface-2)" stroke="var(--border)"/><text x="420" y="145" fill="currentColor">19</text>
+
+            <rect x="190" y="155" width="60" height="30" fill="var(--surface-2)" stroke="var(--border)"/><text x="220" y="175" fill="currentColor">計</text>
+            <rect x="250" y="155" width="70" height="30" fill="var(--surface-2)" stroke="var(--border)"/><text x="285" y="175" fill="currentColor">20</text>
+            <rect x="320" y="155" width="70" height="30" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.6" class="hi"/><text x="355" y="175" fill="var(--res-ink)" font-weight="700">30</text>
+            <rect x="390" y="155" width="60" height="30" fill="var(--surface-2)" stroke="var(--border)"/><text x="420" y="175" fill="currentColor">50</text>
+          </g>
+
+          <g font-size="10.5">
+            <rect x="80" y="200" width="10" height="10" fill="var(--res-soft)" stroke="var(--res)"/>
+            <text x="96" y="209" fill="currentColor" text-anchor="start">単独の合計だけなら多い(機械A=20、夜勤=30)が、どちらも真因の場所を特定できない</text>
+            <rect x="80" y="222" width="10" height="10" fill="var(--wrong-soft)" stroke="var(--wrong)"/>
+            <text x="96" y="231" fill="currentColor" text-anchor="start">クロス集計で初めて見える真因: 機械C×夜勤=16件(機械Cの合計19件の大半を占める)</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption><b>図.</b> 機械別だけ・勤務帯別だけの合計を見ても、機械Aと機械Cで「昼夜どちらが多いか」が逆転していることには気づけない。層別してクロス集計することで初めて、機械C×夜勤の組合せに固有の原因がありそうだと分かる ― これが「層別で真因にたどり着く」というQC的問題解決の考え方の核心。</figcaption>
+    </figure>
+
+    <div class="cases">
+      <div class="case" id="q6">
+        <div class="case-head"><span class="case-num">問6・模試1</span><h4>層別で読む不適合の発生状況(機械×勤務帯)</h4></div>
+        <p class="case-scenario">機械A・B・Cと昼勤・夜勤で層別した「キズ」発生件数。次の調査の方向性を考える。</p>
+        <div class="case-given">機械A:昼12/夜8=20　機械B:昼5/夜6=11　機械C:昼3/夜16=19　計:昼20/夜30=50</div>
+        <ol class="case-steps">
+          <li>最多セルは<b>機械C×夜勤(16件)</b>。機械別合計の最大は<b>機械A(20件)</b>、勤務帯別合計の最大は<b>夜勤(30件)</b></li>
+          <li>機械別上位2つ(A=20, C=19)の合計39/50=<b>78%</b></li>
+        </ol>
+        <div class="case-final">次の一手は<b>機械C×夜勤に絞ってさらに層別データを集める</b>こと。母集団を広げて全機械・全勤務帯を調べ直すのは、すでに得られている手がかりを無視することになる。</div>
+        <div class="case-trap"><b>ここに注意:</b> 「機械別に見るとAが最多」「勤務帯別に見ると夜勤が最多」という単独の集計結果につられて機械Aや夜勤全体を疑うと、本当の偏り(機械Cと夜勤の組合せ固有の原因)を見落とす。</div>
+      </div>
+
+      <div class="case" id="q12">
+        <div class="case-head"><span class="case-num">問12・模試2</span><h4>層別で読む「色ムラ」不適合の発生状況(機械×用紙)</h4></div>
+        <p class="case-scenario">印刷機X・Y・Zと用紙種類(コート紙・上質紙)で層別した色ムラの発生件数。問6と同じ考え方をあてはめる。</p>
+        <div class="case-given">機械X:コート12/上質4=16　機械Y:コート5/上質15=20　機械Z:コート3/上質7=10　計:コート20/上質26=46</div>
+        <ol class="case-steps">
+          <li>最多セルは<b>機械Y×上質紙(15件)</b>。機械別合計の最大は<b>機械Y(20件)</b>、用紙別合計の最大は<b>上質紙(26件)</b></li>
+          <li>機械別上位2つ(Y=20, X=16)の合計36/46≒<b>78%</b></li>
+        </ol>
+        <div class="case-final">機械別・用紙別の単独集計だけでは、機械Xと機械Yで「どちらの用紙が多いか」が逆転していることに気づけない。次は<b>機械X×コート紙・機械Y×上質紙のそれぞれの組合せに絞って</b>層別データを集めるのが合理的。</div>
+        <div class="case-trap"><b>ここに注意:</b> 問6は1つのセル(機械C×夜勤)に真因が集中していたが、問12は2つのセル(機械X×コート紙、機械Y×上質紙)にそれぞれ固有の偏りがある ― 「クロス集計が必要」という結論は同じでも、絞り込む先は1箇所とは限らない。</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>元ページ: <a href="original-mock-exam-combined.html">original-mock-exam-combined.html</a> ／ <a href="index.html">目次に戻る</a></span>
+    <span>作成: 2026-09-22</span>
+  </footer>
+
+</div>
