@@ -130,7 +130,7 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
     <h1>QC検定2級 学習ノート</h1>
     <p class="lede">過去問の解説と、つまずいた概念の掘り下げをまとめたページ。各資料は図解つきで、公式の暗記ではなく「なぜその式になるのか」と「誤答選択肢が何のミスに対応しているか」まで踏み込んでいる。</p>
     <div class="meta-row">
-      <div class="meta"><span class="v">59</span><span class="k">資料</span></div>
+      <div class="meta"><span class="v">61</span><span class="k">資料</span></div>
       <div class="meta"><span class="v">6</span><span class="k">出題回（第35〜40回）</span></div>
       <div class="meta"><span class="v">13</span><span class="k">分野</span></div>
       <div class="meta"><span class="v">2026-09-22</span><span class="k">最終更新</span></div>
@@ -168,8 +168,20 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
     </div>
 
     <div class="group">
-      <div class="group-label"><h3>ドリル — 力試し・暗記</h3><span class="rule"></span><span class="count">3件</span></div>
+      <div class="group-label"><h3>ドリル — 力試し・暗記</h3><span class="rule"></span><span class="count">5件</span></div>
       <div class="cards">
+        <a class="card" href="https://claude.ai/artifact/BgLo7rUbKTirkzmGKMJF2P" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">文章問題クイズ</span><span class="chip">個人用・非公開</span></div>
+          <h4>文章問題クイズ(全380問)</h4>
+          <div class="desc">第35〜40回の空欄を素材に、事前に作り込んだ固定問題(4択308・正誤72)を出題。弱点優先/全範囲ランダム/分野指定/間違えた問題だけの4モードと、15問(約10分)・30問(約20分)・65問(本番相当)から選べる。正誤問題は正しい文・誤りの文がほぼ半々で出る。</div>
+          <div class="keys">
+            <span>4択308問・正誤72問(記号なし・完結した文のみ)</span>
+            <span>分野別正答率・解答時間をlocalStorageに端末保存</span>
+            <span>受験日(2026-09-27)の翌日で公開終了</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
         <a class="card" href="original-mock-exam.html" target="_blank" rel="noopener">
           <div class="chips"><span class="chip">オリジナル問題</span><span class="chip">自動採点</span></div>
           <h4>オリジナル模試 大問6問</h4>
@@ -188,6 +200,18 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
           <div class="desc">模試(1)と重ならない小分野を選んで書き下ろした新問題。問1検定と推定(対応のあるデータの片側t検定)・問2相関回帰分析(無相関の検定とF0の関係)・問3管理図と工程能力指数(np管理図+Cp/CPU/CPL/Cpk)・問4実験計画法(繰返しのある二元配置・交互作用の検定)・問5統計的方法の基礎(超幾何分布+中心極限定理)・問6QC的問題解決(層別クロス集計)。ページ内で解答を入力するとその場で自動採点され、解答時間も計測される。過去問題そのものではない。</div>
           <div class="keys">
             <span>大問6問・計53空欄</span>
+            <span>自動採点・解答時間の計測つき</span>
+            <span>解答はブラウザに下書き保存(共有はされない)</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="original-mock-exam-3.html" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">オリジナル問題</span><span class="chip">自動採点</span></div>
+          <h4>オリジナル模試3 大問5問</h4>
+          <div class="desc">計算問題6分野のうちQC的問題解決を除く5分野に絞り、模試(1)(2)とも重ならない切り口で書き下ろした新問題。問1検定と推定(母不適合品率の検定と区間推定)・問2相関回帰分析(母平均の信頼区間 vs 個々の値の予測区間)・問3管理図と工程能力指数(群の大きさが一定でないp管理図)・問4実験計画法(繰返しのない二元配置)・問5統計的方法の基礎(ポアソン分布)。うち問1・問2は下の「出題分野のカバー状況」で資料が薄かった論点を埋める内容。過去問題そのものではない。</div>
+          <div class="keys">
+            <span>大問5問・計39空欄</span>
             <span>自動採点・解答時間の計測つき</span>
             <span>解答はブラウザに下書き保存(共有はされない)</span>
           </div>
@@ -1012,7 +1036,7 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
           <tr><td>検定と推定（χ²検定・分割表）</td><td><span class="status done">資料あり</span></td><td>第38回 問3</td></tr>
           <tr><td>検定と推定（分散の検定・F検定・χ²検定）</td><td><span class="status done">資料あり</span></td><td>第35回 問1 / 第36回 問3 / 第39回 問2 / 第40回 問1</td></tr>
           <tr><td>検定と推定（母平均のt検定）</td><td><span class="status done">資料あり</span></td><td>第37回 問1 / 第40回 問1</td></tr>
-          <tr><td>検定と推定（母不適合品率）</td><td><span class="status todo">未作成</span></td><td>計数値の検定・推定</td></tr>
+          <tr><td>検定と推定（母不適合品率）</td><td><span class="status done">資料あり</span></td><td>オリジナル模試3 問1(母不適合品率のZ検定と区間推定)</td></tr>
           <tr><td>実験計画法（二元配置・繰り返しあり）</td><td><span class="status done">資料あり</span></td><td>第35回 問4 / 第40回 問6</td></tr>
           <tr><td>管理図（係数 A₂・d₂・D₃・D₄）</td><td><span class="status done">資料あり</span></td><td>管理図の係数の正体</td></tr>
           <tr><td>管理図（p、np、c、u ／ 異常判定ルール）</td><td><span class="status done">資料あり</span></td><td>第35回 問6（c管理図）／ 第40回 問5（np管理図・連による異常判定）</td></tr>
@@ -1034,7 +1058,7 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
 
   <footer>
     <span>QC検定2級 学習ノート — 目次</span>
-    <span>資料59件 / 最終更新 2026-09-22</span>
+    <span>資料61件 / 最終更新 2026-09-22</span>
     <span><a href="https://x.com/junchan614" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">@junchan614</a></span>
   </footer>
 
