@@ -1,0 +1,205 @@
+<title>2つの母比率の差の検定 — オリジナル追加問題 問2</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;}
+.back-link:hover{color:var(--reg-ink);}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(26px,4vw,36px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <a class="back-link" href="original-mock-exam-4.html">← オリジナル追加問題10問に戻る</a>
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 オリジナル問題解説 / 追加問題 問2</span>
+    <h1>2台の成形機を比べる — 2つの母比率の差の検定と推定</h1>
+    <p class="lede">母不適合品率が1つだけの検定(模試3問1)を、2つの比率の比較に拡張した問題。<b>検定にはプールした比率p̄を、区間推定にはp̂1・p̂2をそのまま使う</b>という使い分けは、母平均の検定・推定でμ0とx̄を使い分けるのとまったく同じ構造をしている。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>設定</h2></div>
+    <p>2台の成形機X・Yについて、不適合品率に差があるかを調べる。機械Xはn1=200個中x1=18個が不適合、機械Yはn2=150個中x2=6個が不適合であった。2つの母不適合品率に差があるかを有意水準5%の両側検定で確かめ、差の95%信頼区間も求める。標本サイズが大きいので、二項分布は正規分布で近似できるものとする。</p>
+    <div class="calc">
+      <span class="label">与えられた数値</span>
+      <span class="line">機械X: n1=200 x1=18　　機械Y: n2=150 x2=6</span>
+      <span class="line">z(0.025)=1.96</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>標本比率とプールした比率</h2></div>
+    <p>まず2台それぞれの標本不適合品率を求める。検定は「p1=p2」という帰無仮説のもとで行うため、2つのデータを1つにまとめた<b>プールした比率p̄</b>を分散の推定に使う。</p>
+    <div class="calc">
+      <span class="label">標本比率</span>
+      <span class="line">p̂1 = x1/n1 = 18/200 = 0.09　　p̂2 = x2/n2 = 6/150 = 0.04</span>
+    </div>
+    <div class="calc">
+      <span class="label">プールした比率</span>
+      <span class="line">p̄ = (x1+x2)/(n1+n2) = (18+6)/350 = 24/350</span>
+      <span class="result">p̄ ≒ 0.0686</span>
+    </div>
+    <div class="answer-row">
+      <span class="answer"><span class="qno">①②</span> p̂1=0.09, p̂2=0.04</span>
+      <span class="answer"><span class="qno">③</span> p̄≒0.0686</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>検定統計量と判定</h2></div>
+    <div class="calc">
+      <span class="label">検定統計量</span>
+      <span class="line">z0 = (p̂1−p̂2) / √{p̄(1−p̄)(1/n1+1/n2)}</span>
+      <span class="line">　 = 0.05 / √(0.0686×0.9314×0.011667) ≒ 0.05/0.0273</span>
+      <span class="result">z0 ≒ 1.832</span>
+    </div>
+    <div class="calc">
+      <span class="label">判定</span>
+      <span class="line">|z0| = 1.832 &lt; z(0.025) = 1.96 → 棄却域に入らない</span>
+      <span class="result">有意ではない(2台の不適合品率に差があるとはいえない)</span>
+    </div>
+    <div class="answer-row">
+      <span class="answer"><span class="qno">④</span> z0≒1.832</span>
+      <span class="answer"><span class="qno">⑤</span> 有意ではない</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>差の95%信頼区間</h2></div>
+    <p>区間推定は「本当の値を見積もる」作業なので、検定のような仮の値(帰無仮説の下でのp̄)ではなく、<b>手元のデータそのものp̂1・p̂2</b>を使う。分散もプールせず、それぞれの分散をそのまま足し合わせる。</p>
+    <div class="calc">
+      <span class="label">標準誤差(推定用)</span>
+      <span class="line">SE = √{p̂1(1−p̂1)/n1 + p̂2(1−p̂2)/n2} = √(0.0004095+0.000256)</span>
+      <span class="result">SE ≒ 0.0258</span>
+    </div>
+    <div class="calc">
+      <span class="label">95%信頼区間</span>
+      <span class="line">(p1−p2) = (0.09−0.04) ± 1.96×0.0258 = 0.05 ± 0.0506</span>
+      <span class="result">[−0.06%, 10.06%]</span>
+    </div>
+    <span class="answer"><span class="qno">⑥⑦</span> [−0.06%, 10.06%]</span>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 190" role="img" aria-label="差p1−p2の95%信頼区間を示す数直線。区間はマイナス0.06%からプラス10.06%までで、0%をまたいでいることを示す">
+          <line x1="60" y1="100" x2="580" y2="100" stroke="currentColor" stroke-width="1.4" opacity="0.5"/>
+          <text x="60" y="130" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">−5%</text>
+          <line x1="60" y1="94" x2="60" y2="106" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+          <text x="230" y="130" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">0%</text>
+          <line x1="230" y1="90" x2="230" y2="112" stroke="var(--wrong)" stroke-width="1.6" stroke-dasharray="3 3"/>
+          <text x="410" y="130" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">5%</text>
+          <line x1="410" y1="94" x2="410" y2="106" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+          <text x="580" y="130" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">10%</text>
+          <line x1="580" y1="94" x2="580" y2="106" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+
+          <line x1="228" y1="70" x2="584" y2="70" stroke="var(--reg)" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="410" cy="70" r="5" fill="var(--reg-ink)"/>
+          <text x="410" y="52" font-size="12" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">点推定 5.0%</text>
+
+          <text x="228" y="160" font-size="11" text-anchor="middle" fill="var(--reg-ink)">−0.06%</text>
+          <text x="584" y="160" font-size="11" text-anchor="middle" fill="var(--reg-ink)">10.06%</text>
+          <text x="320" y="30" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.65">95%信頼区間が0%をまたいでいる → 「有意でない」と整合</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 差の点推定は5.0%だが、95%信頼区間は−0.06%〜10.06%と0%をまたいでいる。これはSTEP2で「有意ではない」と判定したことと矛盾しない。区間が0をまたぐ ⇔ 検定で有意にならない、という対応関係はいつも成り立つ。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">分岐点</span><h2>検定はp̄、推定はp̂ ― なぜ使い分けるのか</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">✓</span><span><b>検定</b>: 「p1=p2」という帰無仮説が正しいと<b>仮定した世界</b>での起こりにくさを測るので、その仮定のもとで最も自然な推定値(2群をプールした比率p̄)を使う。</span></div>
+      <div class="step"><span class="mark">✓</span><span><b>区間推定</b>: 「本当の差はどれくらいか」を<b>手元のデータから素直に</b>見積もる作業なので、プールせずp̂1・p̂2をそのまま使う。</span></div>
+      <div class="step"><span class="mark">↔</span><span>これは母不適合品率が1つだけの検定・推定で、検定にはp0(仮説の値)、推定にはp̂(標本比率)を使うのとまったく同じ構造。母平均の検定でμ0、信頼区間でx̄を使う関係とも同型。</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>2つの比率の検定統計量は独立2標本のt検定と形が似ている(差 ÷ 標準誤差)が、分散の作り方はプールした比率p̄(1−p̄)を使う点が固有。</span></div>
+      <div class="step"><span class="mark">2</span><span>検定にはプールしたp̄、区間推定には素のp̂1・p̂2 ― この使い分けのパターンは統計の随所で繰り返し出てくる。</span></div>
+      <div class="step"><span class="mark">3</span><span>信頼区間が0(または差なし)をまたぐかどうかは、検定の結論(有意/非有意)と必ず整合する。計算後の検算に使える。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 オリジナル追加問題 問2 / 2つの母比率の差の検定</span>
+    <span>z0≒1.832 → 有意水準5%で有意ではない</span>
+  </footer>
+
+</div>

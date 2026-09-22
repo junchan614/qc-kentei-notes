@@ -1,0 +1,206 @@
+<title>二項分布とポアソン近似 — オリジナル追加問題 問9</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;}
+.back-link:hover{color:var(--reg-ink);}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(26px,4vw,36px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <a class="back-link" href="original-mock-exam-4.html">← オリジナル追加問題10問に戻る</a>
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 オリジナル問題解説 / 追加問題 問9</span>
+    <h1>二項分布はいつポアソン分布に化けるのか</h1>
+    <p class="lede">nが非常に大きく、pが非常に小さいとき、二項分布はポアソン分布にほぼ一致する。この問題では実際に平均・分散・確率を両方の分布で計算し、<b>どれだけ近似が良いか</b>を数値で確認する。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>設定</h2></div>
+    <p>ある電子部品の工程平均不適合品率はp=0.004(0.4%)であり、1ロットからn=1000個を検査する。不適合品の個数Xは本来は二項分布B(1000, 0.004)に従うが、nが非常に大きくpが非常に小さいので、ポアソン分布で近似して計算する。</p>
+    <div class="calc">
+      <span class="label">与えられた数値</span>
+      <span class="line">n=1000　p=0.004　e^(−4)≒0.0183</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>二項分布の期待値と分散</h2></div>
+    <div class="calc">
+      <span class="label">期待値(平均)</span>
+      <span class="line">E[X] = np = 1000×0.004</span>
+      <span class="result">E[X] = 4.00</span>
+    </div>
+    <div class="calc">
+      <span class="label">分散</span>
+      <span class="line">V[X] = np(1−p) = 4.00×0.996</span>
+      <span class="result">V[X] = 3.984</span>
+    </div>
+    <span class="answer-row">
+      <span class="answer"><span class="qno">①②</span> E[X]=4.00, V[X]=3.984</span>
+    </span>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>ポアソン近似で確率を求める</h2></div>
+    <div class="calc">
+      <span class="label">パラメータ</span>
+      <span class="line">λ = np = 4.00</span>
+    </div>
+    <div class="calc">
+      <span class="label">確率</span>
+      <span class="line">Pr(X=0) = e^(−λ) = e^(−4) ≒ 0.0183</span>
+      <span class="line">Pr(X≧1) = 1−Pr(X=0) = 1−0.0183</span>
+      <span class="result">Pr(X≧1) ≒ 0.9817</span>
+    </div>
+    <span class="answer-row">
+      <span class="answer"><span class="qno">③</span> λ=4.00</span>
+      <span class="answer"><span class="qno">④</span> Pr(X=0)≒0.0183</span>
+      <span class="answer"><span class="qno">⑤</span> Pr(X≧1)≒0.9817</span>
+    </span>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">図解</span><h2>近似の良さを数字で見る</h2></div>
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 560 200" role="img" aria-label="k=0から8までの確率を二項分布(緑)とポアソン近似(橙)で並べた棒グラフ。両者の高さがほとんど重なり近似の精度の高さを示す">
+          <line x1="30" y1="170" x2="550" y2="170" stroke="currentColor" stroke-width="1.2" opacity="0.4"/>
+          <g fill="var(--reg)" opacity="0.9">
+            <rect x="45" y="157" width="16" height="13"/>
+            <rect x="103" y="119" width="16" height="51"/>
+            <rect x="161" y="68" width="16" height="102"/>
+            <rect x="219" y="33" width="16" height="137"/>
+            <rect x="277" y="33" width="16" height="137"/>
+            <rect x="335" y="60" width="16" height="110"/>
+            <rect x="393" y="97" width="16" height="73"/>
+            <rect x="451" y="128" width="16" height="42"/>
+            <rect x="509" y="149" width="16" height="21"/>
+          </g>
+          <g fill="var(--res)" opacity="0.9">
+            <rect x="65" y="157" width="16" height="13"/>
+            <rect x="123" y="119" width="16" height="51"/>
+            <rect x="181" y="67" width="16" height="103"/>
+            <rect x="239" y="33" width="16" height="137"/>
+            <rect x="297" y="33" width="16" height="137"/>
+            <rect x="355" y="61" width="16" height="109"/>
+            <rect x="413" y="97" width="16" height="73"/>
+            <rect x="471" y="128" width="16" height="42"/>
+            <rect x="529" y="149" width="16" height="21"/>
+          </g>
+          <g font-size="11" text-anchor="middle" fill="currentColor" opacity="0.7">
+            <text x="63" y="185">k=0</text><text x="121" y="185">1</text><text x="179" y="185">2</text>
+            <text x="237" y="185">3</text><text x="295" y="185">4</text><text x="353" y="185">5</text>
+            <text x="411" y="185">6</text><text x="469" y="185">7</text><text x="527" y="185">8</text>
+          </g>
+          <rect x="380" y="12" width="12" height="12" fill="var(--reg)"/>
+          <text x="398" y="22" font-size="11" fill="currentColor" text-anchor="start">二項分布B(1000,0.004)</text>
+          <rect x="380" y="30" width="12" height="12" fill="var(--res)"/>
+          <text x="398" y="40" font-size="11" fill="currentColor" text-anchor="start">ポアソン近似(λ=4)</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> Pr(X=k)を k=0〜8 まで両方の分布で計算すると、どのkでも小数点以下3桁までほぼ一致する。棒の高さがほとんど重なって見えるのはこのため。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">分岐点</span><h2>この近似が成り立つ条件は何か</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">✓</span><span>二項分布の分散V[X]=np(1−p)=3.984は、ポアソン分布の分散(=λ=4.00)にほぼ一致している。これは(1−p)がpが小さいため(1−0.004=0.996)ほぼ1になり、np(1−p)≒npとなるため。</span></div>
+      <div class="step"><span class="mark">✕</span><span>「nが大きいから」だけでは根拠として不十分。pがそれなりに大きい(たとえば0.3など)場合は、nがいくら大きくてもnp(1−p)とnpの差は無視できず、ポアソン近似ではなく正規近似を使うべき場面になる。</span></div>
+      <div class="step"><span class="mark">↔</span><span>ポアソン分布そのものは、二項分布でn→∞、p→0、np=λを一定に保ったまま極限をとると得られる分布として定義される。この問題の(n=1000, p=0.004)は、まさにその極限に近い状況を再現している。</span></div>
+    </div>
+    <span class="answer"><span class="qno">⑥</span> V[X]=3.984がポアソン分布の分散(λ=4.00)に近く、pが小さいため近似の誤差がごくわずか</span>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>ポアソン近似が効くのは「nが大きい」だけでなく「pが小さい」ことも必要 ― この2条件がそろって初めてnp(1−p)≒npが成り立つ。</span></div>
+      <div class="step"><span class="mark">2</span><span>近似の良し悪しは、分散を比較することで数値的に確認できる。</span></div>
+      <div class="step"><span class="mark">3</span><span>単位面積・単位時間あたりの欠点数のように「試行回数」を数えにくい現象を扱うときは、最初からポアソン分布を直接使う(模試(3)問17)。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 オリジナル追加問題 問9 / 二項分布の平均・分散とポアソン近似</span>
+    <span>λ=4.00 → Pr(X≧1)≒0.9817</span>
+  </footer>
+
+</div>

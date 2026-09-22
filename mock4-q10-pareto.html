@@ -1,0 +1,218 @@
+<title>パレート図の累積比率とABC分析 — オリジナル追加問題 問10</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;}
+.back-link:hover{color:var(--reg-ink);}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(26px,4vw,36px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:420px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <a class="back-link" href="original-mock-exam-4.html">← オリジナル追加問題10問に戻る</a>
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 オリジナル問題解説 / 追加問題 問10</span>
+    <h1>累積80%までどこで届くか — パレート図とABC分析</h1>
+    <p class="lede">模試(1)(2)の問6・問12は層別クロス集計で真因を探る問題だったが、この問題はパレート図そのものの<b>累積比率の計算</b>に焦点を当てる。「上位2項目で足りるか、3項目必要か」を数字で確認する。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>設定</h2></div>
+    <p>ある製品の不適合を種類別に集計したところ、下表の件数が得られた。パレート図を作成し、累積比率をもとに重点管理すべき項目を選定する。</p>
+    <div class="table-wrap">
+      <table>
+        <caption>不適合の種類別件数(件数の多い順にすでに並べてある)</caption>
+        <thead><tr><th>種類</th><th>件数</th></tr></thead>
+        <tbody>
+          <tr><td>A: 寸法不良</td><td class="num">45</td></tr>
+          <tr><td>B: キズ</td><td class="num">30</td></tr>
+          <tr><td>C: 色ムラ</td><td class="num">15</td></tr>
+          <tr><td>D: 変形</td><td class="num">6</td></tr>
+          <tr><td>E: その他</td><td class="num">4</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="calc">
+      <span class="label">与えられた数値</span>
+      <span class="line">合計件数=100</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>累積比率を求める</h2></div>
+    <div class="calc">
+      <span class="label">累積比率</span>
+      <span class="line">A: 45/100 = 45%</span>
+      <span class="line">A+B: 75/100 = 75%</span>
+      <span class="line">A+B+C: 90/100 = 90%</span>
+    </div>
+    <div class="answer-row">
+      <span class="answer"><span class="qno">①</span> 45%</span>
+      <span class="answer"><span class="qno">②</span> 75%</span>
+      <span class="answer"><span class="qno">③</span> 90%</span>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 520 260" role="img" aria-label="パレート図。件数の多い順にA・B・C・D・Eの棒グラフを並べ、累積比率の折れ線を重ねる。折れ線はA地点で45%、A+B地点で75%、A+B+C地点で90%に達する">
+          <line x1="50" y1="220" x2="470" y2="220" stroke="currentColor" stroke-width="1.3" opacity="0.5"/>
+          <line x1="50" y1="220" x2="50" y2="30" stroke="currentColor" stroke-width="1.3" opacity="0.5"/>
+          <text x="30" y="75" font-size="10.5" text-anchor="end" fill="currentColor" opacity="0.6">50</text>
+          <line x1="46" y1="70" x2="50" y2="70" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+          <text x="30" y="225" font-size="10.5" text-anchor="end" fill="currentColor" opacity="0.6">0</text>
+
+          <line x1="470" y1="40" x2="474" y2="40" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+          <text x="490" y="44" font-size="10.5" text-anchor="middle" fill="var(--res-ink)" opacity="0.85">100%</text>
+          <line x1="470" y1="220" x2="474" y2="220" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+          <text x="490" y="224" font-size="10.5" text-anchor="middle" fill="var(--res-ink)" opacity="0.85">0%</text>
+
+          <g fill="var(--reg)">
+            <rect x="60" y="70" width="60" height="150"/>
+            <rect x="144" y="120" width="60" height="100"/>
+            <rect x="228" y="170" width="60" height="50"/>
+            <rect x="312" y="200" width="60" height="20"/>
+            <rect x="396" y="207" width="60" height="13"/>
+          </g>
+          <g font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">
+            <text x="90" y="235">A(45)</text><text x="174" y="235">B(30)</text><text x="258" y="235">C(15)</text>
+            <text x="342" y="235">D(6)</text><text x="426" y="235">E(4)</text>
+          </g>
+
+          <polyline points="90,139 174,85 258,58 342,47 426,40" fill="none" stroke="var(--res)" stroke-width="2.2"/>
+          <g fill="var(--res)">
+            <circle cx="90" cy="139" r="4.5"/><circle cx="174" cy="85" r="4.5"/><circle cx="258" cy="58" r="4.5"/>
+            <circle cx="342" cy="47" r="4.5"/><circle cx="426" cy="40" r="4.5"/>
+          </g>
+          <line x1="258" y1="58" x2="50" y2="58" stroke="var(--res)" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>
+          <text x="35" y="55" font-size="10.5" text-anchor="end" fill="var(--res-ink)">80%</text>
+          <line x1="50" y1="70" x2="470" y2="70" stroke="var(--res)" stroke-width="0.8" stroke-dasharray="2 4" opacity="0.4"/>
+
+          <text x="90" y="128" font-size="10.5" text-anchor="middle" fill="var(--res-ink)" font-weight="700">45%</text>
+          <text x="174" y="74" font-size="10.5" text-anchor="middle" fill="var(--res-ink)" font-weight="700">75%</text>
+          <text x="258" y="47" font-size="10.5" text-anchor="middle" fill="var(--res-ink)" font-weight="700">90%</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 累積比率の折れ線が80%のライン(点線)を超えるのは、A+Bの75%地点ではなく<b>A+B+Cの90%地点</b>。棒グラフだけを見るとA・Bが目立つが、80%という基準で切ると3項目必要になる。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">分岐点</span><h2>重点管理する項目はどこまでか</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">✕</span><span>A+Bの累積比率は75%。「上位2項目で8割方カバーできる」という直感は、この事例では<b>まだ80%に届いていない</b>ため誤り。</span></div>
+      <div class="step"><span class="mark">✓</span><span>Cを加えて初めて90%に達し、80%の基準を超える。<b>累積比率が基準を超えるまでの項目をすべて含める</b>のがABC分析の考え方。</span></div>
+      <div class="step"><span class="mark">↔</span><span>ちょうど都合よく基準ぴったりで区切れるとは限らない ― 実務でもこの「あと一歩で基準に届かない」というケースはよく起こる。</span></div>
+    </div>
+    <span class="answer"><span class="qno">④</span> A・B・Cの3項目(A+Bでは75%で80%に届かず、Cを含めて90%で初めて超える)</span>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>上位2項目の占有率</h2></div>
+    <div class="calc">
+      <span class="label">上位2項目(A・B)の合計</span>
+      <span class="line">A+B = 45+30 = 75件</span>
+      <span class="line">75/100</span>
+      <span class="result">75%</span>
+    </div>
+    <span class="answer"><span class="qno">⑤</span> 75%</span>
+    <div class="callout info"><b>検算のコツ:</b> ⑤の答えは②の累積比率(A+B)とまったく同じ値になる。A・Bがすでに件数の多い順で並んだ上位2つだから、この一致は当然の結果 ― 検算に使える。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>パレート図の累積比率は、件数の多い順に足し込んでいくだけ。順番が保証されていれば計算は単純。</span></div>
+      <div class="step"><span class="mark">2</span><span>「重点管理すべき項目」を基準比率(80%など)で決めるときは、累積比率が実際にその基準を超える地点まで項目を含める。「上位2つ」のような項目数の直感だけで判断しない。</span></div>
+      <div class="step"><span class="mark">3</span><span>棒グラフ(件数)だけでなく折れ線(累積比率)まで正確に読むのがパレート図の使い方。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 オリジナル追加問題 問10 / パレート図の累積比率とABC分析</span>
+    <span>A+B=75% → A+B+Cで90%、80%基準を超える</span>
+  </footer>
+
+</div>

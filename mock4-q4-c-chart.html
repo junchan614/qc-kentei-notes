@@ -1,0 +1,191 @@
+<title>c管理図 — オリジナル追加問題 問4</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;}
+.back-link:hover{color:var(--reg-ink);}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(26px,4vw,36px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <a class="back-link" href="original-mock-exam-4.html">← オリジナル追加問題10問に戻る</a>
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 オリジナル問題解説 / 追加問題 問4</span>
+    <h1>1枚あたりのキズの数を見張る — c管理図</h1>
+    <p class="lede">np管理図は「検査した個数のうち何個が不適合か」を数えるが、c管理図は<b>1つの検査単位に何個の欠点があるか</b>を数える。検査単位の大きさが常に一定であることが、c管理図が使える前提になる。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>設定</h2></div>
+    <p>ある塗装工程で、1枚のパネル(検査単位の大きさは常に1枚で一定)に生じるキズの数を毎日1枚ずつ、25日間(k=25)記録した。25日間のキズの数の合計は150個であった。</p>
+    <div class="calc">
+      <span class="label">与えられた数値</span>
+      <span class="line">群数 k=25(検査単位=パネル1枚、常に一定)　Σc=150</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>中心線とUCLを求める</h2></div>
+    <p>c管理図はポアソン分布(分散=平均)を前提にしているため、標準偏差は√c̄で求まる。np管理図の√(np̄(1−p̄))と比べて式がシンプルなのはこのため。</p>
+    <div class="calc">
+      <span class="label">中心線</span>
+      <span class="line">c̄ = Σc/k = 150/25</span>
+      <span class="result">c̄ = 6.00</span>
+    </div>
+    <div class="calc">
+      <span class="label">UCL</span>
+      <span class="line">UCL = c̄+3√c̄ = 6.00+3√6.00 = 6.00+3×2.449</span>
+      <span class="result">UCL ≒ 13.35</span>
+    </div>
+    <div class="answer-row">
+      <span class="answer"><span class="qno">①</span> CL=6.00</span>
+      <span class="answer"><span class="qno">②</span> UCL≒13.35</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>LCLと異常判定</h2></div>
+    <div class="calc">
+      <span class="label">LCL</span>
+      <span class="line">LCL = c̄−3√c̄ = 6.00−7.35 = −1.35</span>
+      <span class="result">負の値 → LCLは引かない(考えない)</span>
+    </div>
+    <div class="calc">
+      <span class="label">異常判定</span>
+      <span class="line">後日、あるパネルでc=15を記録 → UCL(13.35)を超えている</span>
+      <span class="result">UCLを超えており異常と判定</span>
+    </div>
+    <div class="answer-row">
+      <span class="answer"><span class="qno">③</span> LCLは引かない</span>
+      <span class="answer"><span class="qno">④</span> 異常と判定</span>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 220" role="img" aria-label="c管理図の模式図。中心線c̄=6.00、上方管理限界UCL=13.35、下方管理限界は負のため引かれていない。ある日の点c=15がUCLを超えて異常と判定されている様子を示す">
+          <line x1="50" y1="60" x2="590" y2="60" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3" opacity="0.6"/>
+          <text x="600" y="64" font-size="11" fill="currentColor" opacity="0.7">UCL 13.35</text>
+          <line x1="50" y1="140" x2="590" y2="140" stroke="currentColor" stroke-width="1.5" opacity="0.85"/>
+          <text x="600" y="144" font-size="11" fill="currentColor" opacity="0.7">CL 6.00</text>
+          <line x1="50" y1="196" x2="590" y2="196" stroke="currentColor" stroke-width="1" stroke-dasharray="1 4" opacity="0.35"/>
+          <text x="600" y="200" font-size="10" fill="currentColor" opacity="0.5">LCLなし</text>
+
+          <polyline points="70,150 110,135 150,145 190,120 230,155 270,110 310,130 350,160" fill="none" stroke="var(--reg)" stroke-width="1.8"/>
+          <g fill="var(--reg)">
+            <circle cx="70" cy="150" r="4"/><circle cx="110" cy="135" r="4"/><circle cx="150" cy="145" r="4"/>
+            <circle cx="190" cy="120" r="4"/><circle cx="230" cy="155" r="4"/><circle cx="270" cy="110" r="4"/>
+            <circle cx="310" cy="130" r="4"/><circle cx="350" cy="160" r="4"/>
+          </g>
+          <line x1="350" y1="160" x2="410" y2="38" stroke="var(--reg)" stroke-width="1.8"/>
+          <circle cx="410" cy="38" r="6" fill="var(--wrong)"/>
+          <text x="410" y="24" font-size="12" text-anchor="middle" fill="var(--wrong)" font-weight="700">c=15(異常)</text>
+
+          <text x="320" y="24" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.6">検査単位(パネル1枚)ごとの欠点数の推移</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> UCLは13.35で固定(検査単位が常にパネル1枚で一定のため)。c=15の点はこのUCLを明確に超えており異常と判定する。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">分岐点</span><h2>検査単位の大きさが変わったらどうするか</h2></div>
+    <p>c管理図が使えるのは<b>検査単位の大きさ(面積・時間・個数など)が常に一定</b>という前提があるからこそ。もし日によってパネルの検査枚数が変わるなら、この前提が崩れる。</p>
+    <div class="steps">
+      <div class="step"><span class="mark">✓</span><span>検査単位が<b>一定</b> → c管理図(c̄±3√c̄)。</span></div>
+      <div class="step"><span class="mark">✓</span><span>検査単位が<b>日によって変わる</b> → u管理図(u=c/n、単位あたりの欠点数)。管理限界の幅も日ごとに変わる。</span></div>
+      <div class="step"><span class="mark">↔</span><span>これはnp管理図(検査数一定)とp管理図(検査数が変わる)の関係とまったく同じ対応。c/u管理図は計数値、np/p管理図も計数値だが、c/uは「1つの対象にいくつ欠点があるか」、np/pは「検査した個体のうち何個が不適合か」を数える点が違う。</span></div>
+    </div>
+    <span class="answer"><span class="qno">⑤</span> u管理図(単位あたりの欠点数)</span>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>c管理図はポアソン分布(分散=平均)が前提。UCL/LCL=c̄±3√c̄とnp管理図よりシンプルな式になる。</span></div>
+      <div class="step"><span class="mark">2</span><span>LCLが負になったら「引かない」。欠点数は0未満になり得ないため。</span></div>
+      <div class="step"><span class="mark">3</span><span>c管理図は検査単位が一定のときだけ使える。単位が変わるならu管理図に切り替える(次の問5で扱う)。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 オリジナル追加問題 問4 / c管理図</span>
+    <span>c̄=6.00, UCL≒13.35 → c=15は異常</span>
+  </footer>
+
+</div>

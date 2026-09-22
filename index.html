@@ -130,7 +130,7 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
     <h1>QC検定2級 学習ノート</h1>
     <p class="lede">過去問の解説と、つまずいた概念の掘り下げをまとめたページ。各資料は図解つきで、公式の暗記ではなく「なぜその式になるのか」と「誤答選択肢が何のミスに対応しているか」まで踏み込んでいる。</p>
     <div class="meta-row">
-      <div class="meta"><span class="v">61</span><span class="k">資料</span></div>
+      <div class="meta"><span class="v">71</span><span class="k">資料</span></div>
       <div class="meta"><span class="v">6</span><span class="k">出題回（第35〜40回）</span></div>
       <div class="meta"><span class="v">13</span><span class="k">分野</span></div>
       <div class="meta"><span class="v">2026-09-23</span><span class="k">最終更新</span></div>
@@ -404,7 +404,7 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
     </div>
 
     <div class="group">
-      <div class="group-label"><h3>相関分析・回帰分析</h3><span class="rule"></span><span class="count">9件</span></div>
+      <div class="group-label"><h3>相関分析・回帰分析</h3><span class="rule"></span><span class="count">10件</span></div>
       <div class="cards">
         <a class="card" href="correlation-coefficient.html" data-round="35" data-q="3" target="_blank" rel="noopener">
           <div class="chips"><span class="chip">概念の掘り下げ</span><span class="chip src">第35回 問3</span></div>
@@ -513,6 +513,18 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
           </div>
           <div class="go">開く →</div>
         </a>
+
+        <a class="card" href="mock4-q3-correlation-direct-t.html" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">オリジナル追加問題</span><span class="chip">問3</span></div>
+          <h4>相関係数の直接t検定</h4>
+          <div class="desc">分散分析表(F0)を経由せず、相関係数rから直接t0=r√(n−2)/√(1−r²)で無相関の検定を行う方法。F0=t0²の関係で分散分析表ルートと同じ結論に達することを確認し、回帰直線・点推定まで解く。</div>
+          <div class="keys">
+            <span>t0 = r√(n−2) / √(1−r²)</span>
+            <span>F0 = t0²(自由度も1:1対応)</span>
+            <span>回帰直線は必ず(x̄,ȳ)を通る</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
       </div>
     </div>
 
@@ -570,7 +582,7 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
     </div>
 
     <div class="group">
-      <div class="group-label"><h3>検定と推定</h3><span class="rule"></span><span class="count">7件</span></div>
+      <div class="group-label"><h3>検定と推定</h3><span class="rule"></span><span class="count">9件</span></div>
       <div class="cards">
         <a class="card" href="38th-chi-square.html" data-round="38" data-q="3" target="_blank" rel="noopener">
           <div class="chips"><span class="chip src">第38回 問3</span><span class="chip">(14)〜(21)</span></div>
@@ -655,11 +667,35 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
           </div>
           <div class="go">開く →</div>
         </a>
+
+        <a class="card" href="mock4-q1-z-test.html" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">オリジナル追加問題</span><span class="chip">問1</span></div>
+          <h4>母平均のZ検定(σ既知)</h4>
+          <div class="desc">母標準偏差σが既知のときの両側Z検定と95%信頼区間。σ既知ならZ分布、未知ならt分布という判断の分かれ目を整理する。</div>
+          <div class="keys">
+            <span>Z0 = (x̄−μ0) / (σ/√n)</span>
+            <span>σ既知→Z分布、σ未知→t分布</span>
+            <span>両側検定はz(0.025)=1.96</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="mock4-q2-two-proportion-test.html" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">オリジナル追加問題</span><span class="chip">問2</span></div>
+          <h4>2つの母比率の差の検定</h4>
+          <div class="desc">2台の成形機の不適合品率を比較する検定と推定。検定にはプールした比率p̄、区間推定にはp̂1・p̂2をそのまま使う使い分けを、母平均の検定・推定の関係と対比して整理する。</div>
+          <div class="keys">
+            <span>z0=(p̂1−p̂2)/√{p̄(1−p̄)(1/n1+1/n2)}</span>
+            <span>検定はp̄、推定はp̂1・p̂2</span>
+            <span>信頼区間が0をまたぐ⇔有意でない</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
       </div>
     </div>
 
     <div class="group">
-      <div class="group-label"><h3>実験計画法</h3><span class="rule"></span><span class="count">7件</span></div>
+      <div class="group-label"><h3>実験計画法</h3><span class="rule"></span><span class="count">9件</span></div>
       <div class="cards">
         <a class="card" href="35th-anova-experiment.html" data-round="35" data-q="4" target="_blank" rel="noopener">
           <div class="chips"><span class="chip src">第35回 問4</span><span class="chip">(18)〜(24)</span></div>
@@ -744,11 +780,35 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
           </div>
           <div class="go">開く →</div>
         </a>
+
+        <a class="card" href="mock4-q6-oneway-balanced.html" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">オリジナル追加問題</span><span class="chip">問6</span></div>
+          <h4>繰返し数が揃った一元配置</h4>
+          <div class="desc">全水準n=5と繰返し数が揃った一元配置実験の基本形。不揃いのケース(模試1問4)と比べて、S_Aの計算・区間推定のnがどれだけシンプルになるかを確認する。</div>
+          <div class="keys">
+            <span>S_A = Σ(T_i²)/n − CT(1回nで割るだけ)</span>
+            <span>骨格はS_T=S_A+S_Eで不揃いと同じ</span>
+            <span>ばらつきの91%を要因Aが説明</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="mock4-q7-twoway-interaction.html" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">オリジナル追加問題</span><span class="chip">問7</span></div>
+          <h4>主効果ゼロ・交互作用だけ有意な二元配置</h4>
+          <div class="desc">A・Bどちらの主効果も有意でないのに交互作用だけが極端に有意という構成。交互作用プロット(2本の折れ線が交差)で、主効果だけでは見えない効果を視覚化する。</div>
+          <div class="keys">
+            <span>F0(A)=0.50, F0(B)=0.50, F0(A×B)=204.50</span>
+            <span>折れ線の交差 = 交互作用のサイン</span>
+            <span>最適水準は実測セル平均で選ぶ</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
       </div>
     </div>
 
     <div class="group">
-      <div class="group-label"><h3>統計的方法の基礎</h3><span class="rule"></span><span class="count">7件</span></div>
+      <div class="group-label"><h3>統計的方法の基礎</h3><span class="rule"></span><span class="count">9件</span></div>
       <div class="cards">
         <a class="card" href="38th-normal-cp.html" data-round="38" data-q="2" target="_blank" rel="noopener">
           <div class="chips"><span class="chip src">第38回 問2</span><span class="chip">(9)〜(13)</span></div>
@@ -833,11 +893,35 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
           </div>
           <div class="go">開く →</div>
         </a>
+
+        <a class="card" href="mock4-q8-clt-unknown-sigma.html" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">オリジナル追加問題</span><span class="chip">問8</span></div>
+          <h4>母標準偏差未知の区間推定</h4>
+          <div class="desc">σが未知で標本標準偏差sから推定するときのt分布による区間推定。中心極限定理(標本平均が正規分布に近づく)と、σの既知・未知(z分布かt分布か)は別の話であることを整理する。</div>
+          <div class="keys">
+            <span>σ既知→z、σ未知→t(自由度n−1)</span>
+            <span>中心極限定理はσの既知・未知と無関係</span>
+            <span>同じSEでもt区間の方がわずかに広い</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="mock4-q9-binomial-poisson.html" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">オリジナル追加問題</span><span class="chip">問9</span></div>
+          <h4>二項分布の平均・分散とポアソン近似</h4>
+          <div class="desc">二項分布B(1000,0.004)の期待値・分散とポアソン近似λ=4を並べて計算。近似が効くのは「nが大きい」だけでなく「pが小さい」ことも必要という条件を、分散の一致で確認する。</div>
+          <div class="keys">
+            <span>E[X]=np, V[X]=np(1−p)</span>
+            <span>pが小さいとnp(1−p)≒np=λ</span>
+            <span>k=0〜8でPr(X=k)がほぼ一致</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
       </div>
     </div>
 
     <div class="group">
-      <div class="group-label"><h3>管理図</h3><span class="rule"></span><span class="count">5件</span></div>
+      <div class="group-label"><h3>管理図</h3><span class="rule"></span><span class="count">7件</span></div>
       <div class="cards">
         <a class="card" href="37th-xbar-r-chart.html" data-round="37" data-q="3" target="_blank" rel="noopener">
           <div class="chips"><span class="chip src">第37回 問3</span><span class="chip">(14)〜(21)</span></div>
@@ -898,6 +982,30 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
           </div>
           <div class="go">開く →</div>
         </a>
+
+        <a class="card" href="mock4-q4-c-chart.html" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">オリジナル追加問題</span><span class="chip">問4</span></div>
+          <h4>c管理図</h4>
+          <div class="desc">検査単位の大きさが一定のときの欠点数を管理するc管理図。ポアソン分布(分散=平均)を前提にしたCL・UCLの求め方と、単位が変わる場合はu管理図に切り替える判断。</div>
+          <div class="keys">
+            <span>CL=c̄、UCL/LCL=c̄±3√c̄</span>
+            <span>LCLが負なら引かない</span>
+            <span>単位が変わる→u管理図</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="mock4-q5-u-chart.html" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">オリジナル追加問題</span><span class="chip">問5</span></div>
+          <h4>u管理図(群サイズ不定)</h4>
+          <div class="desc">検査枚数が日によって変わるときのu管理図。同じūでも群の大きさnが小さい日ほどUCLが広くなる理由をp管理図と対比して整理する。</div>
+          <div class="keys">
+            <span>ū=ΣC/ΣN(合計どうしで求める)</span>
+            <span>UCL=ū+3√(ū/n)、nが小さいほど広い</span>
+            <span>p管理図の群サイズ不定と同じ構造</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
       </div>
     </div>
 
@@ -931,7 +1039,7 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
     </div>
 
     <div class="group">
-      <div class="group-label"><h3>QC的問題解決・QC七つ道具</h3><span class="rule"></span><span class="count">1件</span></div>
+      <div class="group-label"><h3>QC的問題解決・QC七つ道具</h3><span class="rule"></span><span class="count">2件</span></div>
       <div class="cards">
         <a class="card" href="36th-problem-solving.html" data-round="36" data-q="6" target="_blank" rel="noopener">
           <div class="chips"><span class="chip src">第36回 問6</span><span class="chip">(37)〜(47)</span></div>
@@ -941,6 +1049,18 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
             <span>C(pk) = (x̄ − S(L)) / 3s</span>
             <span>特性は「現象」で書く</span>
             <span>相関が弱い = 他に原因</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="mock4-q10-pareto.html" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip">オリジナル追加問題</span><span class="chip">問10</span></div>
+          <h4>パレート図の累積比率とABC分析</h4>
+          <div class="desc">件数の多い順に並んだ不適合の種類から累積比率を計算し、80%基準で重点管理する項目を選ぶ。上位2項目では基準に届かず3項目必要になる「あと一歩」のケースを扱う。</div>
+          <div class="keys">
+            <span>累積比率は多い順に足し込むだけ</span>
+            <span>基準を超えるまでの項目をすべて含める</span>
+            <span>実際のパレート図(棒+累積折れ線)つき</span>
           </div>
           <div class="go">開く →</div>
         </a>
@@ -1063,7 +1183,7 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
 
   <footer>
     <span>QC検定2級 学習ノート — 目次</span>
-    <span>資料61件 / 最終更新 2026-09-23</span>
+    <span>資料71件 / 最終更新 2026-09-23</span>
     <span><a href="https://x.com/junchan614" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">@junchan614</a></span>
   </footer>
 

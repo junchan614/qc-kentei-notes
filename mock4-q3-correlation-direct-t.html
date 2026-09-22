@@ -1,0 +1,202 @@
+<title>相関係数の直接t検定 — オリジナル追加問題 問3</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;}
+.back-link:hover{color:var(--reg-ink);}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(26px,4vw,36px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <a class="back-link" href="original-mock-exam-4.html">← オリジナル追加問題10問に戻る</a>
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 オリジナル問題解説 / 追加問題 問3</span>
+    <h1>rから直接検定する — 無相関の検定(直接法)と回帰直線</h1>
+    <p class="lede">模試(1)(2)の無相関の検定は分散分析表(F0)を経由したが、実は相関係数rさえ求まれば<b>t0=r√(n−2)/√(1−r²)</b>で直接検定できる。F0=t0²という関係を通じて、両方が同じ結論に達することを確かめる。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>設定</h2></div>
+    <p>ある触媒添加量x(%)と反応収率y(%)の関係を調べるため、添加量の水準を変えて12回測定した。相関係数rを直接使った無相関の検定(t検定)を行い、回帰直線も求める。</p>
+    <div class="calc">
+      <span class="label">与えられた数値</span>
+      <span class="line">n=12　Σx=156　Σy=377　Σx²=2600　Σy²=13109　Σxy=5750</span>
+      <span class="line">t(10, 0.025)=2.228</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>平方和と相関係数</h2></div>
+    <div class="calc">
+      <span class="label">3つの平方和</span>
+      <span class="line">Sxx = Σx²−(Σx)²/n = 2600−156²/12 = 2600−2028 = 572.00</span>
+      <span class="line">Sxy = Σxy−ΣxΣy/n = 5750−156×377/12 = 5750−4901 = 849.00</span>
+      <span class="line">Syy = Σy²−(Σy)²/n = 13109−377²/12 ≒ 1264.92</span>
+    </div>
+    <div class="calc">
+      <span class="label">相関係数</span>
+      <span class="line">r = Sxy/√(Sxx・Syy) = 849/√(572×1264.92)</span>
+      <span class="result">r ≒ 0.998</span>
+    </div>
+    <div class="answer-row">
+      <span class="answer"><span class="qno">①②③</span> Sxx=572.00, Sxy=849.00, Syy=1264.92</span>
+      <span class="answer"><span class="qno">④</span> r≒0.998</span>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 460 210" role="img" aria-label="12個のデータ点がほぼ一直線に並ぶ散布図。回帰直線がほとんどの点を通り、相関係数r=0.998の強い相関を示す">
+          <line x1="30" y1="200" x2="440" y2="200" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+          <line x1="30" y1="200" x2="30" y2="20" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+          <text x="235" y="15" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">触媒添加量x(%) → 反応収率y(%)</text>
+          <line x1="40.0" y1="189.6" x2="420.0" y2="31.2" stroke="var(--res)" stroke-width="1.6" stroke-dasharray="4 3" opacity="0.9"/>
+          <g fill="var(--reg)">
+            <circle cx="40.0" cy="190.0" r="4"/>
+            <circle cx="74.5" cy="175.5" r="4"/>
+            <circle cx="109.1" cy="165.8" r="4"/>
+            <circle cx="143.6" cy="141.5" r="4"/>
+            <circle cx="178.2" cy="131.8" r="4"/>
+            <circle cx="212.7" cy="117.3" r="4"/>
+            <circle cx="247.3" cy="97.9" r="4"/>
+            <circle cx="281.8" cy="93.0" r="4"/>
+            <circle cx="316.4" cy="73.6" r="4"/>
+            <circle cx="350.9" cy="59.1" r="4"/>
+            <circle cx="385.5" cy="49.4" r="4"/>
+            <circle cx="420.0" cy="30.0" r="4"/>
+          </g>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> r=0.998は「ほぼ一直線に並ぶ」レベルの強い相関。回帰直線がすべての点のすぐ近くを通っていることが視覚的にも確認できる。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>rから直接検定する</h2></div>
+    <p>模試(1)問2・模試(2)問8では、分散分析表(S_R・S_e・F0)を経由して回帰の有意性を検定した。実はrが分かっていれば、分散分析表を作らずに<b>直接t検定</b>できる。</p>
+    <div class="calc">
+      <span class="label">検定統計量(直接法)</span>
+      <span class="line">t0 = r√(n−2) / √(1−r²) = 0.998×√10 / √(1−0.996)</span>
+      <span class="result">t0 ≒ 51.37</span>
+    </div>
+    <div class="calc">
+      <span class="label">判定</span>
+      <span class="line">t0(51.37) ≫ t(10, 0.025)(2.228)</span>
+      <span class="result">有意水準5%で有意(無相関とはいえない)</span>
+    </div>
+    <div class="answer-row">
+      <span class="answer"><span class="qno">⑤</span> t0≒51.37</span>
+      <span class="answer"><span class="qno">⑥</span> 有意である</span>
+    </div>
+    <div class="callout info"><b>F0=t0²の関係:</b> この直接法のt0と、分散分析表から求めるF0は、単回帰では常に <span class="mono">F0=t0²</span> という関係で結ばれる(自由度も1:1で対応する)。実際にF0を計算するとF0≒51.37²≒2639となり、模試(1)(2)のF0ルートと完全に同じ結論に達する。どちらで解いても構わないが、rが先に求まっている場合は直接法の方が速い。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>回帰直線と点推定</h2></div>
+    <div class="calc">
+      <span class="label">回帰直線の係数</span>
+      <span class="line">b = Sxy/Sxx = 849/572 ≒ 1.48</span>
+      <span class="line">a = ȳ−bx̄ = 31.42−1.4843×13.0 ≒ 12.12</span>
+    </div>
+    <div class="calc">
+      <span class="label">x=13のときの点推定</span>
+      <span class="line">ŷ = a+b×13 = 12.12+1.4843×13</span>
+      <span class="result">ŷ ≒ 31.42</span>
+    </div>
+    <div class="answer-row">
+      <span class="answer"><span class="qno">⑦⑧</span> b≒1.48, a≒12.12</span>
+      <span class="answer"><span class="qno">⑨</span> ŷ≒31.42</span>
+    </div>
+    <div class="callout"><b>検算のコツ:</b> x=13はデータの平均x̄(=13.0)そのもの。回帰直線は必ず点(x̄, ȳ)を通るという性質があるため、この点でのŷは必ずȳ(=31.42)に一致する。この一致を検算に使える。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>無相関の検定は、分散分析表を経由するF0ルートと、rから直接計算するt0ルートの2通りがあり、<span class="mono">F0=t0²</span>で結ばれる。</span></div>
+      <div class="step"><span class="mark">2</span><span>rが先に求まっている場面では、直接法(t0=r√(n−2)/√(1−r²))の方が計算が速い。</span></div>
+      <div class="step"><span class="mark">3</span><span>回帰直線は必ず(x̄, ȳ)を通る。x=x̄での予測値がȳに一致するかどうかで、係数の計算ミスを検算できる。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 オリジナル追加問題 問3 / 相関係数の直接t検定</span>
+    <span>t0≒51.37 → 有意水準5%で有意</span>
+  </footer>
+
+</div>

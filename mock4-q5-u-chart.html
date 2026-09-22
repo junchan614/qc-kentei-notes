@@ -1,0 +1,217 @@
+<title>u管理図 — オリジナル追加問題 問5</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;}
+.back-link:hover{color:var(--reg-ink);}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(26px,4vw,36px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:480px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <a class="back-link" href="original-mock-exam-4.html">← オリジナル追加問題10問に戻る</a>
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 オリジナル問題解説 / 追加問題 問5</span>
+    <h1>検査枚数が日ごとに変わる — u管理図</h1>
+    <p class="lede">問4のc管理図は検査単位が一定という前提だった。検査枚数が日によって変わる場合はu管理図(u=c/n)を使う。p管理図(問15)と同じく、<b>群の大きさnが小さい日ほど管理限界の幅が広くなる</b>。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>設定</h2></div>
+    <p>問4と同じ塗装工程で、検査するパネルの枚数(検査単位の数)が日によって変わる場合を考える。群の大きさnが日ごとに異なるため、u管理図では日ごとに管理限界(UCL・LCL)が変わる。</p>
+    <div class="table-wrap">
+      <table>
+        <caption>3日分のデータ</caption>
+        <thead><tr><th>日</th><th>検査枚数 n</th><th>欠点数 c</th></tr></thead>
+        <tbody>
+          <tr><td>1日目</td><td class="num">5</td><td class="num">8</td></tr>
+          <tr><td>2日目</td><td class="num">10</td><td class="num">9</td></tr>
+          <tr><td>3日目</td><td class="num">5</td><td class="num">18</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="calc">
+      <span class="label">与えられた数値</span>
+      <span class="line">合計検査枚数 ΣN=20　合計欠点数 ΣC=35</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>中心線</h2></div>
+    <p>中心線ūは、日ごとのuの単純平均ではなく、<b>合計どうし</b>で求める(p管理図のp̄の求め方とまったく同じ)。</p>
+    <div class="calc">
+      <span class="label">中心線</span>
+      <span class="line">ū = ΣC/ΣN = 35/20</span>
+      <span class="result">ū = 1.75</span>
+    </div>
+    <span class="answer"><span class="qno">①</span> ū=1.75</span>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>群ごとに変わるUCL</h2></div>
+    <div class="calc">
+      <span class="label">1日目(n=5)のUCL</span>
+      <span class="line">UCL = ū+3√(ū/n) = 1.75+3√(1.75/5) = 1.75+3×0.5916</span>
+      <span class="result">UCL ≒ 3.52</span>
+    </div>
+    <div class="calc">
+      <span class="label">2日目(n=10)のUCL</span>
+      <span class="line">UCL = 1.75+3√(1.75/10) = 1.75+3×0.4183</span>
+      <span class="result">UCL ≒ 3.00</span>
+    </div>
+    <div class="answer-row">
+      <span class="answer"><span class="qno">②</span> 1日目UCL≒3.52</span>
+      <span class="answer"><span class="qno">③</span> 2日目UCL≒3.00</span>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 220" role="img" aria-label="u管理図の3日分の模式図。1日目と3日目はn=5でUCLが3.52、2日目はn=10でUCLが3.00と狭い。3日目のu=3.60はUCLを超えて異常となる" >
+          <text x="130" y="20" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">1日目(n=5)</text>
+          <line x1="30" y1="55" x2="230" y2="55" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3" opacity="0.6"/>
+          <text x="235" y="59" font-size="10" fill="currentColor" opacity="0.7">UCL 3.52</text>
+          <line x1="30" y1="120" x2="230" y2="120" stroke="currentColor" stroke-width="1.4" opacity="0.8"/>
+          <circle cx="130" cy="105" r="5" fill="var(--reg)"/>
+          <text x="130" y="140" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.7">u=1.60(安定)</text>
+
+          <text x="340" y="20" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">2日目(n=10)</text>
+          <line x1="240" y1="70" x2="440" y2="70" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3" opacity="0.6"/>
+          <text x="445" y="74" font-size="10" fill="currentColor" opacity="0.7">UCL 3.00</text>
+          <line x1="240" y1="120" x2="440" y2="120" stroke="currentColor" stroke-width="1.4" opacity="0.8"/>
+          <circle cx="340" cy="112" r="5" fill="var(--reg)"/>
+          <text x="340" y="140" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.7">u=0.90(安定)</text>
+
+          <text x="550" y="20" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">3日目(n=5)</text>
+          <line x1="450" y1="55" x2="620" y2="55" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3" opacity="0.6"/>
+          <text x="565" y="46" font-size="10" fill="currentColor" opacity="0.7">UCL 3.52</text>
+          <line x1="450" y1="120" x2="620" y2="120" stroke="currentColor" stroke-width="1.4" opacity="0.8"/>
+          <circle cx="550" cy="48" r="6" fill="var(--wrong)"/>
+          <text x="550" y="165" font-size="11" text-anchor="middle" fill="var(--wrong)" font-weight="700">u=3.60(異常)</text>
+
+          <text x="320" y="195" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.65">同じū=1.75でも、nが小さい日(1・3日目)ほどUCLが高く、nが大きい日(2日目)ほどUCLが低い</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 1日目と3日目は同じn=5なのでUCLも同じ3.52。2日目はn=10と検査数が多いのでUCLは3.00まで狭まる。標準誤差√(ū/n)がnとともに小さくなるため。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>3日目の判定</h2></div>
+    <div class="calc">
+      <span class="label">3日目のu値</span>
+      <span class="line">u = c/n = 18/5 = 3.60</span>
+      <span class="line">3日目はn=5なのでUCLは1日目と同じ3.52</span>
+      <span class="result">u(3.60) &gt; UCL(3.52) → UCLを超えており異常</span>
+    </div>
+    <span class="answer"><span class="qno">④</span> UCLを超えており異常</span>
+    <div class="callout warn"><b>僅差の判定に注意:</b> 3.60と3.52の差はわずか0.08しかない。感覚的な比較ではなく、必ず数値を正確に計算してから比較する必要がある典型例。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">分岐点</span><h2>なぜnが小さいほどUCLが広いのか</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>標準誤差は√(ū/n)。<b>nが大きいほどこの値は小さくなる</b>(分母が大きくなるため)。</span></div>
+      <div class="step"><span class="mark">2</span><span>UCL=ū+3×標準誤差なので、標準誤差が小さい日(nが大きい日)ほどUCLはū寄りになり、帯が狭くなる。</span></div>
+      <div class="step"><span class="mark">↔</span><span>これはp管理図(問15)で、検査数が変わると管理限界の幅が日ごとに変わるのとまったく同じ理由。u管理図と計数値のp管理図は、どちらも「群の大きさが分母に効く」という構造を共有している。</span></div>
+    </div>
+    <span class="answer"><span class="qno">⑤</span> 標準誤差√(ū/n)がnが大きいほど小さくなるため</span>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>ūは日ごとのuの平均ではなく、合計どうし(ΣC/ΣN)で求める。</span></div>
+      <div class="step"><span class="mark">2</span><span>群の大きさnが変わると、同じūでも日ごとにUCL・LCLが変わる ― c管理図にはない特徴。</span></div>
+      <div class="step"><span class="mark">3</span><span>UCLとの比較は僅差になることがあるため、感覚ではなく正確な数値で判定する。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 オリジナル追加問題 問5 / u管理図(群の大きさ不定)</span>
+    <span>ū=1.75 → 3日目 u=3.60 は異常</span>
+  </footer>
+
+</div>

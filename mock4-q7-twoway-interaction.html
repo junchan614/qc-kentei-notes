@@ -1,0 +1,219 @@
+<title>交互作用が有意な二元配置 — オリジナル追加問題 問7</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;}
+.back-link:hover{color:var(--reg-ink);}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(26px,4vw,36px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:480px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <a class="back-link" href="original-mock-exam-4.html">← オリジナル追加問題10問に戻る</a>
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 オリジナル問題解説 / 追加問題 問7</span>
+    <h1>主効果はゼロなのに交互作用は絶大 — 二元配置実験の落とし穴</h1>
+    <p class="lede">模試(2)問10は交互作用が有意でないケースだった。この問題はその逆で、<b>A・Bどちらの主効果も有意でないのに、交互作用だけが極端に有意</b>という構成。主効果だけを見て「差がない」と結論すると、実は大きく効く組合せを見落とす。</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>設定</h2></div>
+    <p>熱処理温度A(3水準)と保持時間B(2水準)を組み合わせ、各組合せr=3回ずつ(N=18)、製品の硬さ(HV)を測定した。温度・保持時間それぞれの主効果と、交互作用A×Bの有無を有意水準5%で検定する。</p>
+    <div class="table-wrap">
+      <table>
+        <caption>実験データ</caption>
+        <thead><tr><th></th><th>B1</th><th>B2</th></tr></thead>
+        <tbody>
+          <tr><td>A1</td><td class="num">80, 82, 78</td><td class="num">60, 58, 62</td></tr>
+          <tr><td>A2</td><td class="num">72, 74, 70</td><td class="num">68, 66, 70</td></tr>
+          <tr><td>A3</td><td class="num">58, 56, 60</td><td class="num">84, 86, 82</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="calc">
+      <span class="label">与えられた数値</span>
+      <span class="line">N=18　総合計T=1266　Σx²=90732</span>
+      <span class="line">F(2,12;0.05)=3.89　F(1,12;0.05)=4.75</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>平方和の分解</h2></div>
+    <div class="calc">
+      <span class="label">主効果の平方和 ― どちらも極小</span>
+      <span class="line">S_A = Σ(A水準合計²)/6−CT ≒ 4.00</span>
+      <span class="line">S_B = Σ(B水準合計²)/9−CT ≒ 2.00</span>
+    </div>
+    <div class="calc">
+      <span class="label">交互作用と誤差の平方和</span>
+      <span class="line">S(A×B) = S(cell)−S_A−S_B ≒ 1636.00</span>
+      <span class="line">S_e = S_T−S_A−S_B−S(A×B) = 1690−4−2−1636 = 48.00</span>
+    </div>
+    <div class="answer-row">
+      <span class="answer"><span class="qno">①②</span> S_A=4.00, S_B=2.00</span>
+      <span class="answer"><span class="qno">③④</span> S(A×B)=1636.00, S_e=48.00</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>3つの分散比</h2></div>
+    <div class="calc">
+      <span class="label">自由度と分散</span>
+      <span class="line">φ(A)=2, φ(B)=1, φ(A×B)=2, φ(E)=6×2=12</span>
+      <span class="line">V_A=2.00、V_B=2.00、V_AB=818.00、V_e=4.00</span>
+    </div>
+    <div class="calc">
+      <span class="label">分散比</span>
+      <span class="line">F0(A) = 2.00/4.00 = 0.50</span>
+      <span class="line">F0(B) = 2.00/4.00 = 0.50</span>
+      <span class="line">F0(A×B) = 818.00/4.00 = 204.50</span>
+    </div>
+    <span class="answer-row">
+      <span class="answer"><span class="qno">⑤⑥⑦</span> F0(A)=0.50, F0(B)=0.50, F0(A×B)=204.50</span>
+    </span>
+    <div class="calc">
+      <span class="label">判定</span>
+      <span class="line">F0(A)(0.50)・F0(B)(0.50) ≪ F表の値 → 有意でない</span>
+      <span class="line">F0(A×B)(204.50) ≫ F(2,12;0.05)(3.89) → 有意</span>
+      <span class="result">交互作用A×Bのみ有意</span>
+    </div>
+    <span class="answer"><span class="qno">⑧</span> 交互作用A×Bのみ有意</span>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">図解</span><h2>なぜ主効果はゼロでも交互作用が効くのか</h2></div>
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 540 210" role="img" aria-label="交互作用プロット。横軸に温度A1・A2・A3、縦軸に硬さをとり、保持時間B1(実線)とB2(破線)の折れ線が中央付近で交差する様子を示す。A1ではB1が高く、A3ではB2が高く逆転している">
+          <line x1="60" y1="170" x2="480" y2="170" stroke="currentColor" stroke-width="1.2" opacity="0.4"/>
+          <line x1="100" y1="20" x2="100" y2="175" stroke="currentColor" stroke-width="0.8" opacity="0.25" stroke-dasharray="2 3"/>
+          <line x1="270" y1="20" x2="270" y2="175" stroke="currentColor" stroke-width="0.8" opacity="0.25" stroke-dasharray="2 3"/>
+          <line x1="440" y1="20" x2="440" y2="175" stroke="currentColor" stroke-width="0.8" opacity="0.25" stroke-dasharray="2 3"/>
+          <text x="100" y="190" font-size="12" text-anchor="middle" fill="currentColor">A1</text>
+          <text x="270" y="190" font-size="12" text-anchor="middle" fill="currentColor">A2</text>
+          <text x="440" y="190" font-size="12" text-anchor="middle" fill="currentColor">A3</text>
+
+          <polyline points="100,65 270,93 440,142" fill="none" stroke="var(--reg)" stroke-width="2.4"/>
+          <g fill="var(--reg)"><circle cx="100" cy="65" r="4.5"/><circle cx="270" cy="93" r="4.5"/><circle cx="440" cy="142" r="4.5"/></g>
+          <text x="460" y="146" font-size="12" fill="var(--reg-ink)" font-weight="700">B1</text>
+
+          <polyline points="100,135 270,107 440,51" fill="none" stroke="var(--res)" stroke-width="2.4" stroke-dasharray="6 4"/>
+          <g fill="var(--res)"><circle cx="100" cy="135" r="4.5"/><circle cx="270" cy="107" r="4.5"/><circle cx="440" cy="51" r="4.5"/></g>
+          <text x="460" y="55" font-size="12" fill="var(--res-ink)" font-weight="700">B2</text>
+
+          <text x="270" y="20" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.65">2本の線がA2付近で交差 ― これが交互作用</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> A1ではB1(硬さ80)がB2(60)より高いのに、A3ではB2(84)がB1(58)より高いと<b>逆転</b>している。2本の線を「A1〜A3全体」で平均すると、B1・B2ともにほぼ同じ高さ(≒70)になり、これが主効果F0(B)がほぼゼロになる理由。線が交差する(平行でない)ことが交互作用の視覚的なサイン。</figcaption>
+    </figure>
+    <div class="callout warn"><b>もし交互作用の検定を省略していたら:</b> F0(A)・F0(B)だけを見て「AもBも効果がない」と結論してしまう。しかし実際にはA3×B2(硬さ84)とA3×B1(58)の間には26の差があり、組合せの選び方次第で結果が大きく変わる。主効果だけでは見えないこの効果を暴くのが交互作用の検定。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">分岐点</span><h2>最適な組合せの選び方</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">✕</span><span>主効果が有意でないからといって「どの組合せでも同じ」と判断するのは誤り。</span></div>
+      <div class="step"><span class="mark">✓</span><span>交互作用が有意な場合は、A・Bそれぞれの主効果は無視し、<b>実測のセル平均が最大の組合せ</b>を選ぶ。ここではA3×B2(平均84)が最大。</span></div>
+      <div class="step"><span class="mark">↔</span><span>これは模試(1)問4の「交互作用が有意なら加法モデルでなく実測セル平均を使う」という注意点とまったく同じ考え方。</span></div>
+    </div>
+    <span class="answer"><span class="qno">⑨</span> A3×B2の実測セル平均(84)を選ぶ</span>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>主効果がゼロでも交互作用が絶大、という組合せは実際にあり得る。3つの検定は必ずセットで確認する。</span></div>
+      <div class="step"><span class="mark">2</span><span>交互作用プロットで2本の線が交差(平行でない)していれば、交互作用がある可能性が高いというサインになる。</span></div>
+      <div class="step"><span class="mark">3</span><span>交互作用が有意なときの最適水準は、主効果でなく実測のセル平均で選ぶ。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 オリジナル追加問題 問7 / 二元配置実験(交互作用が有意なケース)</span>
+    <span>F0(A×B)≒204.50 → 交互作用のみ有意</span>
+  </footer>
+
+</div>
