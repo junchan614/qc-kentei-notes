@@ -1,0 +1,666 @@
+<title>検定統計量 早見表</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+  --shadow-lift: 0 2px 4px rgba(22,35,42,0.08), 0 14px 32px -14px rgba(22,35,42,0.22);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  --shadow-lift: 0 2px 6px rgba(0,0,0,0.4), 0 16px 36px -14px rgba(0,0,0,0.66);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:900px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:52px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+p{margin:0;color:var(--ink-soft);}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+a:focus-visible{outline:2px solid var(--reg);outline-offset:3px;border-radius:4px;}
+
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:26px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4.2vw,40px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+.meta-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:4px;}
+.meta{display:flex;flex-direction:column;gap:2px;}
+.meta .v{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--ink);line-height:1.2;}
+.meta .k{font-size:11.5px;color:var(--ink-faint);letter-spacing:0.04em;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:56px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:middle;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+td .mono{font-family:'JetBrains Mono',monospace;}
+
+.heat-table th.rc,.heat-table td.rc{text-align:center;width:44px;}
+.heat-table td.rc.hit{background:var(--reg-soft);}
+.heat-table td.rc.hit span{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--reg);}
+.heat-table td.rc.miss span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--border-strong);opacity:0.6;}
+.heat-table td.topic{font-size:13.5px;}
+.heat-table td.cnt{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--reg-ink);text-align:center;}
+
+.callout{background:var(--reg-soft);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+.callout.warn b{color:var(--wrong);}
+
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;}
+.panel{border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);background:var(--surface);overflow:hidden;display:flex;flex-direction:column;}
+.panel .ph{padding:14px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:0.06em;font-weight:700;display:flex;align-items:center;gap:8px;}
+.panel.memo .ph{background:var(--res-soft);color:var(--res-ink);border-bottom:1px solid var(--res);}
+.panel.under .ph{background:var(--reg-soft);color:var(--reg-ink);border-bottom:1px solid var(--reg);}
+.panel ul{margin:0;padding:16px 20px 18px 34px;display:flex;flex-direction:column;gap:10px;}
+.panel li{font-size:14.5px;color:var(--ink-soft);}
+.panel li b{color:var(--ink);}
+.panel li .mono{font-family:'JetBrains Mono',monospace;font-size:13.5px;}
+
+.trap-table td.tag{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--wrong);font-weight:700;white-space:nowrap;}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
+.card{
+  display:flex;flex-direction:column;gap:10px;
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:18px 20px;box-shadow:var(--shadow);
+  text-decoration:none;color:inherit;
+  transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+}
+.card:hover{box-shadow:var(--shadow-lift);border-color:var(--border-strong);transform:translateY(-2px);}
+@media (prefers-reduced-motion: reduce){.card{transition:none;} .card:hover{transform:none;}}
+.card .chips{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.04em;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--ink-faint);border:1px solid var(--border);}
+.chip.src{background:var(--reg-soft);color:var(--reg-ink);border-color:var(--reg);}
+.card h4{font-family:'Zen Old Mincho',serif;font-size:17px;font-weight:600;margin:0;color:var(--ink);line-height:1.5;}
+.card .desc{font-size:13.5px;color:var(--ink-soft);line-height:1.7;}
+.card .go{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--reg-ink);font-weight:600;margin-top:2px;}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+
+/* ---- 検定統計量一覧 専用 ---- */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 3px;line-height:1.35;}
+.frac > span{padding:0 4px;white-space:nowrap;}
+.frac > span:first-child{border-bottom:1.5px solid currentColor;}
+.formula{font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--ink);background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;overflow-x:auto;white-space:nowrap;display:flex;align-items:center;gap:6px;}
+.formula .lhs{font-weight:700;color:var(--reg-ink);}
+.formula.chi .lhs{color:var(--res-ink);}
+
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px;}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:12px;border-top:3px solid var(--reg);}
+.stat.chi{border-top-color:var(--res);}
+.stat .no{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.08em;color:var(--ink-faint);font-weight:600;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.stat .dist{font-family:'JetBrains Mono',monospace;font-size:11px;padding:2px 8px;border-radius:999px;background:var(--reg-soft);color:var(--reg-ink);border:1px solid var(--reg);}
+.stat.chi .dist{background:var(--res-soft);color:var(--res-ink);border-color:var(--res);}
+.stat .rare{font-family:'JetBrains Mono',monospace;font-size:11px;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--ink-faint);border:1px solid var(--border);}
+.stat h3{font-size:18px;font-weight:600;line-height:1.5;}
+.stat dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:14px;}
+.stat dt{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-faint);font-weight:600;padding-top:3px;white-space:nowrap;}
+.stat dd{margin:0;color:var(--ink-soft);}
+.stat dd b{color:var(--ink);}
+.stat dd .mono{font-family:'JetBrains Mono',monospace;font-size:13px;}
+.stat .note{font-size:13px;color:var(--ink-soft);background:var(--wrong-soft);border-left:3px solid var(--wrong);border-radius:6px;padding:8px 12px;}
+.stat .note b{color:var(--wrong);}
+.stat .links{display:flex;flex-wrap:wrap;gap:6px;}
+.stat .links a{font-family:'JetBrains Mono',monospace;font-size:11.5px;text-decoration:none;padding:3px 9px;border-radius:999px;border:1px solid var(--border);background:var(--surface-2);color:var(--reg-ink);}
+.stat .links a:hover{border-color:var(--reg);}
+
+.overview td:first-child{font-weight:600;color:var(--ink);white-space:nowrap;}
+.overview td.f{font-family:'JetBrains Mono',monospace;font-size:13.5px;white-space:nowrap;}
+.overview td.d{font-family:'JetBrains Mono',monospace;font-size:13px;white-space:nowrap;}
+.overview tr.grp td{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.08em;color:var(--ink-faint);font-weight:700;}
+
+@media (max-width:420px){
+  .sheet{padding:32px 16px 72px;}
+  .stat-grid{grid-template-columns:1fr;}
+  .stat dl{grid-template-columns:1fr;gap:2px;}
+  .stat dt{padding-top:6px;}
+}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 手法編 ／ 横断まとめ</span>
+    <h1>検定統計量 早見表</h1>
+    <p class="lede">QC検定2級で使う検定統計量を1ページに並べた。数は多く見えるが、<b>どれも「(推定値 − 仮説の値) ÷ そのばらつき」か「平方和や分散の比」のどちらか</b>の形をしている。式ごとに、使う分布・自由度・棄却域の向き・対になる区間推定・関連する解説ページをまとめた。</p>
+    <div class="meta-row">
+      <div class="meta"><span class="v">19</span><span class="k">検定統計量</span></div>
+      <div class="meta"><span class="v">4</span><span class="k">使う分布（u・t・χ²・F）</span></div>
+      <div class="meta"><span class="v">2026-09-24</span><span class="k">作成</span></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">骨格</span><h2>検定統計量は2つの型しかない</h2></div>
+    <p>式を丸暗記する前に、型を押さえておく。型がわかれば、忘れた式も「分子に何を置き、分母に何を置くか」から組み立て直せる。</p>
+
+    <div class="split">
+      <div class="panel under">
+        <div class="ph">型A ｜ 差 ÷ 標準誤差 → u・t分布</div>
+        <ul>
+          <li><span class="formula" style="display:inline-flex;font-size:14px;"><span class="lhs">u0, t0</span> = <span class="frac"><span>推定値 − 仮説の値</span><span>推定値の標準誤差</span></span></span></li>
+          <li>平均・比率・不適合数・回帰係数など<b>「中心の位置」</b>を問う検定はすべてこの型。</li>
+          <li>分母の中にある<b>分散が母数(σ²など)ならu(正規分布)</b>、<b>データから求めたV(推定値)ならt分布</b>。</li>
+          <li>0を中心に左右対称なので、<b>両側・上側・下側</b>のどれにもなる。</li>
+        </ul>
+      </div>
+      <div class="panel memo">
+        <div class="ph">型B ｜ 平方和・分散の比 → χ²・F分布</div>
+        <ul>
+          <li><span class="formula chi" style="display:inline-flex;font-size:14px;"><span class="lhs">χ0²</span> = <span class="frac"><span>平方和</span><span>仮説の分散</span></span></span> ／ <span class="formula chi" style="display:inline-flex;font-size:14px;"><span class="lhs">F0</span> = <span class="frac"><span>分散</span><span>分散</span></span></span></li>
+          <li>分散・ばらつき・分割表の<b>「ずれの大きさ」</b>を問う検定はこの型。</li>
+          <li>2乗しているので<b>必ず0以上</b>。値が大きいほど「仮説からずれている」。</li>
+          <li>分散分析・分割表・回帰の分散分析は<b>上側だけ</b>を見る。</li>
+        </ul>
+      </div>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 700 330" role="img" aria-label="検定統計量を選ぶ決定木。まず計量値か計数値かで分け、計量値は平均か分散かで分ける。平均は1つか2つか対応ありか、分散は1つか2つかで分かれ、それぞれu0、t0、χ0²、F0にたどり着く。計数値は比率・不適合数・分割表に分かれ、比率と不適合数はu0、分割表はχ0²になる。">
+          <g font-size="12.5" fill="currentColor">
+            <!-- root -->
+            <rect x="290" y="8" width="120" height="30" rx="8" fill="var(--surface-2)" stroke="var(--border-strong)"/>
+            <text x="350" y="28" text-anchor="middle" font-weight="600">データの種類</text>
+            <path d="M350,38 V52 H170 V66 M350,52 H540 V66" fill="none" stroke="var(--border-strong)" stroke-width="1.4"/>
+
+            <!-- 計量値 -->
+            <rect x="110" y="66" width="120" height="30" rx="8" fill="var(--surface-2)" stroke="var(--border-strong)"/>
+            <text x="170" y="86" text-anchor="middle" font-weight="600">計量値</text>
+            <path d="M170,96 V110 H90 V124 M170,110 H260 V124" fill="none" stroke="var(--border-strong)" stroke-width="1.4"/>
+            <rect x="40" y="124" width="100" height="28" rx="8" fill="var(--reg-soft)" stroke="var(--reg)"/>
+            <text x="90" y="143" text-anchor="middle">平均を問う</text>
+            <rect x="210" y="124" width="100" height="28" rx="8" fill="var(--res-soft)" stroke="var(--res)"/>
+            <text x="260" y="143" text-anchor="middle">分散を問う</text>
+
+            <!-- 平均の枝 -->
+            <path d="M90,152 V166 M40,166 H140 M40,166 V180 M90,166 V180 M140,166 V180" fill="none" stroke="var(--reg)" stroke-width="1.2"/>
+            <text x="40" y="196" text-anchor="middle" font-size="11">σ既知</text>
+            <text x="90" y="196" text-anchor="middle" font-size="11">σ未知</text>
+            <text x="140" y="196" text-anchor="middle" font-size="11">対応あり</text>
+            <path d="M40,202 V222 M90,202 V222 M140,202 V222" fill="none" stroke="var(--reg)" stroke-width="1.2"/>
+            <rect x="16" y="222" width="48" height="28" rx="7" fill="var(--reg)" />
+            <text x="40" y="241" text-anchor="middle" fill="var(--surface)" font-weight="700">u0</text>
+            <rect x="66" y="222" width="48" height="28" rx="7" fill="var(--reg)" />
+            <text x="90" y="241" text-anchor="middle" fill="var(--surface)" font-weight="700">t0</text>
+            <rect x="116" y="222" width="48" height="28" rx="7" fill="var(--reg)" />
+            <text x="140" y="241" text-anchor="middle" fill="var(--surface)" font-weight="700">t0</text>
+            <text x="90" y="272" text-anchor="middle" font-size="10.5" opacity="0.7">1つでも2つでも同じ分け方</text>
+            <text x="140" y="288" text-anchor="middle" font-size="10.5" opacity="0.7">(差dの1標本に直す)</text>
+
+            <!-- 分散の枝 -->
+            <path d="M260,152 V166 M230,166 H290 M230,166 V180 M290,166 V180" fill="none" stroke="var(--res)" stroke-width="1.2"/>
+            <text x="230" y="196" text-anchor="middle" font-size="11">1つ</text>
+            <text x="290" y="196" text-anchor="middle" font-size="11">2つ</text>
+            <path d="M230,202 V222 M290,202 V222" fill="none" stroke="var(--res)" stroke-width="1.2"/>
+            <rect x="204" y="222" width="52" height="28" rx="7" fill="var(--res)" />
+            <text x="230" y="241" text-anchor="middle" fill="var(--surface)" font-weight="700">χ0²</text>
+            <rect x="266" y="222" width="48" height="28" rx="7" fill="var(--res)" />
+            <text x="290" y="241" text-anchor="middle" fill="var(--surface)" font-weight="700">F0</text>
+
+            <!-- 計数値 -->
+            <rect x="480" y="66" width="120" height="30" rx="8" fill="var(--surface-2)" stroke="var(--border-strong)"/>
+            <text x="540" y="86" text-anchor="middle" font-weight="600">計数値</text>
+            <path d="M540,96 V110 H420 V124 M540,110 V124 M540,110 H650 V124" fill="none" stroke="var(--border-strong)" stroke-width="1.4"/>
+            <rect x="370" y="124" width="100" height="28" rx="8" fill="var(--reg-soft)" stroke="var(--reg)"/>
+            <text x="420" y="143" text-anchor="middle">不適合品率</text>
+            <rect x="490" y="124" width="100" height="28" rx="8" fill="var(--reg-soft)" stroke="var(--reg)"/>
+            <text x="540" y="143" text-anchor="middle">不適合数</text>
+            <rect x="605" y="124" width="90" height="28" rx="8" fill="var(--res-soft)" stroke="var(--res)"/>
+            <text x="650" y="143" text-anchor="middle">分割表</text>
+            <path d="M420,152 V222 M540,152 V222 M650,152 V222" fill="none" stroke="var(--border-strong)" stroke-width="1.2"/>
+            <text x="420" y="190" text-anchor="middle" font-size="10.5" opacity="0.7">二項→正規近似</text>
+            <text x="540" y="190" text-anchor="middle" font-size="10.5" opacity="0.7">ポアソン→正規近似</text>
+            <rect x="396" y="222" width="48" height="28" rx="7" fill="var(--reg)" />
+            <text x="420" y="241" text-anchor="middle" fill="var(--surface)" font-weight="700">u0</text>
+            <rect x="516" y="222" width="48" height="28" rx="7" fill="var(--reg)" />
+            <text x="540" y="241" text-anchor="middle" fill="var(--surface)" font-weight="700">u0</text>
+            <rect x="624" y="222" width="52" height="28" rx="7" fill="var(--res)" />
+            <text x="650" y="241" text-anchor="middle" fill="var(--surface)" font-weight="700">χ0²</text>
+            <text x="480" y="276" text-anchor="middle" font-size="10.5" opacity="0.7">計数値は近似で正規分布に乗せるので、σ既知・未知の区別がない</text>
+
+            <line x1="20" y1="304" x2="680" y2="304" stroke="var(--border)" stroke-dasharray="3 4"/>
+            <text x="350" y="324" text-anchor="middle" font-size="11.5" opacity="0.8">相関・回帰・分散分析は別枠: 無相関 t0 ／ 回帰 F0 = VR/Ve ／ 要因 F0 = VA/Ve</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption><b>選ぶ順番:</b> ①計量値か計数値か → ②平均(位置)か分散(ばらつき)か → ③1つか2つか → ④σが既知か未知か。計量値の平均だけが④まで枝分かれする。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">一覧</span><h2>全19の検定統計量</h2></div>
+    <p>各式の詳しい説明は下の分野別カードにある。横にスクロールできる。</p>
+    <div class="table-wrap">
+      <table class="overview">
+        <caption>検定統計量と分布・自由度の一覧</caption>
+        <thead><tr><th>#</th><th>検定の対象</th><th>検定統計量</th><th>分布</th><th>自由度</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="5">計量値 ｜ 1つの母集団</td></tr>
+          <tr><td>1</td><td>母平均(σ既知)</td><td class="f">u0 = (x̄ − μ0) / √(σ²/n)</td><td class="d">N(0,1²)</td><td class="d">—</td></tr>
+          <tr><td>2</td><td>母平均(σ未知)</td><td class="f">t0 = (x̄ − μ0) / √(V/n)</td><td class="d">t</td><td class="d">n − 1</td></tr>
+          <tr><td>3</td><td>母分散</td><td class="f">χ0² = S / σ0²</td><td class="d">χ²</td><td class="d">n − 1</td></tr>
+          <tr class="grp"><td colspan="5">計量値 ｜ 2つの母集団</td></tr>
+          <tr><td>4</td><td>母分散の比</td><td class="f">F0 = VA / VB</td><td class="d">F</td><td class="d">(nA−1, nB−1)</td></tr>
+          <tr><td>5</td><td>母平均の差(σ既知)</td><td class="f">u0 = (x̄A − x̄B) / √(σA²/nA + σB²/nB)</td><td class="d">N(0,1²)</td><td class="d">—</td></tr>
+          <tr><td>6</td><td>母平均の差(σ未知・等分散)</td><td class="f">t0 = (x̄A − x̄B) / √{V(1/nA + 1/nB)}</td><td class="d">t</td><td class="d">nA + nB − 2</td></tr>
+          <tr><td>7</td><td>母平均の差(σ未知・等分散でない)</td><td class="f">t0 = (x̄A − x̄B) / √(VA/nA + VB/nB)</td><td class="d">t</td><td class="d">φ*(等価自由度)</td></tr>
+          <tr><td>8</td><td>対応のあるデータの差</td><td class="f">t0 = d̄ / √(Vd/n)</td><td class="d">t</td><td class="d">n − 1</td></tr>
+          <tr class="grp"><td colspan="5">計数値</td></tr>
+          <tr><td>9</td><td>母不適合品率</td><td class="f">u0 = (p̂ − P0) / √{P0(1−P0)/n}</td><td class="d">N(0,1²)</td><td class="d">—</td></tr>
+          <tr><td>10</td><td>2つの母不適合品率の差</td><td class="f">u0 = (p̂A − p̂B) / √{p̄(1−p̄)(1/nA + 1/nB)}</td><td class="d">N(0,1²)</td><td class="d">—</td></tr>
+          <tr><td>11</td><td>母不適合数</td><td class="f">u0 = (λ̂ − λ0) / √(λ0/n)</td><td class="d">N(0,1²)</td><td class="d">—</td></tr>
+          <tr><td>12</td><td>2つの母不適合数の差</td><td class="f">u0 = (λ̂A − λ̂B) / √{λ̄(1/nA + 1/nB)}</td><td class="d">N(0,1²)</td><td class="d">—</td></tr>
+          <tr><td>13</td><td>分割表(独立性)</td><td class="f">χ0² = Σ (O − E)² / E</td><td class="d">χ²</td><td class="d">(l−1)(m−1)</td></tr>
+          <tr class="grp"><td colspan="5">相関・回帰・実験計画法</td></tr>
+          <tr><td>14</td><td>無相関(ρ = 0)</td><td class="f">t0 = r√(n−2) / √(1 − r²)</td><td class="d">t</td><td class="d">n − 2</td></tr>
+          <tr><td>15</td><td>回帰の有意性</td><td class="f">F0 = VR / Ve</td><td class="d">F</td><td class="d">(1, n−2)</td></tr>
+          <tr><td>16</td><td>回帰係数(β1 = 0)</td><td class="f">t0 = β̂1 / √(Ve/Sxx)</td><td class="d">t</td><td class="d">n − 2</td></tr>
+          <tr><td>17</td><td>一元配置の因子A</td><td class="f">F0 = VA / VE</td><td class="d">F</td><td class="d">(a−1, N−a)</td></tr>
+          <tr><td>18</td><td>二元配置(繰返しあり)の A・B・A×B</td><td class="f">F0 = VA/VE, VB/VE, VA×B/VE</td><td class="d">F</td><td class="d">φE = ab(r−1)</td></tr>
+          <tr><td>19</td><td>符号検定(散布図の相関)</td><td class="f">少数派の打点数 ≦ 符号検定表の値</td><td class="d">二項</td><td class="d">打点数 n</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout">記号の約束: <b>S</b> = 偏差平方和、<b>V = S/(n−1)</b> = 不偏分散、<b>φ</b> = 自由度。u0 はテキストによって z0・Z0 とも書かれる(中身は同じ標準正規分布)。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">計量値1</span><h2>1つの母集団 — 平均と分散</h2></div>
+    <div class="stat-grid">
+
+      <article class="stat">
+        <div class="no">#1 <span class="dist">正規分布</span></div>
+        <h3>母平均の検定(σ既知)</h3>
+        <div class="formula"><span class="lhs">u0</span> = <span class="frac"><span>x̄ − μ0</span><span>√(σ²/n)</span></span></div>
+        <dl>
+          <dt>仮説</dt><dd>H0: μ = μ0</dd>
+          <dt>棄却域</dt><dd>両側 |u0| ≧ u(α/2) ／ 片側 u0 ≧ u(α)。5%なら <span class="mono">1.960</span>(両側)・<span class="mono">1.645</span>(片側)</dd>
+          <dt>区間推定</dt><dd><span class="mono">x̄ ± u(α/2)·√(σ²/n)</span></dd>
+        </dl>
+        <p class="note"><b>判断の分かれ目:</b> 問題文に「母標準偏差は○○であることがわかっている」とあればこれ。書いていなければ#2のt。</p>
+        <div class="links"><a href="mock4-q1-z-test.html" target="_blank" rel="noopener">追加問題 問1</a></div>
+      </article>
+
+      <article class="stat">
+        <div class="no">#2 <span class="dist">t分布 φ = n−1</span></div>
+        <h3>母平均の検定(σ未知)</h3>
+        <div class="formula"><span class="lhs">t0</span> = <span class="frac"><span>x̄ − μ0</span><span>√(V/n)</span></span></div>
+        <dl>
+          <dt>仮説</dt><dd>H0: μ = μ0</dd>
+          <dt>棄却域</dt><dd>両側 |t0| ≧ t(φ, α) ／ 片側 t0 ≧ t(φ, 2α)</dd>
+          <dt>区間推定</dt><dd><span class="mono">x̄ ± t(φ, α)·√(V/n)</span></dd>
+        </dl>
+        <p class="note"><b>t表の罠:</b> QC検定で使うt表は<b>両側確率</b>で引く。片側5%の検定では t(φ, <b>0.10</b>) を引く。</p>
+        <div class="links"><a href="37th-onesided-t-test.html" target="_blank" rel="noopener">第37回 問1</a><a href="40th-mean-variance-test.html" target="_blank" rel="noopener">第40回 問1</a><a href="mock4-q8-clt-unknown-sigma.html" target="_blank" rel="noopener">追加問題 問8</a></div>
+      </article>
+
+      <article class="stat chi">
+        <div class="no">#3 <span class="dist">χ²分布 φ = n−1</span></div>
+        <h3>母分散の検定</h3>
+        <div class="formula chi"><span class="lhs">χ0²</span> = <span class="frac"><span>S</span><span>σ0²</span></span></div>
+        <dl>
+          <dt>仮説</dt><dd>H0: σ² = σ0²</dd>
+          <dt>棄却域</dt><dd>上側 χ0² ≧ χ²(φ, α) ／ 下側 χ0² ≦ χ²(φ, 1−α) ／ 両側はα/2と1−α/2の2か所</dd>
+          <dt>区間推定</dt><dd><span class="mono">S/χ²(φ, α/2) ≦ σ² ≦ S/χ²(φ, 1−α/2)</span></dd>
+        </dl>
+        <p class="note"><b>分子はVでなくS:</b> V/σ0² にすると値が1/(n−1)倍になり、誤答選択肢になる。区間推定は大きい方のχ²で割ると<b>下限</b>になる(逆転に注意)。</p>
+        <div class="links"><a href="35th-variance-test.html" target="_blank" rel="noopener">第35回 問1</a><a href="36th-chi-square-variance.html" target="_blank" rel="noopener">第36回 問3</a><a href="40th-chi-square-meaning.html" target="_blank" rel="noopener">S/σ²の正体</a></div>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">計量値2</span><h2>2つの母集団 — 比べる検定</h2></div>
+    <p>2つの母平均を比べるときは、<b>先に#4で分散が等しいかを見てから</b>#6か#7を選ぶ、というのが教科書的な手順。</p>
+    <div class="stat-grid">
+
+      <article class="stat chi">
+        <div class="no">#4 <span class="dist">F分布 (φA, φB)</span></div>
+        <h3>2つの母分散の比の検定</h3>
+        <div class="formula chi"><span class="lhs">F0</span> = <span class="frac"><span>VA</span><span>VB</span></span>　<span style="font-size:12.5px;color:var(--ink-faint);">(VA ≧ VB になるよう置く)</span></div>
+        <dl>
+          <dt>仮説</dt><dd>H0: σA² = σB²</dd>
+          <dt>棄却域</dt><dd>両側 F0 ≧ F(φA, φB; α/2)。大きい方を分子にすれば上側だけ見ればよい</dd>
+          <dt>自由度</dt><dd><b>分子の自由度が先</b>。φA = nA−1, φB = nB−1</dd>
+        </dl>
+        <p class="note"><b>罠:</b> 両側5%なのに F(φA, φB; 0.05) を引くと棄却域が広すぎる。正しくは0.025。</p>
+        <div class="links"><a href="39th-f-test.html" target="_blank" rel="noopener">第39回 問2</a><a href="degrees-of-freedom.html" target="_blank" rel="noopener">自由度の考え方</a></div>
+      </article>
+
+      <article class="stat">
+        <div class="no">#5 <span class="dist">正規分布</span></div>
+        <h3>2つの母平均の差(σ既知)</h3>
+        <div class="formula"><span class="lhs">u0</span> = <span class="frac"><span>x̄A − x̄B</span><span>√(σA²/nA + σB²/nB)</span></span></div>
+        <dl>
+          <dt>仮説</dt><dd>H0: μA = μB</dd>
+          <dt>区間推定</dt><dd><span class="mono">(x̄A − x̄B) ± u(α/2)·√(σA²/nA + σB²/nB)</span></dd>
+        </dl>
+        <p class="note"><b>分母は足し算:</b> 差をとっても分散は「足す」。独立な変数の分散の加法性そのもの。</p>
+        <div class="links"><a href="40th-normal-composition.html" target="_blank" rel="noopener">差の分散も足し算(第40回 問3)</a></div>
+      </article>
+
+      <article class="stat">
+        <div class="no">#6 <span class="dist">t分布 φ = nA+nB−2</span></div>
+        <h3>2つの母平均の差(σ未知・等分散)</h3>
+        <div class="formula"><span class="lhs">t0</span> = <span class="frac"><span>x̄A − x̄B</span><span>√{V(1/nA + 1/nB)}</span></span></div>
+        <dl>
+          <dt>併合分散</dt><dd><span class="mono">V = (SA + SB) / (nA + nB − 2)</span></dd>
+          <dt>仮説</dt><dd>H0: μA = μB</dd>
+          <dt>区間推定</dt><dd><span class="mono">(x̄A − x̄B) ± t(φ, α)·√{V(1/nA + 1/nB)}</span></dd>
+        </dl>
+        <p class="note"><b>併合分散の罠:</b> (VA + VB)/2 は nA ≠ nB のとき誤り。平方和Sを足して、自由度の合計で割る。</p>
+        <div class="links"><a href="original-mock-exam.html" target="_blank" rel="noopener">オリジナル模試 問1</a></div>
+      </article>
+
+      <article class="stat">
+        <div class="no">#7 <span class="dist">t分布 φ*</span><span class="rare">出題は少なめ</span></div>
+        <h3>2つの母平均の差(σ未知・等分散でない)— ウェルチの検定</h3>
+        <div class="formula"><span class="lhs">t0</span> = <span class="frac"><span>x̄A − x̄B</span><span>√(VA/nA + VB/nB)</span></span></div>
+        <dl>
+          <dt>等価自由度</dt><dd><span class="mono">φ* = (VA/nA + VB/nB)² ÷ {(VA/nA)²/φA + (VB/nB)²/φB}</span></dd>
+          <dt>使う場面</dt><dd>#4のF検定で「分散が等しいとはいえない」と出たとき</dd>
+        </dl>
+        <p class="note"><b>φ*は整数にならない:</b> 数表を引くときは小数を切り捨てて(または補間して)使う。分母は#5のσ²をVに置き換えただけの形。</p>
+      </article>
+
+      <article class="stat">
+        <div class="no">#8 <span class="dist">t分布 φ = n−1</span></div>
+        <h3>対応のあるデータの差</h3>
+        <div class="formula"><span class="lhs">t0</span> = <span class="frac"><span>d̄</span><span>√(Vd/n)</span></span></div>
+        <dl>
+          <dt>準備</dt><dd>ペアごとに差 d = xA − xB を作る。d̄ = 差の平均、Vd = 差の不偏分散</dd>
+          <dt>仮説</dt><dd>H0: μd = 0</dd>
+          <dt>区間推定</dt><dd><span class="mono">d̄ ± t(φ, α)·√(Vd/n)</span></dd>
+        </dl>
+        <p class="note"><b>見分け方:</b> 「同じ試験片を2つの方法で測った」「同じ人の前後」なら対応あり。#6で解くと自由度が 2n−2 になり、ペア間のばらつきを誤差に混ぜてしまう。</p>
+        <div class="links"><a href="original-mock-exam-2.html" target="_blank" rel="noopener">オリジナル模試2 問1</a></div>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">計数値</span><h2>比率・不適合数・分割表</h2></div>
+    <p>比率(二項分布)と不適合数(ポアソン分布)は、サンプルが十分大きいとして<b>正規分布で近似</b>する。そのため、使うのは常にuで、t分布は出てこない。</p>
+    <div class="stat-grid">
+
+      <article class="stat">
+        <div class="no">#9 <span class="dist">正規近似</span></div>
+        <h3>母不適合品率の検定</h3>
+        <div class="formula"><span class="lhs">u0</span> = <span class="frac"><span>p̂ − P0</span><span>√{P0(1 − P0)/n}</span></span></div>
+        <dl>
+          <dt>p̂</dt><dd>x/n(不適合品数 ÷ サンプル数)</dd>
+          <dt>近似の条件</dt><dd>nP0 ≧ 5 かつ n(1 − P0) ≧ 5 が目安</dd>
+          <dt>区間推定</dt><dd><span class="mono">p̂ ± u(α/2)·√{p̂(1 − p̂)/n}</span></dd>
+        </dl>
+        <p class="note"><b>検定はP0、推定はp̂:</b> 検定は「H0が正しいと仮定した世界」で計算するので分母にP0。推定には仮説がないのでp̂を使う。</p>
+        <div class="links"><a href="original-mock-exam-3.html" target="_blank" rel="noopener">オリジナル模試3 問1</a><a href="np-chart-variance.html" target="_blank" rel="noopener">p(1−p)の由来</a></div>
+      </article>
+
+      <article class="stat">
+        <div class="no">#10 <span class="dist">正規近似</span></div>
+        <h3>2つの母不適合品率の差</h3>
+        <div class="formula"><span class="lhs">u0</span> = <span class="frac"><span>p̂A − p̂B</span><span>√{p̄(1 − p̄)(1/nA + 1/nB)}</span></span></div>
+        <dl>
+          <dt>p̄</dt><dd><span class="mono">(xA + xB) / (nA + nB)</span>(2群をまとめた比率)</dd>
+          <dt>仮説</dt><dd>H0: PA = PB</dd>
+          <dt>区間推定</dt><dd><span class="mono">(p̂A − p̂B) ± u(α/2)·√{p̂A(1−p̂A)/nA + p̂B(1−p̂B)/nB}</span></dd>
+        </dl>
+        <p class="note"><b>#9と同じ考え方:</b> 検定では「PA = PB」を仮定するので共通のp̄でまとめる。推定では別々のp̂A・p̂Bを使う。</p>
+        <div class="links"><a href="mock4-q2-two-proportion-test.html" target="_blank" rel="noopener">追加問題 問2</a></div>
+      </article>
+
+      <article class="stat">
+        <div class="no">#11 <span class="dist">正規近似</span></div>
+        <h3>母不適合数の検定</h3>
+        <div class="formula"><span class="lhs">u0</span> = <span class="frac"><span>λ̂ − λ0</span><span>√(λ0/n)</span></span></div>
+        <dl>
+          <dt>λ̂</dt><dd>T/n(不適合数の合計T ÷ 調べた単位数n)= 1単位あたりの不適合数</dd>
+          <dt>近似の条件</dt><dd>nλ0 ≧ 5 が目安</dd>
+          <dt>区間推定</dt><dd><span class="mono">λ̂ ± u(α/2)·√(λ̂/n)</span></dd>
+        </dl>
+        <p class="note"><b>ポアソン分布は平均 = 分散:</b> だから分母の分散にλそのものが入る。二項分布の p(1−p) に当たる部分が λ になっただけ。</p>
+        <div class="links"><a href="mock4-q9-binomial-poisson.html" target="_blank" rel="noopener">二項とポアソン(追加問題 問9)</a></div>
+      </article>
+
+      <article class="stat">
+        <div class="no">#12 <span class="dist">正規近似</span><span class="rare">出題は少なめ</span></div>
+        <h3>2つの母不適合数の差</h3>
+        <div class="formula"><span class="lhs">u0</span> = <span class="frac"><span>λ̂A − λ̂B</span><span>√{λ̄(1/nA + 1/nB)}</span></span></div>
+        <dl>
+          <dt>λ̄</dt><dd><span class="mono">(TA + TB) / (nA + nB)</span></dd>
+          <dt>区間推定</dt><dd><span class="mono">(λ̂A − λ̂B) ± u(α/2)·√(λ̂A/nA + λ̂B/nB)</span></dd>
+        </dl>
+        <p class="note"><b>#10と同じ構造:</b> p̄(1 − p̄) が λ̄ に置き換わっただけ。検定はまとめたλ̄、推定は別々のλ̂。</p>
+      </article>
+
+      <article class="stat chi">
+        <div class="no">#13 <span class="dist">χ²分布 φ = (l−1)(m−1)</span></div>
+        <h3>分割表による独立性の検定</h3>
+        <div class="formula chi"><span class="lhs">χ0²</span> = Σ <span class="frac"><span>(O − E)²</span><span>E</span></span></div>
+        <dl>
+          <dt>期待度数E</dt><dd><span class="mono">行計 × 列計 / 総計</span>(独立なら各セルに入るはずの数)</dd>
+          <dt>棄却域</dt><dd><b>上側のみ</b> χ0² ≧ χ²(φ, α)</dd>
+          <dt>自由度</dt><dd>l行 × m列なら (l−1)(m−1)。2×2なら1</dd>
+        </dl>
+        <p class="note"><b>罠:</b> 自由度を「セル数−1」にする誤答。行と列の合計が決まっているので、自由に決められるのは (l−1)(m−1) 個だけ。</p>
+        <div class="links"><a href="38th-chi-square.html" target="_blank" rel="noopener">第38回 問3</a><a href="chi-square-why-squared.html" target="_blank" rel="noopener">なぜ2乗なのか</a></div>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">分解</span><h2>相関・回帰・実験計画法</h2></div>
+    <p>分散分析型の検定(#15・#17・#18)は、全体の平方和を「要因で説明できる部分」と「誤差」に分けて、<b>1自由度あたりの大きさ(分散)の比</b>をとる。F0が大きいほど、要因の効果が誤差に埋もれていないことを示す。</p>
+    <div class="stat-grid">
+
+      <article class="stat">
+        <div class="no">#14 <span class="dist">t分布 φ = n−2</span></div>
+        <h3>無相関の検定</h3>
+        <div class="formula"><span class="lhs">t0</span> = <span class="frac"><span>r√(n − 2)</span><span>√(1 − r²)</span></span></div>
+        <dl>
+          <dt>仮説</dt><dd>H0: ρ = 0(母相関係数がゼロ)</dd>
+          <dt>別解</dt><dd>r表で |r| ≧ r(n−2, α) を直接比べる方法もある</dd>
+          <dt>関係</dt><dd><b>t0² = F0(#15)</b>。単回帰の分散分析と同じ検定をしている</dd>
+        </dl>
+        <p class="note"><b>自由度はn−2:</b> 直線を引くのに切片と傾きの2つを使うので2つ減る。n−1にする誤答に注意。</p>
+        <div class="links"><a href="mock4-q3-correlation-direct-t.html" target="_blank" rel="noopener">追加問題 問3</a><a href="original-mock-exam-2.html" target="_blank" rel="noopener">オリジナル模試2 問2</a></div>
+      </article>
+
+      <article class="stat chi">
+        <div class="no">#15 <span class="dist">F分布 (1, n−2)</span></div>
+        <h3>単回帰の分散分析</h3>
+        <div class="formula chi"><span class="lhs">F0</span> = <span class="frac"><span>VR</span><span>Ve</span></span> = <span class="frac"><span>SR / 1</span><span>Se / (n − 2)</span></span></div>
+        <dl>
+          <dt>平方和</dt><dd><span class="mono">SR = Sxy²/Sxx</span>、<span class="mono">Se = Syy − SR</span></dd>
+          <dt>棄却域</dt><dd><b>上側のみ</b> F0 ≧ F(1, n−2; α)</dd>
+          <dt>寄与率</dt><dd><span class="mono">R² = SR/Syy</span>(= r²)</dd>
+        </dl>
+        <div class="links"><a href="regression-anova.html" target="_blank" rel="noopener">分散分析表の図解</a><a href="regression-sr.html" target="_blank" rel="noopener">SRの4通りの求め方</a><a href="40th-regression-anova.html" target="_blank" rel="noopener">第40回 問4</a></div>
+      </article>
+
+      <article class="stat">
+        <div class="no">#16 <span class="dist">t分布 φ = n−2</span></div>
+        <h3>回帰係数の検定</h3>
+        <div class="formula"><span class="lhs">t0</span> = <span class="frac"><span>β̂1</span><span>√(Ve/Sxx)</span></span></div>
+        <dl>
+          <dt>β̂1</dt><dd><span class="mono">Sxy/Sxx</span>(推定した傾き)</dd>
+          <dt>仮説</dt><dd>H0: β1 = 0(xはyに効いていない)</dd>
+          <dt>区間推定</dt><dd><span class="mono">β̂1 ± t(n−2, α)·√(Ve/Sxx)</span></dd>
+        </dl>
+        <p class="note"><b>これも t0² = F0:</b> #14・#15・#16は、単回帰では同じ結論になる3通りの書き方。</p>
+        <div class="links"><a href="38th-regression-anova.html" target="_blank" rel="noopener">第38回 問4</a><a href="regression-r2-se.html" target="_blank" rel="noopener">√(Ve/Sxx)の導出</a></div>
+      </article>
+
+      <article class="stat chi">
+        <div class="no">#17 <span class="dist">F分布 (a−1, N−a)</span></div>
+        <h3>一元配置の分散分析</h3>
+        <div class="formula chi"><span class="lhs">F0</span> = <span class="frac"><span>VA</span><span>VE</span></span> = <span class="frac"><span>SA / (a − 1)</span><span>SE / (N − a)</span></span></div>
+        <dl>
+          <dt>記号</dt><dd>a = 水準数、N = 総データ数(繰返し数が不揃いでもNで数える)</dd>
+          <dt>棄却域</dt><dd><b>上側のみ</b> F0 ≧ F(φA, φE; α)</dd>
+          <dt>区間推定</dt><dd><span class="mono">x̄(Ai) ± t(φE, α)·√(VE/ni)</span></dd>
+        </dl>
+        <p class="note"><b>区間推定の自由度はφE:</b> その水準だけの ni−1 ではなく、全水準でプールした誤差の自由度を使う。</p>
+        <div class="links"><a href="36th-anova-oneway.html" target="_blank" rel="noopener">第36回 問5</a><a href="39th-anova-unequal.html" target="_blank" rel="noopener">第39回 問4</a><a href="t-table-anova-estimate.html" target="_blank" rel="noopener">t表とφE</a></div>
+      </article>
+
+      <article class="stat chi">
+        <div class="no">#18 <span class="dist">F分布 (φ要因, φE)</span></div>
+        <h3>二元配置(繰返しあり)の分散分析</h3>
+        <div class="formula chi"><span class="lhs">F0</span> = <span class="frac"><span>VA</span><span>VE</span></span>, <span class="frac"><span>VB</span><span>VE</span></span>, <span class="frac"><span>VA×B</span><span>VE</span></span></div>
+        <dl>
+          <dt>自由度</dt><dd><span class="mono">φA = a−1, φB = b−1, φA×B = (a−1)(b−1), φE = ab(r−1)</span></dd>
+          <dt>棄却域</dt><dd>要因ごとに F0 ≧ F(φ要因, φE; α)</dd>
+          <dt>繰返しなし</dt><dd>交互作用と誤差が分離できないので、A×Bは検定できない</dd>
+        </dl>
+        <p class="note"><b>罠:</b> 平方和が同じくらいでも、自由度が違えば平均平方Vが変わり、有意かどうかが分かれる。</p>
+        <div class="links"><a href="40th-two-way-anova.html" target="_blank" rel="noopener">第40回 問6</a><a href="two-way-anova-df.html" target="_blank" rel="noopener">φ(A×B)の由来</a><a href="mock4-q7-twoway-interaction.html" target="_blank" rel="noopener">追加問題 問7</a></div>
+      </article>
+
+      <article class="stat">
+        <div class="no">#19 <span class="dist">二項分布(表)</span></div>
+        <h3>符号検定(散布図のメディアン線による相関の判定)</h3>
+        <div class="formula"><span class="lhs">判定</span> 少数派の象限の打点数 ≦ 符号検定表の値 → 相関あり</div>
+        <dl>
+          <dt>手順</dt><dd>メディアン線で4象限に分け、線上の点は除いて数える。(Ⅰ+Ⅲ)と(Ⅱ+Ⅳ)の少ない方を表と比べる</dd>
+          <dt>正体</dt><dd>H0: 相関なし なら各点は確率1/2でどちらかに入る。二項分布B(n, 1/2)の片側を表にしたもの</dd>
+        </dl>
+        <p class="note"><b>計算しない検定:</b> 検定統計量は「打点数」そのもの。<b>少ないほど</b>有意になる点が、他の18個と逆向き。</p>
+        <div class="links"><a href="39th-sign-test.html" target="_blank" rel="noopener">第39回 問5</a></div>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">棄却域</span><h2>数表の引き方と棄却域の向き</h2></div>
+    <p>式が合っていても、数表の確率を取り違えると答えが変わる。数表ごとに「何の確率を表にしているか」が違うことが原因。</p>
+    <div class="table-wrap">
+      <table>
+        <caption>分布ごとの棄却域と数表の確率(有意水準α)</caption>
+        <thead><tr><th>分布</th><th>両側検定</th><th>上側検定</th><th>下側検定</th><th>数表の確率</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">u(正規)</td><td>|u0| ≧ u(α/2)<br><span class="mono">5% → 1.960</span></td><td>u0 ≧ u(α)<br><span class="mono">5% → 1.645</span></td><td>u0 ≦ −u(α)</td><td><b>上側</b>確率</td></tr>
+          <tr><td class="mono">t</td><td>|t0| ≧ t(φ, α)</td><td>t0 ≧ t(φ, 2α)</td><td>t0 ≦ −t(φ, 2α)</td><td><b>両側</b>確率 ← ここだけ違う</td></tr>
+          <tr><td class="mono">χ²</td><td>χ0² ≧ χ²(φ, α/2) または χ0² ≦ χ²(φ, 1−α/2)</td><td>χ0² ≧ χ²(φ, α)</td><td>χ0² ≦ χ²(φ, 1−α)</td><td><b>上側</b>確率</td></tr>
+          <tr><td class="mono">F</td><td>大きい方を分子にして F0 ≧ F(φ1, φ2; α/2)</td><td>F0 ≧ F(φ1, φ2; α)</td><td>—</td><td><b>上側</b>確率</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="split">
+      <div class="panel under">
+        <div class="ph">片側か両側かの判断</div>
+        <ul>
+          <li>「<b>変わったか</b>」「差があるか」→ 両側(H1: ≠)</li>
+          <li>「<b>大きくなったか</b>」「増えたか」→ 上側(H1: &gt;)</li>
+          <li>「<b>小さくなったか</b>」「ばらつきが減った(向上した)か」→ 下側(H1: &lt;)</li>
+          <li>分散分析・分割表・回帰のF0とχ0²は、問題文によらず<b>常に上側</b>。</li>
+        </ul>
+      </div>
+      <div class="panel memo">
+        <div class="ph">結論の書き方</div>
+        <ul>
+          <li>棄却できた → 「<b>有意水準5%で差があるといえる</b>」</li>
+          <li>棄却できない → 「差があるとはいえない」。<b>「等しいといえる」とは書かない</b>。</li>
+          <li>両側検定で棄却しても、方向(大きい・小さい)までは結論にしない。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">誤答</span><h2>検定統計量でよくある取り違え</h2></div>
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>誤答選択肢になりやすいミス</caption>
+        <thead><tr><th>ミス</th><th>どこで起きるか</th><th>正しくは</th></tr></thead>
+        <tbody>
+          <tr><td class="tag">√n忘れ</td><td>#1・#2 の分母を √V や σ だけにする</td><td>平均のばらつきは √(V/n)。1個のデータでなく平均を比べている</td></tr>
+          <tr><td class="tag">S/Vの混同</td><td>#3 を V/σ0² にする</td><td>χ0² = S/σ0²(= (n−1)V/σ0²)</td></tr>
+          <tr><td class="tag">t表の確率</td><td>#2 の片側5%で t(φ, 0.05) を引く</td><td>t表は両側確率なので t(φ, 0.10)</td></tr>
+          <tr><td class="tag">α/2忘れ</td><td>#3・#4 の両側検定で α のまま引く</td><td>χ²・F表は上側確率なので α/2 で引く</td></tr>
+          <tr><td class="tag">P0とp̂</td><td>#9 の検定の分母に p̂ を使う</td><td>検定はP0(仮説の値)、推定はp̂</td></tr>
+          <tr><td class="tag">併合の誤り</td><td>#6 の V を (VA+VB)/2、#10 の p̄ を (p̂A+p̂B)/2 にする</td><td>合計どうしを足して合計で割る。(SA+SB)/(φA+φB)、(xA+xB)/(nA+nB)</td></tr>
+          <tr><td class="tag">自由度</td><td>#14〜#16 を n−1、#13 をセル数−1 にする</td><td>回帰は n−2、分割表は (l−1)(m−1)</td></tr>
+          <tr><td class="tag">F表の順番</td><td>#4・#17 で F(φE, φA) と逆に引く</td><td>F(分子の自由度, 分母の自由度)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">関連</span><h2>あわせて読む</h2></div>
+    <div class="cards">
+      <a class="card" href="summary-test-estimation.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip src">分野別まとめ 2/6</span></div>
+        <h4>検定と推定</h4>
+        <div class="desc">t・χ²・F・正規の4つの分布の正体と形、出題傾向、暗記と導出の切り分け。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="degrees-of-freedom.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip">概念の掘り下げ</span></div>
+        <h4>自由度の考え方</h4>
+        <div class="desc">F検定の「n−1が2本」と、回帰・分散分析の「1本を切り分ける」の違いを整理。</div>
+        <div class="go">開く →</div>
+      </a>
+      <a class="card" href="formula-drill.html" target="_blank" rel="noopener">
+        <div class="chips"><span class="chip">ドリル</span></div>
+        <h4>公式暗記ドリル</h4>
+        <div class="desc">ここに並べた式をフラッシュカードで思い出す練習ができる。</div>
+        <div class="go">開く →</div>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 検定統計量 早見表</span>
+    <span>作成 2026-09-24</span>
+  </footer>
+
+</div>
