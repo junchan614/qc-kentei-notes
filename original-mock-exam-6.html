@@ -1,0 +1,856 @@
+<title>QC検定模試6</title>
+<style>
+:root{
+  --bg:#f2f4f2;
+  --surface:#ffffff;
+  --surface-2:#eaf0ed;
+  --border:#d6ddd8;
+  --text:#182420;
+  --muted:#5b6b63;
+  --accent:#1f6f5c;
+  --accent-strong:#154d40;
+  --accent-soft:#e2f0ea;
+  --good:#2f8f5f;
+  --good-soft:#e2f5ea;
+  --bad:#c14b3f;
+  --bad-soft:#fbeae7;
+  --warn:#a9752a;
+  --warn-soft:#f7edd9;
+  --mono:'IBM Plex Mono',ui-monospace,'SFMono-Regular',Consolas,monospace;
+  --sans:'IBM Plex Sans','Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;
+  --display:'IBM Plex Sans Condensed',var(--sans);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#11150f;
+    --surface:#181d17;
+    --surface-2:#1f2620;
+    --border:#31392f;
+    --text:#e7ede8;
+    --muted:#9dab9f;
+    --accent:#59b898;
+    --accent-strong:#82d3b3;
+    --accent-soft:#1c3129;
+    --good:#4fbf82;
+    --good-soft:#173626;
+    --bad:#e2827a;
+    --bad-soft:#3a231f;
+    --warn:#d9ab63;
+    --warn-soft:#382d17;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#11150f;
+  --surface:#181d17;
+  --surface-2:#1f2620;
+  --border:#31392f;
+  --text:#e7ede8;
+  --muted:#9dab9f;
+  --accent:#59b898;
+  --accent-strong:#82d3b3;
+  --accent-soft:#1c3129;
+  --good:#4fbf82;
+  --good-soft:#173626;
+  --bad:#e2827a;
+  --bad-soft:#3a231f;
+  --warn:#d9ab63;
+  --warn-soft:#382d17;
+}
+*{box-sizing:border-box;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  line-height:1.7;
+  padding-inline:16px;
+  padding-block:0 24px;
+}
+.wrap{max-width:760px;margin:0 auto;}
+.masthead{padding-block:22px 10px;}
+.eyebrow{
+  font-family:var(--display);
+  font-size:.78rem;
+  letter-spacing:.12em;
+  color:var(--accent-strong);
+  text-transform:uppercase;
+  font-weight:600;
+}
+h1{
+  font-family:var(--display);
+  font-size:1.9rem;
+  margin:.2em 0 .3em;
+  text-wrap:balance;
+  letter-spacing:.01em;
+}
+.lede{color:var(--muted);font-size:.95rem;max-width:62ch;}
+.notice{
+  margin-top:14px;
+  padding:12px 14px;
+  border:1px solid var(--border);
+  border-left:4px solid var(--warn);
+  background:var(--warn-soft);
+  border-radius:6px;
+  font-size:.86rem;
+  color:var(--text);
+}
+.bar{
+  position:sticky;
+  top:env(safe-area-inset-top,0px);
+  z-index:20;
+  margin-top:16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px 14px;
+  box-shadow:0 2px 10px rgba(0,0,0,.06);
+  flex-wrap:wrap;
+}
+.bar .clock{
+  font-family:var(--mono);
+  font-variant-numeric:tabular-nums;
+  font-size:1.15rem;
+  font-weight:600;
+  color:var(--accent-strong);
+  display:flex;align-items:center;gap:.5em;
+}
+.bar .clock .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 1.6s ease-in-out infinite;}
+@media (prefers-reduced-motion: reduce){.bar .clock .dot{animation:none;}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+.bar .progress{font-size:.82rem;color:var(--muted);font-family:var(--mono);}
+.btn{
+  font-family:var(--sans);
+  font-size:.86rem;
+  font-weight:600;
+  border:1px solid var(--border);
+  background:var(--surface-2);
+  color:var(--text);
+  padding:8px 14px;
+  border-radius:8px;
+  cursor:pointer;
+}
+.btn:hover{border-color:var(--accent);}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+.btn.primary:hover{background:var(--accent-strong);}
+.btn.ghost{background:transparent;}
+.btn.ghost.active{background:var(--warn-soft);border-color:var(--warn);color:var(--warn);}
+.refbox{
+  margin-top:18px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  border-radius:10px;
+  padding:14px 16px;
+  font-size:.85rem;
+  color:var(--muted);
+}
+.refbox summary{cursor:pointer;font-weight:600;color:var(--text);font-family:var(--display);}
+.reftable{width:100%;border-collapse:collapse;margin-top:8px;font-family:var(--mono);font-size:.82rem;}
+.reftable td,.reftable th{border:1px solid var(--border);padding:5px 8px;text-align:center;font-variant-numeric:tabular-nums;}
+.reftable th{background:var(--surface-2);font-family:var(--sans);}
+
+.problem{
+  margin-top:26px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-left:4px solid var(--accent);
+  border-radius:0 12px 12px 0;
+  padding:20px 20px 18px;
+}
+.problem .tag{
+  font-family:var(--display);
+  font-size:.78rem;
+  letter-spacing:.1em;
+  color:var(--accent-strong);
+  text-transform:uppercase;
+  font-weight:700;
+}
+.problem h2{
+  font-family:var(--display);
+  font-size:1.35rem;
+  margin:.15em 0 .5em;
+  text-wrap:balance;
+}
+.scenario{font-size:.94rem;}
+.datatable{width:100%;border-collapse:collapse;margin:12px 0;font-size:.86rem;}
+.datatable th,.datatable td{border:1px solid var(--border);padding:6px 9px;text-align:center;font-family:var(--mono);font-variant-numeric:tabular-nums;}
+.datatable th{background:var(--surface-2);font-family:var(--sans);}
+.given{
+  background:var(--surface-2);
+  border-radius:8px;
+  padding:10px 14px;
+  font-size:.86rem;
+  margin:10px 0;
+  font-family:var(--mono);
+}
+.given div{padding:2px 0;}
+ol.blanks{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:12px;}
+ol.blanks li{
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:10px 12px;
+  background:var(--surface);
+}
+.qnum{
+  display:inline-flex;
+  align-items:center;justify-content:center;
+  width:1.6em;height:1.6em;
+  border-radius:50%;
+  background:var(--accent-soft);
+  color:var(--accent-strong);
+  font-family:var(--mono);font-weight:700;font-size:.82rem;
+  margin-right:.5em;
+}
+.qtext{font-size:.92rem;}
+.answer-row{display:flex;align-items:center;gap:.5em;margin-top:6px;flex-wrap:wrap;}
+.blank{
+  font-family:var(--mono);
+  font-size:.95rem;
+  border:1.5px solid var(--border);
+  border-radius:6px;
+  padding:5px 9px;
+  background:var(--bg);
+  color:var(--text);
+  min-width:6.5em;
+}
+select.blank{min-width:14em;}
+.blank:focus-visible{outline:2px solid var(--accent);outline-offset:1px;}
+.blank.correct{border-color:var(--good);background:var(--good-soft);}
+.blank.wrong{border-color:var(--bad);background:var(--bad-soft);}
+.unit{font-size:.82rem;color:var(--muted);}
+.mark{font-weight:700;font-size:.95rem;min-width:1.1em;display:inline-block;text-align:center;}
+.mark.correct{color:var(--good);}
+.mark.wrong{color:var(--bad);}
+
+.actions{display:flex;align-items:center;gap:10px;margin-top:16px;flex-wrap:wrap;}
+.score-readout{font-family:var(--mono);font-size:.88rem;color:var(--muted);font-variant-numeric:tabular-nums;}
+.explain{
+  margin-top:14px;
+  border-top:1px dashed var(--border);
+  padding-top:12px;
+  font-size:.88rem;
+  color:var(--text);
+}
+.explain[hidden]{display:none;}
+.explain h3{font-family:var(--display);font-size:1rem;margin:.6em 0 .2em;}
+.explain .step{margin:.3em 0;}
+.explain .final{
+  font-weight:700;color:var(--accent-strong);
+}
+
+.summary{
+  margin-top:28px;
+  background:var(--accent-soft);
+  border:1px solid var(--accent);
+  border-radius:12px;
+  padding:20px;
+}
+.summary[hidden]{display:none;}
+.summary h2{font-family:var(--display);margin-top:0;}
+.summary-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:10px;margin:14px 0;
+}
+.stat-tile{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:10px 12px;
+}
+.stat-tile .label{font-size:.76rem;color:var(--muted);}
+.stat-tile .value{font-family:var(--mono);font-size:1.3rem;font-weight:700;font-variant-numeric:tabular-nums;}
+.domaintable{width:100%;border-collapse:collapse;font-size:.86rem;margin-top:6px;}
+.domaintable th,.domaintable td{border:1px solid var(--border);padding:6px 9px;text-align:left;}
+.domaintable td:nth-child(2),.domaintable td:nth-child(3){text-align:center;font-family:var(--mono);font-variant-numeric:tabular-nums;}
+.note-line{font-size:.8rem;color:var(--muted);margin-top:10px;}
+footer{margin-top:30px;font-size:.78rem;color:var(--muted);text-align:center;padding-bottom:10px;}
+.errtable{width:100%;border-collapse:collapse;margin:8px 0 4px;font-size:.84rem;}
+.errtable th,.errtable td{border:1px solid var(--border);padding:6px 9px;text-align:left;vertical-align:top;}
+.errtable th{background:var(--surface-2);font-weight:600;}
+.errtable td:nth-child(2){font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.why{
+  margin-top:10px;
+  background:var(--accent-soft);
+  border-radius:8px;
+  padding:10px 14px;
+  font-size:.86rem;
+}
+.why strong{color:var(--accent-strong);}
+.trend{
+  margin-top:16px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  border-radius:10px;
+  padding:12px 16px;
+  font-size:.86rem;
+}
+.trend table{width:100%;border-collapse:collapse;margin-top:6px;}
+.trend th,.trend td{border:1px solid var(--border);padding:5px 8px;text-align:left;vertical-align:top;}
+.trend th{background:var(--surface-2);}
+.keybox{margin-top:24px;border:1px solid var(--border);background:var(--surface);border-radius:10px;padding:14px 16px;font-size:.88rem;}
+.keybox summary{cursor:pointer;font-weight:600;font-family:var(--display);}
+.keybox table{width:100%;border-collapse:collapse;margin-top:8px;font-size:.84rem;}
+.keybox th,.keybox td{border:1px solid var(--border);padding:5px 8px;text-align:left;}
+.keybox td:nth-child(3){font-family:var(--mono);font-variant-numeric:tabular-nums;}
+.keybox th{background:var(--surface-2);}
+.scroll{overflow-x:auto;}
+</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="eyebrow">QC検定2級・自己採点ドリル</div>
+    <h1>オリジナル頻出計算問題 第2弾 全5問</h1>
+    <p class="lede">出題頻度の高い計算分野から、これまでの模試(1)〜(5)で扱っていない5つの計算パターンを選んだ。等分散の確認(F検定)から2つの母平均の差のt検定への流れ、分割表のχ²検定、回帰係数の検定と区間推定・寄与率・残差、計数規準型抜取検査のOC曲線、変数変換による平均・標準偏差と変動係数の5問。解答を入力すると自動採点され、各問の解説には「よくある誤答がどの計算ミスから生まれるか」の対応表をつけた。</p>
+    <div class="notice">この5問は<strong>書き下ろしのオリジナル問題</strong>で、過去問題そのものではありません。<a href="original-mock-exam.html">模試(1)</a>・<a href="original-mock-exam-2.html">模試(2)</a>・<a href="original-mock-exam-3.html">模試(3)</a>・<a href="original-mock-exam-4.html">追加問題10問</a>・<a href="original-mock-exam-5.html">頻出計算問題 第1弾</a>とは計算パターンが重ならないように作っている。</div>
+
+    <div class="trend">
+      <strong>この5問を選んだ理由</strong>
+      <div class="scroll"><table>
+        <thead><tr><th>問</th><th>分野</th><th>選んだ理由</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>検定と推定</td><td>2つの母分散の比のF検定は第39回で出題。「まず等分散を確かめてから母平均の差を検定する」という2段構えは、模試ではまだ扱っていなかった</td></tr>
+          <tr><td>2</td><td>検定と推定</td><td>分割表のχ²検定は第38回で出題。期待度数の計算と自由度の数え方が決まった手順で解ける</td></tr>
+          <tr><td>3</td><td>相関・回帰分析</td><td>単回帰は第35〜40回のほぼ毎回出る最頻出分野。これまでの模試で扱っていない、回帰係数の区間推定・残差・F0とt0の関係を扱う</td></tr>
+          <tr><td>4</td><td>抜取検査</td><td>第35・36・39・40回で出題。OC曲線の読み方(生産者危険・消費者危険)を、二項分布の計算で確かめる</td></tr>
+          <tr><td>5</td><td>統計的方法の基礎</td><td>データのまとめ方(変数変換)は第36・38・39回で出題。電卓計算を楽にする定番テクニック</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </header>
+
+  <div class="bar">
+    <span class="clock"><span class="dot" aria-hidden="true"></span><span id="clockText">00:00</span></span>
+    <span class="progress" id="progressText">解答欄 0/38 採点済み</span>
+    <button class="btn ghost" id="pauseBtn" type="button">タイマーストップ</button>
+    <button class="btn ghost" id="resetBtn" type="button">タイマーをリセット</button>
+  </div>
+
+  <!-- ============ 問1 ============ -->
+  <section class="problem" id="p1" data-domain="検定と推定">
+    <div class="tag">問1 ・ 検定と推定</div>
+    <h2>等分散のF検定から、2つの母平均の差のt検定へ</h2>
+    <p class="scenario">2つの製造ラインA・Bで作った製品の引張強度を比較する。ラインAから8個、ラインBから10個を無作為に抜き取って測定した結果が下の表である。まず2つの母分散が等しいとみなせるかを有意水準5%(両側)のF検定で確かめる。等しいとみなせる場合は、母平均に差があるかを有意水準5%(両側)のt検定で調べ、母平均の差の95%信頼区間も求める。</p>
+    <table class="datatable">
+      <tr><th>ライン</th><th>n</th><th>平均 x̄</th><th>偏差平方和 S</th></tr>
+      <tr><td>A</td><td>8</td><td>52.4</td><td>11.2</td></tr>
+      <tr><td>B</td><td>10</td><td>50.9</td><td>19.8</td></tr>
+    </table>
+    <div class="given">
+      <div>F(9, 7; 0.025)=4.82　F(7, 9; 0.025)=4.20</div>
+      <div>t(16, 0.05)=2.120　t(17, 0.05)=2.110　t(16, 0.10)=1.746(t表は両側確率)</div>
+    </div>
+
+    <ol class="blanks">
+      <li><div class="qtext"><span class="qnum">1・2</span>各ラインの不偏分散 VA・VB を求めよ(小数点以下1桁)。</div>
+        <div class="answer-row">VA = <input class="blank" type="text" inputmode="decimal" id="p1-1" data-ans="1.6" data-tol="0.01"> VB = <input class="blank" type="text" inputmode="decimal" id="p1-2" data-ans="2.2" data-tol="0.01"><span class="mark" id="p1-1-mark"></span><span class="mark" id="p1-2-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">3</span>F検定の検定統計量 F0 を求めよ(大きいほうの分散を分子にする。小数点以下3桁)。</div>
+        <div class="answer-row">F0 = <input class="blank" type="text" inputmode="decimal" id="p1-3" data-ans="1.375" data-tol="0.005"><span class="mark" id="p1-3-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">4</span>F検定の結論として正しいものを選べ。</div>
+        <div class="answer-row">
+          <select class="blank" id="p1-4" data-ans="equal">
+            <option value="">選択してください</option>
+            <option value="equal">F0 &lt; F(9, 7; 0.025)=4.82 で有意でない。等分散とみなしてプールした分散を使う</option>
+            <option value="equal_proved">F0 &lt; 4.82 なので、2つの母分散は等しいことが証明された</option>
+            <option value="unequal">F0 &gt; 1 なので母分散は異なる。プールした分散は使えない</option>
+          </select>
+          <span class="mark" id="p1-4-mark"></span>
+        </div></li>
+      <li><div class="qtext"><span class="qnum">5</span>プールした分散 V を求めよ(小数点以下4桁)。</div>
+        <div class="answer-row">V = <input class="blank" type="text" inputmode="decimal" id="p1-5" data-ans="1.9375" data-tol="0.0005"><span class="mark" id="p1-5-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">6</span>t検定の検定統計量 t0 を求めよ(小数点以下2桁)。</div>
+        <div class="answer-row">t0 = <input class="blank" type="text" inputmode="decimal" id="p1-6" data-ans="2.27" data-tol="0.02"><span class="mark" id="p1-6-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">7</span>t検定の結論として正しいものを選べ。</div>
+        <div class="answer-row">
+          <select class="blank" id="p1-7" data-ans="sig">
+            <option value="">選択してください</option>
+            <option value="sig">|t0| ≧ t(16, 0.05)=2.120 で有意。母平均に差があるといえる</option>
+            <option value="nosig">|t0| &lt; t(17, 0.05) で有意でない。差があるとはいえない</option>
+          </select>
+          <span class="mark" id="p1-7-mark"></span>
+        </div></li>
+      <li><div class="qtext"><span class="qnum">8・9</span>母平均の差 μA−μB の95%信頼区間を求めよ(小数点以下2桁)。</div>
+        <div class="answer-row">下限 <input class="blank" type="text" inputmode="decimal" id="p1-8" data-ans="0.10" data-tol="0.02"> 〜 上限 <input class="blank" type="text" inputmode="decimal" id="p1-9" data-ans="2.90" data-tol="0.02"><span class="mark" id="p1-8-mark"></span><span class="mark" id="p1-9-mark"></span></div></li>
+    </ol>
+
+    <div class="actions">
+      <button class="btn" data-grade="p1" type="button">この問だけ採点する</button>
+      <span class="score-readout" id="p1-score"></span>
+      <button class="btn ghost" data-toggle="p1-explain" type="button" disabled>解説を見る</button>
+    </div>
+
+    <div class="explain" id="p1-explain" hidden>
+      <h3>解き方</h3>
+      <p class="step">①② VA=SA/(nA−1)=11.2/7=<strong>1.6</strong>。VB=SB/(nB−1)=19.8/9=<strong>2.2</strong>。</p>
+      <p class="step">③ 大きいほうを分子にする。F0=VB/VA=2.2/1.6=<strong>1.375</strong>。分子がBなので、自由度は(分子φB=9, 分母φA=7)の順。</p>
+      <p class="step">④ 大きいほうを分子にしたので、両側5%の検定でも上側2.5%点だけと比べればよい。F0=1.375 &lt; F(9, 7; 0.025)=4.82 で有意でない。<span class="final">等分散とみなしてプールした分散を使う</span>。ただし「有意でない」は「等しいと証明された」ではなく、「異なるとはいえない」という意味。</p>
+      <p class="step">⑤ V=(SA+SB)/(nA+nB−2)=(11.2+19.8)/16=31.0/16=<strong>1.9375</strong>。不偏分散どうしの単純平均((1.6+2.2)/2=1.9)ではない。</p>
+      <p class="step">⑥ 標準誤差=√{V(1/nA+1/nB)}=√{1.9375×(0.125+0.1)}=√0.43594=0.6603。t0=(52.4−50.9)/0.6603=<strong>2.27</strong>。</p>
+      <p class="step">⑦ 自由度はφ=nA+nB−2=16。両側5%なので t(16, 0.05)=2.120 と比べる。2.27 ≧ 2.120 で<span class="final">有意(差があるといえる)</span>。</p>
+      <p class="step">⑧⑨ 1.5±2.120×0.6603=1.5±1.400=[<strong>0.10, 2.90</strong>]。区間が0を含まないことも⑦の結論と整合している。</p>
+      <h3>よくある誤答と原因</h3>
+      <div class="scroll"><table class="errtable">
+        <thead><tr><th>誤答</th><th>値</th><th>原因</th></tr></thead>
+        <tbody>
+          <tr><td>VA・VB</td><td>1.4 / 1.98</td><td>Sをn−1でなくnで割った</td></tr>
+          <tr><td>F0</td><td>0.727</td><td>小さいほうを分子にした。この場合は下側2.5%点と比べることになり手間が増える</td></tr>
+          <tr><td>V</td><td>1.9</td><td>VAとVBを単純平均した。自由度で重みをつける(Sの合計÷φの合計)</td></tr>
+          <tr><td>t0</td><td>3.44</td><td>√を取り忘れ、V(1/nA+1/nB)=0.4359でそのまま割った</td></tr>
+          <tr><td>t表</td><td>1.746</td><td>両側検定なのにt(16, 0.10)を使った。片側5%のときに使う値</td></tr>
+        </tbody>
+      </table></div>
+      <div class="why"><strong>なぜ先にF検定をするのか</strong>: プールした分散Vは「A・Bは同じ分散σ²を持つ」という前提で、2つの推定値を1つにまとめたもの。前提が崩れるとVは何の推定値でもなくなるので、まず等分散を確認する。等分散といえない場合は、プールせずにウェルチの方法(等価自由度)を使う。</div>
+    </div>
+  </section>
+
+  <!-- ============ 問2 ============ -->
+  <section class="problem" id="p2" data-domain="検定と推定">
+    <div class="tag">問2 ・ 検定と推定</div>
+    <h2>分割表(3×2)のχ²検定</h2>
+    <p class="scenario">3つの勤務直(1直・2直・3直)で製品を検査し、不適合品の出方が直によって異なるかを調べる。3直は生産量が少ないため検査数も少ない。直と適合/不適合の分割表について、有意水準5%で独立性の検定を行う。</p>
+    <table class="datatable">
+      <tr><th>直</th><th>不適合品</th><th>適合品</th><th>計</th></tr>
+      <tr><td>1直</td><td>10</td><td>190</td><td>200</td></tr>
+      <tr><td>2直</td><td>16</td><td>184</td><td>200</td></tr>
+      <tr><td>3直</td><td>14</td><td>86</td><td>100</td></tr>
+      <tr><th>計</th><td>40</td><td>460</td><td>500</td></tr>
+    </table>
+    <div class="given">
+      <div>χ²(2, 0.05)=5.991　χ²(2, 0.01)=9.210　χ²(5, 0.05)=11.07　χ²(6, 0.05)=12.59</div>
+    </div>
+
+    <ol class="blanks">
+      <li><div class="qtext"><span class="qnum">1・2</span>1直と3直の不適合品の期待度数を求めよ。</div>
+        <div class="answer-row">1直 <input class="blank" type="text" inputmode="decimal" id="p2-1" data-ans="16" data-tol="0.05"> 3直 <input class="blank" type="text" inputmode="decimal" id="p2-2" data-ans="8" data-tol="0.05"><span class="mark" id="p2-1-mark"></span><span class="mark" id="p2-2-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">3</span>3直の適合品の期待度数を求めよ。</div>
+        <div class="answer-row"><input class="blank" type="text" inputmode="decimal" id="p2-3" data-ans="92" data-tol="0.05"><span class="mark" id="p2-3-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">4</span>検定統計量 χ0² を求めよ(小数点以下2桁)。</div>
+        <div class="answer-row">χ0² = <input class="blank" type="text" inputmode="decimal" id="p2-4" data-ans="7.34" data-tol="0.03"><span class="mark" id="p2-4-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">5</span>自由度 φ を求めよ。</div>
+        <div class="answer-row">φ = <input class="blank" type="text" inputmode="numeric" id="p2-5" data-ans="2" data-tol="0"><span class="mark" id="p2-5-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">6</span>検定の結論として正しいものを選べ。</div>
+        <div class="answer-row">
+          <select class="blank" id="p2-6" data-ans="sig5">
+            <option value="">選択してください</option>
+            <option value="sig1">有意水準1%でも有意。直によって不適合品率が大きく異なる</option>
+            <option value="sig5">有意水準5%で有意(1%では有意でない)。不適合品の出方は直によって異なるといえる</option>
+            <option value="nosig">有意でない。直によって異なるとはいえない</option>
+          </select>
+          <span class="mark" id="p2-6-mark"></span>
+        </div></li>
+    </ol>
+
+    <div class="actions">
+      <button class="btn" data-grade="p2" type="button">この問だけ採点する</button>
+      <span class="score-readout" id="p2-score"></span>
+      <button class="btn ghost" data-toggle="p2-explain" type="button" disabled>解説を見る</button>
+    </div>
+
+    <div class="explain" id="p2-explain" hidden>
+      <h3>解き方</h3>
+      <p class="step">①②③ 期待度数=行計×列計/総計。1直の不適合: 200×40/500=<strong>16</strong>。3直の不適合: 100×40/500=<strong>8</strong>。3直の適合: 100×460/500=<strong>92</strong>(=100−8)。2直の期待度数は1直と同じ16・184。</p>
+      <p class="step">④ χ0²=Σ(観測−期待)²/期待。<br>
+      不適合: (10−16)²/16=2.250、(16−16)²/16=0、(14−8)²/8=4.500<br>
+      適合: (190−184)²/184=0.196、(184−184)²/184=0、(86−92)²/92=0.391<br>
+      合計 χ0²=<strong>7.34</strong>。</p>
+      <p class="step">⑤ φ=(行数−1)(列数−1)=(3−1)(2−1)=<strong>2</strong>。</p>
+      <p class="step">⑥ 5.991 ≦ 7.34 &lt; 9.210 なので、<span class="final">5%で有意、1%では有意でない</span>。不適合品率は1直5%、2直8%、3直14%で、3直が高い。</p>
+      <h3>よくある誤答と原因</h3>
+      <div class="scroll"><table class="errtable">
+        <thead><tr><th>誤答</th><th>値</th><th>原因</th></tr></thead>
+        <tbody>
+          <tr><td>3直の期待度数</td><td>13.3</td><td>3直の検査数が少ないことを無視して、不適合40個を3直で均等割りした</td></tr>
+          <tr><td>χ0²</td><td>6.75</td><td>不適合品の列だけ計算し、適合品の列(0.196+0.391)を足し忘れた</td></tr>
+          <tr><td>χ0²</td><td>6.78</td><td>(観測−期待)²を期待度数でなく観測度数で割った</td></tr>
+          <tr><td>φ</td><td>5</td><td>セルの数6から1を引いた。分割表では行と列それぞれから1を引いて掛ける</td></tr>
+        </tbody>
+      </table></div>
+      <div class="why"><strong>自由度が(3−1)(2−1)になる理由</strong>: 行計と列計が決まっていると、不適合品の列の値を2つ決めれば残り4セルは引き算で自動的に決まる。自由に動けるセルが2つなので、φ=2。</div>
+    </div>
+  </section>
+
+  <!-- ============ 問3 ============ -->
+  <section class="problem" id="p3" data-domain="相関・回帰分析">
+    <div class="tag">問3 ・ 相関・回帰分析</div>
+    <h2>回帰係数の検定・区間推定と寄与率・残差</h2>
+    <p class="scenario">熱処理温度x(×10℃)と硬さy の関係を n=10 組のデータで調べた。集計結果は以下の通り。単回帰式を求め、回帰係数(傾き)について検定と区間推定を行う。</p>
+    <div class="given">
+      <div>n=10　x̄=5.0　ȳ=20.0</div>
+      <div>Sxx=40.0　Syy=280.0　Sxy=100.0</div>
+      <div>t(8, 0.05)=2.306　t(9, 0.05)=2.262　F(1, 8; 0.05)=5.32</div>
+    </div>
+
+    <ol class="blanks">
+      <li><div class="qtext"><span class="qnum">1・2</span>回帰直線 y=a+bx の傾き b と切片 a を求めよ。</div>
+        <div class="answer-row">b = <input class="blank" type="text" inputmode="decimal" id="p3-1" data-ans="2.5" data-tol="0.01"> a = <input class="blank" type="text" inputmode="decimal" id="p3-2" data-ans="7.5" data-tol="0.01"><span class="mark" id="p3-1-mark"></span><span class="mark" id="p3-2-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">3・4</span>回帰による平方和 SR と残差平方和 Se を求めよ。</div>
+        <div class="answer-row">SR = <input class="blank" type="text" inputmode="decimal" id="p3-3" data-ans="250" data-tol="0.5"> Se = <input class="blank" type="text" inputmode="decimal" id="p3-4" data-ans="30" data-tol="0.5"><span class="mark" id="p3-3-mark"></span><span class="mark" id="p3-4-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">5</span>寄与率 R² を求めよ(小数点以下3桁)。</div>
+        <div class="answer-row">R² = <input class="blank" type="text" inputmode="decimal" id="p3-5" data-ans="0.893" data-tol="0.002"><span class="mark" id="p3-5-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">6</span>残差の分散 Ve を求めよ(小数点以下2桁)。</div>
+        <div class="answer-row">Ve = <input class="blank" type="text" inputmode="decimal" id="p3-6" data-ans="3.75" data-tol="0.01"><span class="mark" id="p3-6-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">7</span>「β1=0」の検定統計量 t0=b/√(Ve/Sxx) を求めよ(小数点以下2桁)。</div>
+        <div class="answer-row">t0 = <input class="blank" type="text" inputmode="decimal" id="p3-7" data-ans="8.16" data-tol="0.03"><span class="mark" id="p3-7-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">8</span>分散分析表の F0=VR/Ve を求めよ(小数点以下2桁)。</div>
+        <div class="answer-row">F0 = <input class="blank" type="text" inputmode="decimal" id="p3-8" data-ans="66.67" data-tol="0.1"><span class="mark" id="p3-8-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">9・10</span>母回帰係数 β1 の95%信頼区間を求めよ(小数点以下2桁)。</div>
+        <div class="answer-row">下限 <input class="blank" type="text" inputmode="decimal" id="p3-9" data-ans="1.79" data-tol="0.02"> 〜 上限 <input class="blank" type="text" inputmode="decimal" id="p3-10" data-ans="3.21" data-tol="0.02"><span class="mark" id="p3-9-mark"></span><span class="mark" id="p3-10-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">11</span>データの1つ(x=6.0, y=24.0)の残差 e=y−ŷ を求めよ。</div>
+        <div class="answer-row">e = <input class="blank" type="text" inputmode="decimal" id="p3-11" data-ans="1.5" data-tol="0.01"><span class="mark" id="p3-11-mark"></span></div></li>
+    </ol>
+
+    <div class="actions">
+      <button class="btn" data-grade="p3" type="button">この問だけ採点する</button>
+      <span class="score-readout" id="p3-score"></span>
+      <button class="btn ghost" data-toggle="p3-explain" type="button" disabled>解説を見る</button>
+    </div>
+
+    <div class="explain" id="p3-explain" hidden>
+      <h3>解き方</h3>
+      <p class="step">①② b=Sxy/Sxx=100.0/40.0=<strong>2.5</strong>。回帰直線は(x̄, ȳ)を通るので a=ȳ−b·x̄=20.0−2.5×5.0=<strong>7.5</strong>。</p>
+      <p class="step">③④ SR=Sxy²/Sxx=100²/40=<strong>250</strong>。Se=Syy−SR=280−250=<strong>30</strong>。</p>
+      <p class="step">⑤ R²=SR/Syy=250/280=<strong>0.893</strong>。yのばらつきの約89%を回帰で説明できる。</p>
+      <p class="step">⑥ φe=n−2=8。Ve=Se/φe=30/8=<strong>3.75</strong>。</p>
+      <p class="step">⑦ bの標準誤差=√(Ve/Sxx)=√(3.75/40)=√0.09375=0.3062。t0=2.5/0.3062=<strong>8.16</strong>。t(8, 0.05)=2.306より大きく有意。</p>
+      <p class="step">⑧ VR=SR/1=250。F0=250/3.75=<strong>66.67</strong>。t0²=8.165²=66.67 と一致する。単回帰では「分散分析表のF検定」と「回帰係数のt検定」は同じ検定を別の形で書いたもの。</p>
+      <p class="step">⑨⑩ b±t(8, 0.05)×√(Ve/Sxx)=2.5±2.306×0.3062=2.5±0.706=[<strong>1.79, 3.21</strong>]。区間が0を含まないことも⑦と整合している。</p>
+      <p class="step">⑪ ŷ=7.5+2.5×6.0=22.5。e=24.0−22.5=<strong>1.5</strong>。</p>
+      <h3>よくある誤答と原因</h3>
+      <div class="scroll"><table class="errtable">
+        <thead><tr><th>誤答</th><th>値</th><th>原因</th></tr></thead>
+        <tbody>
+          <tr><td>b</td><td>0.357</td><td>Sxy/Syyで計算した(xとyの取り違え)</td></tr>
+          <tr><td>Ve</td><td>3.33</td><td>残差の自由度をn−2=8でなくn−1=9とした</td></tr>
+          <tr><td>t0</td><td>1.29</td><td>√(Ve/Sxx)のSxxを忘れ、b/√Ve(=2.5/1.936)とした</td></tr>
+          <tr><td>区間の幅</td><td>±0.693</td><td>t(9, 0.05)=2.262を使った。φ=n−2=8で引く</td></tr>
+          <tr><td>残差</td><td>−1.5</td><td>ŷ−yの順に引いた。残差は「実測−予測」</td></tr>
+        </tbody>
+      </table></div>
+      <div class="why"><strong>残差の自由度がn−2になる理由</strong>: 回帰直線を引くためにa・bの2つをデータから推定しているので、残差はその2つの制約(Σe=0、Σxe=0)を満たす。自由に動けるのはn−2個だけになる。</div>
+    </div>
+  </section>
+
+  <!-- ============ 問4 ============ -->
+  <section class="problem" id="p4" data-domain="抜取検査">
+    <div class="tag">問4 ・ 抜取検査</div>
+    <h2>計数1回抜取検査のOC曲線</h2>
+    <p class="scenario">購入部品のロットから n=20個を抜き取り、不適合品が c=1個以下(合格判定個数Ac=1)なら合格、2個以上なら不合格とする抜取方式を考える。ロットは十分大きく、抜き取った個数に含まれる不適合品数は二項分布に従うものとする。</p>
+    <div class="given">
+      <div>0.99^19=0.8262　0.99^20=0.8179</div>
+      <div>0.95^19=0.3774　0.95^20=0.3585</div>
+      <div>0.90^19=0.1351　0.90^20=0.1216</div>
+    </div>
+
+    <ol class="blanks">
+      <li><div class="qtext"><span class="qnum">1</span>ロットの不適合品率が p=1%のとき、合格する確率 L(0.01) を求めよ(小数点以下3桁)。</div>
+        <div class="answer-row">L(0.01) = <input class="blank" type="text" inputmode="decimal" id="p4-1" data-ans="0.983" data-tol="0.002"><span class="mark" id="p4-1-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">2</span>p=1%のロットを合格させたいロット(p0=1%)とするとき、生産者危険 α を求めよ(%、小数点以下1桁)。</div>
+        <div class="answer-row">α = <input class="blank" type="text" inputmode="decimal" id="p4-2" data-ans="1.7" data-tol="0.1">%<span class="mark" id="p4-2-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">3</span>p=5%のとき、合格する確率 L(0.05) を求めよ(小数点以下3桁)。</div>
+        <div class="answer-row">L(0.05) = <input class="blank" type="text" inputmode="decimal" id="p4-3" data-ans="0.736" data-tol="0.002"><span class="mark" id="p4-3-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">4</span>p=10%のロットを不合格にしたいロット(p1=10%)とするとき、消費者危険 β を求めよ(小数点以下3桁)。</div>
+        <div class="answer-row">β = <input class="blank" type="text" inputmode="decimal" id="p4-4" data-ans="0.392" data-tol="0.002"><span class="mark" id="p4-4-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">5</span>nは20のまま、合格判定個数をAc=1からAc=0に厳しくしたときの変化として正しいものを選べ。</div>
+        <div class="answer-row">
+          <select class="blank" id="p4-5" data-ans="alpha_up">
+            <option value="">選択してください</option>
+            <option value="alpha_up">OC曲線が下に下がる。消費者危険βは小さくなるが、生産者危険αは大きくなる</option>
+            <option value="both_down">OC曲線が急になり、αとβの両方が小さくなる</option>
+            <option value="alpha_down">OC曲線が上に上がる。生産者危険αが小さくなる</option>
+          </select>
+          <span class="mark" id="p4-5-mark"></span>
+        </div></li>
+    </ol>
+
+    <div class="actions">
+      <button class="btn" data-grade="p4" type="button">この問だけ採点する</button>
+      <span class="score-readout" id="p4-score"></span>
+      <button class="btn ghost" data-toggle="p4-explain" type="button" disabled>解説を見る</button>
+    </div>
+
+    <div class="explain" id="p4-explain" hidden>
+      <h3>解き方</h3>
+      <p class="step">合格確率は L(p)=Pr(X=0)+Pr(X=1)=(1−p)^20+20p(1−p)^19。</p>
+      <p class="step">① p=0.01: 0.8179+20×0.01×0.8262=0.8179+0.1652=<strong>0.983</strong>。</p>
+      <p class="step">② 生産者危険は「良いロット(p0)なのに不合格になる確率」。α=1−L(0.01)=1−0.983=0.017=<strong>1.7%</strong>。</p>
+      <p class="step">③ p=0.05: 0.3585+20×0.05×0.3774=0.3585+0.3774=<strong>0.736</strong>。</p>
+      <p class="step">④ 消費者危険は「悪いロット(p1)なのに合格してしまう確率」。β=L(0.10)=0.1216+20×0.10×0.1351=0.1216+0.2702=<strong>0.392</strong>。βは1から引かない。</p>
+      <p class="step">⑤ Ac=0にするとL(p)=(1−p)^20だけになり、どのpでも合格確率が下がる(例: L(0.05)は0.736→0.358)。<span class="final">OC曲線が下がり、βは小さく、αは大きくなる</span>。αとβを両方小さくするには、Acを変えるだけでは足りず、サンプルの大きさnを大きくする必要がある。</p>
+      <h3>よくある誤答と原因</h3>
+      <div class="scroll"><table class="errtable">
+        <thead><tr><th>誤答</th><th>値</th><th>原因</th></tr></thead>
+        <tbody>
+          <tr><td>L(0.01)</td><td>0.818</td><td>Pr(X=0)だけで止めた。Ac=1なのでX=1の場合も合格</td></tr>
+          <tr><td>L(0.01)</td><td>0.826</td><td>Pr(X=1)で20(組合せの数)を掛け忘れた(0.8179+0.0083)</td></tr>
+          <tr><td>α</td><td>98.3%</td><td>合格確率そのものを答えた。αは不合格になる確率</td></tr>
+          <tr><td>β</td><td>0.608</td><td>1−L(0.10)を答えた。βは「合格してしまう」確率なのでL(p1)そのもの</td></tr>
+        </tbody>
+      </table></div>
+      <div class="why"><strong>OC曲線の読み方</strong>: 横軸がロットの不適合品率p、縦軸が合格確率L(p)。p0での「1−L」がα(良いロットを落とす確率)、p1での「L」がβ(悪いロットを通す確率)。理想は、p0では合格確率が1に近く、p1では0に近い、崖のように急な曲線。nを大きくするほどこの形に近づく。</div>
+    </div>
+  </section>
+
+  <!-- ============ 問5 ============ -->
+  <section class="problem" id="p5" data-domain="統計的方法の基礎">
+    <div class="tag">問5 ・ 統計的方法の基礎</div>
+    <h2>変数変換による平均・標準偏差と変動係数</h2>
+    <p class="scenario">ある部品の長さx(mm)を10個測定した。値が100.00前後で小数点以下まであるため、電卓の計算を楽にするために u=(x−100.0)×10 と変換して集計したところ、次の結果になった。</p>
+    <div class="given">
+      <div>n=10　Σu=20　Σu²=240</div>
+    </div>
+
+    <ol class="blanks">
+      <li><div class="qtext"><span class="qnum">1・2</span>uの平均 ū と、xの平均 x̄ を求めよ。</div>
+        <div class="answer-row">ū = <input class="blank" type="text" inputmode="decimal" id="p5-1" data-ans="2.0" data-tol="0.01"> x̄ = <input class="blank" type="text" inputmode="decimal" id="p5-2" data-ans="100.2" data-tol="0.005"><span class="unit">mm</span><span class="mark" id="p5-1-mark"></span><span class="mark" id="p5-2-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">3・4</span>uの偏差平方和 Su と、xの偏差平方和 Sx を求めよ。</div>
+        <div class="answer-row">Su = <input class="blank" type="text" inputmode="decimal" id="p5-3" data-ans="200" data-tol="0.5"> Sx = <input class="blank" type="text" inputmode="decimal" id="p5-4" data-ans="2.00" data-tol="0.01"><span class="mark" id="p5-3-mark"></span><span class="mark" id="p5-4-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">5</span>xの標準偏差 s(=√(Sx/(n−1)))を求めよ(小数点以下3桁)。</div>
+        <div class="answer-row">s = <input class="blank" type="text" inputmode="decimal" id="p5-5" data-ans="0.471" data-tol="0.002"><span class="unit">mm</span><span class="mark" id="p5-5-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">6</span>xの変動係数 CV を求めよ(%、小数点以下2桁)。</div>
+        <div class="answer-row">CV = <input class="blank" type="text" inputmode="decimal" id="p5-6" data-ans="0.47" data-tol="0.01">%<span class="mark" id="p5-6-mark"></span></div></li>
+      <li><div class="qtext"><span class="qnum">7</span>変数変換と統計量の関係について正しいものを選べ。</div>
+        <div class="answer-row">
+          <select class="blank" id="p5-7" data-ans="shift_mean">
+            <option value="">選択してください</option>
+            <option value="shift_mean">100.0を引く操作は平均だけを変え、標準偏差は変えない。10倍する操作は平均も標準偏差も10倍にする</option>
+            <option value="shift_both">100.0を引く操作は平均も標準偏差も100.0だけ小さくする</option>
+            <option value="scale_var">10倍する操作は標準偏差を100倍にする</option>
+          </select>
+          <span class="mark" id="p5-7-mark"></span>
+        </div></li>
+    </ol>
+
+    <div class="actions">
+      <button class="btn" data-grade="p5" type="button">この問だけ採点する</button>
+      <span class="score-readout" id="p5-score"></span>
+      <button class="btn ghost" data-toggle="p5-explain" type="button" disabled>解説を見る</button>
+    </div>
+
+    <div class="explain" id="p5-explain" hidden>
+      <h3>解き方</h3>
+      <p class="step">①② ū=Σu/n=20/10=<strong>2.0</strong>。変換を逆にたどると x=100.0+u/10 なので、x̄=100.0+2.0/10=<strong>100.2</strong>mm。</p>
+      <p class="step">③④ Su=Σu²−(Σu)²/n=240−400/10=<strong>200</strong>。u=10(x−100.0)なので、偏差は10倍、偏差平方和は10²=100倍になっている。Sx=Su/100=<strong>2.00</strong>。</p>
+      <p class="step">⑤ Vx=Sx/(n−1)=2.00/9=0.2222。s=√0.2222=<strong>0.471</strong>mm(=uの標準偏差4.714÷10でも同じ)。</p>
+      <p class="step">⑥ CV=s/x̄×100=0.471/100.2×100=<strong>0.47</strong>%。</p>
+      <p class="step">⑦ 全データから同じ数を引いても、平均が同じだけずれるだけで、偏差(平均からの距離)は変わらない。そのため<span class="final">標準偏差は引き算の影響を受けず、定数倍の影響だけを受ける</span>。分散は2乗の世界なので100倍になる。</p>
+      <h3>よくある誤答と原因</h3>
+      <div class="scroll"><table class="errtable">
+        <thead><tr><th>誤答</th><th>値</th><th>原因</th></tr></thead>
+        <tbody>
+          <tr><td>x̄</td><td>120.0</td><td>元に戻すときに10で割り忘れた(100.0+2.0×10)</td></tr>
+          <tr><td>Sx</td><td>20.0</td><td>偏差平方和を10で割った。Sは2乗の量なので10²=100で割る</td></tr>
+          <tr><td>s</td><td>0.447</td><td>n−1でなくnで割った(√(2.00/10))</td></tr>
+          <tr><td>CV</td><td>23.6%</td><td>uの標準偏差4.714をuの平均2.0で割った。変動係数は元のxで計算する(引き算を含む変換では比が保たれない)</td></tr>
+        </tbody>
+      </table></div>
+      <div class="why"><strong>変動係数だけは変換後の値で計算できない</strong>: 平均と標準偏差はそれぞれ逆変換すれば元に戻せるが、変動係数(標準偏差÷平均)は「100.0を引く」操作で平均だけが変わるため、uの値で計算すると全く別の数になる。必ずxに戻してから割る。</div>
+    </div>
+  </section>
+
+  <div class="actions" style="margin-top:24px;">
+    <button class="btn primary" id="gradeAllBtn" type="button">全問まとめて採点して終了</button>
+  </div>
+
+  <section class="summary" id="summary" hidden>
+    <h2>結果</h2>
+    <div class="summary-grid">
+      <div class="stat-tile"><div class="label">総合正答率</div><div class="value" id="sumTotal">–</div></div>
+      <div class="stat-tile"><div class="label">解答時間</div><div class="value" id="sumTime">–</div></div>
+      <div class="stat-tile"><div class="label">正解数</div><div class="value" id="sumCount">–</div></div>
+    </div>
+    <table class="domaintable">
+      <thead><tr><th>分野</th><th>正解</th><th>正答率</th></tr></thead>
+      <tbody id="domainRows"></tbody>
+    </table>
+    <p class="note-line">参考: 実際のQC検定は「分野別50%以上・総合70%以上」が合格の目安とされる。この問題の結果はあくまで自己診断用の参考値。</p>
+  </section>
+
+  <details class="keybox">
+    <summary>解答一覧(まとめて答え合わせする場合)</summary>
+    <div class="scroll"><table>
+      <thead><tr><th>問</th><th>空欄</th><th>正解</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>VA / VB / F0</td><td>1.6 / 2.2 / 1.375</td></tr>
+        <tr><td>1</td><td>F検定の結論 / V / t0</td><td>等分散とみなす / 1.9375 / 2.27</td></tr>
+        <tr><td>1</td><td>t検定の結論 / 差の95%信頼区間</td><td>有意 / 0.10 〜 2.90</td></tr>
+        <tr><td>2</td><td>期待度数(1直不適合・3直不適合・3直適合)</td><td>16 / 8 / 92</td></tr>
+        <tr><td>2</td><td>χ0² / φ / 結論</td><td>7.34 / 2 / 5%で有意(1%では有意でない)</td></tr>
+        <tr><td>3</td><td>b / a / SR / Se / R²</td><td>2.5 / 7.5 / 250 / 30 / 0.893</td></tr>
+        <tr><td>3</td><td>Ve / t0 / F0</td><td>3.75 / 8.16 / 66.67</td></tr>
+        <tr><td>3</td><td>β1の95%信頼区間 / 残差</td><td>1.79 〜 3.21 / 1.5</td></tr>
+        <tr><td>4</td><td>L(0.01) / α / L(0.05) / β</td><td>0.983 / 1.7% / 0.736 / 0.392</td></tr>
+        <tr><td>4</td><td>Ac=0にしたとき</td><td>OC曲線が下がり、βは小さく、αは大きくなる</td></tr>
+        <tr><td>5</td><td>ū / x̄ / Su / Sx</td><td>2.0 / 100.2 / 200 / 2.00</td></tr>
+        <tr><td>5</td><td>s / CV / 変換の性質</td><td>0.471 / 0.47% / 引き算は平均だけ変える</td></tr>
+      </tbody>
+    </table></div>
+  </details>
+
+  <footer>QC検定2級学習用オリジナル問題 ／ projects/qc-kentei/original-mock-exam-6.html</footer>
+</div>
+<script>
+(function(){
+  "use strict";
+  var startTime = Date.now();
+  var elapsedFrozen = null;
+  var manualPauseStart = null;
+  var clockEl = document.getElementById('clockText');
+  var pauseBtn = document.getElementById('pauseBtn');
+
+  function fmt(ms){
+    var s = Math.floor(ms/1000);
+    var m = Math.floor(s/60);
+    var r = s%60;
+    return String(m).padStart(2,'0')+':'+String(r).padStart(2,'0');
+  }
+  function tick(){
+    if(elapsedFrozen===null && manualPauseStart===null){
+      clockEl.textContent = fmt(Date.now()-startTime);
+    }
+  }
+  setInterval(tick,500);
+
+  function pauseClock(){
+    if(elapsedFrozen!==null || manualPauseStart!==null) return;
+    manualPauseStart = Date.now();
+    pauseBtn.textContent = '再開';
+    pauseBtn.classList.add('active');
+  }
+  function resumeClock(){
+    if(manualPauseStart===null) return;
+    startTime += Date.now()-manualPauseStart;
+    manualPauseStart = null;
+    pauseBtn.textContent = 'タイマーストップ';
+    pauseBtn.classList.remove('active');
+  }
+  pauseBtn.addEventListener('click', function(){
+    if(elapsedFrozen!==null) return;
+    if(manualPauseStart===null) pauseClock(); else resumeClock();
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', function(){
+    startTime = Date.now();
+    elapsedFrozen = null;
+    manualPauseStart = null;
+    pauseBtn.disabled = false;
+    pauseBtn.textContent = 'タイマーストップ';
+    pauseBtn.classList.remove('active');
+    clockEl.textContent = '00:00';
+  });
+
+  var PROBLEMS = ['p1','p2','p3','p4','p5'];
+  var TOTAL_BLANKS = document.querySelectorAll('.blank').length;
+
+  function gradeOne(input){
+    var val = input.value.trim();
+    if(val===""){ return false; }
+    if(input.tagName === 'SELECT'){
+      return val === input.dataset.ans;
+    }
+    var num = parseFloat(val.replace(/,/g,'').replace(/[−ー－]/g,'-'));
+    if(isNaN(num)) return false;
+    var ans = parseFloat(input.dataset.ans);
+    var tol = parseFloat(input.dataset.tol || "0");
+    return Math.abs(num-ans) <= tol + 1e-9;
+  }
+
+  function markInput(input, ok){
+    input.classList.remove('correct','wrong');
+    input.classList.add(ok ? 'correct' : 'wrong');
+    var mark = document.getElementById(input.id+'-mark');
+    if(mark){
+      mark.textContent = ok ? '✓' : '✗';
+      mark.classList.remove('correct','wrong');
+      mark.classList.add(ok ? 'correct' : 'wrong');
+    }
+  }
+
+  function gradeProblem(id){
+    var card = document.getElementById(id);
+    var blanks = card.querySelectorAll('.blank');
+    var correct = 0;
+    blanks.forEach(function(input){
+      var ok = gradeOne(input);
+      markInput(input, ok);
+      if(ok) correct++;
+    });
+    document.getElementById(id+'-score').textContent = correct + ' / ' + blanks.length + ' 正解';
+    document.querySelector('[data-toggle="'+id+'-explain"]').disabled = false;
+    updateProgress();
+    return {correct: correct, total: blanks.length};
+  }
+
+  function updateProgress(){
+    var graded = 0;
+    document.querySelectorAll('.blank').forEach(function(input){
+      if(input.classList.contains('correct') || input.classList.contains('wrong')) graded++;
+    });
+    document.getElementById('progressText').textContent = '解答欄 '+graded+'/'+TOTAL_BLANKS+' 採点済み';
+  }
+
+  document.querySelectorAll('[data-grade]').forEach(function(btn){
+    btn.addEventListener('click', function(){ gradeProblem(btn.dataset.grade); });
+  });
+
+  document.querySelectorAll('[data-toggle]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var target = document.getElementById(btn.dataset.toggle);
+      if(target.hasAttribute('hidden')){ target.removeAttribute('hidden'); btn.textContent = '解説を隠す'; }
+      else { target.setAttribute('hidden',''); btn.textContent = '解説を見る'; }
+    });
+  });
+
+  document.getElementById('gradeAllBtn').addEventListener('click', function(){
+    resumeClock();
+    if(elapsedFrozen===null){
+      elapsedFrozen = Date.now()-startTime;
+      clockEl.textContent = fmt(elapsedFrozen);
+      pauseBtn.disabled = true;
+    }
+    var totalCorrect = 0, totalCount = 0, rows = '';
+    PROBLEMS.forEach(function(id){
+      var r = gradeProblem(id);
+      totalCorrect += r.correct;
+      totalCount += r.total;
+      var domain = document.getElementById(id).dataset.domain;
+      rows += '<tr><td>'+domain+'</td><td>'+r.correct+' / '+r.total+'</td><td>'+Math.round(r.correct/r.total*100)+'%</td></tr>';
+    });
+    document.getElementById('domainRows').innerHTML = rows;
+    document.getElementById('sumTotal').textContent = Math.round(totalCorrect/totalCount*100)+'%';
+    document.getElementById('sumCount').textContent = totalCorrect+' / '+totalCount;
+    document.getElementById('sumTime').textContent = fmt(elapsedFrozen);
+    var summary = document.getElementById('summary');
+    summary.removeAttribute('hidden');
+    summary.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  try{
+    var saved = localStorage.getItem('qc-mock-exam6-answers');
+    if(saved){
+      var data = JSON.parse(saved);
+      Object.keys(data).forEach(function(id){
+        var el = document.getElementById(id);
+        if(el) el.value = data[id];
+      });
+    }
+  }catch(e){}
+
+  function persist(){
+    try{
+      var data = {};
+      document.querySelectorAll('.blank').forEach(function(input){
+        if(input.value) data[input.id] = input.value;
+      });
+      localStorage.setItem('qc-mock-exam6-answers', JSON.stringify(data));
+    }catch(e){}
+  }
+  document.querySelectorAll('.blank').forEach(function(input){
+    input.addEventListener('change', persist);
+  });
+})();
+</script>
