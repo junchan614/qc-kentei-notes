@@ -1,0 +1,260 @@
+<title>第42回 問10 新製品開発</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 過去問解説 / 第42回 問10</span>
+    <h1>「思いつき」を製品にする前に、4人の部長が確認していること</h1>
+    <p class="lede">社内発の新製品案を、開発部長・営業部長・技術部長・品質保証部長がそれぞれの立場から検証する会議の場面。潜在ニーズの捉え方とマーケットイン/プロダクトアウトの位置づけ、機能的価値と情緒的価値、機能から部品への階層的な展開、そして製品安全の考え方という、新製品開発に共通する4つの視点をたどる。</p>
+  </header>
+
+  <div class="callout info">
+    <b>読む前に:</b> このページは過去問そのものは掲載していない。お手元の問題冊子と合わせて読む前提で書いている。また、基準解答の公開前(2026年9月27日試験当日時点)に作成した暫定の解説であり、基準解答と異なる場合は内容を更新する。
+  </div>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(63)(64)</span><h2>開発部長 ― 潜在ニーズと、良い意味でのプロダクトアウト</h2></div>
+    <p>新製品案は、市場調査そのものの結果から出てきたものではなく、開発部内での議論から生まれたものだった。開発部長は、役立つ新製品を生み出すには、顧客自身もまだ言葉にできていない隠れた要求を捉えることが大切であり、「どんな製品が欲しいか」と漠然と尋ねるだけではそれをつかめないと述べる。また、この案は企業側の一方的な発想を売り込むだけの考え方に見えるかもしれないが、良い意味でその考え方を実践する必要がある、とも付け加える。</p>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(63)</span> 潜在ニーズ</span>
+      <span class="answer"><span class="qno">(64)</span> プロダクトアウト</span>
+    </div>
+
+    <div class="callout info"><b>決め手:</b> (63)は「漠然と尋ねても捉えられない」「顧客自身もまだ言葉にできていない」という表現。(64)は「企業の一方的な立場から作ったものを売る」という表現と、それを「良い意味で」行う必要があるという逆説的な言い回しに対応する。</div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 280" role="img" aria-label="マーケットインとプロダクトアウトの出発点の違いを示す図。マーケットインは市場調査で拾える顕在ニーズを出発点にし、良い意味でのプロダクトアウトは企業の技術やアイデアを出発点にしつつ、市場調査だけでは拾えない潜在ニーズを捉えようとする">
+          <rect x="30" y="40" width="230" height="82" rx="10" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.2" opacity="0.9"/>
+          <text x="145" y="68" text-anchor="middle" font-size="14" fill="currentColor" font-weight="600">マーケットイン</text>
+          <text x="145" y="90" text-anchor="middle" font-size="11.5" fill="currentColor" opacity="0.75">市場調査で拾える</text>
+          <text x="145" y="107" text-anchor="middle" font-size="11.5" fill="currentColor" opacity="0.75">「顕在ニーズ」が出発点</text>
+
+          <rect x="380" y="40" width="230" height="82" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="2"/>
+          <text x="495" y="68" text-anchor="middle" font-size="14" fill="var(--reg-ink)" font-weight="700">プロダクトアウト</text>
+          <text x="495" y="90" text-anchor="middle" font-size="11.5" fill="var(--reg-ink)">企業の技術・アイデアが</text>
+          <text x="495" y="107" text-anchor="middle" font-size="11.5" fill="var(--reg-ink)">出発点 …(64)</text>
+
+          <rect x="205" y="170" width="230" height="82" rx="10" fill="var(--res-soft)" stroke="var(--res)" stroke-width="2"/>
+          <text x="320" y="198" text-anchor="middle" font-size="14" fill="var(--res-ink)" font-weight="700">潜在ニーズ …(63)</text>
+          <text x="320" y="220" text-anchor="middle" font-size="11.5" fill="var(--res-ink)">アンケートで漠然と聞いても</text>
+          <text x="320" y="237" text-anchor="middle" font-size="11.5" fill="var(--res-ink)">出てこない、隠れた要求</text>
+
+          <line x1="145" y1="122" x2="270" y2="180" stroke="currentColor" stroke-width="1.3" opacity="0.5"/>
+          <line x1="495" y1="122" x2="380" y2="178" stroke="var(--reg)" stroke-width="1.6"/>
+          <text x="440" y="150" font-size="11" fill="var(--reg-ink)" text-anchor="middle">良い意味でのプロダクトアウトは、</text>
+          <text x="440" y="165" font-size="11" fill="var(--reg-ink)" text-anchor="middle">この潜在ニーズを捉えにいく</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> マーケットインが拾えるのは市場調査で言語化される顕在ニーズまで。潜在ニーズは調査だけでは出てこないため、企業側の技術やアイデアを起点にする「良い意味でのプロダクトアウト」が、その隠れた要求を掘り当てる役割を担うことがある。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(65)(66)</span><h2>営業部長 ― 機能的価値と情緒的価値、両方の完成度</h2></div>
+    <p>営業部長は、使用者にとっての価値には二種類あると説明する。重量が軽い、強度がある、折りたためる、段差もスムーズに越えられるといった性能面の価値と、形やデザインがおしゃれである、使うと誇らしい気分になるといった感性面の価値である。性能面だけでなく、感性面も含めた製品全体の完成度が問われると述べる。</p>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(65)</span> 機能的価値</span>
+      <span class="answer"><span class="qno">(66)</span> 情緒的価値</span>
+    </div>
+
+    <div class="callout info"><b>決め手:</b> (65)は重量・強度・折りたたみ・段差といった、測定できる性能の列挙。(66)は「形やデザイン」「誇らしい気分」といった、感性・気持ちに関する表現に対応する。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(67)(68)(69)</span><h2>技術部長 ― 機能を機構へ、機構を部品へ</h2></div>
+    <p>技術部長は、保有している技術と新たに必要な技術を、抽象的な技術名称から具体的な技術名称へと段階を追って示す図で整理すると説明する。まず製品に求められる機能を、それを実現する機構に落とし込み、さらにその機構を実際に作るユニットや部品に変換していく。この過程で、実現の難易度が高く全体の実現を左右する、いわば足かせになりそうな技術を洗い出す。</p>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(67)</span> 階層構造</span>
+      <span class="answer"><span class="qno">(68)</span> ユニット・部品</span>
+      <span class="answer"><span class="qno">(69)</span> ボトルネック</span>
+    </div>
+
+    <div class="callout info"><b>決め手:</b> (67)は「抽象的な名称から具体的な名称へ段階を追って示す」という表現。(68)は「機構をさらに何に変換するか」という、機能→機構の次の展開段階。(69)は「実現を妨げる、難易度の高い技術」という文脈にそのまま対応する。</div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 260" role="img" aria-label="機能から機構、ユニット・部品へと段階的に展開する階層図。機能は抽象度が高く、下にいくほど具体的になる。展開の途中でボトルネックとなる技術が抽出される">
+          <text x="320" y="24" text-anchor="middle" font-size="12.5" fill="currentColor" opacity="0.7">階層構造で抽象 → 具体へ展開する …(67)</text>
+
+          <rect x="240" y="40" width="160" height="46" rx="8" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.2"/>
+          <text x="320" y="68" text-anchor="middle" font-size="13.5" fill="currentColor" font-weight="600">機能(抽象的)</text>
+
+          <line x1="320" y1="86" x2="320" y2="108" stroke="currentColor" stroke-width="1.3" opacity="0.6"/>
+
+          <rect x="240" y="108" width="160" height="46" rx="8" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.2"/>
+          <text x="320" y="136" text-anchor="middle" font-size="13.5" fill="currentColor" font-weight="600">機構</text>
+
+          <line x1="320" y1="154" x2="320" y2="176" stroke="currentColor" stroke-width="1.3" opacity="0.6"/>
+
+          <rect x="220" y="176" width="200" height="46" rx="8" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="2"/>
+          <text x="320" y="204" text-anchor="middle" font-size="13.5" fill="var(--reg-ink)" font-weight="700">ユニット・部品(具体的) …(68)</text>
+
+          <rect x="440" y="108" width="176" height="46" rx="8" fill="var(--res-soft)" stroke="var(--res)" stroke-width="2"/>
+          <text x="528" y="130" text-anchor="middle" font-size="12.5" fill="var(--res-ink)" font-weight="700">ボトルネック技術 …(69)</text>
+          <text x="528" y="146" text-anchor="middle" font-size="11" fill="var(--res-ink)">実現の難易度が高い箇所</text>
+          <line x1="440" y1="130" x2="404" y2="130" stroke="var(--res)" stroke-width="1.6" stroke-dasharray="4 3"/>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> 機能→機構→ユニット・部品と下にいくほど話が具体的になる。この展開の途中で、実現の難易度が高くプロジェクト全体の足かせになりうる技術(ボトルネック)を洗い出しておくことが技術部長の役割になる。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(70)</span><h2>品質保証部長 ― 危険源を断ってから、壊れ方を安全側に倒す</h2></div>
+    <p>品質保証部長は、製品の安全対策としてまず危険の発生源そのものを根本的に取り除いて危険性のレベルを抑えることを優先し、そのうえで、万一の誤操作や部品の故障が起きても被害が広がらない側に壊れるという考え方を取り入れると説明する。</p>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(70)</span> フェールセーフ</span></div>
+
+    <div class="callout info"><b>決め手:</b> 「発生源を取り除いたうえで、さらに」取り入れるという段階的な言い回しと、「誤操作や故障が起きても」被害を抑えるという前提の組み合わせ。</div>
+
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span><b>本質安全設計</b> ― 危険の発生源そのものを設計段階で取り除く。最優先の対策。</span></div>
+      <div class="step"><span class="mark">2</span><span><b>保護方策(フェールセーフ／フールプルーフ)</b> ― 発生源を除ききれない残りのリスクに対し、故障や誤操作が起きても安全側に働く仕組みを加える。</span></div>
+      <div class="step"><span class="mark">3</span><span><b>警告表示・使用上の注意</b> ― 設計での対策が尽きたあとの、最後の手段としての注意喚起。</span></div>
+    </div>
+    <div class="callout"><b>フェールセーフとフールプルーフの違い:</b> フェールセーフは「故障が起きても安全側に壊れる」考え方、フールプルーフは「誤った操作そのものができないようにする」考え方。どちらも本質安全設計の次の段階に位置する保護方策である点は共通する。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">対比</span><h2>取り違えやすい用語の見分け方</h2></div>
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>問10の語群にある紛らわしい用語の対比</caption>
+        <thead><tr><th>用語</th><th>ひとことで</th><th>見分けるキーワード</th><th>取り違えやすい相手</th></tr></thead>
+        <tbody>
+          <tr><td>マーケットイン</td><td>市場調査に基づき、顧客ニーズを起点に製品を作る考え方</td><td>「調査結果に基づいて企画した」という文脈</td><td>プロダクトアウト</td></tr>
+          <tr><td class="good">プロダクトアウト</td><td>企業の技術・アイデアを起点に新しい価値を提案する考え方</td><td>「社内の議論から生まれた案」という文脈</td><td>マーケットイン</td></tr>
+          <tr><td class="good">潜在ニーズ</td><td>顧客自身もまだ言葉にできていない、隠れた要求</td><td>「漠然と尋ねても出てこない」という表現</td><td>顧客満足</td></tr>
+          <tr><td class="good">機能的価値</td><td>製品の性能・実用面が生み出す価値</td><td>軽さ・強度・折りたたみなど具体的な性能の列挙</td><td>情緒的価値</td></tr>
+          <tr><td class="good">情緒的価値</td><td>デザインや所有する満足感など感性面の価値</td><td>「おしゃれ」「誇らしい気分」という表現</td><td>機能的価値</td></tr>
+          <tr><td class="good">階層構造</td><td>抽象的な名称から具体的な名称へ段階的に落とし込む示し方</td><td>「抽象→具体的な名称へ」という表現</td><td>連関図</td></tr>
+          <tr><td>連関図</td><td>問題点と要因の関係を線で結び、真因を探る図</td><td>要因分析・問題解決の文脈</td><td>階層構造</td></tr>
+          <tr><td class="good">ボトルネック(技術)</td><td>全体の実現を妨げる、最も難易度の高い制約となる技術</td><td>「抽出すべき技術」のうち難度・重要度が際立つもの</td><td>知的財産</td></tr>
+          <tr><td>知的財産</td><td>特許やノウハウなど、権利として保護される技術・知識</td><td>権利化・出願といった文脈</td><td>ボトルネック(技術)</td></tr>
+          <tr><td class="good">フェールセーフ</td><td>故障や誤操作が起きても安全側に壊れる設計思想</td><td>「発生源を除いたうえで、さらに」という段階的な表現</td><td>本質安全設計</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">まとめ</span><h2>覚えること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span><b>潜在ニーズはアンケートでは出てこない。</b> 「どんな製品が欲しいか」という直接的な問いでは、顧客自身も気づいていない要求はつかめない。</span></div>
+      <div class="step"><span class="mark">2</span><span><b>プロダクトアウトは悪い意味だけの言葉ではない。</b> 企業の技術・アイデアを起点にしつつ、良い意味で潜在ニーズを掘り当てる進め方もある。</span></div>
+      <div class="step"><span class="mark">3</span><span><b>製品の価値は機能的価値と情緒的価値の両輪。</b> 性能が良いだけでも、デザインが良いだけでも製品全体の完成度にはならない。</span></div>
+      <div class="step"><span class="mark">4</span><span><b>機能→機構→ユニット・部品の順に具体化する。</b> 抽象的な機能をいきなり部品に落とすのではなく、機構という中間段階を経る。</span></div>
+      <div class="step"><span class="mark">5</span><span><b>製品安全は「発生源を断つ」が最優先。</b> それでも残るリスクに対して、フェールセーフやフールプルーフといった保護方策を組み合わせる。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第42回 問10 / 新製品開発</span>
+    <span>暫定解説・基準解答公開前</span>
+  </footer>
+
+</div>

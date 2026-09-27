@@ -1,0 +1,421 @@
+<title>第42回 問5 繰返しのある二元配置</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+header.hero .back{font-size:12.5px;color:var(--ink-faint);}
+header.hero .back a{color:var(--ink-faint);text-decoration:underline;text-underline-offset:2px;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第42回 問5</span>
+    <h1>交互作用が有意でないとき、何を捨てて何を残すか</h1>
+    <p class="lede">因子A(添加剤、2水準)と因子B(添加量、3水準)、繰返し2回の<b>繰返しのある二元配置実験</b>。交互作用A×Bを検定してから、有意でなければ誤差にプーリングし、最適条件の点推定と信頼区間まで求める、この分野の定番の流れを一通り扱う。</p>
+    <p class="back"><a href="index.html" target="_blank" rel="noopener">← 目次へ戻る</a></p>
+  </header>
+
+  <div class="callout">
+    <b>お断り:</b> 過去問そのものは掲載していません。お手元の問題冊子と合わせて読む前提です。基準解答の公開前(2026-09-27時点)に作成した暫定の解説であり、基準解答と異なる場合は更新します。
+  </div>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>与えられた条件</h2></div>
+    <p>製品強度に対する因子A(添加剤、2水準)と因子B(添加量、3水準)の効果を調べるため、完全ランダムに繰返し2回の実験を行った(全N=12個のデータ)。個々のデータは伏せられ、水準の組み合わせ(セル)ごとの合計だけが与えられている。</p>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <caption>表5.1 セルごとの合計（繰返し2回分の合計）</caption>
+        <thead><tr><th></th><th>B1</th><th>B2</th><th>B3</th><th>合計</th></tr></thead>
+        <tbody>
+          <tr><td>A1</td><td>17</td><td>38</td><td>29</td><td class="sum">T1. = 84</td></tr>
+          <tr><td>A2</td><td>9</td><td>37</td><td>23</td><td class="sum">T2. = 69</td></tr>
+          <tr><td>合計</td><td class="sum">T.1 = 26</td><td class="sum">T.2 = 75</td><td class="sum">T.3 = 52</td><td class="sum">T = 153</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>あわせて <span class="mono">Σx² = 2295</span>、行合計の2乗和 <span class="mono">ΣT(i.)² = 11817</span>、列合計の2乗和 <span class="mono">ΣT(.j)² = 9005</span>、セル合計の2乗和 <span class="mono">ΣT(ij)² = 4553</span> が与えられている。水準数a=2、b=3、繰返しr=2、N=abr=12。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(29)</span><h2>データの構造式を選ぶ</h2></div>
+    <p>繰返しのある二元配置では、交互作用(ab)<sub>ij</sub>を誤差e<sub>ijk</sub>と切り離して推定できる。これは「繰返しがある」からこそ可能になる。</p>
+
+    <div class="calc">
+      <span class="label">データの構造式</span>
+      <span class="line">x(ijk) = μ + a(i) + b(j) + (ab)(ij) + e(ijk)</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(29)</span> エ</span></div>
+
+    <div class="callout warn"><b>罠:</b> 交互作用項(ab)<sub>ij</sub>を持たない x(ijk) = μ + a(i) + b(j) + e(ijk) の形は、<b>繰返しのない</b>二元配置のときの構造式。今回は繰返しr=2があるので、交互作用を別の項として分離できる形を選ぶ必要がある。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>平方和を分解する — (30)(31)</h2></div>
+    <p>修正項CTを引いてから、行・列・セルの順に平方和を求め、最後に引き算で交互作用と誤差の平方和を出す。</p>
+
+    <div class="calc">
+      <span class="label">修正項と全体の変動</span>
+      <span class="line">CT = T² / N = 153² / 12 = 23409 / 12 = 1950.75</span>
+      <span class="line">S(T) = Σx² − CT = 2295 − 1950.75</span>
+      <span class="result">S(T) = 344.25</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">要因Aと要因Bの平方和</span>
+      <span class="line">S(A) = ΣT(i.)² / (br) − CT = 11817 / 6 − 1950.75 = 1969.50 − 1950.75</span>
+      <span class="line">S(A) = 18.75</span>
+      <span class="line">S(B) = ΣT(.j)² / (ar) − CT = 9005 / 4 − 1950.75 = 2251.25 − 1950.75</span>
+      <span class="line">S(B) = 300.50</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">セル間の変動 → 交互作用の平方和</span>
+      <span class="line">S(AB) = ΣT(ij)² / r − CT = 4553 / 2 − 1950.75 = 2276.50 − 1950.75 = 325.75</span>
+      <span class="line">S(A×B) = S(AB) − S(A) − S(B) = 325.75 − 18.75 − 300.50</span>
+      <span class="result">S(A×B) = 6.50</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">誤差の平方和（引き算で求める）</span>
+      <span class="line">S(E) = S(T) − S(AB) = 344.25 − 325.75</span>
+      <span class="result">S(E) = 18.50</span>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(30)</span> カ. 6.50</span>
+      <span class="answer"><span class="qno">(31)</span> ク. 18.50</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>交互作用は有意か — (32)(33)</h2></div>
+    <p>自由度は水準数だけで機械的に決まる: φ(A)=a−1=1、φ(B)=b−1=2、φ(A×B)=(a−1)(b−1)=2、φ(E)=ab(r−1)=6。検算: 1+2+2+6=11=φ(T)。</p>
+
+    <div class="calc">
+      <span class="label">交互作用と誤差の平均平方</span>
+      <span class="line">V(A×B) = S(A×B) / φ(A×B) = 6.50 / 2 = 3.25</span>
+      <span class="line">V(E) = S(E) / φ(E) = 18.50 / 6 ≒ 3.083</span>
+      <span class="line">F(0) = V(A×B) / V(E) = 3.25 / 3.083</span>
+      <span class="result">F(0) ≒ 1.05</span>
+    </div>
+
+    <p>棄却域は R: F(0) ≧ F(φ(A×B), φ(E); 0.05) = F(2, 6; 0.05) = 5.14。F(0)=1.05はこれより小さいので、交互作用は有意でない。</p>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(32)</span> イ. 2</span>
+      <span class="answer"><span class="qno">(33)</span> エ. 6</span>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 320" role="img" aria-label="B1からB3にかけてのA1・A2それぞれのセル平均の折れ線グラフ。両方ともB2で山になる似た形をしており、交互作用が小さいことを示す">
+          <text x="320" y="24" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">水準別セル平均 — A1とA2はほぼ同じ形で動く</text>
+
+          <line x1="100" y1="280" x2="580" y2="280" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <line x1="100" y1="40" x2="100" y2="280" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <g font-size="11" fill="currentColor" opacity="0.6">
+            <text x="90" y="284" text-anchor="end">0</text>
+            <text x="90" y="224" text-anchor="end">5</text>
+            <text x="90" y="164" text-anchor="end">10</text>
+            <text x="90" y="104" text-anchor="end">15</text>
+            <text x="90" y="44" text-anchor="end">20</text>
+            <text x="160" y="300" text-anchor="middle">B1</text>
+            <text x="340" y="300" text-anchor="middle">B2</text>
+            <text x="520" y="300" text-anchor="middle">B3</text>
+          </g>
+
+          <polyline points="160,178 340,52 520,106" fill="none" stroke="var(--reg)" stroke-width="2.4"/>
+          <polyline points="160,226 340,58 520,142" fill="none" stroke="var(--res)" stroke-width="2.4" stroke-dasharray="7 4"/>
+
+          <g fill="var(--reg)"><circle cx="160" cy="178" r="4.5"/><circle cx="340" cy="52" r="4.5"/><circle cx="520" cy="106" r="4.5"/></g>
+          <g fill="var(--res)"><circle cx="160" cy="226" r="4.5"/><circle cx="340" cy="58" r="4.5"/><circle cx="520" cy="142" r="4.5"/></g>
+
+          <g font-size="11.5" fill="currentColor">
+            <text x="160" y="168" text-anchor="middle">8.5</text>
+            <text x="340" y="42" text-anchor="middle">19.0</text>
+            <text x="520" y="96" text-anchor="middle">14.5</text>
+            <text x="160" y="242" text-anchor="middle">4.5</text>
+            <text x="340" y="74" text-anchor="middle">18.5</text>
+            <text x="520" y="158" text-anchor="middle">11.5</text>
+          </g>
+
+          <rect x="440" y="220" width="14" height="4" fill="var(--reg)"/>
+          <text x="460" y="226" font-size="12" fill="var(--reg-ink)">A1（実線）</text>
+          <rect x="440" y="242" width="14" height="4" fill="var(--res)"/>
+          <text x="460" y="248" font-size="12" fill="var(--res-ink)">A2（破線）</text>
+
+          <text x="320" y="308" font-size="11.5" text-anchor="middle" fill="var(--ink-faint, currentColor)" opacity="0.75">2本の折れ線がほぼ平行 → F(0)=1.05は有意でない</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> A1・A2どちらの折れ線もB2で山になり、B1で谷になる同じ形を描く。線がほぼ平行に近いこと自体が「交互作用が小さい」ことの視覚的なサインで、F検定の結果(有意でない)と一致する。</figcaption>
+    </figure>
+
+    <div class="callout info"><b>交互作用が有意でない ＝ 効果がゼロという意味ではない:</b> V(A×B)=3.25はV(E)=3.083とほぼ同じ大きさで、「誤差と区別がつかない変動」というだけ。効果が全く無いとまでは言い切れないが、少なくとも「AとBの効果が互いの水準によって大きく変わる」とは言えない、という判断になる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>誤差にプーリングして、AとBを検定し直す</h2></div>
+    <p>交互作用が有意でないので、A×Bの変動を誤差にプールし、より自由度の大きい誤差でAとBを検定し直す。</p>
+
+    <div class="calc">
+      <span class="label">プーリング後の誤差</span>
+      <span class="line">S(E') = S(E) + S(A×B) = 18.50 + 6.50 = 25.00</span>
+      <span class="line">φ(E') = φ(E) + φ(A×B) = 6 + 2 = 8</span>
+      <span class="line">V(E') = S(E') / φ(E') = 25.00 / 8 = 3.125</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">AとBを改めて検定する</span>
+      <span class="line">V(A) = S(A)/φ(A) = 18.75/1 = 18.75　→　F(0)_A = 18.75 / 3.125 = 6.00</span>
+      <span class="line">V(B) = S(B)/φ(B) = 300.50/2 = 150.25　→　F(0)_B = 150.25 / 3.125 ≒ 48.1</span>
+    </div>
+
+    <p>F(0)_A=6.00 ＞ F(1,8;0.05)=5.32、F(0)_B≒48.1 ＞ F(2,8;0.05)=4.46。AもBもどちらも有意水準5%で有意になる。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>表5.2 分散分析表（プーリング前）</caption>
+        <thead><tr><th>要因</th><th>平方和S</th><th>自由度φ</th><th>平均平方V</th><th>分散比F<sub>0</sub></th></tr></thead>
+        <tbody>
+          <tr><td>A</td><td><div class="num">18.75</div></td><td><div class="num">1</div></td><td><div class="num">18.75</div></td><td><div class="num sub">プーリング後に検定</div></td></tr>
+          <tr><td>B</td><td><div class="num">300.50</div></td><td><div class="num">2</div></td><td><div class="num">150.25</div></td><td><div class="num sub">プーリング後に検定</div></td></tr>
+          <tr class="row-res"><td>A×B</td><td><div class="num hit">6.50</div><div class="sub">…(30)</div></td><td><div class="num hit">2</div><div class="sub">…(32)</div></td><td><div class="num">3.25</div></td><td><div class="num">1.05</div></td></tr>
+          <tr><td>E</td><td><div class="num hit">18.50</div><div class="sub">…(31)</div></td><td><div class="num hit">6</div><div class="sub">…(33)</div></td><td><div class="num">3.083</div></td><td></td></tr>
+          <tr class="row-total"><td>合計T</td><td><div class="num">344.25</div></td><td><div class="num">11</div></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>表5.3 分散分析表（A×Bを誤差にプーリング後）</caption>
+        <thead><tr><th>要因</th><th>平方和S</th><th>自由度φ</th><th>平均平方V</th><th>分散比F<sub>0</sub></th><th>判定</th></tr></thead>
+        <tbody>
+          <tr class="row-reg"><td>A</td><td><div class="num">18.75</div></td><td><div class="num">1</div></td><td><div class="num">18.75</div></td><td><div class="num hit">6.00</div></td><td>5%で有意</td></tr>
+          <tr class="row-reg"><td>B</td><td><div class="num">300.50</div></td><td><div class="num">2</div></td><td><div class="num">150.25</div></td><td><div class="num hit">48.1</div></td><td>5%で有意</td></tr>
+          <tr><td>E'（プール後）</td><td><div class="num">25.00</div></td><td><div class="num">8</div></td><td><div class="num">3.125</div></td><td></td><td></td></tr>
+          <tr class="row-total"><td>合計T</td><td><div class="num">344.25</div></td><td><div class="num">11</div></td><td></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 4</span><h2>最適条件と点推定 — (34)(35)</h2></div>
+    <p>AもBも有意なので、それぞれ良いほうの水準を選んで組み合わせる。交互作用は誤差にプールした(＝無視できる)前提なので、点推定は「行の効果＋列の効果−全体平均」の加法モデルで求める。</p>
+
+    <div class="calc">
+      <span class="label">水準ごとの平均</span>
+      <span class="line">x̄(A1) = T(1.)/6 = 84/6 = 14.00　　x̄(A2) = T(2.)/6 = 69/6 = 11.50　→　A1が良い</span>
+      <span class="line">x̄(B1) = T(.1)/4 = 6.50　　x̄(B2) = T(.2)/4 = 18.75　　x̄(B3) = T(.3)/4 = 13.00　→　B2が良い</span>
+      <span class="line">全体平均 x̄ = T/N = 153/12 = 12.75</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(34)</span> イ. A1B2</span></div>
+
+    <div class="calc">
+      <span class="label">最適条件A1B2での点推定値</span>
+      <span class="line">μ̂(A1B2) = x̄(A1) + x̄(B2) − x̄ = 14.00 + 18.75 − 12.75</span>
+      <span class="result">μ̂(A1B2) = 20.00</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(35)</span> オ. 20.00</span></div>
+
+    <div class="callout warn"><b>罠1: セル平均19.00をそのまま使ってしまう。</b> A1B2セルの実測平均は 38(セル合計)÷2(繰返し) = <b>19.00</b>。これは「交互作用も込みの、そのセルだけの実測値」であり、交互作用を誤差にプールした(＝A×Bの効果は無視する)今回のモデルでは使わない。プーリング後は加法モデル x̄(A1)+x̄(B2)−x̄ = 20.00 が正しい点推定値になる。19.00は一見もっともらしいが、「プーリングした意味」を無視した値になってしまう。</div>
+
+    <div class="callout warn"><b>罠2: 水準を取り違える。</b> A1ではなくA2を使うと 11.50+18.75−12.75=17.50 になる。A1・A2のどちらが「良い水準」かは平均の大小(14.00 ＞ 11.50)で決まるので、水準を取り違えるとそのまま別の数値に落ちてしまう。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 5</span><h2>信頼区間を求める — (36)</h2></div>
+    <p>最適条件の母平均を区間推定するには、有効反復数n<sub>e</sub>が必要になる。伊奈の式で求める。</p>
+
+    <div class="calc">
+      <span class="label">有効反復数 n(e)（伊奈の式）</span>
+      <span class="line">n(e) = N / (1 + φ(A) + φ(B)) = 12 / (1 + 1 + 2) = 12 / 4</span>
+      <span class="result">n(e) = 3</span>
+      <span class="line">検算（田中の式）: 1/n(e) = 1/6 + 1/4 − 1/12 = 2/12 + 3/12 − 1/12 = 4/12 = 1/3　→　n(e)=3（一致）</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">母平均の信頼区間</span>
+      <span class="line">μ̂(A1B2) ± t(φ(E'); 0.05)・√(V(E')/n(e))</span>
+      <span class="line">= 20.00 ± 2.306 × √(3.125/3) = 20.00 ± 2.306 × 1.021</span>
+      <span class="line">= 20.00 ± 2.353</span>
+      <span class="line">下限 = 17.65　　上限 = 22.35</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(36)</span> キ. 22.35（上限）</span></div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 220" role="img" aria-label="点推定20.00を中心に、下限17.65から上限22.35までの信頼区間を数直線上に示す図。セル平均19.00は交互作用ありの推定値であり、この信頼区間の計算には使わない値として区別して示す">
+          <text x="330" y="24" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">最適条件A1B2の母平均の信頼区間</text>
+
+          <line x1="60" y1="170" x2="600" y2="170" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+          <g font-size="11" fill="currentColor" opacity="0.65">
+            <text x="60" y="190" text-anchor="middle">16</text>
+            <text x="137" y="190" text-anchor="middle">17</text>
+            <text x="214" y="190" text-anchor="middle">18</text>
+            <text x="291" y="190" text-anchor="middle">19</text>
+            <text x="369" y="190" text-anchor="middle">20</text>
+            <text x="446" y="190" text-anchor="middle">21</text>
+            <text x="523" y="190" text-anchor="middle">22</text>
+            <text x="600" y="190" text-anchor="middle">23</text>
+          </g>
+
+          <line x1="187" y1="130" x2="550" y2="130" stroke="var(--reg)" stroke-width="4"/>
+          <line x1="187" y1="118" x2="187" y2="142" stroke="var(--reg)" stroke-width="3"/>
+          <line x1="550" y1="118" x2="550" y2="142" stroke="var(--reg)" stroke-width="3"/>
+          <circle cx="369" cy="130" r="6" fill="var(--reg-ink)"/>
+
+          <text x="369" y="105" font-size="13" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">μ̂=20.00</text>
+          <text x="187" y="160" font-size="12" text-anchor="middle" fill="var(--reg-ink)">下限 17.65</text>
+          <text x="550" y="160" font-size="12" text-anchor="middle" fill="var(--reg-ink)">上限 22.35</text>
+
+          <line x1="291" y1="170" x2="291" y2="60" stroke="var(--wrong)" stroke-width="1.4" stroke-dasharray="4 3"/>
+          <circle cx="291" cy="60" r="5" fill="var(--wrong)"/>
+          <text x="291" y="45" font-size="12" text-anchor="middle" fill="var(--wrong)" font-weight="700">セル平均19.00（罠）</text>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> 点推定20.00はちょうど区間の中央にある。セル平均19.00(赤)は区間の中には入っているが、これは「交互作用込みの実測平均」であって、プーリング後の点推定値でも信頼区間の中心でもない、別の量である。</figcaption>
+    </figure>
+
+    <div class="callout warn"><b>罠3: 上限と下限を取り違える。</b> 選択肢には下限17.65もそのまま並んでいる。「求めよ」と言われているのが上限なのか下限なのかを見落とすと、計算は合っているのに符号だけ逆の値を選んでしまう。μ̂±(誤差)の<b>どちら側</b>を聞かれているかを最後にもう一度確認する。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">罠</span><h2>(30)〜(33)の選択肢に紛れる「別の場所の値」</h2></div>
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>選択肢の正体</caption>
+        <thead><tr><th>値</th><th>判定</th><th>どこから来るか</th></tr></thead>
+        <tbody>
+          <tr><td class="good">6.50</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (30)</span></td><td>S(A×B) = S(AB) − S(A) − S(B)</td></tr>
+          <tr><td class="good">18.50</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (31)</span></td><td>S(E) = S(T) − S(AB)</td></tr>
+          <tr><td class="bad">3.25</td><td>誤</td><td>V(A×B)そのもの。平方和(30)を求める欄に平均平方の値を置いてしまう取り違え</td></tr>
+          <tr><td class="bad">12.75</td><td>誤</td><td>全体平均x̄=T/N。この設問群のどの平方和・自由度でもなく、後のSTEP4で使う別の値</td></tr>
+          <tr><td class="good">2</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (32)</span></td><td>φ(A×B) = (a−1)(b−1) = 1×2</td></tr>
+          <tr><td class="good">6</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (33)</span></td><td>φ(E) = ab(r−1) = 6×1</td></tr>
+          <tr><td class="bad">1</td><td>誤</td><td>φ(A)=a−1。Aの自由度であって、A×Bや誤差の欄の値ではない</td></tr>
+          <tr><td class="bad">4</td><td>誤</td><td>ar=2×2=4。S(B)を求めるときの分母で、自由度ではない</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout warn"><b>選択肢の多くが「表の別の行・別の段階の本物の値」:</b> 3.25(平均平方)・12.75(全体平均)・1(Aの自由度)・4(Bの分母)は、すべてこの問題のどこかで実際に登場する数字。今どの行(A・B・A×B・E)の、どの列(S・φ)を埋めているかを都度確認しないと、正しい計算をしていても違う欄の値を書いてしまう。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>繰返しのある二元配置は<b>行→列→セル→(引き算で)交互作用と誤差</b>の順に平方和を求める。S(A×B)=S(AB)−S(A)−S(B)、S(E)=S(T)−S(AB)。</span></div>
+      <div class="step"><span class="mark">2</span><span>交互作用が有意でなければ<b>誤差にプーリング</b>する: S(E')=S(E)+S(A×B)、φ(E')=φ(E)+φ(A×B)。プーリング後の誤差でAとBを検定し直す。</span></div>
+      <div class="step"><span class="mark">3</span><span>プーリング後の最適条件の点推定は<b>加法モデル</b> μ̂=x̄(行)+x̄(列)−x̄(全体)。セルの実測平均(交互作用込み)とは別の値になる。</span></div>
+      <div class="step"><span class="mark">4</span><span>有効反復数は伊奈の式 <b>n(e)=N/(1+φ(A)+φ(B))</b>(直交表のときはこちらが速い)。田中(田口)の式 1/n(e)=Σ(1/水準あたりの反復数)−(k−1)/N でも同じ値になる(kは加える要因の数)。</span></div>
+      <div class="step"><span class="mark">5</span><span>信頼区間はμ̂±t(φ(E');0.05)√(V(E')/n(e))。<b>上限と下限、そしてセル平均との3つを混同しない</b>ことがこの問題の最大のポイント。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第42回 問5 / 繰返しのある二元配置</span>
+    <span>最適条件 A1B2 ・ μ̂=20.00 ・ 95%信頼区間 [17.65, 22.35]</span>
+  </footer>
+
+</div>

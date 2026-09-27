@@ -1,0 +1,250 @@
+<title>第42回 問15 企業の社会的責任(CSR)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 過去問解説 / 第42回 問15</span>
+    <h1>CSRは「良い製品を作る」ところから始まる</h1>
+    <p class="lede">企業の社会的責任(CSR)は、利益至上主義に偏らず、利害関係者と社会全体への責任を果たす活動。この大問は、法令・社内規則の順守と全従業員による情報共有という土台の上に、ISO 26000の7原則、そして<b>経済的な土台から社会貢献へと段階的に積み上がるCSRの構造</b>を重ねて問うている。</p>
+  </header>
+
+  <section style="gap:10px;">
+    <div class="callout info">
+      <b>お断り:</b> 過去問そのものは掲載していない。お手元の問題冊子と合わせて読む前提で書いている。また、基準解答の公開前(2026-09-27時点)に作成した暫定の解説であり、基準解答と異なる場合は内容を更新する。
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(97)〜(100)</span><h2>企業倫理の土台 — 法令・社内規則・全従業員・情報共有</h2></div>
+    <p>企業は社会倫理に沿って行動する必要がある。まず<b>法令</b>を順守するのは当然として、企業ごとに内容が異なる<b>社内規則</b>——顧客情報の社外持ち出し禁止のような内規——も守る。こうした規範と調和しながら、社会の構成員としての価値観・倫理観をもって誠実に行動するのは、経営幹部などの一部ではなく<b>全従業員</b>。企業不祥事のない経営を目指すには、全従業員がコミュニケーションによる<b>情報</b>の共有を図り、組織と個人の間で目標や考え方を共有することが欠かせない。</p>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(97)</span> オ. 法令</span>
+      <span class="answer"><span class="qno">(98)</span> ア. 社内規則</span>
+      <span class="answer"><span class="qno">(99)</span> コ. 全従業員</span>
+      <span class="answer"><span class="qno">(100)</span> キ. 情報</span>
+    </div>
+
+    <div class="callout">
+      <b>(99)の決め手:</b> 「社会の構成員としての企業人・社会人として求められる価値観・倫理観」で誠実に行動するのは、規範を作る側の一部の人間ではなく<b>全従業員</b>。この語は文中に2か所出てくるが、どちらも主語は全員であって、経営陣に限定した記述ではない。「経営幹部」に置き換えると、規範の順守が一部の人間の役目に矮小化されてしまい、CSRの趣旨(利害関係者・社会全体への責任)からずれる。
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(101)〜(103)</span><h2>CSRは段階を踏んで積み上がる</h2></div>
+    <p>CSRの基本は、まず本業そのものを誠実に行うこと。製造業であれば、不適合品による事故を起こさないよう<b>品質に問題のない優れた製品を作り販売すること</b>が土台になる。そこで生み出された適正な利益で<b>従業員の賃金や税金などを正しく払い、従業員や社会のために貢献すること</b>も欠かせない。さらに意識を広げ、<b>社会事業を立ち上げるなどして社会貢献すること</b>まで進めると、社会的認知度が上がっていく。</p>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(101)</span> エ. 品質に問題のない優れた製品を作り、販売すること</span>
+      <span class="answer"><span class="qno">(102)</span> カ. 従業員の賃金や税金などを正しく払い、従業員や社会のために貢献すること</span>
+      <span class="answer"><span class="qno">(103)</span> ウ. 社会事業を立ち上げるなどして社会貢献すること</span>
+    </div>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>段階ごとの正解と、紛らわしい行動がなぜ不適切か</caption>
+        <thead><tr><th>段階</th><th>正解の内容</th><th>紛らわしい行動</th><th>なぜCSRとして不適切か</th></tr></thead>
+        <tbody>
+          <tr><td class="good">(101) 経済的な土台</td><td>品質に問題のない優れた製品を作り販売する</td><td>とにかく多く売ることだけを追う姿勢</td><td>販売数の最大化だけを目指すと、品質確認より数量を優先しがちになり、不適合品による事故のリスクを高める。CSRの土台は「量」ではなく「質」の誠実さ</td></tr>
+          <tr><td class="good">(102) 利益の適正な還元</td><td>従業員の賃金・税金などを正しく払い、従業員や社会に貢献する</td><td>経営者個人への高い報酬を優先する姿勢</td><td>適正な利益は従業員や社会に還元されて初めて意味を持つ。一部の経営者だけが高く評価される仕組みは、利害関係者全体への責任というCSRの考え方に反する</td></tr>
+          <tr><td class="good">(103) 社会貢献</td><td>社会事業を立ち上げるなどして社会に貢献する</td><td>品質を犠牲にしたコストダウン・大量生産で安さだけを追う姿勢</td><td>品質を落として得たコスト競争力は、不適合品や事故のリスクと引き換え。社会貢献どころか(101)の土台自体を掘り崩してしまう</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn"><b>つまずきやすい点:</b> どの紛らわしい行動も、一見すると企業活動として自然に見える(売上を伸ばす、経営を評価する、コストを下げる)。しかしCSRの文脈では、<b>誰の利益のためか</b>(自社の売上だけか、利害関係者全体か)と<b>何を犠牲にしていないか</b>(品質や誠実さを犠牲にしていないか)の2点で判定する。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">図解</span><h2>CSRの3段階</h2></div>
+    <p>(101)〜(103)は、土台から積み上がっていく構造になっている。下の段が満たされていなければ、上の段だけを掲げても意味がない。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 680 340" role="img" aria-label="CSRの3段階ピラミッド図。最下段は経済的責任として品質に問題のない優れた製品を作り販売すること、中段は利益の適正な還元として従業員の賃金や税金を正しく払うこと、最上段は社会貢献として社会事業を立ち上げることを示す">
+          <polygon points="60,300 460,300 380,220 140,220" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+          <polygon points="140,220 380,220 320,150 200,150" fill="var(--reg)" fill-opacity="0.32" stroke="var(--reg)" stroke-width="1.6"/>
+          <polygon points="200,150 320,150 260,80" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.8"/>
+
+          <text x="260" y="270" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">経済的責任</text>
+          <text x="260" y="288" font-size="11" text-anchor="middle" fill="var(--reg-ink)">(101)</text>
+
+          <text x="260" y="190" font-size="12" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">利益の適正な還元</text>
+          <text x="260" y="206" font-size="11" text-anchor="middle" fill="var(--reg-ink)">(102)</text>
+
+          <text x="260" y="122" font-size="12" text-anchor="middle" fill="var(--res-ink)" font-weight="700">社会貢献</text>
+          <text x="260" y="137" font-size="11" text-anchor="middle" fill="var(--res-ink)">(103)</text>
+
+          <line x1="460" y1="290" x2="500" y2="290" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" opacity="0.6"/>
+          <text x="508" y="270" font-size="11.5" fill="currentColor" opacity="0.85">品質に問題のない優れた</text>
+          <text x="508" y="286" font-size="11.5" fill="currentColor" opacity="0.85">製品を作り、販売すること</text>
+
+          <line x1="380" y1="200" x2="500" y2="200" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" opacity="0.6"/>
+          <text x="508" y="180" font-size="11.5" fill="currentColor" opacity="0.85">従業員の賃金・税金などを</text>
+          <text x="508" y="196" font-size="11.5" fill="currentColor" opacity="0.85">正しく払い、社会に貢献</text>
+
+          <line x1="320" y1="130" x2="500" y2="130" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" opacity="0.6"/>
+          <text x="508" y="110" font-size="11.5" fill="currentColor" opacity="0.85">社会事業を立ち上げる</text>
+          <text x="508" y="126" font-size="11.5" fill="currentColor" opacity="0.85">など社会貢献すること</text>
+
+          <text x="260" y="325" font-size="11.5" text-anchor="middle" fill="var(--ink-faint, currentColor)" opacity="0.75">下の段が満たされて初めて、上の段のCSRが意味を持つ</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 経済的責任(良い製品を作る)を土台に、利益の適正な還元、社会貢献の順で積み上がる。土台を欠いたまま社会貢献だけを掲げても、CSRとしては成立しない。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">整理</span><h2>ISO 26000 の7つの原則</h2></div>
+    <p>CSRは利益至上主義に偏らず、利害関係者と社会全体への責任を果たす活動。ISO 26000:2010「社会的責任に関する手引き」は、その拠り所となる7つの原則を示している。</p>
+    <div class="table-wrap">
+      <table>
+        <caption>ISO 26000:2010 が示す社会的責任の7原則</caption>
+        <thead><tr><th>原則</th><th>ひとことで</th></tr></thead>
+        <tbody>
+          <tr><td>説明責任</td><td>組織の意思決定や活動の結果について、説明する責任を負う</td></tr>
+          <tr><td>透明性</td><td>意思決定や活動が社会や環境に与える影響を開示する</td></tr>
+          <tr><td>倫理的な行動</td><td>誠実・公正・高潔さといった倫理観に基づいて行動する</td></tr>
+          <tr><td>ステークホルダーの利害の尊重</td><td>影響を受ける利害関係者の利害を認識し、配慮する</td></tr>
+          <tr><td>法の支配の尊重</td><td>法令の遵守は義務であるという考え方を受け入れる</td></tr>
+          <tr><td>国際行動規範の尊重</td><td>法令が国際的な行動規範に反する場合も、規範を尊重するよう努める</td></tr>
+          <tr><td>人権の尊重</td><td>人権の重要性と普遍性を認識し、尊重する</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">整理</span><h2>紛らわしい用語の対比</h2></div>
+    <div class="table-wrap">
+      <table>
+        <caption>CSRまわりの語をどう見分けるか</caption>
+        <thead><tr><th>用語</th><th>ひとことで</th><th>見分けるキーワード</th><th>取り違えやすい相手</th></tr></thead>
+        <tbody>
+          <tr><td>法令</td><td>国や自治体が定める、外部からの規範</td><td>順守するのは当然の前提</td><td>社内規則</td></tr>
+          <tr><td>社内規則</td><td>企業ごとに内容が異なる、内部のルール</td><td>企業により内容は異なる</td><td>法令</td></tr>
+          <tr><td>全従業員</td><td>経営層だけでなく組織に属する人全員</td><td>社会の構成員としての価値観・倫理観</td><td>経営幹部</td></tr>
+          <tr><td>CSR(社会的責任)</td><td>利害関係者と社会全体への責任を果たす活動</td><td>利益至上主義に偏らない</td><td>コンプライアンス(法令順守だけを指す語)</td></tr>
+          <tr><td>ISO 26000</td><td>社会的責任についての「手引き」であり、認証取得のための規格ではない</td><td>7つの原則</td><td>ISO 9001(QMSの認証規格)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span><b>企業倫理の土台は「法令+社内規則」の二重構造。</b> 法令は外部の規範、社内規則は企業ごとに異なる内部の規範で、両方を守って初めて社会倫理に沿った行動になる。</span></div>
+      <div class="step"><span class="mark">2</span><span><b>誠実な行動を担うのは全従業員であって、経営幹部だけではない。</b> 「一部の人間の役目」に矮小化する選択肢は、この時点で外れる。</span></div>
+      <div class="step"><span class="mark">3</span><span><b>CSRは経済的責任(良い製品作り)を土台に、利益の還元、社会貢献へと段階的に積み上がる。</b> 土台を欠いた社会貢献はCSRとして成立しない。</span></div>
+      <div class="step"><span class="mark">4</span><span><b>紛らわしい選択肢は「誰の利益か」「何を犠牲にしているか」で見抜く。</b> 販売数だけを追う、経営者だけが得をする、品質を犠牲に安くする——どれも一見自然だが、利害関係者全体への責任というCSRの軸からは外れる。</span></div>
+      <div class="step"><span class="mark">5</span><span><b>ISO 26000は認証規格ではなく「手引き」。</b> ISO 9001のような第三者認証の対象ではない点も、あわせて押さえておく。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第42回 問15 / 企業の社会的責任(CSR)</span>
+    <span>暫定解説(基準解答公開前)</span>
+  </footer>
+
+</div>

@@ -1,0 +1,252 @@
+<title>第42回 問14 品質マネジメントシステム</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 過去問解説 / 第42回 問14</span>
+    <h1>QMSは、規定を作っただけでは動かない</h1>
+    <p class="lede">この大問が問うのは、品質マネジメントシステム(QMS)を「作って終わり」にせず実際に機能させ続けるために何が必要かという点。要求事項を文書に落とし込むだけでは足りず、組織にすでに根付いている風土や慣習との整合が要る。そのうえで組織機能を社内標準に反映し、周知・順守を徹底し、最終的に顧客の信頼につなげるところまでの一連の流れを追う。</p>
+  </header>
+
+  <section style="gap:10px;">
+    <div class="callout info">
+      <b>お断り:</b> 過去問そのものは掲載していない。お手元の問題冊子と合わせて読む前提で書いている。また、基準解答の公開前(2026-09-27時点)に作成した暫定の解説であり、基準解答と異なる場合は内容を更新する。
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">全体像</span><h2>QMSが「実施・維持される」ために必要な条件</h2></div>
+    <p>品質マネジメントシステム(QMS)を構築し、維持・改善しながら顧客満足につながる製品・サービスを提供し続けるには、適切な権限を持つ品質保証責任者の存在が欠かせない。あわせて、自社の規模や経営理念に応じた運用も必要になる。この設問は、QMSが実際に機能するかどうかを分ける2つの軸——<b>「何を満たすか(要求事項)」</b>と<b>「どう根付かせるか(組織の風土・慣習)」</b>——を対比させたうえで、組織機能をどう社内標準・周知・順守へとつなげ、最終的に顧客の信頼を得るところまでを問うている。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(92)(93)</span><h2>要求事項だけでは、QMSは根付かない</h2></div>
+    <p>企業には、業種や歴史の中で共通の価値観として自然に根付いている<b>風土や慣習</b>がある。これを無視して、規格などが定める<b>要求事項</b>を文書やルールとして形式的に組み込んだだけのQMSでは、確実な実施と維持に至らない。</p>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(92)</span> イ. 風土や慣習</span>
+      <span class="answer"><span class="qno">(93)</span> キ. 要求事項</span>
+    </div>
+
+    <div class="callout">
+      <b>決め手のキーワード:</b> 「企業で共通的な価値観として<b>根付いている</b>」は、規格が外から与える基準ではなく、組織の内側にすでにある文化を指す言い回し。一方「形式的に織り込んだ<b>だけ</b>」が指しているのは、規格・基準が求める<b>要求事項</b>そのもの。「要求事項を満たす」ことと「組織に定着させる」ことは別の作業であり、前者だけではQMSは機能しない、という対比がこの2空欄の骨格になっている。
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(94)〜(96)</span><h2>組織機能 → 社内標準 → 周知 → 順守 → 顧客の信頼</h2></div>
+    <p>QMSを運用する機能は、部門や担当者がばらばらに動いていては機能しない。組織間の連携のもとで働くよう組織機能を明確にし、それを<b>社内標準</b>などの形に落とし込む。そのうえで従業員に内容を周知し、規定事項の順守を義務づけて初めて、決めたことが実際の業務に反映される。</p>
+    <p>品質保証業務はさらに、生産の達成・能率向上・コスト低減という企業の目的を果たすと同時に、<b>顧客</b>に対して品質への信頼感を与える役割を担う(この語は文中に2か所出てくる)。品質保証の実行状態が顧客からも客観的に認識されることが求められている点が、内向きの効率活動である品質管理と、対外的な信頼を扱う品質保証とを分けるところ。加えて、あらゆる業務がアウトプットの品質に影響するため、組織内の<b>責任区分</b>や業務分担を明確にし、指揮命令系統や業務連携の方法をわかりやすくしておく必要がある。</p>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(94)</span> エ. 社内標準</span>
+      <span class="answer"><span class="qno">(95)</span> ケ. 顧客</span>
+      <span class="answer"><span class="qno">(96)</span> ア. 責任区分</span>
+    </div>
+
+    <div class="callout">
+      <b>決め手のキーワード:</b> (94)は「周知」「順守を義務づける」という文言——定着させる先はルール・文書化された<b>社内標準</b>。(95)は「品質への信頼感」「客観的に認識される」という、社外・受け手側の視点を示す言葉。(96)は「指揮命令系統」「業務連携方法」という、誰が何を担うかという役割分担そのものを指す言葉。
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">図解</span><h2>形だけのQMSと、実際に機能するQMSの分かれ道</h2></div>
+    <p>この大問の論理を2段の図にまとめる。上段は(92)(93)の対比、下段は(94)〜(96)の流れ。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 660 420" role="img" aria-label="上段: 要求事項だけを形式的に取り込むと形だけのQMSになるが、風土や慣習も踏まえると実施・維持されるQMSになる対比図。下段: 組織機能の明確化から社内標準への反映、周知、順守の義務づけを経て顧客の信頼に至る流れ図。責任区分と業務分担がこの流れ全体を支える">
+          <defs>
+            <marker id="q14a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <text x="330" y="20" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">① 要求事項と組織文化 — (92)(93)</text>
+
+          <text x="160" y="46" font-size="12" text-anchor="middle" fill="var(--wrong)" font-weight="600">要求事項だけを形式的に取り込む</text>
+          <rect x="20" y="58" width="280" height="42" rx="8" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.1" opacity="0.9"/>
+          <text x="160" y="84" font-size="12.5" text-anchor="middle" fill="currentColor">要求事項を文書に落とし込む</text>
+          <line x1="160" y1="100" x2="160" y2="118" stroke="var(--wrong)" stroke-width="1.4" marker-end="url(#q14a)"/>
+          <rect x="20" y="122" width="280" height="42" rx="8" fill="var(--wrong-soft)" stroke="var(--wrong)" stroke-width="1.3"/>
+          <text x="160" y="148" font-size="12.5" text-anchor="middle" fill="currentColor">(92)風土・慣習に定着しない</text>
+          <line x1="160" y1="164" x2="160" y2="182" stroke="var(--wrong)" stroke-width="1.4" marker-end="url(#q14a)"/>
+          <rect x="20" y="186" width="280" height="48" rx="8" fill="var(--wrong-soft)" stroke="var(--wrong)" stroke-width="1.8"/>
+          <text x="160" y="206" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="700">形式だけのQMS</text>
+          <text x="160" y="223" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.85">→ 確実な実施・維持に至らない</text>
+
+          <text x="500" y="46" font-size="12" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">(92)風土や慣習も踏まえる</text>
+          <rect x="360" y="58" width="280" height="42" rx="8" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.1" opacity="0.9"/>
+          <text x="500" y="84" font-size="12.5" text-anchor="middle" fill="currentColor">(93)要求事項 + 風土や慣習</text>
+          <line x1="500" y1="100" x2="500" y2="118" stroke="var(--reg)" stroke-width="1.4" marker-end="url(#q14a)"/>
+          <rect x="360" y="122" width="280" height="42" rx="8" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.3"/>
+          <text x="500" y="148" font-size="12.5" text-anchor="middle" fill="currentColor">組織の文化として定着する</text>
+          <line x1="500" y1="164" x2="500" y2="182" stroke="var(--reg)" stroke-width="1.4" marker-end="url(#q14a)"/>
+          <rect x="360" y="186" width="280" height="48" rx="8" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.8"/>
+          <text x="500" y="206" font-size="12.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">実施・維持されるQMS</text>
+          <text x="500" y="223" font-size="11" text-anchor="middle" fill="var(--reg-ink)" opacity="0.9">→ 顧客満足につながる</text>
+
+          <text x="330" y="270" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">② 組織機能から顧客の信頼まで — (94)〜(96)</text>
+
+          <rect x="20" y="296" width="112" height="50" rx="8" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.1" opacity="0.9"/>
+          <text x="76" y="326" font-size="10.8" text-anchor="middle" fill="currentColor">組織機能の明確化</text>
+          <line x1="132" y1="321" x2="150" y2="321" stroke="currentColor" stroke-width="1.3" marker-end="url(#q14a)" opacity="0.7"/>
+
+          <rect x="154" y="296" width="112" height="50" rx="8" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+          <text x="210" y="320" font-size="10.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">(94)</text>
+          <text x="210" y="334" font-size="10.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">社内標準に反映</text>
+          <line x1="266" y1="321" x2="284" y2="321" stroke="currentColor" stroke-width="1.3" marker-end="url(#q14a)" opacity="0.7"/>
+
+          <rect x="288" y="296" width="112" height="50" rx="8" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.1" opacity="0.9"/>
+          <text x="344" y="326" font-size="10.8" text-anchor="middle" fill="currentColor">従業員に周知</text>
+          <line x1="400" y1="321" x2="418" y2="321" stroke="currentColor" stroke-width="1.3" marker-end="url(#q14a)" opacity="0.7"/>
+
+          <rect x="422" y="296" width="112" height="50" rx="8" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.1" opacity="0.9"/>
+          <text x="478" y="326" font-size="10.8" text-anchor="middle" fill="currentColor">順守を義務づけ</text>
+          <line x1="534" y1="321" x2="552" y2="321" stroke="currentColor" stroke-width="1.3" marker-end="url(#q14a)" opacity="0.7"/>
+
+          <rect x="556" y="296" width="90" height="50" rx="8" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+          <text x="601" y="320" font-size="10.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">(95)</text>
+          <text x="601" y="334" font-size="10.5" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">顧客の信頼</text>
+
+          <line x1="20" y1="374" x2="646" y2="374" stroke="var(--res)" stroke-width="1.6" stroke-dasharray="5 4"/>
+          <text x="333" y="394" font-size="11.5" text-anchor="middle" fill="var(--res-ink)">(96)責任区分・業務分担の明確化が、この流れ全体を下から支える</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 上段は「要求事項をどう扱うか」による分岐(左: 形式だけ、右: 風土に定着)。下段は組織機能が顧客の信頼に届くまでの経路で、責任区分と業務分担がその土台になる。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">整理</span><h2>紛らわしい用語の対比</h2></div>
+    <div class="table-wrap">
+      <table>
+        <caption>QMSまわりの語をどう見分けるか</caption>
+        <thead><tr><th>用語</th><th>ひとことで</th><th>見分けるキーワード</th><th>取り違えやすい相手</th></tr></thead>
+        <tbody>
+          <tr><td>要求事項</td><td>規格・基準が外から定める「満たすべき条件」</td><td>形式的に織り込む</td><td>風土や慣習</td></tr>
+          <tr><td>風土や慣習</td><td>組織の内側にすでに根付いている価値観・行動様式</td><td>共通的な価値観として根付いている</td><td>要求事項</td></tr>
+          <tr><td>社内標準</td><td>組織機能を明文化した規定・手順</td><td>周知・順守を義務づける対象</td><td>要求事項(与えられる側)</td></tr>
+          <tr><td>責任区分</td><td>誰が何に責任を持つかという役割の切り分け</td><td>指揮命令系統・業務連携方法</td><td>社内標準(反映される内容そのもの)</td></tr>
+          <tr><td>品質保証</td><td>顧客に品質への信頼感を与える対外的な活動</td><td>客観的に認識される</td><td>品質管理(社内向けの効率活動)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span><b>要求事項を満たすことと、組織に定着させることは別の作業。</b> 文書やルールとして形式的に取り込むだけでは、QMSは確実に実施・維持されるところまで届かない。</span></div>
+      <div class="step"><span class="mark">2</span><span><b>組織機能は「社内標準に反映 → 周知 → 順守の義務づけ」の順で初めて動く。</b> 標準を作った時点では終わっておらず、周知と順守までが一連の流れ。</span></div>
+      <div class="step"><span class="mark">3</span><span><b>品質保証は対外的な信頼、品質管理は対内的な効率。</b> 「顧客に信頼感を与える」「客観的に認識される」という言葉が出てきたら品質保証の文脈。</span></div>
+      <div class="step"><span class="mark">4</span><span><b>責任区分・業務分担の明確化は、QMS全体を下支えする土台。</b> 誰が何を担うかが曖昧なままでは、どれだけ標準を整えても実務に反映されない。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第42回 問14 / 品質マネジメントシステム</span>
+    <span>暫定解説(基準解答公開前)</span>
+  </footer>
+
+</div>

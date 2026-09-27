@@ -1,0 +1,272 @@
+<title>第42回 問2 二項分布とポアソン分布</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+.callout p{margin:0;}
+.callout p + p{margin-top:8px;}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 過去問解説 / 第42回 問2</span>
+    <h1>n→∞、P→0 で二項分布はポアソン分布に化ける — nPを固定するとは</h1>
+    <p class="lede">不適合品率Pのロットからn個抜き取ったときの不適合品数は二項分布B(n,P)にしたがう。この問題ではまずB(n,P)の平均・分散の基本形を確認し、続けて「試行回数nを限りなく増やしながら確率Pを限りなく小さくし、その積nPだけを一定に保つ」という極限操作でポアソン分布が導かれる筋道を追う。</p>
+  </header>
+
+  <div class="callout info">
+    <p>過去問そのものは掲載していません。お手元の問題冊子と合わせて読む前提です。</p>
+    <p>基準解答の公開前(2026年9月27日時点)に作成した暫定の解説です。基準解答と異なる場合は更新します。</p>
+  </div>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>与えられた条件</h2></div>
+    <p>母不適合品率 P のロットから n 個を抜き取るとき、サンプル中の不適合品数は二項分布 B(n,P) にしたがう。まずこの基本形の平均・分散を確認し、そのあとで P=0.1、n=4 という具体的な数値での確率計算に進む。</p>
+    <div class="calc">
+      <span class="label">二項分布 B(n,P) の基本形</span>
+      <span class="line">母平均 = (5)　　母分散 = (6)</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>二項分布の平均と分散 — (5)(6)</h2></div>
+    <p>二項分布は「成功確率Pの試行をn回繰り返したときの成功回数」の分布であり、平均・分散はP、nの単純な式で表される。</p>
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(5)</span> ア. nP</span>
+      <span class="answer"><span class="qno">(6)</span> イ. nP(1−P)</span>
+    </div>
+    <div class="callout">分散 nP(1−P) は、P=0.5 のとき最大になり、Pが0または1に近づくほど0に近づく(不適合品率が極端に低い、または極端に高いロットほど、抜き取った個数のばらつきは小さくなる)。この式のPが後のSTEP3でポアソン分布に化ける鍵になる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>具体的な数値で確率を求める — (7)(8)</h2></div>
+    <p>P=0.1(不適合品率10%)のロットから n=4 個を抜き取る。「4個のうち1個だけが不適合品である確率」を求める。</p>
+
+    <div class="calc">
+      <span class="label">(7) ちょうど1個が不適合品である確率</span>
+      <span class="line">P(1) = 4C1 × 0.1¹ × 0.9³ = 4 × 0.1 × 0.729</span>
+      <span class="result">P(1) = 0.2916</span>
+    </div>
+    <div class="calc">
+      <span class="label">(8) 不適合品数の母平均(n=4のとき)</span>
+      <span class="line">母平均 = nP = 4 × 0.1</span>
+      <span class="result">母平均 = 0.4</span>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(7)</span> イ. 0.2916</span>
+      <span class="answer"><span class="qno">(8)</span> エ. 0.4</span>
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <caption>表2.1 B(4, 0.1) の確率(参考)</caption>
+        <thead><tr><th>x</th><th>0</th><th>1</th><th>2</th><th>3以上</th></tr></thead>
+        <tbody>
+          <tr><td>P(x)</td><td class="num">0.6561</td><td class="num hit">0.2916</td><td class="num">0.0486</td><td class="num">0.0037</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn"><b>選択肢の罠:</b> 0.0729(=0.1×0.9³)は、組合せ数 4C1=4 を掛け忘れた値。0.729(=0.9³)は、そもそも0.1を掛け忘れた値。0.36(=4×0.1×0.9)は(6)の分散の公式 nP(1−P) をそのまま(7)の答えとして流用してしまった値である。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">図解</span><h2>B(4, 0.1) の確率分布</h2></div>
+    <p>n=4、P=0.1 では、4個とも良品(x=0)である確率が全体の3分の2近くを占め、右に行くほど急激に確率が小さくなる。不適合品率が低いほど分布は0側に偏る。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 260" role="img" aria-label="二項分布B(4,0.1)の棒グラフ。x=0の確率0.6561が最も高く、xが増えるほど確率が急激に小さくなる">
+          <text x="320" y="22" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">B(4, 0.1) の確率分布(4個中の不適合品数)</text>
+          <line x1="45" y1="220" x2="605" y2="220" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+
+          <rect x="60" y="51.4" width="60" height="168.6" fill="var(--reg)" opacity="0.9"/>
+          <rect x="170" y="145.1" width="60" height="74.9" fill="var(--reg)" opacity="0.9"/>
+          <rect x="280" y="207.5" width="60" height="12.5" fill="var(--reg)" opacity="0.9"/>
+          <rect x="390" y="219.1" width="60" height="0.9" fill="var(--reg)" opacity="0.9"/>
+
+          <g font-size="12" text-anchor="middle" fill="currentColor" opacity="0.85">
+            <text x="90" y="46.4">0.6561</text>
+            <text x="200" y="140.1">0.2916</text>
+            <text x="310" y="202.5">0.0486</text>
+            <text x="420" y="214.1">0.0036</text>
+          </g>
+          <g font-size="12" text-anchor="middle" fill="currentColor" opacity="0.75">
+            <text x="90" y="238">0</text>
+            <text x="200" y="238">1</text>
+            <text x="310" y="238">2</text>
+            <text x="420" y="238">3</text>
+            <text x="530" y="238">4</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> P=0.1が小さいほど分布はx=0側に偏り、右に長い裾を引く。次のSTEPで、この「Pが小さい」状況をさらに極端にした極限を考える。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>ポアソン分布への極限 — (9)〜(12)</h2></div>
+    <p>試行回数 n を限りなく大きくしながら、確率 P を限りなく小さくし、その積 nP(=平均)だけを一定値に保つという極限操作を考える。この極限で二項分布はポアソン分布に近づく。交通事故の発生件数や、ガラス1m²あたりのキズの数のように、「試行回数が非常に多く、1回あたりの発生確率が非常に小さい」現象によく当てはまる。</p>
+
+    <div class="calc">
+      <span class="label">極限操作</span>
+      <span class="line">(9) を一定のまま、n → (10)、P → 0 とする極限</span>
+      <span class="line">この極限で二項分布 B(n,P) は (11) 分布に近づく</span>
+      <span class="line">母平均をλとすると、母分散 = (12)</span>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(9)</span> イ. nP</span>
+      <span class="answer"><span class="qno">(10)</span> エ. ∞</span>
+      <span class="answer"><span class="qno">(11)</span> キ. ポアソン</span>
+      <span class="answer"><span class="qno">(12)</span> ク. λ</span>
+    </div>
+
+    <div class="callout info"><b>なぜ分散もλになるのか:</b> 二項分布の分散は nP(1−P) だった((6)の答え)。ここで nP=λ を一定に保ったまま P→0 とすると、(1−P)→1 に近づくので、分散 nP(1−P) は nP×1=λ に収束する。<b>平均と分散がどちらもλで一致する</b>のがポアソン分布の特徴で、これは二項分布の極限として導かれたことの直接の帰結である。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">図解</span><h2>二項分布からポアソン分布への極限</h2></div>
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 220" role="img" aria-label="二項分布B(n,P)の箱から、nを増やしPを減らしnPを一定に保つ矢印を経て、ポアソン分布Po(λ)の箱に至る図">
+          <rect x="40" y="70" width="200" height="80" rx="12" fill="var(--surface-2)" stroke="var(--reg)" stroke-width="1.5"/>
+          <text x="140" y="105" font-size="15" text-anchor="middle" fill="currentColor" font-weight="600">二項分布 B(n, P)</text>
+          <text x="140" y="128" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.75">平均 nP　分散 nP(1−P)</text>
+
+          <line x1="248" y1="110" x2="392" y2="110" stroke="currentColor" stroke-width="1.6" opacity="0.7" marker-end="url(#arrow-q2)"/>
+          <text x="320" y="90" font-size="12" text-anchor="middle" fill="var(--res-ink)" font-weight="600">n → ∞　P → 0</text>
+          <text x="320" y="132" font-size="12" text-anchor="middle" fill="var(--res-ink)" font-weight="600">nP = λ を一定に保つ</text>
+
+          <rect x="400" y="70" width="200" height="80" rx="12" fill="var(--surface-2)" stroke="var(--reg)" stroke-width="1.5"/>
+          <text x="500" y="105" font-size="15" text-anchor="middle" fill="currentColor" font-weight="600">ポアソン分布 Po(λ)</text>
+          <text x="500" y="128" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.75">平均 λ　分散 λ</text>
+
+          <text x="320" y="190" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.6">試行回数が非常に多く、1回あたりの発生確率が非常に小さい現象(交通事故件数、ガラスのキズの数など)に対応</text>
+
+          <defs>
+            <marker id="arrow-q2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="currentColor" opacity="0.7"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> nP=λを固定したまま n→∞、P→0 とする極限で、二項分布の平均nP・分散nP(1−P)は、そのままλ・λに収束する。</figcaption>
+    </figure>
+    <div class="callout warn"><b>選択肢の罠:</b> (11)(12)の語群には「超幾何」「1/λ」「λ²」「x²」「1」なども含まれる。超幾何分布は非復元抽出の分布であり、今回のような「nP一定でn→∞」という極限とは無関係。分散をλ²やλの逆数と答えるのは、平均=分散=λというポアソン分布の特徴を覚え違えた誤りである。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>二項分布 B(n,P) の平均は<b>nP</b>、分散は<b>nP(1−P)</b>。</span></div>
+      <div class="step"><span class="mark">2</span><span>確率の計算は必ず「組合せ数 × 成功の確率 × 失敗の確率」の3つの積。組合せ数を掛け忘れる、指数を間違えるのが典型的なミス。</span></div>
+      <div class="step"><span class="mark">3</span><span>n→∞、P→0としながら<b>nP=λを一定に保つ</b>極限で、二項分布はポアソン分布に近づく。</span></div>
+      <div class="step"><span class="mark">4</span><span>ポアソン分布は<b>平均と分散がどちらもλで一致する</b>のが最大の特徴。これは二項分布の分散 nP(1−P) で P→0、(1−P)→1 となることから導かれる。</span></div>
+      <div class="step"><span class="mark">5</span><span>ポアソン分布は「試行回数が多く、1回あたりの発生確率が小さい」事象(事故件数、欠陥数など)のモデルとしてよく使われる。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第42回 問2 / 二項分布とポアソン分布</span>
+    <span>B(4,0.1): P(1)=0.2916 ・ 極限: nP=λ 一定</span>
+  </footer>
+
+</div>

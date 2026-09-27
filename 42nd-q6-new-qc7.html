@@ -1,0 +1,283 @@
+<title>第42回 問6 新QC七つ道具</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+.answer.wrong{background:var(--wrong-soft);border-color:var(--wrong);}
+.answer.wrong .qno{color:var(--wrong);}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+.callout p{margin:0;max-width:none;color:inherit;font-size:inherit;}
+.callout p + p{margin-top:8px;}
+
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;align-self:flex-start;}
+.back-link:hover{color:var(--reg-ink);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <a class="back-link" href="index.html">← 目次に戻る</a>
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第42回 問6</span>
+    <h1>正しいのは4つ、どこかが逆さまなのは3つ ― 新QC七つ道具を7つの発言で確認する</h1>
+    <p class="lede">新QC七つ道具は、言語データを中心に扱いながら複雑な問題を整理し、方策や日程に落とし込むための7つの手法群。この問題は、部下が現場でそれぞれの手法を使う場面で述べた発言に対し、上司としてどこまで正しいと判断できるかを問うている。手法名を知っているかではなく、<b>その手法が本来何のためにあるか</b>を思い出せるかが分かれ目になる。</p>
+  </header>
+
+  <div class="callout info">
+    <p>過去問そのものは掲載していません。お手元の問題冊子と合わせて読む前提です。</p>
+    <p>基準解答の公開前(2026年9月27日時点)に作成した暫定の解説です。基準解答と異なる場合は更新します。</p>
+  </div>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">導入</span><h2>新QC七つ道具とは</h2></div>
+    <p>QC七つ道具(パレート図・特性要因図など)が主に数値データを扱うのに対し、新QC七つ道具は主に<b>言語データ</b>を対象にする。混沌とした事実や意見を整理し、原因を探り、手段に展開し、日程に落とし込む――問題解決の各段階に対応する形で7つの手法が用意されている。この問題は、部下がそれぞれの手法を使う場面で述べた7つの発言(①〜⑦)に対し、上司としてどこまで正しいと判断できるかを問う形式になっている。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">発言①</span><h2>アローダイアグラム ― 所要日数の見積もり方</h2></div>
+    <p>部下は、各作業の所要日数を<b>正味の作業日数</b>で見積もったうえで、全体の所要日数を積み上げる段階では、単純な暦日ではなく<b>実際に作業できる日(実働日)</b>の積み上げで考える必要があると述べた。さらに、公休日だけでなく、屋外作業であれば雨天による作業中断のような<b>不確定要素</b>も見込んでおくべきだと付け加えている。</p>
+    <div class="answer-row"><span class="answer"><span class="qno">(37)</span>そのとおり</span></div>
+    <div class="callout info"><b>正しい理由:</b> アローダイアグラム(日程計画のネットワーク図)では、まず各作業を「正味何日かかる仕事か」で見積もる。次に、そのつながりから求めた所要日数をカレンダー上の実際の期間に変換する段階で、休日や天候リスクのような<b>実働日を圧迫する要因</b>を織り込む。見積もりの精度は、この「正味日数の見積もり」と「実働日への変換」を分けて考えられているかで決まる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">発言②</span><h2>系統図法 ― 手段展開でのブレーンストーミングの運用</h2></div>
+    <p>部下は、系統図法で目的を達成する手段・方策を洗い出す際にブレーンストーミングを活用すると述べたうえで、<b>参加者を直接の関係者に絞り込み</b>、事前に背景・ねらい・状況を共有してから始める、という進め方を説明した。</p>
+    <div class="answer-row"><span class="answer wrong"><span class="qno">(38)</span>一部誤り(要確認)</span></div>
+    <div class="callout warn"><b>判断の根拠:</b> 背景・ねらい・状況を事前に周知してから始めるという部分は妥当。全員が同じ前提に立って発想できないと、手段の抜け漏れや的外れな案が増える。一方で、<b>参加者を直接の関係者だけに絞る</b>という運用には無理がある。ブレーンストーミングは「自由奔放・質より量・批判厳禁・便乗歓迎」を原則とし、直接の担当者以外(他部門、若手、専門外の視点)を交えたほうが思いも寄らない手段が出やすく、系統図法が目指す<b>手段の網羅性</b>にかなう。</div>
+    <div class="callout"><b>ほかに考えられる答え:</b> 出題の意図次第では「参加者の絞り込みは許容し、周知の有無だけを問うている」という設計もあり得る。この発言は一文に「参加範囲」と「周知」という2つの論点が混ざっているため、どちらを問うているかは基準解答の公開後に確認したい(自信度: 低)。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">発言③</span><h2>マトリックス図法 ― 対応づける要素の選び方</h2></div>
+    <p>部下は、マトリックス図を作成する際のポイントは、<b>どの事象とどの事象を組み合わせるか</b>、そして<b>どのレベルの要素で対応づけるか</b>を見極めることだと述べ、要素を具体的に洗い出す段階では系統図法を使うとよい、と付け加えた。</p>
+    <div class="answer-row"><span class="answer"><span class="qno">(39)</span>そのとおり</span></div>
+    <div class="callout info"><b>正しい理由:</b> マトリックス図法は、二元的な対応関係(行×列)の交点に関連の有無・度合いを表して着眼点を見つける手法。対応づける事象の粒度がバラバラだと交点の意味が曖昧になるため、「どのレベルの要素で対応づけるか」をそろえる視点は的確。要素の候補を漏れなく展開する下ごしらえとして、系統図法を組み合わせて使うのもよく行われる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">発言④</span><h2>連関図法 ― 因果関係の結び方</h2></div>
+    <p>部下は、連関図で問題点と要因の間を結ぶ際、<b>感覚的に関連づけていき</b>、原因追求が進むにつれて図を数回書き改めていく、と述べた。</p>
+    <div class="answer-row"><span class="answer wrong"><span class="qno">(40)</span>一部誤り</span></div>
+    <div class="callout warn"><b>誤っている点:</b> 連関図法で原因と結果、目的と手段を結ぶ線は、感覚(感性)ではなく<b>論理的な因果関係</b>に基づいて引く必要がある。「なぜそうなるのか」を一つずつ言葉で説明できる関係だけを線で結ぶのが正しい使い方で、感覚的なつながりを線にすると、後で見た人が納得できる図にならない。一方、検討が進むにつれて<b>図を何度も書き改める</b>という点は連関図法の性質としてそのとおりで、一度で完成させる手法ではない。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">発言⑤</span><h2>系統図法 ― 制約条件と手段の抽出順序</h2></div>
+    <p>部下は、系統図法で手段・方策を展開する前に<b>前提条件(制約条件)を明確にしておき</b>、手段を抽出している最中は、その案が実際に採用できるかどうかにとらわれずに数多く出す、という進め方を述べた。</p>
+    <div class="answer-row"><span class="answer"><span class="qno">(41)</span>そのとおり</span></div>
+    <div class="callout info"><b>正しい理由:</b> 制約条件を先に洗い出しておけば、後工程(評価・選定)で使える判断基準がそろう。一方でアイデアを出す段階から実現可能性を気にし始めると発想が縮こまるため、<b>出す段階と選ぶ段階を分ける</b>のがブレーンストーミング系の手法に共通する原則。系統図法の手段抽出でも同様に、抽出中は質より量を優先してよい。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">発言⑥</span><h2>親和図法 ― 言語データの扱い方</h2></div>
+    <p>部下は、親和図法は<b>少数の重要な言語データだけを選び、それ以外を排除しながら</b>まとめていく手法だと説明した。</p>
+    <div class="answer-row"><span class="answer wrong"><span class="qno">(42)</span>誤り</span></div>
+    <div class="callout warn"><b>誤っている点:</b> 親和図法は、混沌とした状況から集めた言語データを<b>取捨選択せずに</b>すべて生かし、感覚的に近いと感じるもの同士を親和性でグルーピングしながら、問題の構造を浮かび上がらせる手法。データを間引いてから統合するという説明は逆で、<b>集めたデータを減らさず全部使う</b>ことが親和図法の要になる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">発言⑦</span><h2>マトリックス・データ解析法 ― 何を要約する手法か</h2></div>
+    <p>部下は、マトリックス・データ解析法は、多数の変数を少数の<b>合成変数</b>に置き換えることで、元のデータが持つ特徴の大部分を説明できる手法だと述べた。</p>
+    <div class="answer-row"><span class="answer"><span class="qno">(43)</span>そのとおり</span></div>
+    <div class="callout info"><b>正しい理由:</b> これは主成分分析そのものの説明。新QC七つ道具の中で唯一<b>数値データ</b>を扱う手法で、マトリックス図に並んだ数値データを、情報の失われ方が少ない少数の合成変数(主成分)に集約して全体の特徴をつかむ。似た手法との違いに注意したい: 個体を似たものどうしのグループに分けるのはクラスター分析、個体間の距離関係を2次元の地図に落とし込むのは多次元尺度法(MDS)で、いずれもマトリックス・データ解析法とは目的が異なる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">全体像</span><h2>新QC七つ道具、7手法の使い分け</h2></div>
+    <p>個々の発言を離れて7つの手法を並べると、扱うデータの種類と目的の違いが見えやすくなる。</p>
+    <div class="table-wrap">
+      <table>
+        <caption>表 新QC七つ道具の比較</caption>
+        <thead><tr><th>手法</th><th>目的</th><th>データ種別</th><th>混同しやすい相手</th></tr></thead>
+        <tbody>
+          <tr class="row-reg"><td>親和図法</td><td>混沌とした言語データを取捨選択せずにグルーピングし、問題の構造をつかむ</td><td>言語データ</td><td>連関図法(こちらは論理的な因果関係で結ぶ)</td></tr>
+          <tr class="row-reg"><td>連関図法</td><td>原因と結果、目的と手段が複雑に絡む問題を、論理的な因果関係で結んで整理する</td><td>言語データ</td><td>親和図法・特性要因図</td></tr>
+          <tr class="row-reg"><td>系統図法</td><td>目的を達成する手段を段階的に展開し、最適な方策を絞り込む</td><td>言語データ</td><td>連関図法(手段の展開 vs 原因の追求)</td></tr>
+          <tr class="row-reg"><td>マトリックス図法</td><td>対になる二つの事象を行と列に並べ、交点の関連の有無・度合いから着眼点を見つける</td><td>言語データ</td><td>マトリックス・データ解析法(こちらは数値データ)</td></tr>
+          <tr class="row-res"><td>アローダイアグラム</td><td>作業の順序関係と所要日数から最適な日程計画を立て、進捗を管理する</td><td>数値データ(日数)</td><td>PDPC法(日程管理 vs 不測事態への対応)</td></tr>
+          <tr class="row-reg"><td>PDPC法</td><td>事態の進展とともに様々な結果が想定される問題で、望ましい結果に至る道筋と対応策をあらかじめ検討する</td><td>言語データ</td><td>アローダイアグラム(不測事態への対応 vs 日程管理)</td></tr>
+          <tr class="row-res"><td>マトリックス・データ解析法</td><td>多数の変数を少数の合成変数に要約し、データの特徴を効率よく説明する</td><td>数値データ</td><td>クラスター分析・多次元尺度法(新QC七つ道具の枠外の手法)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">図解</span><h2>「何をしたいか」から手法を選ぶ</h2></div>
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 340" role="img" aria-label="着眼点ごとに対応する新QC七つ道具の手法名を示した対応図">
+          <text x="320" y="20" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">状況・着眼点 → 使う手法</text>
+          <g font-size="13">
+            <!-- row template: left box, arrow, right box -->
+            <g transform="translate(0,32)">
+              <rect x="20" y="0" width="280" height="30" rx="6" fill="var(--surface-2)" stroke="var(--border)"/>
+              <text x="30" y="20" fill="currentColor">まとまりない事実・意見を整理したい</text>
+              <line x1="304" y1="15" x2="356" y2="15" stroke="var(--ink-faint)" stroke-width="1.4"/>
+              <polygon points="356,10 366,15 356,20" fill="var(--ink-faint)"/>
+              <rect x="372" y="0" width="248" height="30" rx="6" fill="var(--reg-soft)" stroke="var(--reg)"/>
+              <text x="496" y="20" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">親和図法</text>
+            </g>
+            <g transform="translate(0,74)">
+              <rect x="20" y="0" width="280" height="30" rx="6" fill="var(--surface-2)" stroke="var(--border)"/>
+              <text x="30" y="20" fill="currentColor">原因と結果の関係を筋道立てたい</text>
+              <line x1="304" y1="15" x2="356" y2="15" stroke="var(--ink-faint)" stroke-width="1.4"/>
+              <polygon points="356,10 366,15 356,20" fill="var(--ink-faint)"/>
+              <rect x="372" y="0" width="248" height="30" rx="6" fill="var(--reg-soft)" stroke="var(--reg)"/>
+              <text x="496" y="20" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">連関図法</text>
+            </g>
+            <g transform="translate(0,116)">
+              <rect x="20" y="0" width="280" height="30" rx="6" fill="var(--surface-2)" stroke="var(--border)"/>
+              <text x="30" y="20" fill="currentColor">目的を達成する手段を展開したい</text>
+              <line x1="304" y1="15" x2="356" y2="15" stroke="var(--ink-faint)" stroke-width="1.4"/>
+              <polygon points="356,10 366,15 356,20" fill="var(--ink-faint)"/>
+              <rect x="372" y="0" width="248" height="30" rx="6" fill="var(--reg-soft)" stroke="var(--reg)"/>
+              <text x="496" y="20" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">系統図法</text>
+            </g>
+            <g transform="translate(0,158)">
+              <rect x="20" y="0" width="280" height="30" rx="6" fill="var(--surface-2)" stroke="var(--border)"/>
+              <text x="30" y="20" fill="currentColor">二つの事象の対応関係を見たい</text>
+              <line x1="304" y1="15" x2="356" y2="15" stroke="var(--ink-faint)" stroke-width="1.4"/>
+              <polygon points="356,10 366,15 356,20" fill="var(--ink-faint)"/>
+              <rect x="372" y="0" width="248" height="30" rx="6" fill="var(--reg-soft)" stroke="var(--reg)"/>
+              <text x="496" y="20" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">マトリックス図法</text>
+            </g>
+            <g transform="translate(0,200)">
+              <rect x="20" y="0" width="280" height="30" rx="6" fill="var(--surface-2)" stroke="var(--border)"/>
+              <text x="30" y="20" fill="currentColor">作業の日程・進捗を管理したい</text>
+              <line x1="304" y1="15" x2="356" y2="15" stroke="var(--ink-faint)" stroke-width="1.4"/>
+              <polygon points="356,10 366,15 356,20" fill="var(--ink-faint)"/>
+              <rect x="372" y="0" width="248" height="30" rx="6" fill="var(--res-soft)" stroke="var(--res)"/>
+              <text x="496" y="20" text-anchor="middle" fill="var(--res-ink)" font-weight="600">アローダイアグラム</text>
+            </g>
+            <g transform="translate(0,242)">
+              <rect x="20" y="0" width="280" height="30" rx="6" fill="var(--surface-2)" stroke="var(--border)"/>
+              <text x="30" y="20" fill="currentColor">不測の事態にあらかじめ備えたい</text>
+              <line x1="304" y1="15" x2="356" y2="15" stroke="var(--ink-faint)" stroke-width="1.4"/>
+              <polygon points="356,10 366,15 356,20" fill="var(--ink-faint)"/>
+              <rect x="372" y="0" width="248" height="30" rx="6" fill="var(--reg-soft)" stroke="var(--reg)"/>
+              <text x="496" y="20" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">PDPC法</text>
+            </g>
+            <g transform="translate(0,284)">
+              <rect x="20" y="0" width="280" height="30" rx="6" fill="var(--surface-2)" stroke="var(--border)"/>
+              <text x="30" y="20" fill="currentColor">数値データの特徴を要約したい</text>
+              <line x1="304" y1="15" x2="356" y2="15" stroke="var(--ink-faint)" stroke-width="1.4"/>
+              <polygon points="356,10 366,15 356,20" fill="var(--ink-faint)"/>
+              <rect x="372" y="0" width="248" height="30" rx="6" fill="var(--res-soft)" stroke="var(--res)"/>
+              <text x="496" y="20" text-anchor="middle" fill="var(--res-ink)" font-weight="600">マトリックス・データ解析法</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> オレンジの2つ(アローダイアグラム・マトリックス・データ解析法)は数値データを扱う手法、青の5つは言語データを扱う手法。手法名を思い出せなくても、「今扱いたいデータの種類」と「着眼点」から絞り込める。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>正しい発言(①③⑤⑦)に共通するのは、<b>各手法の基本動作を省略せずに説明できている</b>点。</span></div>
+      <div class="step"><span class="mark">2</span><span>誤りを含む発言(④⑥)は、<b>感性/論理</b>や<b>取捨選択する/しない</b>のように、手法の芯となる一語を反転させただけの形で紛れ込む。</span></div>
+      <div class="step"><span class="mark">3</span><span>発言②のように、複数の論点(参加範囲/周知の有無)が一文に混在すると、<b>どちらが問われているか</b>を切り分けて判断する必要がある。</span></div>
+      <div class="step"><span class="mark">4</span><span>迷ったら「その手法が本来何のためにあるか」に立ち返る。目的を思い出せれば、発言が逆のことを言っていないか判断しやすい。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第42回 問6 / 新QC七つ道具</span>
+    <span>そのとおり4件・誤りを含む3件(うち1件は判断に幅あり)</span>
+  </footer>
+
+</div>

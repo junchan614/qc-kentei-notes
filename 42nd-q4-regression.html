@@ -1,0 +1,327 @@
+<title>第42回 問4 単回帰分析</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+header.hero .back{font-size:12.5px;color:var(--ink-faint);}
+header.hero .back a{color:var(--ink-faint);text-decoration:underline;text-underline-offset:2px;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+a{color:var(--reg-ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第42回 問4</span>
+    <h1>相関係数から寄与率まで、ひとつの分散分析表でつながる</h1>
+    <p class="lede">製品の質量xと熱処理時間yの関係を調べる単回帰分析。相関係数・回帰直線の傾きと切片・分散分析表・寄与率と、聞かれ方は多いが、元になる数字はS<sub>xx</sub>・S<sub>yy</sub>・S<sub>xy</sub>の3つだけ。<b>どの式にどの数字を代入するか</b>を一直線に追っていく。</p>
+    <p class="back"><a href="index.html" target="_blank" rel="noopener">← 目次へ戻る</a></p>
+  </header>
+
+  <div class="callout">
+    <b>お断り:</b> 過去問そのものは掲載していません。お手元の問題冊子と合わせて読む前提です。基準解答の公開前(2026-09-27時点)に作成した暫定の解説であり、基準解答と異なる場合は更新します。
+  </div>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>与えられた条件</h2></div>
+    <p>製品の質量x(kg)と熱処理時間y(秒)について、20組(n=20)のデータから偏差平方和・偏差積和がすでに計算されて与えられている。</p>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <caption>表4.1 データの要約（n=20）</caption>
+        <thead><tr><th>x̄</th><th>ȳ</th><th>S<sub>xx</sub></th><th>S<sub>yy</sub></th><th>S<sub>xy</sub></th></tr></thead>
+        <tbody>
+          <tr><td class="sum">14.31</td><td class="sum">18.60</td><td class="sum">260.75</td><td class="sum">380.80</td><td class="sum">274.64</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 180" role="img" aria-label="合計変動S_T=380.80のうち、76.0%が回帰による変動S_Rに、残りの24.0%が残差S_eに分かれることを示す横棒グラフ">
+          <text x="320" y="24" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">合計変動 S<tspan baseline-shift="sub" font-size="10">T</tspan> = 380.80 の内訳（先取りした結論）</text>
+
+          <rect x="40" y="60" width="425" height="50" fill="var(--reg)" opacity="0.85"/>
+          <rect x="465" y="60" width="135" height="50" fill="var(--res)" opacity="0.85"/>
+          <line x1="465" y1="52" x2="465" y2="118" stroke="currentColor" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.6"/>
+
+          <g font-size="13" text-anchor="middle" font-weight="600">
+            <text x="252" y="90" fill="var(--surface)">S<tspan baseline-shift="sub" font-size="10">R</tspan></text>
+            <text x="532" y="90" fill="var(--surface)">S<tspan baseline-shift="sub" font-size="10">e</tspan></text>
+          </g>
+
+          <g font-size="12" text-anchor="middle" fill="currentColor" opacity="0.85">
+            <text x="252" y="140">289.27（76.0%）</text>
+            <text x="532" y="140">91.53（24.0%）</text>
+          </g>
+          <text x="320" y="164" font-size="11.5" text-anchor="middle" fill="var(--ink-faint, currentColor)" opacity="0.75">この76.0%という比率が、そのまま寄与率R²になる</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 単回帰分析のゴールは、全体の変動S<sub>T</sub>を「回帰で説明できる部分S<sub>R</sub>」と「説明できない残差S<sub>e</sub>」に分けること。この比率が後述の寄与率R²そのものになる。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>相関係数を求める — (21)</h2></div>
+    <p>相関係数rは、偏差積和S<sub>xy</sub>を、S<sub>xx</sub>とS<sub>yy</sub>の積の平方根で割って求める。</p>
+
+    <div class="calc">
+      <span class="label">相関係数 r</span>
+      <span class="line">r = S(xy) / √(S(xx)・S(yy)) = 274.64 / √(260.75 × 380.80)</span>
+      <span class="line">　　= 274.64 / √99293.6 = 274.64 / 315.11</span>
+      <span class="result">r ≒ 0.872</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(21)</span> エ. 0.872</span></div>
+
+    <div class="callout info">xとyの間には強い正の相関がある(rが1に近い)。この0.872は、後で寄与率R²を求めるときにr²=0.760として検算に使える値でもある。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>回帰直線を求める — (22)(23)</h2></div>
+    <p>傾きβ̂<sub>1</sub>はS<sub>xy</sub>/S<sub>xx</sub>、切片β̂<sub>0</sub>は「回帰直線は必ず(x̄,ȳ)を通る」性質からȳ−β̂<sub>1</sub>x̄で求める。</p>
+
+    <div class="calc">
+      <span class="label">傾き β̂(1)</span>
+      <span class="line">β̂(1) = S(xy) / S(xx) = 274.64 / 260.75</span>
+      <span class="result">β̂(1) ≒ 1.053</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">切片 β̂(0)</span>
+      <span class="line">β̂(0) = ȳ − β̂(1)・x̄ = 18.60 − 1.053 × 14.31 = 18.60 − 15.068</span>
+      <span class="result">β̂(0) ≒ 3.532</span>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(22)</span> エ. 1.053</span>
+      <span class="answer"><span class="qno">(23)</span> キ. 3.532</span>
+    </div>
+
+    <div class="callout warn"><b>丸め方に注意:</b> β̂(1)=1.053(小数第3位までに丸めた値)を使って計算すると3.532になるが、丸める前の1.05329…をそのまま使うと3.527に近い値になる。選択肢と合わせるには「表示桁数まで丸めてから次の計算に進む」進め方が前提になっている。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>分散分析表を作る — (24)(25)(26)</h2></div>
+    <p>回帰による変動S<sub>R</sub>はS<sub>xy</sub>²/S<sub>xx</sub>で最短に求まり、残差S<sub>e</sub>はS<sub>yy</sub>からの引き算。自由度はφ<sub>R</sub>=1、φ<sub>e</sub>=n−2=18。</p>
+
+    <div class="calc">
+      <span class="label">回帰による変動 S(R)</span>
+      <span class="line">S(R) = S(xy)² / S(xx) = 274.64² / 260.75 = 75427.13 / 260.75</span>
+      <span class="result">S(R) ≒ 289.27</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">残差の変動 S(e)（引き算で求める）</span>
+      <span class="line">S(e) = S(yy) − S(R) = 380.80 − 289.27</span>
+      <span class="result">S(e) ≒ 91.53</span>
+    </div>
+
+    <div class="calc">
+      <span class="label">平均平方と分散比F(0)</span>
+      <span class="line">φ(R) = 1、φ(e) = n − 2 = 20 − 2 = 18</span>
+      <span class="line">V(e) = S(e) / φ(e) = 91.53 / 18 = 5.085</span>
+      <span class="line">V(R) = S(R) / φ(R) = 289.27 / 1 = 289.27</span>
+      <span class="line">F(0) = V(R) / V(e) = 289.27 / 5.09</span>
+      <span class="result">F(0) ≒ 56.83</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>表4.2 分散分析表（完成形）</caption>
+        <thead><tr><th>要因</th><th>平方和S</th><th>自由度φ</th><th>平均平方V</th><th>分散比F<sub>0</sub></th></tr></thead>
+        <tbody>
+          <tr class="row-reg"><td>回帰R</td><td><div class="num hit">289.27</div><div class="sub">…(24)</div></td><td><div class="num">1</div></td><td><div class="num">289.27</div></td><td><div class="num hit">56.83</div><div class="sub">…(26)</div></td></tr>
+          <tr class="row-res"><td>残差e</td><td><div class="num">91.53</div></td><td><div class="num">18</div><div class="sub">= n−2</div></td><td><div class="num hit">5.09</div><div class="sub">…(25)</div></td><td></td></tr>
+          <tr class="row-total"><td>合計T</td><td><div class="num">380.80</div></td><td><div class="num">19</div><div class="sub">= n−1</div></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(24)</span> ケ. 289.27</span>
+      <span class="answer"><span class="qno">(25)</span> ウ. 5.09</span>
+      <span class="answer"><span class="qno">(26)</span> エ. 56.83</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 4</span><h2>有意性を判定する — (27)</h2></div>
+    <p>F(0)=56.83を、F(1,18;0.01)=8.29と比較する。分子の自由度1、分母の自由度18のF表を使う。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 200" role="img" aria-label="F(1,18;0.01)=8.29に対しF0=56.83は約6.9倍大きく、棄却域をはるかに超えていることを示す横棒比較図">
+          <text x="320" y="24" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">F(0) と棄却限界の比較</text>
+
+          <g font-size="12.5" text-anchor="end" fill="currentColor">
+            <text x="132" y="80">F(1,18;0.01)</text>
+            <text x="132" y="140">F(0)</text>
+          </g>
+
+          <rect x="140" y="62" width="64" height="30" fill="var(--res)" opacity="0.85"/>
+          <text x="212" y="82" font-size="13" fill="currentColor">8.29</text>
+
+          <rect x="140" y="122" width="436" height="30" fill="var(--reg)" opacity="0.9"/>
+          <text x="584" y="142" font-size="13" fill="currentColor" font-weight="600">56.83</text>
+
+          <line x1="204" y1="50" x2="204" y2="168" stroke="var(--wrong)" stroke-width="1.4" stroke-dasharray="4 3" opacity="0.75"/>
+          <text x="204" y="184" font-size="11.5" text-anchor="middle" fill="var(--wrong)">この線を超えれば1%で有意</text>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> F(0)=56.83はF(1,18;0.01)=8.29の約6.9倍。棄却域にはるかに入り込んでおり、「有意である」と「高度に有意である」の境目を考える必要すらないほど差がある。</figcaption>
+    </figure>
+
+    <p>F(0)=56.83 ＞ F(1,18;0.01)=8.29 なので、帰無仮説H<sub>0</sub>: β<sub>1</sub>=0は有意水準1%で棄却される。質量xと熱処理時間yの間には直線的な関係があり、しかもその根拠は強い。</p>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(27)</span> イ. 高度に有意である</span></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 5</span><h2>寄与率を求める — (28)</h2></div>
+    <p>寄与率R²は、全体の変動のうちどれだけを回帰で説明できたかを表す割合で、S<sub>R</sub>/S<sub>T</sub>で求める。相関係数rの2乗と一致することでも検算できる。</p>
+
+    <div class="calc">
+      <span class="label">寄与率 R²</span>
+      <span class="line">R² = S(R) / S(T) = 289.27 / 380.80</span>
+      <span class="result">R² ≒ 0.760</span>
+      <span class="line">検算: r² = 0.872² = 0.760（一致）</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(28)</span> ア. 0.760</span></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">罠</span><h2>選択肢に紛れる「別の割り算の答え」</h2></div>
+    <p>この問題の選択肢には、正しい計算の途中で自由度や分母を1つ間違えると出てくる値が丁寧に用意されている。特に自由度の間違いはF(0)にも連鎖する。</p>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>主な誤答の正体</caption>
+        <thead><tr><th>値</th><th>判定</th><th>どこから来るか</th></tr></thead>
+        <tbody>
+          <tr><td class="good">289.27</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (24)</span></td><td>S(R) = S(xy)²/S(xx)</td></tr>
+          <tr><td class="bad">198.08</td><td>誤</td><td>S(xy)²/S(yy)。S(R)の分母をS(xx)ではなくS(yy)にしてしまう取り違え</td></tr>
+          <tr><td class="bad">91.53</td><td>誤（(24)の選択肢としては）</td><td>S(e)そのもの。求めているのはS(R)であって、残差の値ではない</td></tr>
+          <tr><td class="good">5.09</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (25)</span></td><td>V(e) = S(e)/φ(e) = 91.53/18</td></tr>
+          <tr><td class="bad">4.82</td><td>誤</td><td>91.53を<b>φ(e)=18ではなくφ(T)=19</b>で割った値</td></tr>
+          <tr><td class="bad">4.58</td><td>誤</td><td>91.53を<b>n=20</b>でそのまま割った値</td></tr>
+          <tr><td class="good">56.83</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (26)</span></td><td>F(0) = V(R)/V(e) = 289.27/5.09</td></tr>
+          <tr><td class="bad">60.01</td><td>誤</td><td>289.27を、4.82(上のφ違いの誤答)で割った値。分母の自由度ミスがF(0)にも連鎖する</td></tr>
+          <tr><td class="bad">63.16</td><td>誤</td><td>289.27を、4.58(上のnで割った誤答)で割った値。同じ連鎖ミス</td></tr>
+          <tr><td class="bad">1.460</td><td>誤</td><td>S(yy)/S(xx)。傾きβ̂(1)の分子分母を逆にした値</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn"><b>(22)(23)(28)は共通の選択肢群から出題される:</b> この3問と(21)は選択肢が重なっており、r=0.872やR²=0.760といった<b>別の空欄の正解</b>が、傾きや切片の選択肢としても並んでいる。数字自体は本物なので、「今どの量を求めているか」を指差し確認しないまま似た値を選ぶと、そのまま不正解になる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>相関係数・回帰係数・分散分析表・寄与率は、すべて<b>S(xx)・S(yy)・S(xy)の3つの数字だけ</b>から計算できる。新しいデータは要らない。</span></div>
+      <div class="step"><span class="mark">2</span><span>傾きβ̂(1)=S(xy)/S(xx)、切片β̂(0)=ȳ−β̂(1)x̄。分母分子を逆にすると1.460のような別の値になってしまう。</span></div>
+      <div class="step"><span class="mark">3</span><span>S(R)=S(xy)²/S(xx)、S(e)=S(yy)−S(R)。分母をS(xx)とS(yy)で取り違えると198.08のような近い値が出るので要注意。</span></div>
+      <div class="step"><span class="mark">4</span><span>残差の自由度は<b>φ(e)=n−2</b>。n−1(合計の自由度)やnそのもので割ると、V(e)だけでなくF(0)まで連鎖して誤る。</span></div>
+      <div class="step"><span class="mark">5</span><span>寄与率R²=S(R)/S(T)は、相関係数の2乗r²と一致する。片方を求めたらもう片方で検算できる。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第42回 問4 / 単回帰分析</span>
+    <span>r=0.872 ・ ŷ=3.532+1.053x ・ F(0)=56.83 ・ R²=0.760</span>
+  </footer>
+
+</div>

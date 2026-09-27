@@ -130,8 +130,8 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
     <h1>QC検定2級 学習ノート</h1>
     <p class="lede">過去問の解説と、つまずいた概念の掘り下げをまとめたページ。各資料は図解つきで、公式の暗記ではなく「なぜその式になるのか」と「誤答選択肢が何のミスに対応しているか」まで踏み込んでいる。</p>
     <div class="meta-row">
-      <div class="meta"><span class="v">74</span><span class="k">資料</span></div>
-      <div class="meta"><span class="v">6</span><span class="k">出題回（第35〜40回）</span></div>
+      <div class="meta"><span class="v">89</span><span class="k">資料</span></div>
+      <div class="meta"><span class="v">7</span><span class="k">出題回（第35〜40回・第42回）</span></div>
       <div class="meta"><span class="v">13</span><span class="k">分野</span></div>
       <div class="meta"><span class="v">2026-09-27</span><span class="k">最終更新</span></div>
     </div>
@@ -161,6 +161,191 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
             <span>合格基準: 各分野50%以上＋総合70%以上</span>
             <span>電卓の二乗ショートカット・GT・メモリー機能</span>
             <span>次回: 第42回 2026-09-27</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-label"><h3>第42回 本試験の解説 — 2026-09-27実施・基準解答公開前の暫定版</h3><span class="rule"></span><span class="count">15件</span></div>
+      <div class="cards">
+        <a class="card" href="42nd-q1-hypergeometric.html" data-round="42" data-q="1" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第42回 問1</span><span class="chip">(1)〜(4)</span><span class="chip">暫定</span></div>
+          <h4>超幾何分布</h4>
+          <div class="desc">ロットN=18・不適合品r=4からn=5個を抜き取る超幾何分布。確率の計算から期待値・分散まで求め、二項分布より分散が小さくなる理由(有限母集団修正)を比較図で示す。</div>
+          <div class="keys">
+            <span>f(x)=C(r,x)C(N−r,n−x)/C(N,n)</span>
+            <span>E(x)=nr/N</span>
+            <span>V(x)=np(1−p)(N−n)/(N−1)</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="42nd-q2-binomial-poisson.html" data-round="42" data-q="2" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第42回 問2</span><span class="chip">(5)〜(12)</span><span class="chip">暫定</span></div>
+          <h4>二項分布とポアソン分布</h4>
+          <div class="desc">二項分布の平均・分散と、P=0.1・n=4での確率計算。nPを一定にしてn→∞、P→0とする極限でポアソン分布になる流れと、平均と分散がともにλになる性質。</div>
+          <div class="keys">
+            <span>E=nP、V=nP(1−P)</span>
+            <span>組合せ数の掛け忘れに注意</span>
+            <span>ポアソン分布は平均=分散=λ</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="42nd-q3-f-test-t-test.html" data-round="42" data-q="3" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第42回 問3</span><span class="chip">(13)〜(20)</span><span class="chip">暫定</span></div>
+          <h4>母分散の比の検定と母平均の差の検定</h4>
+          <div class="desc">等分散のF検定(F0=1.51、有意でない)から、併合分散を使う母平均の差の片側t検定へ。片側α=0.05なのにt表を0.10の列で引く理由と、等分散でない場合の等価自由度・Welchの検定。</div>
+          <div class="keys">
+            <span>F0は大きいほうの分散を分子に</span>
+            <span>片側α → t表は2α</span>
+            <span>等価自由度とWelchの検定</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="42nd-q4-regression.html" data-round="42" data-q="4" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第42回 問4</span><span class="chip">(21)〜(28)</span><span class="chip">暫定</span></div>
+          <h4>単回帰分析</h4>
+          <div class="desc">統計量から相関係数・回帰係数・切片を求め、分散分析表(S_R・S_e・F0)で回帰の有意性を判定し、寄与率まで。誤答の値が自由度や分母の取り違えなど、どの計算ミスから出るかを分析。</div>
+          <div class="keys">
+            <span>S_R=Sxy²/Sxx</span>
+            <span>φ_e=n−2</span>
+            <span>R²=S_R/S_T=r²</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="42nd-q5-two-way-anova.html" data-round="42" data-q="5" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第42回 問5</span><span class="chip">(29)〜(36)</span><span class="chip">暫定</span></div>
+          <h4>繰返しのある二元配置</h4>
+          <div class="desc">A2水準×B3水準、繰返し2回。平方和の分解と交互作用の検定、交互作用を誤差にプーリングした後の最適条件の点推定と信頼区間。セル平均を点推定に使ってしまう罠を詳しく扱う。</div>
+          <div class="keys">
+            <span>S(A×B)=S(AB)−S(A)−S(B)</span>
+            <span>プーリング後は加法モデルで点推定</span>
+            <span>n_e=N/(1+φ_A+φ_B)</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="42nd-q6-new-qc7.html" data-round="42" data-q="6" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第42回 問6</span><span class="chip">(37)〜(43)</span><span class="chip">暫定</span></div>
+          <h4>新QC七つ道具</h4>
+          <div class="desc">部下の7つの発言への上司のアドバイスを選ぶ形式。アローダイアグラム・系統図・マトリックス図・連関図・親和図・マトリックス・データ解析法の正しい使い方と、7手法の比較表。</div>
+          <div class="keys">
+            <span>連関図は論理で結ぶ</span>
+            <span>親和図はデータを捨てない</span>
+            <span>マトリックス・データ解析=主成分分析</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="42nd-q7-sampling-inspection.html" data-round="42" data-q="7" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第42回 問7</span><span class="chip">(44)〜(49)</span><span class="chip">暫定</span></div>
+          <h4>計数規準型一回抜取検査</h4>
+          <div class="desc">p0(出荷側の保護・上限)とp1(受取側の保護・下限)、生産者危険αと消費者危険βをOC曲線で整理し、JIS Z 9002の表の読み方(矢印の意味)をステップで解説。</div>
+          <div class="keys">
+            <span>p0=出荷側・p1=受取側</span>
+            <span>α≈0.05、β≈0.10</span>
+            <span>矢印↓は1つ下の行を読む</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="42nd-q8-qc-concepts.html" data-round="42" data-q="8" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第42回 問8</span><span class="chip">(50)〜(55)</span><span class="chip">暫定</span></div>
+          <h4>品質管理の考え方</h4>
+          <div class="desc">6つの職場の事例から、プロセス重視・標準化・事実に基づく管理・人間性尊重・再発防止などの考え方を、事例文のどの言葉が決め手になるかで見分ける。</div>
+          <div class="keys">
+            <span>結果でなくやり方を見る=プロセス重視</span>
+            <span>データで現状確認=事実に基づく管理</span>
+            <span>仕組みを直す=再発防止</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="42nd-q9-quality-tqm.html" data-round="42" data-q="9" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第42回 問9</span><span class="chip">(56)〜(62)</span><span class="chip">暫定</span></div>
+          <h4>品質の概念とTQM</h4>
+          <div class="desc">QCDSの同時達成、狩野モデルの魅力的品質・当たり前品質・一元的品質、品質管理と仕組み、全部門で取り組むTQMまでを、狩野モデルの図とともに整理。</div>
+          <div class="keys">
+            <span>魅力的品質: 無くても不満なし</span>
+            <span>当たり前品質: 有って当然</span>
+            <span>全部門で顧客満足=TQM</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="42nd-q10-new-product.html" data-round="42" data-q="10" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第42回 問10</span><span class="chip">(63)〜(70)</span><span class="chip">暫定</span></div>
+          <h4>新製品開発</h4>
+          <div class="desc">新製品(案)をめぐる4部長の意見から、潜在ニーズと良い意味でのプロダクトアウト、機能的価値と情緒的価値、機能→機構→ユニット・部品への展開、ボトルネック技術、フェールセーフを解説。</div>
+          <div class="keys">
+            <span>潜在ニーズは聞いても出てこない</span>
+            <span>機能的価値と情緒的価値</span>
+            <span>本質安全→フェールセーフ</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="42nd-q11-supplier-improvement.html" data-round="42" data-q="11" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第42回 問11</span><span class="chip">(71)〜(78)</span><span class="chip">暫定</span></div>
+          <h4>調達先との改善活動</h4>
+          <div class="desc">調達先との協働による改善を、目標設定→設定理由の共有と相互理解→すり合わせ→小集団改善活動と意思疎通→パートナー関係、の流れで整理し、紛らわしい語を見分ける。</div>
+          <div class="keys">
+            <span>協働・相互理解・すり合わせ</span>
+            <span>調達先のQCサークル=小集団改善活動</span>
+            <span>一体感→パートナー</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="42nd-q12-policy-management.html" data-round="42" data-q="12" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第42回 問12</span><span class="chip">(79)〜(84)</span><span class="chip">暫定</span></div>
+          <h4>方針管理</h4>
+          <div class="desc">基本方針→中長期のQC推進計画→年度方針→部門方針の展開と、方針を構成する重点課題・目標・方策。成果は目標の達成度と改善のプロセスの両方で評価する。</div>
+          <div class="keys">
+            <span>方針=重点課題+目標+方策</span>
+            <span>中長期のQC推進計画</span>
+            <span>成果とプロセスを両方評価</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="42nd-q13-standardization.html" data-round="42" data-q="13" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第42回 問13</span><span class="chip">(85)〜(91)</span><span class="chip">暫定</span></div>
+          <h4>社内標準化</h4>
+          <div class="desc">有効性(アウトプット)と効率(インプット対アウトプット)、何をやるか=業務分掌、どうやるか=基準、結果は良いか=QC工程図の3段階と、SDCAサイクルによる標準の維持と改訂。</div>
+          <div class="keys">
+            <span>有効性と効率</span>
+            <span>業務分掌規定・作業手順書・QC工程図</span>
+            <span>SDCA: 教育・訓練と見直し</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="42nd-q14-qms.html" data-round="42" data-q="14" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第42回 問14</span><span class="chip">(92)〜(96)</span><span class="chip">暫定</span></div>
+          <h4>品質マネジメントシステム</h4>
+          <div class="desc">要求事項を形だけ取り込んだQMSが定着しない理由(風土や慣習)と、組織機能の明確化→社内標準→周知→順守→顧客の信頼という流れ、責任区分の明確化。</div>
+          <div class="keys">
+            <span>風土や慣習を無視しない</span>
+            <span>組織機能は社内標準に反映</span>
+            <span>品質保証=顧客への信頼感</span>
+          </div>
+          <div class="go">開く →</div>
+        </a>
+
+        <a class="card" href="42nd-q15-csr.html" data-round="42" data-q="15" target="_blank" rel="noopener">
+          <div class="chips"><span class="chip src">第42回 問15</span><span class="chip">(97)〜(103)</span><span class="chip">暫定</span></div>
+          <h4>企業の社会的責任(CSR)</h4>
+          <div class="desc">法令と社内規則の順守、全従業員の倫理観と情報共有から、品質の良い製品→適正な利益の還元→社会貢献へと積み上がるCSRの段階、ISO 26000の7つの原則まで。</div>
+          <div class="keys">
+            <span>法令+社内規則</span>
+            <span>ISO 26000の7つの原則</span>
+            <span>品質→利益の還元→社会貢献</span>
           </div>
           <div class="go">開く →</div>
         </a>
@@ -1188,30 +1373,30 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
         <thead><tr><th>分野</th><th>状況</th><th>対応する資料 / メモ</th></tr></thead>
         <tbody>
           <tr><td>統計的方法の基礎（正規分布・標準誤差・データのまとめ方・確率の定義・正規分布の再生性）</td><td><span class="status done">資料あり</span></td><td>なぜ√nで割るのか / 第35回 問2 / 第38回 問2 / 第39回 問1 / 第39回 問3 / 第40回 問3</td></tr>
-          <tr><td>確率分布（二項分布・正規分布の確率計算）</td><td><span class="status done">資料あり</span></td><td>第36回 問2</td></tr>
-          <tr><td>相関分析・回帰分析</td><td><span class="status done">資料あり</span></td><td>単回帰の分散分析表 / 第35回 問3 / 第36回 問4 / 第37回 問4</td></tr>
+          <tr><td>確率分布（二項分布・正規分布の確率計算）</td><td><span class="status done">資料あり</span></td><td>第36回 問2 / 第42回 問1(超幾何分布)・問2(二項・ポアソン)</td></tr>
+          <tr><td>相関分析・回帰分析</td><td><span class="status done">資料あり</span></td><td>単回帰の分散分析表 / 第35回 問3 / 第36回 問4 / 第37回 問4 / 第42回 問4</td></tr>
           <tr><td>実験計画法（一元配置）</td><td><span class="status done">資料あり</span></td><td>第35回 問4 / 第36回 問5 / 第37回 問5 / 第38回 問5 / 第39回 問4</td></tr>
           <tr><td>工程能力指数</td><td><span class="status done">資料あり</span></td><td>第36回 問6 の中で解説 / 第37回 問6 / 第38回 問2 / 第40回 問2（Cpk含む）</td></tr>
           <tr><td>ヒストグラム</td><td><span class="status done">資料あり</span></td><td>第37回 問6（区間幅の決め方）</td></tr>
           <tr><td>QC七つ道具・問題解決型QCストーリー</td><td><span class="status done">資料あり</span></td><td>第36回 問6</td></tr>
           <tr><td>検定と推定（χ²検定・分割表）</td><td><span class="status done">資料あり</span></td><td>第38回 問3 / オリジナル頻出計算 第2弾 問2(3×2分割表)</td></tr>
-          <tr><td>検定と推定（分散の検定・F検定・χ²検定）</td><td><span class="status done">資料あり</span></td><td>第35回 問1 / 第36回 問3 / 第39回 問2 / 第40回 問1 / オリジナル頻出計算 問1(母分散の片側χ²検定)</td></tr>
-          <tr><td>検定と推定（母平均のt検定）</td><td><span class="status done">資料あり</span></td><td>第37回 問1 / 第40回 問1</td></tr>
+          <tr><td>検定と推定（分散の検定・F検定・χ²検定）</td><td><span class="status done">資料あり</span></td><td>第35回 問1 / 第36回 問3 / 第39回 問2 / 第40回 問1 / 第42回 問3(等分散のF検定) / オリジナル頻出計算 問1(母分散の片側χ²検定)</td></tr>
+          <tr><td>検定と推定（母平均のt検定）</td><td><span class="status done">資料あり</span></td><td>第37回 問1 / 第40回 問1 / 第42回 問3(母平均の差・Welch)</td></tr>
           <tr><td>検定と推定（検定統計量の横断整理）</td><td><span class="status done">資料あり</span></td><td>検定統計量 早見表（19種）</td></tr>
           <tr><td>検定と推定（母不適合品率）</td><td><span class="status done">資料あり</span></td><td>オリジナル模試3 問1(母不適合品率のZ検定と区間推定)</td></tr>
-          <tr><td>実験計画法（二元配置・繰り返しあり）</td><td><span class="status done">資料あり</span></td><td>第35回 問4 / 第40回 問6 / オリジナル頻出計算 問3(プーリングと有効反復数)</td></tr>
+          <tr><td>実験計画法（二元配置・繰り返しあり）</td><td><span class="status done">資料あり</span></td><td>第35回 問4 / 第40回 問6 / 第42回 問5 / オリジナル頻出計算 問3(プーリングと有効反復数)</td></tr>
           <tr><td>管理図（係数 A₂・d₂・D₃・D₄）</td><td><span class="status done">資料あり</span></td><td>管理図の係数の正体</td></tr>
           <tr><td>管理図（x-Rs管理図）</td><td><span class="status done">資料あり</span></td><td>オリジナル頻出計算 問2</td></tr>
           <tr><td>管理図（p、np、c、u ／ 異常判定ルール）</td><td><span class="status done">資料あり</span></td><td>第35回 問6（c管理図）／ 第40回 問5（np管理図・連による異常判定）</td></tr>
-          <tr><td>抜取検査・サンプリング</td><td><span class="status done">資料あり</span></td><td>新QC七つ道具・抜取検査・信頼性工学まとめ（第35・36・39・40回）/ オリジナル頻出計算 第2弾 問4(OC曲線)</td></tr>
-          <tr><td>新QC七つ道具</td><td><span class="status done">資料あり</span></td><td>新QC七つ道具・抜取検査・信頼性工学まとめ（第35・37・38・39回）</td></tr>
+          <tr><td>抜取検査・サンプリング</td><td><span class="status done">資料あり</span></td><td>新QC七つ道具・抜取検査・信頼性工学まとめ（第35・36・39・40回）/ オリジナル頻出計算 第2弾 問4(OC曲線) / 第42回 問7</td></tr>
+          <tr><td>新QC七つ道具</td><td><span class="status done">資料あり</span></td><td>新QC七つ道具・抜取検査・信頼性工学まとめ（第35・37・38・39回）/ 第42回 問6</td></tr>
           <tr><td>信頼性工学</td><td><span class="status done">資料あり</span></td><td>新QC七つ道具・抜取検査・信頼性工学まとめ（第37・38・39・40回）/ オリジナル頻出計算 問5(MTBF・直列/並列)</td></tr>
-          <tr><td>実践: 品質の概念・QC的ものの見方・倫理と社会的責任</td><td><span class="status done">資料あり</span></td><td>実践編まとめ 1/7</td></tr>
+          <tr><td>実践: 品質の概念・QC的ものの見方・倫理と社会的責任</td><td><span class="status done">資料あり</span></td><td>実践編まとめ 1/7 / 第42回 問8・問9・問15</td></tr>
           <tr><td>実践: 管理の方法（応急対策・再発防止・未然防止・QCストーリー）</td><td><span class="status done">資料あり</span></td><td>実践編まとめ 2/7</td></tr>
-          <tr><td>実践: 品質保証（新製品開発・プロセス保証・検査・計測）</td><td><span class="status done">資料あり</span></td><td>実践編まとめ 3/7</td></tr>
-          <tr><td>実践: 方針管理・機能別管理・日常管理</td><td><span class="status done">資料あり</span></td><td>実践編まとめ 4/7</td></tr>
-          <tr><td>実践: 標準化・小集団活動・人材育成</td><td><span class="status done">資料あり</span></td><td>実践編まとめ 5/7</td></tr>
-          <tr><td>実践: 品質マネジメントシステム・診断と監査・設備管理</td><td><span class="status done">資料あり</span></td><td>実践編まとめ 6/7</td></tr>
+          <tr><td>実践: 品質保証（新製品開発・プロセス保証・検査・計測）</td><td><span class="status done">資料あり</span></td><td>実践編まとめ 3/7 / 第42回 問10</td></tr>
+          <tr><td>実践: 方針管理・機能別管理・日常管理</td><td><span class="status done">資料あり</span></td><td>実践編まとめ 4/7 / 第42回 問12</td></tr>
+          <tr><td>実践: 標準化・小集団活動・人材育成</td><td><span class="status done">資料あり</span></td><td>実践編まとめ 5/7 / 第42回 問11・問13</td></tr>
+          <tr><td>実践: 品質マネジメントシステム・診断と監査・設備管理</td><td><span class="status done">資料あり</span></td><td>実践編まとめ 6/7 / 第42回 問14</td></tr>
         </tbody>
       </table>
     </div>
@@ -1221,7 +1406,7 @@ footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrain
 
   <footer>
     <span>QC検定2級 学習ノート — 目次</span>
-    <span>資料74件 / 最終更新 2026-09-27</span>
+    <span>資料89件 / 最終更新 2026-09-27</span>
     <span><a href="https://x.com/junchan614" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">@junchan614</a></span>
   </footer>
 

@@ -1,0 +1,283 @@
+<title>第42回 問12 方針管理</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:74px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer.pending{background:var(--surface-2);border-color:var(--border-strong);color:var(--ink-soft);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .hit{color:var(--reg-ink);font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+.details{background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:14px 18px;}
+.details summary{cursor:pointer;font-weight:600;color:var(--ink);font-size:14.5px;}
+.details summary::marker{color:var(--reg-ink);}
+.details .body{margin-top:10px;font-size:14.5px;color:var(--ink-soft);display:flex;flex-direction:column;gap:8px;}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 過去問解説 / 第42回 問12</span>
+    <h1>方針管理は「基本方針」から「方策」まで一本の糸でつながる</h1>
+    <p class="lede">方針管理は、年度方針を部門別の方針に展開し、実施計画に落とし込み、遂行状況を管理する体系的な活動。首脳部が示す基本方針から、中長期の計画、年度方針、そして重点課題・目標・方策という具体的な行動レベルまで、どうつながっていくかを問う設問。</p>
+  </header>
+
+  <div class="callout">
+    <b>お断り:</b> 過去問そのものは掲載していません。お手元の問題冊子と合わせて読む前提です。基準解答の公開前(2026-09-27時点)に作成した暫定の解説であり、基準解答と異なる場合は更新します。
+  </div>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">全体像</span><h2>基本方針から部門方針までの展開</h2></div>
+    <p>方針管理の骨組みは、上位の方針が下位の具体策へと段階的に姿を変えていく点にある。まず会社首脳部が<b>基本方針</b>を全従業員に示す。基本方針は大きく2本柱で、ひとつは顧客への品質保証に対する基本的な考え方、もうひとつは新製品・現行製品それぞれに向けた具体的な指針になる。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 700 400" role="img" aria-label="方針管理の展開図。基本方針が品質保証の考え方と新製品・現行製品への指針に分かれ、中長期のQC推進計画を経て年度方針にまとまり、各部門で検討したのち部門方針として完成する流れ">
+          <defs>
+            <marker id="a12" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <rect x="220" y="16" width="260" height="52" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+          <text x="350" y="47" text-anchor="middle" fill="var(--reg-ink)" font-weight="600" font-size="14">基本方針</text>
+
+          <line x1="300" y1="68" x2="220" y2="98" stroke="currentColor" stroke-width="1.3" opacity="0.6" marker-end="url(#a12)"/>
+          <line x1="400" y1="68" x2="480" y2="98" stroke="currentColor" stroke-width="1.3" opacity="0.6" marker-end="url(#a12)"/>
+
+          <rect x="40" y="100" width="240" height="60" rx="10" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.1" opacity="0.9"/>
+          <text x="160" y="126" text-anchor="middle" fill="currentColor" font-size="12.5">顧客への品質保証の</text>
+          <text x="160" y="144" text-anchor="middle" fill="currentColor" font-size="12.5">基本的な考え方</text>
+
+          <rect x="380" y="100" width="280" height="60" rx="10" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.1" opacity="0.9"/>
+          <text x="520" y="122" text-anchor="middle" fill="currentColor" font-size="12.5">新製品の品質目標(79)</text>
+          <text x="520" y="140" text-anchor="middle" fill="currentColor" font-size="12.5">現行製品の品質改善計画(80)</text>
+
+          <line x1="160" y1="160" x2="330" y2="196" stroke="currentColor" stroke-width="1.2" opacity="0.5" marker-end="url(#a12)"/>
+          <line x1="520" y1="160" x2="370" y2="196" stroke="currentColor" stroke-width="1.2" opacity="0.5" marker-end="url(#a12)"/>
+
+          <rect x="220" y="198" width="260" height="52" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+          <text x="350" y="222" text-anchor="middle" fill="var(--reg-ink)" font-weight="600" font-size="13.5">QC推進計画(81)</text>
+          <text x="350" y="240" text-anchor="middle" fill="var(--reg-ink)" font-size="11">中長期・毎年チェック</text>
+
+          <line x1="350" y1="250" x2="350" y2="278" stroke="currentColor" stroke-width="1.4" opacity="0.6" marker-end="url(#a12)"/>
+
+          <rect x="190" y="280" width="320" height="60" rx="10" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.6"/>
+          <text x="350" y="304" text-anchor="middle" fill="var(--res-ink)" font-weight="600" font-size="13.5">年度方針(案)</text>
+          <text x="350" y="322" text-anchor="middle" fill="var(--res-ink)" font-size="11">当年度の反省 + 次年度・中長期の展望</text>
+
+          <text x="30" y="298" font-size="11" fill="var(--ink-faint)">材料:</text>
+          <text x="30" y="313" font-size="11" fill="var(--ink-faint)">・管理項目の達成状況</text>
+          <text x="30" y="328" font-size="11" fill="var(--ink-faint)">・(82)の結果</text>
+          <line x1="90" y1="322" x2="185" y2="310" stroke="var(--ink-faint)" stroke-width="1" stroke-dasharray="3 3" opacity="0.7" marker-end="url(#a12)"/>
+
+          <line x1="350" y1="340" x2="350" y2="368" stroke="currentColor" stroke-width="1.4" opacity="0.6" marker-end="url(#a12)"/>
+          <text x="365" y="358" font-size="11" fill="currentColor" opacity="0.7">各部門で検討 → 首脳部で修正</text>
+
+          <rect x="220" y="370" width="260" height="26" rx="8" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.1" opacity="0.9"/>
+          <text x="350" y="388" text-anchor="middle" fill="currentColor" font-weight="600" font-size="13">部門方針(完成)</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 基本方針の2本柱のうち、右側(新製品・現行製品への指針)が(79)(80)にあたる。そこから中長期のQC推進計画(81)を経て年度方針案がまとまり、部門での検討と首脳部の修正を経て部門方針として完成する。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(79)(80)(81)</span><h2>基本方針の2本柱と中長期計画</h2></div>
+    <p>基本方針の具体的な指針にあたる部分は、新製品については<b>品質目標</b>、すでに市場に出ている現行製品については<b>品質改善計画</b>という形をとる。「これから作るものの到達点」と「今あるものの直し方」という違いで覚えると区別しやすい。さらに、これらの基本方針を達成するために、中長期にわたる<b>QC推進計画</b>を作成し、その進捗を継続的にチェックしていく。</p>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(79)</span> 品質目標</span>
+      <span class="answer"><span class="qno">(80)</span> 品質改善計画</span>
+      <span class="answer"><span class="qno">(81)</span> QC推進計画</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(82)</span><h2>年度方針をまとめる材料——判断が割れる一箇所</h2></div>
+    <p>年度方針は、基本方針・各役員の管理項目の達成状況・(82)の結果、といった当年度の振り返り材料と、次年度や中長期の展望を合わせて案を作り、各部門での検討と首脳部での修正を経て完成する、という流れになる。</p>
+
+    <div class="answer-row"><span class="answer pending"><span class="qno">(82)</span> QC内部監査(暫定・要確認)</span></div>
+
+    <details class="details">
+      <summary>判断の根拠とほかに考えられる答え</summary>
+      <div class="body">
+        <p><b>判断の根拠:</b> 文中にはすでに「各役員の<b>管理項目の達成状況</b>」という反省材料が別立てで書かれている。したがって(82)はそれとは異なる、社内で当年度の活動を振り返るための仕組みを指すと考えるのが自然。トップ診断を伴う<b>QC内部監査</b>は、社内で自部門の活動を年間を通じて点検し、その結果を次年度の方針づくりに反映させる代表的な仕組みであり、文脈に合う。</p>
+        <p><b>ほかに考えられる答え:</b> 「第三者監査」(外部機関による監査)や「顧客満足度調査」も語群には含まれている。ただし年度方針は自社内の反省を踏まえて首脳部が作る性質のものであり、外部機関に委ねる第三者監査よりも、社内で実施する内部監査のほうが位置づけとして合う。顧客満足度調査も反省材料になり得るが、方針管理の枠組み(JIS Q 9023)では内部監査(トップ診断)がより中心的に扱われる。</p>
+        <p>この設問は判断材料が本文だけでは決めきれず、<b>自信が低い箇所</b>としている。基準解答の公開後に確認し、異なっていれば更新する。</p>
+      </div>
+    </details>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(83)(84)</span><h2>方針は「重点課題・目標・方策」の3点セット</h2></div>
+    <p>方針は<b>重点課題・目標・方策</b>の3項目で構成される。目標には評価尺度・達成期限に加えて、必ず達成すべき下限の必達目標と、できれば到達したい上限の努力目標がある。そして、その目標をどう達成するかという方法を記述したものが<b>方策</b>。成果の評価は、目標がどこまで達成できたかだけでなく、改善に至る<b>プロセス</b>そのものも合わせて評価する。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 660 260" role="img" aria-label="方針の構成図。重点課題の下に目標と方策が並び、目標には評価尺度・達成期限・必達目標・努力目標が含まれ、成果の評価は目標達成度と改善のプロセスの両方でおこなう">
+          <rect x="240" y="14" width="180" height="48" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+          <text x="330" y="43" text-anchor="middle" fill="var(--reg-ink)" font-weight="600" font-size="14">重点課題</text>
+
+          <defs>
+            <marker id="b12" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+          <line x1="290" y1="62" x2="180" y2="90" stroke="currentColor" stroke-width="1.3" opacity="0.6" marker-end="url(#b12)"/>
+          <line x1="370" y1="62" x2="480" y2="90" stroke="currentColor" stroke-width="1.3" opacity="0.6" marker-end="url(#b12)"/>
+
+          <rect x="40" y="92" width="280" height="92" rx="10" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.1" opacity="0.9"/>
+          <text x="180" y="114" text-anchor="middle" fill="currentColor" font-weight="600" font-size="13">目標</text>
+          <text x="180" y="133" text-anchor="middle" fill="currentColor" font-size="11.5">評価尺度・達成期限</text>
+          <text x="180" y="150" text-anchor="middle" fill="currentColor" font-size="11.5">必達目標(下限)</text>
+          <text x="180" y="167" text-anchor="middle" fill="currentColor" font-size="11.5">努力目標(上限)</text>
+
+          <rect x="340" y="92" width="280" height="92" rx="10" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.6"/>
+          <text x="480" y="118" text-anchor="middle" fill="var(--res-ink)" font-weight="600" font-size="13">方策(83)</text>
+          <text x="480" y="140" text-anchor="middle" fill="var(--res-ink)" font-size="11.5">目標達成の方法を</text>
+          <text x="480" y="157" text-anchor="middle" fill="var(--res-ink)" font-size="11.5">具体的に記述</text>
+
+          <line x1="180" y1="184" x2="270" y2="212" stroke="currentColor" stroke-width="1.2" opacity="0.5" marker-end="url(#b12)"/>
+          <line x1="480" y1="184" x2="390" y2="212" stroke="currentColor" stroke-width="1.2" opacity="0.5" marker-end="url(#b12)"/>
+
+          <rect x="150" y="214" width="360" height="40" rx="9" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.4"/>
+          <text x="330" y="232" text-anchor="middle" fill="currentColor" font-size="12.5" font-weight="600">成果の評価</text>
+          <text x="330" y="248" text-anchor="middle" fill="currentColor" font-size="11">目標達成度 ＋ 改善のプロセス(84)</text>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> 目標は「何を、いつまでに、どの水準で」を定め、方策は「どうやって」を定める。評価の段階では結果(目標達成度)だけでなく、そこに至る過程(プロセス)も見る点が、方針管理らしさのひとつ。</figcaption>
+    </figure>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(83)</span> 方策</span>
+      <span class="answer"><span class="qno">(84)</span> プロセス</span>
+    </div>
+
+    <div class="callout warn"><b>取り違えやすい点:</b> 語群には「管理項目」も含まれる。管理項目は日常管理で使われる、結果を継続的にチェックするための項目であり、ここで問われている「目標達成の方法」そのものを指す<b>方策</b>とは役割が違う。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">補足</span><h2>方針管理と日常管理の関係</h2></div>
+    <p>方針管理は、現状を打破して新しい水準を目指す<b>改善・革新</b>のための活動であるのに対し、日常管理は決められた標準どおりに仕事を回し、結果を安定させる<b>維持</b>のための活動という役割分担がある。年度方針づくりの材料になる「管理項目の達成状況」は、この日常管理側で継続的にチェックされている数値であり、方針管理はその結果を取り込みながら、次の打破すべき目標を定めていく。両者は別々の仕組みではなく、互いの結果を材料にし合う補完的な関係にある。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">対比</span><h2>取り違えやすい語の見分け方</h2></div>
+    <div class="table-wrap">
+      <table>
+        <caption>方針管理で紛らわしい用語</caption>
+        <thead><tr><th>用語</th><th>ひとことで</th><th>見分けるキーワード</th><th>取り違えやすい相手</th></tr></thead>
+        <tbody>
+          <tr class="row-reg"><td>品質目標</td><td>新製品が到達すべき品質の水準</td><td>「新製品」</td><td>品質改善計画(現行製品向け)</td></tr>
+          <tr><td>品質改善計画</td><td>現行製品を良くしていく計画</td><td>「現行製品」</td><td>品質目標(新製品向け)</td></tr>
+          <tr class="row-reg"><td>QC推進計画</td><td>基本方針達成のための中長期計画</td><td>「中長期」「チェック」</td><td>QCストーリー(問題解決の手順そのもの)</td></tr>
+          <tr><td>QC内部監査</td><td>社内で活動を点検する仕組み</td><td>「社内」「トップ診断」</td><td>第三者監査(外部機関による監査)</td></tr>
+          <tr class="row-reg"><td>方策</td><td>目標を達成するための具体的な方法</td><td>「どうやって」</td><td>管理項目(日常管理での点検項目)</td></tr>
+          <tr><td>プロセス</td><td>改善に至るまでの過程そのもの</td><td>「達成度と同時に評価」</td><td>管理水準(維持すべき数値の範囲)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span><b>基本方針 → QC推進計画(中長期) → 年度方針 → 部門方針</b>の順に、抽象的な方針が具体的な行動へと降りていく。どの階層の話をしているかをまず特定する。</span></div>
+      <div class="step"><span class="mark">2</span><span><b>「新製品」は品質目標、「現行製品」は品質改善計画。</b> 対象がこれから作るものか、すでにあるものかで語を使い分ける。</span></div>
+      <div class="step"><span class="mark">3</span><span><b>方針は重点課題・目標・方策の3点セット。</b> 目標は「何を・いつまでに・どの水準で」、方策は「どうやって」を定める、と役割で覚える。</span></div>
+      <div class="step"><span class="mark">4</span><span><b>評価は結果だけでなく過程も見る。</b> 目標達成度に加えてプロセスも評価することが、方針管理の特徴のひとつ。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第42回 問12 / 方針管理</span>
+    <span>基本方針 → QC推進計画 → 年度方針 → 部門方針</span>
+  </footer>
+
+</div>

@@ -1,0 +1,287 @@
+<title>第42回 問13 社内標準化</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:74px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .hit{color:var(--reg-ink);font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 過去問解説 / 第42回 問13</span>
+    <h1>アウトプットを見るか、インプット対アウトプットを見るか</h1>
+    <p class="lede">社内標準化を、仕事の「有効性」と「効率」という2つのものさしから説明し、標準化の対象を「何をやるか」「どうやるか」「結果は良いか」の3段階に整理する設問。最後は標準を作って終わりにせず、教育・訓練と見直しまでを含めたサイクルとして回す視点で締めくくられる。</p>
+  </header>
+
+  <div class="callout">
+    <b>お断り:</b> 過去問そのものは掲載していません。お手元の問題冊子と合わせて読む前提です。基準解答の公開前(2026-09-27時点)に作成した暫定の解説であり、基準解答と異なる場合は更新します。
+  </div>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(85)(86)</span><h2>有効性はアウトプット、効率はインプット対アウトプット</h2></div>
+    <p>仕事には「何をやるか」の有効性と「どうやるか」の効率という、2つの評価軸がある。有効性を追求するのは、<b>アウトプット</b>が利用者(顧客や後工程)の満足度を最大化するため。効率を追求するのは、<b>インプット</b>に対するアウトプットの割合を最大化するため。同じ仕事でも、見ている分子・分母が違う。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 660 220" role="img" aria-label="有効性と効率の図。インプットから仕事の工程を経てアウトプットが生まれ、効率はインプットに対するアウトプットの割合、有効性はアウトプットが利用者の満足度を最大化するかで測る">
+          <rect x="20" y="80" width="130" height="60" rx="10" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.2" opacity="0.9"/>
+          <text x="85" y="115" text-anchor="middle" fill="currentColor" font-weight="600" font-size="13">インプット(86)</text>
+
+          <rect x="265" y="80" width="130" height="60" rx="10" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.2" opacity="0.9"/>
+          <text x="330" y="106" text-anchor="middle" fill="currentColor" font-size="11.5">仕事の工程</text>
+          <text x="330" y="123" text-anchor="middle" fill="currentColor" font-size="11.5">(どうやるか)</text>
+
+          <rect x="510" y="80" width="130" height="60" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+          <text x="575" y="115" text-anchor="middle" fill="var(--reg-ink)" font-weight="600" font-size="13">アウトプット(85)</text>
+
+          <defs>
+            <marker id="a13" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+          <line x1="150" y1="110" x2="263" y2="110" stroke="currentColor" stroke-width="1.4" opacity="0.6" marker-end="url(#a13)"/>
+          <line x1="395" y1="110" x2="508" y2="110" stroke="currentColor" stroke-width="1.4" opacity="0.6" marker-end="url(#a13)"/>
+
+          <text x="330" y="60" text-anchor="middle" font-size="12" fill="var(--res-ink)" font-weight="600">効率 = アウトプット ÷ インプット を最大化</text>
+          <line x1="30" y1="70" x2="630" y2="70" stroke="var(--res)" stroke-width="1.4" stroke-dasharray="5 4" opacity="0.7"/>
+
+          <text x="575" y="175" text-anchor="middle" font-size="12" fill="var(--reg-ink)" font-weight="600">有効性 = 利用者(顧客・後工程)の</text>
+          <text x="575" y="192" text-anchor="middle" font-size="12" fill="var(--reg-ink)" font-weight="600">満足度を最大化</text>
+          <line x1="510" y1="150" x2="510" y2="205" stroke="var(--reg)" stroke-width="1.2" opacity="0.6"/>
+          <line x1="510" y1="205" x2="640" y2="205" stroke="var(--reg)" stroke-width="1.2" opacity="0.6" marker-end="url(#a13)"/>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 効率はインプットとアウトプットの比、有効性はアウトプットが利用者にどれだけ届いているかで測る。同じ「アウトプットを増やす」でも、効率の話なのか有効性の話なのかを区別すると迷わない。</figcaption>
+    </figure>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(85)</span> アウトプット</span>
+      <span class="answer"><span class="qno">(86)</span> インプット</span>
+    </div>
+
+    <div class="callout warn"><b>取り違えやすい点:</b> 「歩留まり」や「コスト削減」は効率の結果として現れる数字であって、効率そのものの定義ではない。定義を問われたら「割合」という言葉が入っているかどうかで見分ける。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(87)(88)</span><h2>「何をやるか」と「どうやるか」の標準化</h2></div>
+    <p>「何をやるか」を標準化するのは、<b>業務分掌</b>規定などによって個人の担当業務と責任を明確にすること。一方「どうやるか」を標準化するのは、作業手順書によって作業条件・使用材料・作業方法などについての<b>基準</b>を定めること。前者は役割の線引き、後者は作業そのものの決め事という違いになる。</p>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(87)</span> 業務分掌</span>
+      <span class="answer"><span class="qno">(88)</span> 基準</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(89)</span><h2>「結果は良いか」も標準化する</h2></div>
+    <p>何をやるか・どうやるかを決めても、結果を確認する仕組みがなければ「やらせっぱなし」になってしまう。そこで、たとえば<b>QC工程図</b>の中に、工程ごとの管理項目・点検項目・管理方法・検査方法をあらかじめ定めておくことで、結果の良し悪しを継続的に確認できるようにする。</p>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(89)</span> QC工程図</span></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">全体像</span><h2>標準化は3段階でできている</h2></div>
+    <p>(87)〜(89)の内容をまとめると、標準化は「何をやるか」「どうやるか」「結果は良いか」という3つの問いにそれぞれ答える形で組み立てられている。どれか1つが欠けても、標準は機能しない。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>標準化がカバーする3つの問い</caption>
+        <thead><tr><th>問い</th><th>標準化の手段</th><th>決めること</th></tr></thead>
+        <tbody>
+          <tr class="row-reg"><td>何をやるか</td><td>業務分掌(87)</td><td>担当業務と責任の範囲</td></tr>
+          <tr><td>どうやるか</td><td>作業手順書・基準(88)</td><td>作業条件・使用材料・作業方法</td></tr>
+          <tr class="row-reg"><td>結果は良いか</td><td>QC工程図(89)</td><td>管理項目・点検項目・管理方法・検査方法</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(90)(91)</span><h2>標準は作って終わりではない</h2></div>
+    <p>標準は、SDCAサイクル(社内標準の作成S → 標準に基づいた業務D → 結果の確認C → 標準の見直しA)の中で回し続けるもの。標準を作ったら、その内容や作業方法について<b>教育・訓練</b>を行い、実際にできる状態にする。そして標準は一度決めたら固定するのではなく、常に<b>組織の実情</b>に合った内容にし、関連する要素が変われば改訂・制定していく。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 700 300" role="img" aria-label="SDCAサイクルとPDCAサイクルの関係図。標準を作り守り抜くSDCAサイクルの上に、標準を破って改善するPDCAサイクルが乗り、改善結果は新しい標準としてSDCAに組み込まれる">
+          <defs>
+            <marker id="c13" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <text x="350" y="24" font-size="13" text-anchor="middle" fill="var(--res-ink)" font-weight="600">PDCA — 標準を打ち破って改善する</text>
+          <g font-size="13">
+            <rect x="40" y="36" width="110" height="46" rx="9" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.5"/>
+            <text x="95" y="64" text-anchor="middle" fill="var(--res-ink)" font-weight="700">P 計画</text>
+            <rect x="190" y="36" width="110" height="46" rx="9" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.5"/>
+            <text x="245" y="64" text-anchor="middle" fill="var(--res-ink)" font-weight="700">D 実行</text>
+            <rect x="340" y="36" width="110" height="46" rx="9" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.5"/>
+            <text x="395" y="64" text-anchor="middle" fill="var(--res-ink)" font-weight="700">C 確認</text>
+            <rect x="490" y="36" width="110" height="46" rx="9" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.5"/>
+            <text x="545" y="64" text-anchor="middle" fill="var(--res-ink)" font-weight="700">A 処置</text>
+          </g>
+          <g stroke="var(--res)" stroke-width="1.3" opacity="0.8">
+            <line x1="150" y1="59" x2="188" y2="59" marker-end="url(#c13)"/>
+            <line x1="300" y1="59" x2="338" y2="59" marker-end="url(#c13)"/>
+            <line x1="450" y1="59" x2="488" y2="59" marker-end="url(#c13)"/>
+          </g>
+          <path d="M545,82 Q545,105 95,105 Q95,105 95,84" fill="none" stroke="var(--res)" stroke-width="1.1" opacity="0.5" marker-end="url(#c13)"/>
+
+          <text x="350" y="200" font-size="13" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">SDCA — 標準を守り抜き維持する</text>
+          <g font-size="13">
+            <rect x="40" y="212" width="110" height="46" rx="9" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.5"/>
+            <text x="95" y="240" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">S 標準作成(90)</text>
+            <rect x="190" y="212" width="110" height="46" rx="9" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.5"/>
+            <text x="245" y="240" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">D 業務実施</text>
+            <rect x="340" y="212" width="110" height="46" rx="9" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.5"/>
+            <text x="395" y="240" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">C 結果確認</text>
+            <rect x="490" y="212" width="110" height="46" rx="9" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.5"/>
+            <text x="545" y="240" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">A 標準見直し</text>
+          </g>
+          <g stroke="var(--reg)" stroke-width="1.3" opacity="0.8">
+            <line x1="150" y1="235" x2="188" y2="235" marker-end="url(#c13)"/>
+            <line x1="300" y1="235" x2="338" y2="235" marker-end="url(#c13)"/>
+            <line x1="450" y1="235" x2="488" y2="235" marker-end="url(#c13)"/>
+          </g>
+          <path d="M545,258 Q545,281 95,281 Q95,281 95,260" fill="none" stroke="var(--reg)" stroke-width="1.1" opacity="0.5" marker-end="url(#c13)"/>
+
+          <line x1="545" y1="82" x2="95" y2="210" stroke="currentColor" stroke-width="1.3" opacity="0.55" marker-end="url(#c13)"/>
+          <text x="330" y="140" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.75">改善(A)の結果を新しい標準(S)として組み込む</text>
+
+          <line x1="395" y1="212" x2="245" y2="84" stroke="currentColor" stroke-width="1.1" opacity="0.4" stroke-dasharray="4 4" marker-end="url(#c13)"/>
+          <text x="330" y="160" font-size="11" text-anchor="middle" fill="currentColor" opacity="0.6">結果確認(C)で不都合が見つかればPDCAへ</text>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> SDCAは決めた標準を守り抜いて維持する回転、PDCAは標準そのものを打ち破って改善する回転。改善(PDCAのA)がまとまったら、それを新しい標準(SDCAのS)として組み込み、標準が常に組織の実情(91)に合った状態を保つ。</figcaption>
+    </figure>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(90)</span> 教育・訓練</span>
+      <span class="answer"><span class="qno">(91)</span> 組織の実情</span>
+    </div>
+
+    <div class="callout info"><b>SとDが1文字違いで紛らわしい:</b> SDCAの「D」は「標準に基づいた<b>業務</b>」であり、PDCAの「D」の「実行」と役割は近いが、前提にあるのが標準かどうかが違う。SDCAは既に決まった標準をなぞる回転、PDCAは新しい計画を試す回転になる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">対比</span><h2>取り違えやすい語の見分け方</h2></div>
+    <div class="table-wrap">
+      <table>
+        <caption>社内標準化で紛らわしい用語</caption>
+        <thead><tr><th>用語</th><th>ひとことで</th><th>見分けるキーワード</th><th>取り違えやすい相手</th></tr></thead>
+        <tbody>
+          <tr class="row-reg"><td>アウトプット</td><td>仕事の成果そのもの</td><td>「利用者の満足度」</td><td>インプット(投入する資源)</td></tr>
+          <tr><td>インプット</td><td>仕事に投入する資源</td><td>「〜に対する割合」</td><td>アウトプット(仕事の成果)</td></tr>
+          <tr class="row-reg"><td>業務分掌</td><td>担当業務と責任の線引き</td><td>「何をやるか」</td><td>基準(作業条件そのものの決め事)</td></tr>
+          <tr><td>基準</td><td>作業条件・材料・方法の決め事</td><td>「どうやるか」「作業手順書」</td><td>業務分掌(役割の線引き)</td></tr>
+          <tr class="row-reg"><td>QC工程図</td><td>工程ごとの管理・検査方法を定めた図</td><td>「結果は良いか」「管理項目」</td><td>品質表(設計段階で品質特性を対応づける表)</td></tr>
+          <tr><td>教育・訓練</td><td>標準を実践できるようにする活動</td><td>「標準を作ったら行う」</td><td>組織の実情(標準の中身を合わせる対象)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span><b>有効性はアウトプット側、効率はインプットとアウトプットの比。</b> 「何が最大化されるか」を聞かれたら、割合の話かどうかで見分ける。</span></div>
+      <div class="step"><span class="mark">2</span><span><b>標準化は「何を・どう・結果は良いか」の3段構え。</b> 業務分掌が役割、作業手順書(基準)が方法、QC工程図が結果確認、と対応づけて覚える。</span></div>
+      <div class="step"><span class="mark">3</span><span><b>標準は作って終わりではなくSDCAで回す。</b> 作成→実施→確認→見直しの4段階のうち、実施の前には必ず教育・訓練が入る。</span></div>
+      <div class="step"><span class="mark">4</span><span><b>SDCAは維持、PDCAは改善。</b> 標準を守り抜く回転と、標準を打ち破る回転は別物だが、改善結果は新しい標準としてSDCA側に組み込まれてつながっていく。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第42回 問13 / 社内標準化</span>
+    <span>何をやるか → どうやるか → 結果は良いか → 教育・訓練 → 組織の実情</span>
+  </footer>
+
+</div>

@@ -1,0 +1,247 @@
+<title>第42回 問11 調達先との改善活動</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:74px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .hit{color:var(--reg-ink);font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 過去問解説 / 第42回 問11</span>
+    <h1>改善目標は、まず調達先に立ててもらう</h1>
+    <p class="lede">調達先(サプライヤー)との関係を、監督・統制ではなく<b>協働</b>で改善していく進め方を問う設問。目標を最初に立てるのは誰か、すり合わせと小集団活動はどう違うか、フォローアップの先に何を目指すか——購買・調達管理の考え方が、段階ごとの用語選びに現れる。</p>
+  </header>
+
+  <div class="callout">
+    <b>お断り:</b> 過去問そのものは掲載していません。お手元の問題冊子と合わせて読む前提です。基準解答の公開前(2026-09-27時点)に作成した暫定の解説であり、基準解答と異なる場合は更新します。
+  </div>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">全体像</span><h2>改善活動は5段階で進む</h2></div>
+    <p>この設問は、調達先との改善活動を時系列で追う構成になっている。<b>目標設定 → すり合わせ → 共同改善 → フォローアップ → パートナー関係</b>という流れの、どの段階でどの言葉が使われるかを押さえれば、空欄はほぼ機械的に埋まる。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 700 260" role="img" aria-label="調達先との改善活動の流れ図。目標設定からすり合わせ、共同改善、フォローアップを経てパートナー関係に至る5段階と、その下を貫く相互理解と意思疎通の軸">
+          <defs>
+            <marker id="a11" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <text x="350" y="24" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">調達先との改善活動 — 5つの段階</text>
+
+          <g font-size="13">
+            <rect x="16" y="60" width="122" height="72" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+            <text x="77" y="90" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">目標設定</text>
+            <text x="77" y="110" text-anchor="middle" fill="var(--reg-ink)" font-size="11">(71)(72)</text>
+
+            <rect x="152" y="60" width="122" height="72" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+            <text x="213" y="90" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">すり合わせ</text>
+            <text x="213" y="110" text-anchor="middle" fill="var(--reg-ink)" font-size="11">(75)</text>
+
+            <rect x="288" y="60" width="122" height="72" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="1.6"/>
+            <text x="349" y="90" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">共同改善</text>
+            <text x="349" y="110" text-anchor="middle" fill="var(--reg-ink)" font-size="11">(76)(77)</text>
+
+            <rect x="424" y="60" width="122" height="72" rx="10" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.2" opacity="0.9"/>
+            <text x="485" y="90" text-anchor="middle" fill="currentColor">フォローアップ</text>
+            <text x="485" y="110" text-anchor="middle" fill="currentColor" font-size="11" opacity="0.7">監査</text>
+
+            <rect x="560" y="60" width="124" height="72" rx="10" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.6"/>
+            <text x="622" y="90" text-anchor="middle" fill="var(--res-ink)" font-weight="600">パートナー関係</text>
+            <text x="622" y="110" text-anchor="middle" fill="var(--res-ink)" font-size="11">(78)</text>
+          </g>
+
+          <g stroke="currentColor" stroke-width="1.4" opacity="0.6">
+            <line x1="138" y1="96" x2="150" y2="96" marker-end="url(#a11)"/>
+            <line x1="274" y1="96" x2="286" y2="96" marker-end="url(#a11)"/>
+            <line x1="410" y1="96" x2="422" y2="96" marker-end="url(#a11)"/>
+            <line x1="546" y1="96" x2="558" y2="96" marker-end="url(#a11)"/>
+          </g>
+
+          <line x1="16" y1="165" x2="410" y2="165" stroke="var(--reg)" stroke-width="1.6" stroke-dasharray="5 4" opacity="0.8"/>
+          <text x="213" y="185" font-size="12" text-anchor="middle" fill="var(--reg-ink)">設定理由(73)の明示 → 相互理解(74)を深める</text>
+
+          <line x1="16" y1="205" x2="684" y2="205" stroke="var(--ink-faint)" stroke-width="1.4" stroke-dasharray="3 4" opacity="0.6"/>
+          <text x="350" y="225" font-size="12" text-anchor="middle" fill="var(--ink-faint)">各種会議・委員会での意思疎通(77)は活動全体を通じて良好に保つ</text>
+
+          <text x="350" y="248" font-size="11.5" text-anchor="middle" fill="var(--res-ink)" font-weight="600">目標を決めるのは調達先が先、J社は後から希望を乗せる</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 5段階は独立した手続きではなく、下段の2本の軸(理由の共有・日常的な意思疎通)が全体を支えている。段階が進むごとに関係の呼び方が「取引先」から「パートナー」へと変わっていく点も、この設問の主題。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(71)(72)</span><h2>目標は調達先が先に立てる</h2></div>
+    <p>改善活動は<b>調達先と協働</b>して進めるのが基本線になる。ここでのポイントは順番で、まず調達先が自律的に改善目標を検討し、そこにJ社側の<b>希望</b>を加味して、双方が納得できる目標に仕上げていく。J社が目標を一方的に決めて調達先に課す形ではない。</p>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(71)</span> 協働</span>
+      <span class="answer"><span class="qno">(72)</span> 希望</span>
+    </div>
+
+    <div class="callout warn"><b>取り違えやすい点:</b> 「協働」を「競合」や「競合関係」と読み違えると、以降の文脈(役割分担・改善の有効性)と噛み合わなくなる。調達先とJ社は改善に向けて同じ方向を向く関係であって、利害がぶつかる関係ではない。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(73)(74)</span><h2>理由を明示して、認識をそろえる</h2></div>
+    <p>目標を立てた後は、改善事項や目標レベルをなぜそう設定したのか、その<b>設定理由</b>をお互いに明示する段階に移る。理由を共有することで、目標に対する認識を両者で一致させる。さらに、その目標が顧客要求事項にどう影響するかを説明することで、<b>相互理解</b>を一段深めていく。</p>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(73)</span> 設定理由</span>
+      <span class="answer"><span class="qno">(74)</span> 相互理解</span>
+    </div>
+
+    <div class="callout"><b>キーワード:</b> 「認識を一致」させるのが(73)、「顧客要求事項への影響を説明して深める」のが(74)。前者は目標そのものについての合意、後者はその先にある背景理解という、2段構えになっている。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(75)</span><h2>不足を補うのは「すり合わせ」</h2></div>
+    <p>調達先に不足している能力を分析したうえで、きめ細かくやり取りしながら調整していく活動を<b>すり合わせ</b>と呼ぶ。一方的に教え込む教育とは異なり、双方でやり取りしながら落としどころを探る点が特徴になる。</p>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(75)</span> すり合わせ</span></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(76)(77)</span><h2>共同のチームと日常のコミュニケーション</h2></div>
+    <p>共同の改善チームや、調達先側のQCサークルなどの<b>小集団改善活動</b>を活用し、現場レベルで改善を進める。あわせて、各種の会議や委員会を通じて<b>意思疎通</b>を良好に保ち、活動が形だけにならないようにする。</p>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(76)</span> 小集団改善活動</span>
+      <span class="answer"><span class="qno">(77)</span> 意思疎通</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(78)</span><h2>フォローアップの先にあるもの</h2></div>
+    <p>役割分担を取り決めたうえでフォローアップ監査を行い、活動を振り返る。ここまでの積み重ねによって一体感が増し、調達先とJ社は単なる取引先ではなく<b>パートナー</b>として信頼関係が強化されていく、というのがこの設問の結び。</p>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(78)</span> パートナー</span></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">対比</span><h2>取り違えやすい語の見分け方</h2></div>
+    <div class="table-wrap">
+      <table>
+        <caption>調達先との改善活動で紛らわしい用語</caption>
+        <thead><tr><th>用語</th><th>ひとことで</th><th>見分けるキーワード</th><th>取り違えやすい相手</th></tr></thead>
+        <tbody>
+          <tr class="row-reg"><td>協働</td><td>役割分担して一緒に改善する関係</td><td>「役割分担」「改善の有効性」</td><td>競合・競合関係(利害が対立する関係)</td></tr>
+          <tr><td>設定理由</td><td>目標をなぜその水準にしたかの説明</td><td>「認識を一致」</td><td>監査証拠(実施結果の裏付け資料)</td></tr>
+          <tr class="row-reg"><td>相互理解</td><td>顧客要求への影響まで踏み込んだ理解</td><td>「顧客要求事項への影響」</td><td>利益相反(むしろ対立を示す語)</td></tr>
+          <tr><td>すり合わせ</td><td>不足能力を分析し調整するやり取り</td><td>「きめ細かく」「調整」</td><td>教育・訓練(一方向に教え込む活動)</td></tr>
+          <tr class="row-reg"><td>小集団改善活動</td><td>QCサークルなど現場発の改善チーム</td><td>「QCサークル」</td><td>内部統制(管理側からの統制の仕組み)</td></tr>
+          <tr><td>意思疎通</td><td>会議・委員会での日常的な情報共有</td><td>「各種会議・委員会」</td><td>説明責任(結果を対外的に説明する義務)</td></tr>
+          <tr class="row-reg"><td>パートナー</td><td>フォローアップを経て強化された信頼関係</td><td>「一体感」「信頼関係の強化」</td><td>製造物責任・補償(法的な責任の話)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span><b>目標は調達先が先に立て、J社の希望は後から乗せる。</b> 主従関係ではなく、自律性を尊重したうえでの協働という順番を覚えておく。</span></div>
+      <div class="step"><span class="mark">2</span><span><b>「理由の共有」と「日常のやり取り」は別の役割を持つ。</b> 設定理由の明示は目標そのものへの合意、意思疎通は活動全体を支える継続的なコミュニケーション。</span></div>
+      <div class="step"><span class="mark">3</span><span><b>すり合わせと教育・訓練は別物。</b> すり合わせは双方向の調整、教育・訓練は一方向の育成。どちらも改善活動には出てくるが、意味する行為が違う。</span></div>
+      <div class="step"><span class="mark">4</span><span><b>活動の到達点は「パートナー」という関係そのもの。</b> 単発の改善提案で終わらせず、フォローアップを重ねて信頼関係を積み上げていく設計になっている。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第42回 問11 / 調達先との改善活動</span>
+    <span>目標設定 → すり合わせ → 共同改善 → フォローアップ → パートナー</span>
+  </footer>
+
+</div>

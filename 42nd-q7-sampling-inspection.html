@@ -1,0 +1,279 @@
+<title>第42回 問7 計数規準型一回抜取検査</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+.answer.wrong{background:var(--wrong-soft);border-color:var(--wrong);}
+.answer.wrong .qno{color:var(--wrong);}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+.callout p{margin:0;max-width:none;color:inherit;font-size:inherit;}
+.callout p + p{margin-top:8px;}
+
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;align-self:flex-start;}
+.back-link:hover{color:var(--reg-ink);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <a class="back-link" href="index.html">← 目次に戻る</a>
+
+  <header class="hero">
+    <span class="kicker">QC検定2級 過去問解説 / 第42回 問7</span>
+    <h1>p0とp1、上限と下限が入れ替わって見える理由</h1>
+    <p class="lede">計数規準型一回抜取検査(JIS Z 9002)は、部品を買う側と売る側、それぞれの言い分を数値(p0, p1, α, β)に落とし込んで、双方が納得できる抜取方式(サンプルサイズnと合格判定個数c)を表から選ぶ仕組み。p0は数値としては小さいのに「上限」、p1は数値としては大きいのに「下限」と呼ばれる点でつまずきやすく、抜取検査表の矢印の読み方も独特の作法がある。</p>
+  </header>
+
+  <div class="callout info">
+    <p>過去問そのものは掲載していません。お手元の問題冊子と合わせて読む前提です。</p>
+    <p>基準解答の公開前(2026年9月27日時点)に作成した暫定の解説です。基準解答と異なる場合は更新します。</p>
+  </div>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">導入</span><h2>p0・p1・α・βの意味と、出荷側・受取側の対応</h2></div>
+    <p>計数規準型一回抜取検査は、ロットを売る側(出荷側)と買う側(受取側)の両方が納得できるように、あらかじめ「合格させたい品質の水準」と「不合格にしたい品質の水準」を協議して決め、それぞれの言い分が一定の確率までしか損なわれないように抜取方式を設計する検査。4つの記号がそれぞれ誰の何を守っているかを整理すると次のようになる。</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>表1 p0・p1・α・βの役割</caption>
+        <thead><tr><th>記号</th><th>誰の保護か</th><th>意味</th></tr></thead>
+        <tbody>
+          <tr class="row-reg"><td>p0</td><td>出荷側(売り手)</td><td>「この不適合品率以下ならなるべく合格にしてほしい」という水準の<b>上限</b>。これより品質が良いロットは高い確率で合格にする。</td></tr>
+          <tr class="row-res"><td>p1</td><td>受取側(買い手)</td><td>「この不適合品率以上ならなるべく不合格にしてほしい」という水準の<b>下限</b>。これより品質が悪いロットは高い確率で不合格にする。</td></tr>
+          <tr><td>α(生産者危険)</td><td>出荷側</td><td>p0程度の良いロットなのに、抜取検査でたまたま不合格になってしまう確率。JIS Z 9002ではおよそ0.05。</td></tr>
+          <tr><td>β(消費者危険)</td><td>受取側</td><td>p1程度の悪いロットなのに、抜取検査でたまたま合格になってしまう確率。JIS Z 9002ではおよそ0.10。</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn"><b>上限・下限が入れ替わって見える理由:</b> p0はp1より小さい数値なのに「上限」、p1のほうが大きい数値なのに「下限」と呼ばれるため混同しやすい。実際には、p0は「合格させたい良品質の範囲」を上から区切る境界(これを超えたら困る)であり、p1は「不合格にしたい不良品質の範囲」を下から区切る境界(これを下回ったら困る)。<b>2つの範囲は不適合品率の軸を別の方向から挟み込んでおり</b>、p0とp1の間(p0 &lt; p &lt; p1)はどちらとも言い切れないグレーゾーンとして残る。</div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 300" role="img" aria-label="OC曲線上にp0とp1を取り、p0での合格確率が1-α、p1での合格確率がβになることを示した図">
+          <line x1="70" y1="20" x2="70" y2="250" stroke="currentColor" stroke-width="1.2" opacity="0.6"/>
+          <line x1="70" y1="250" x2="600" y2="250" stroke="currentColor" stroke-width="1.2" opacity="0.6"/>
+          <text x="45" y="34" font-size="11" text-anchor="end" fill="currentColor" opacity="0.75">1.0</text>
+          <text x="45" y="254" font-size="11" text-anchor="end" fill="currentColor" opacity="0.75">0</text>
+          <text x="75" y="18" font-size="12" fill="currentColor" font-weight="600">L(p)：ロットが合格する確率</text>
+          <text x="600" y="272" font-size="12" text-anchor="end" fill="currentColor" font-weight="600">p：ロットの不適合品率</text>
+
+          <path d="M 90 34 C 160 34, 195 36, 230 41 C 300 55, 350 140, 420 228 C 480 240, 540 244, 580 246" fill="none" stroke="var(--reg)" stroke-width="2.4"/>
+
+          <line x1="230" y1="250" x2="230" y2="41" stroke="var(--res)" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <line x1="70" y1="41" x2="230" y2="41" stroke="var(--res)" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <line x1="70" y1="30" x2="230" y2="30" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3" opacity="0.4"/>
+          <circle cx="230" cy="41" r="4" fill="var(--res)"/>
+          <text x="230" y="266" font-size="12" text-anchor="middle" fill="var(--res-ink)" font-weight="600">p0</text>
+          <text x="60" y="45" font-size="11" text-anchor="end" fill="var(--res-ink)">1−α</text>
+          <line x1="245" y1="30" x2="245" y2="41" stroke="var(--res-ink)" stroke-width="1.2"/>
+          <text x="252" y="40" font-size="11" fill="var(--res-ink)">α</text>
+
+          <line x1="420" y1="250" x2="420" y2="228" stroke="var(--reg-ink)" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <line x1="70" y1="228" x2="420" y2="228" stroke="var(--reg-ink)" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <circle cx="420" cy="228" r="4" fill="var(--reg-ink)"/>
+          <text x="420" y="266" font-size="12" text-anchor="middle" fill="var(--reg-ink)" font-weight="600">p1</text>
+          <text x="60" y="232" font-size="11" text-anchor="end" fill="var(--reg-ink)">β</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 横軸はロットの不適合品率p、縦軸はその抜取方式でロットが合格する確率L(p)。p0(良い品質)での合格確率は1−αと高く、p1(悪い品質)での合格確率はβと低い。抜取方式(n, c)を選ぶことは、この曲線がp0とp1のどちらの点も通るように<b>曲線の形そのものを選ぶ</b>ことに等しい。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP</span><h2>抜取検査表の読み方</h2></div>
+    <p>JIS Z 9002の抜取検査表は、p0とp1の組み合わせごとに、条件を満たす(n, c)の組をあらかじめ計算して並べたもの。行と列の交点をそのまま読めない場合があり、そこに矢印や記号のルールがある。</p>
+
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>表の<b>行</b>には p0 の範囲が、区切りの細かい段階で並んでいる。</span></div>
+      <div class="step"><span class="mark">2</span><span>表の<b>列</b>には p1 の範囲が、同じように段階で並んでいる。</span></div>
+      <div class="step"><span class="mark">3</span><span>p0 の行と p1 の列が交わるマスを探す。マスの中身は「(n, c)の組」「矢印(↓・←・→)」「*」のいずれか。</span></div>
+      <div class="step"><span class="mark">4</span><span>マスに(n, c)が直接書かれていれば、それがそのまま使う抜取方式。</span></div>
+      <div class="step"><span class="mark">5</span><span>マスに矢印が書かれている場合は、<b>矢印が指す方向へマスを1つずらし</b>、そこに書かれた(n, c)を採用する。↓なら1行下、←/→なら1列左/右の<b>同じ行(または列)</b>を読む。</span></div>
+      <div class="step"><span class="mark">6</span><span>マスに<b>*</b>が書かれている場合は、そのp0とp1の組み合わせでは実用的な(n, c)がこの表の範囲では決まらないことを意味し、抜取検査設計補助表(別表)を使って個別に設計する。</span></div>
+      <div class="step"><span class="mark">7</span><span>得られたnだけ試料を抜き取り、見つかった不適合品数をcと比較する。<b>c以下なら合格、cを超えれば不合格</b>と判定する。</span></div>
+    </div>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 300" role="img" aria-label="抜取検査表で矢印にぶつかったときに1行下を読みに行く様子を示した模式図。数値は説明用の例。">
+          <text x="320" y="20" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">抜取検査表の読み方（模式図・数値は例）</text>
+
+          <text x="380" y="42" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.8">p1 の列</text>
+          <text x="90" y="150" font-size="12" text-anchor="middle" fill="currentColor" opacity="0.8" transform="rotate(-90 90 150)">p0 の行</text>
+
+          <text x="240" y="58" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.7">p1 一段階小さい</text>
+          <text x="380" y="58" font-size="11.5" text-anchor="middle" fill="var(--res-ink)" font-weight="600">p1 = 8.0%</text>
+          <text x="520" y="58" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.7">p1 一段階大きい</text>
+
+          <text x="168" y="95" font-size="11.5" text-anchor="end" fill="currentColor" opacity="0.7">p0 一段階小さい</text>
+          <text x="168" y="155" font-size="11.5" text-anchor="end" fill="var(--res-ink)" font-weight="600">p0 = 1.0%</text>
+          <text x="168" y="215" font-size="11.5" text-anchor="end" fill="currentColor" opacity="0.7">p0 一段階大きい</text>
+
+          <g stroke="var(--border)" fill="var(--surface)">
+            <rect x="170" y="65" width="140" height="55"/>
+            <rect x="310" y="65" width="140" height="55"/>
+            <rect x="450" y="65" width="140" height="55"/>
+            <rect x="170" y="120" width="140" height="55" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.6"/>
+            <rect x="310" y="120" width="140" height="55" fill="var(--res-soft)" stroke="var(--res)" stroke-width="1.6"/>
+            <rect x="450" y="120" width="140" height="55"/>
+            <rect x="170" y="175" width="140" height="55"/>
+            <rect x="310" y="175" width="140" height="55" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="2"/>
+            <rect x="450" y="175" width="140" height="55"/>
+          </g>
+
+          <text x="240" y="152" font-size="14" text-anchor="middle" fill="var(--res-ink)">*</text>
+          <text x="240" y="168" font-size="10" text-anchor="middle" fill="currentColor" opacity="0.7">例: 別表で個別設計</text>
+
+          <text x="380" y="146" font-size="20" text-anchor="middle" fill="var(--res-ink)" font-weight="700">↓</text>
+          <text x="380" y="164" font-size="10" text-anchor="middle" fill="currentColor" opacity="0.7">交点そのものには値がない</text>
+
+          <text x="380" y="198" font-size="15" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">n = 60</text>
+          <text x="380" y="216" font-size="15" text-anchor="middle" fill="var(--reg-ink)" font-weight="700">c = 2</text>
+
+          <text x="520" y="152" font-size="20" text-anchor="middle" fill="currentColor" opacity="0.55">←</text>
+          <text x="520" y="168" font-size="10" text-anchor="middle" fill="currentColor" opacity="0.7">例: 1列左を読む</text>
+
+          <line x1="380" y1="120" x2="380" y2="175" stroke="var(--res-ink)" stroke-width="2" marker-end="url(#arrowhead-q7)"/>
+          <defs>
+            <marker id="arrowhead-q7" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="var(--res-ink)"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+      <figcaption><b>図2.</b> p0=1.0%の行とp1=8.0%の列が交わるマスには矢印「↓」が入っていて、そのマス自体には(n, c)がない。矢印の指す1つ下の行・同じ列を読むと n=60, c=2 が見つかる。* は「この表の範囲では方式が決まらない」という意味で、その場合は抜取検査設計補助表で個別に設計する。行・列の区切り値そのものはJISの表を参照(ここでは読み方の説明のため模式的に示した)。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">適用</span><h2>p0=1.0%、p1=8.0%を表にあてはめる</h2></div>
+    <p>出荷側の希望する不適合品率の上限 p0=1.0%、受取側が不合格にしたい不適合品率の下限 p1=8.0% が与えられた場合を、STEPの手順どおりに追ってみる。</p>
+
+    <div class="calc">
+      <span class="label">表を読む手順</span>
+      <span class="line">① p0=1.0% を含む行を探す</span>
+      <span class="line">② p1=8.0% を含む列を探す</span>
+      <span class="line">③ 交点のマスには矢印「↓」が入っている(交点自体に(n, c)はない)</span>
+      <span class="line">④ 矢印の指す1つ下の行・同じ列を読む → n=60, c=2</span>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">抜取方式</span>n = 60、c = 2</span>
+    </div>
+
+    <p>この抜取方式に従うと、ロットから60個を抜き取り、その中の不適合品数を数える。仮に見つかった不適合品が2個であれば、c=2以下なので合格と判定する。不適合品が3個以上見つかれば、cを超えるため不合格と判定する。</p>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">判定</span>不適合品数 2 ≤ c(=2) → 合格</span>
+    </div>
+
+    <div class="callout"><b>ここでの矢印の意味を取り違えやすい点:</b> 「↓」は<b>1行下・同じ列</b>を読む合図であって、1つ隣の列を読む合図ではない。行(p0側)と列(p1側)のどちらを動かす矢印なのかを、矢印の向きから正しく読み取る必要がある。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>p0は<b>出荷側</b>の保護で「合格させたい品質」の<b>上限</b>、p1は<b>受取側</b>の保護で「不合格にしたい品質」の<b>下限</b>。数値の大小と「上限・下限」の呼び名が逆に感じても、守っている範囲の向きが違うだけで矛盾しない。</span></div>
+      <div class="step"><span class="mark">2</span><span>α(生産者危険)はp0の良いロットを誤って落とす確率、β(消費者危険)はp1の悪いロットを誤って通す確率。どちらも「良い/悪いロットなのに逆の判定をしてしまう確率」という共通の形をしている。</span></div>
+      <div class="step"><span class="mark">3</span><span>抜取検査表は行=p0、列=p1。交点に矢印があれば<b>その方向に1マスずらして</b>読み、*があれば別表で個別に設計する。</span></div>
+      <div class="step"><span class="mark">4</span><span>最終判定は常に同じ形: <b>抜取ったサンプルの不適合品数がc以下なら合格、cを超えれば不合格</b>。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第42回 問7 / 計数規準型一回抜取検査</span>
+    <span>p0=1.0% ・ p1=8.0% ・ n=60 ・ c=2</span>
+  </footer>
+
+</div>

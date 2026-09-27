@@ -1,0 +1,296 @@
+<title>第42回 問1 超幾何分布</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.data-table td.blank{font-family:'JetBrains Mono',monospace;color:var(--res-ink);font-weight:700;background:var(--res-soft);}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+.callout p{margin:0;}
+.callout p + p{margin-top:8px;}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 過去問解説 / 第42回 問1</span>
+    <h1>抜き取ったら戻さない — 超幾何分布の分散はなぜ二項分布より小さくなるのか</h1>
+    <p class="lede">ロットの中から不適合品を非復元(抜き取ったものを戻さない)で抜き取るとき、サンプル中の不適合品数がしたがう確率分布が超幾何分布である。期待値の公式は二項分布と同じ形になるが、分散には「有限母集団修正」という項が掛かり、二項分布より必ず小さくなる。この問題では確率分布表の空欄を埋めながら、その構造を数値で確認する。</p>
+  </header>
+
+  <div class="callout info">
+    <p>過去問そのものは掲載していません。お手元の問題冊子と合わせて読む前提です。</p>
+    <p>基準解答の公開前(2026年9月27日時点)に作成した暫定の解説です。基準解答と異なる場合は更新します。</p>
+  </div>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">問題</span><h2>与えられた条件</h2></div>
+    <p>ロットの大きさ N=18、そのうち不適合品 r=4。このロットからランダムに n=5 個を非復元で抜き取ったとき、サンプル中に含まれる不適合品の個数を x とする。x は超幾何分布にしたがう。</p>
+
+    <div class="calc">
+      <span class="label">超幾何分布の確率関数</span>
+      <span class="line">f(x) = C(r, x)・C(N−r, n−x) / C(N, n)　　(0 ≤ x ≤ t、t は n と r の小さいほう)</span>
+      <span class="line">N=18, r=4, n=5 なので t=4。 C(18,5) = 8568</span>
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <caption>表1.1 x の確率分布(空欄が(1)(2))</caption>
+        <thead><tr><th>x</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>合計</th></tr></thead>
+        <tbody>
+          <tr><td>P(x)</td><td class="num">0.2337</td><td class="num">0.4673</td><td class="num">0.2549</td><td class="blank">(1)</td><td class="blank">(2)</td><td class="num">0.0000</td><td class="sum">1.0000</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>x=5(サンプル5個すべてが不適合品)は、そもそも不適合品が r=4 個しかロットにないので起こり得ず、P(5)=0.0000 になる。これは超幾何分布に特有の制約で、二項分布にはない。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 1</span><h2>確率の空欄を埋める — (1)(2)</h2></div>
+    <p>公式にそのまま x=3, x=4 を代入する。C(4,3)=4、C(4,4)=1、C(14,2)=91、C(14,1)=14 を使う。</p>
+
+    <div class="calc">
+      <span class="label">P(3) の計算</span>
+      <span class="line">P(3) = C(4,3)・C(14,2) / C(18,5) = 4 × 91 / 8568 = 364 / 8568</span>
+      <span class="result">P(3) = 0.0425</span>
+    </div>
+    <div class="calc">
+      <span class="label">P(4) の計算</span>
+      <span class="line">P(4) = C(4,4)・C(14,1) / C(18,5) = 1 × 14 / 8568 = 14 / 8568</span>
+      <span class="result">P(4) = 0.0016</span>
+    </div>
+
+    <div class="answer-row">
+      <span class="answer"><span class="qno">(1)</span> イ. 0.0425</span>
+      <span class="answer"><span class="qno">(2)</span> ア. 0.0016</span>
+    </div>
+
+    <div class="callout warn"><b>選択肢の罠:</b> 0.0850 は 0.0425 を2倍した値、0.1275 は 0.0425 の3倍、0.1683 も同種の掛け違いで、いずれも期待値 E(x)=Σx・P(x) の計算で出てくる「x・P(x)」の項(3×0.0425=0.1275 など)を、P(x) そのものと取り違えたときに紛れ込みやすい値である。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 2</span><h2>期待値を求める — (3)</h2></div>
+    <p>E(x) = Σ x・P(x) を x=0〜5 まで足し合わせる。x=0 の項は 0 なので省略できる。</p>
+
+    <div class="calc">
+      <span class="label">E(x) の計算</span>
+      <span class="line">E(x) = 1×0.4673 + 2×0.2549 + 3×0.0425 + 4×0.0016 + 5×0.0000</span>
+      <span class="line">　　= 0.4673 + 0.5098 + 0.1275 + 0.0064</span>
+      <span class="result">E(x) = 1.1110</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(3)</span> オ. 1.1110</span></div>
+
+    <div class="callout info"><b>公式での検算:</b> 超幾何分布の期待値は E(x) = n・r/N という単純な形で求まる。E(x) = 5×4/18 = 20/18 = 1.1111 となり、表の積み上げ計算(1.1110)とほぼ一致する(差は丸め誤差)。この n・r/N は、二項分布 B(n,P) の期待値 nP において P=r/N と置いたものと同じ形である。</div>
+
+    <div class="callout warn"><b>選択肢の罠:</b> 0.7717・0.8813・0.9014・1.1011 が並ぶ。1.1011 は 1.1110 の桁を書き間違えたような値、他は Σx・P(x) の項を一部だけ数えたり、係数(x)を掛け忘れたりした場合に近い値になる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">STEP 3</span><h2>分散を求める — (4)</h2></div>
+    <p>分散は V(x) = E(x²) − {E(x)}² で求める。まず E(x²) = Σ x²・P(x) を計算する。</p>
+
+    <div class="calc">
+      <span class="label">E(x²) の計算</span>
+      <span class="line">E(x²) = 1²×0.4673 + 2²×0.2549 + 3²×0.0425 + 4²×0.0016</span>
+      <span class="line">　　= 0.4673 + 1.0196 + 0.3825 + 0.0256</span>
+      <span class="result">E(x²) = 1.8950</span>
+    </div>
+    <div class="calc">
+      <span class="label">V(x) の計算</span>
+      <span class="line">V(x) = E(x²) − {E(x)}² = 1.8950 − 1.1110² = 1.8950 − 1.2343</span>
+      <span class="result">V(x) = 0.6607</span>
+    </div>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(4)</span> イ. 0.6607</span></div>
+
+    <div class="callout info"><b>公式での検算(有限母集団修正):</b> 超幾何分布の分散は V(x) = n・p(1−p)・(N−n)/(N−1)、ただし p=r/N。ここで p=4/18=2/9 なので、n・p(1−p) = 5×(2/9)×(7/9) = 0.8642。これに (N−n)/(N−1) = 13/17 = 0.7647 を掛けると 0.6609 となり、積み上げ計算(0.6607)とほぼ一致する。この (N−n)/(N−1) が<b>有限母集団修正項</b>で、非復元抽出(抜き取ったら戻さない)であることの効果を表している。</div>
+
+    <div class="callout warn"><b>選択肢の罠:</b> 0.4358・0.8997・1.3353・1.8976 が並ぶ。1.8976 は E(x²)=1.8950 に近い値で、分散を求める際に {E(x)}² を引き忘れ、E(x²) をそのまま分散と取り違えたときに出てきやすい。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">図解</span><h2>超幾何分布と二項分布 — 平均は同じでも裾の広がりが違う</h2></div>
+    <p>もし非復元ではなく復元抽出(毎回戻してから引く)だったなら、x は二項分布 B(5, 2/9) にしたがう。二項分布の期待値も n・p=5×2/9=1.111 で超幾何分布と全く同じになるが、分散は有限母集団修正がかからないぶん大きくなり、確率がより裾広がりに分布する。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 640 330" role="img" aria-label="超幾何分布と、平均が同じ二項分布B(5,2/9)を比較した棒グラフ。超幾何分布はx=1付近に確率が集中し、二項分布より裾が広がらない">
+          <text x="320" y="24" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">平均が同じ1.111でも、超幾何分布の方が中心に集中する</text>
+          <line x1="50" y1="260" x2="610" y2="260" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+
+          <rect x="70" y="157.2" width="30" height="102.8" fill="var(--reg)" opacity="0.9"/>
+          <rect x="110" y="134.8" width="30" height="125.2" fill="var(--res)" opacity="0.9"/>
+          <rect x="160" y="54.4" width="30" height="205.6" fill="var(--reg)" opacity="0.9"/>
+          <rect x="200" y="81.1" width="30" height="178.9" fill="var(--res)" opacity="0.9"/>
+          <rect x="250" y="147.8" width="30" height="112.2" fill="var(--reg)" opacity="0.9"/>
+          <rect x="290" y="157.8" width="30" height="102.2" fill="var(--res)" opacity="0.9"/>
+          <rect x="340" y="241.3" width="30" height="18.7" fill="var(--reg)" opacity="0.9"/>
+          <rect x="380" y="230.8" width="30" height="29.2" fill="var(--res)" opacity="0.9"/>
+          <rect x="430" y="259.3" width="30" height="0.7" fill="var(--reg)" opacity="0.9"/>
+          <rect x="470" y="255.8" width="30" height="4.2" fill="var(--res)" opacity="0.9"/>
+          <rect x="560" y="259.8" width="30" height="0.2" fill="var(--res)" opacity="0.9"/>
+
+          <g font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.85">
+            <text x="85" y="153.2">0.2337</text>
+            <text x="125" y="130.8">0.2846</text>
+            <text x="175" y="50.4">0.4673</text>
+            <text x="215" y="77.1">0.4067</text>
+            <text x="265" y="143.8">0.2549</text>
+            <text x="305" y="153.8">0.2323</text>
+            <text x="355" y="237.3">0.0425</text>
+            <text x="395" y="226.8">0.0664</text>
+          </g>
+
+          <g font-size="12" text-anchor="middle" fill="currentColor" opacity="0.75">
+            <text x="105" y="278">0</text>
+            <text x="195" y="278">1</text>
+            <text x="285" y="278">2</text>
+            <text x="375" y="278">3</text>
+            <text x="465" y="278">4</text>
+            <text x="555" y="278">5</text>
+          </g>
+          <text x="330" y="298" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.6">x(サンプル中の不適合品数)</text>
+
+          <rect x="150" y="308" width="14" height="14" fill="var(--reg)"/>
+          <text x="172" y="319" font-size="12" text-anchor="start" fill="currentColor" opacity="0.85">超幾何分布(非復元, N=18)</text>
+          <rect x="380" y="308" width="14" height="14" fill="var(--res)"/>
+          <text x="402" y="319" font-size="12" text-anchor="start" fill="currentColor" opacity="0.85">二項分布(復元と仮定, p=2/9)</text>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> どちらも期待値は1.111で同じだが、超幾何分布(青緑)の方が x=1 に確率が集中し、両端(x=0やx=3以上)の確率は二項分布(橙)より低い。これが分散 0.6607 < 0.8642(有限修正前の二項分布の分散)という差になって表れる。</figcaption>
+    </figure>
+
+    <div class="callout"><b>N が大きいときは二項分布で近似できる:</b> 有限母集団修正項 (N−n)/(N−1) は、N が n に比べて十分大きいと 1 に近づく。ロットが大きく、そこから抜き取る個数が少ない場合には超幾何分布は二項分布にほぼ一致する。今回のように N=18, n=5 のようにロットが小さいと、この修正の効果が数値にはっきり表れる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">分析</span><h2>選択肢の正体</h2></div>
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>選択肢が対応する「別の計算」</caption>
+        <thead><tr><th>選択肢</th><th>判定</th><th>正体</th></tr></thead>
+        <tbody>
+          <tr><td class="good">イ. 0.0425</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (1)</span></td><td>P(3) = C(4,3)C(14,2)/C(18,5)</td></tr>
+          <tr><td class="bad">0.0850</td><td>誤</td><td>0.0425 の2倍。x・P(x) の項(2×0.0425)と混同</td></tr>
+          <tr><td class="bad">0.1275</td><td>誤</td><td>0.0425 の3倍。E(x) の計算に出てくる 3×0.0425 の項</td></tr>
+          <tr><td class="good">ア. 0.0016</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (2)</span></td><td>P(4) = C(4,4)C(14,1)/C(18,5)</td></tr>
+          <tr><td class="good">オ. 1.1110</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (3)</span></td><td>E(x) = Σx・P(x)、公式 n・r/N=1.1111 とも一致</td></tr>
+          <tr><td class="bad">1.1011</td><td>誤</td><td>1.1110 の桁の並び替えに近い誤り</td></tr>
+          <tr><td class="good">イ. 0.6607</td><td><span style="color:var(--reg-ink);font-weight:700;">正解 (4)</span></td><td>V(x) = E(x²) − {E(x)}²、公式でも0.6609とほぼ一致</td></tr>
+          <tr><td class="bad">1.8976</td><td>誤</td><td>E(x²)=1.8950 に近い値。{E(x)}² を引き忘れた誤り</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">要点</span><h2>この問題から持ち帰ること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span>超幾何分布は<b>非復元抽出</b>のときにサンプル中の不適合品数がしたがう分布。確率関数は f(x) = C(r,x)C(N−r,n−x)/C(N,n)。</span></div>
+      <div class="step"><span class="mark">2</span><span>期待値は E(x) = n・r/N で、二項分布の nP と同じ形(p=r/N とみなせる)。</span></div>
+      <div class="step"><span class="mark">3</span><span>分散は V(x) = n・p(1−p)・(N−n)/(N−1)。<b>(N−n)/(N−1) が有限母集団修正</b>で、これが超幾何分布と二項分布の違いの本体。修正項は必ず1以下なので、超幾何分布の分散は同じ n, p の二項分布より小さい。</span></div>
+      <div class="step"><span class="mark">4</span><span>N が n に比べて十分大きければ (N−n)/(N−1)≒1 となり、超幾何分布は二項分布で近似できる。</span></div>
+      <div class="step"><span class="mark">5</span><span>期待値・分散を確率分布表から積み上げ計算したら、必ず公式(n・r/N、有限修正つきの分散式)で検算する。両者が一致することで計算ミスに気づける。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第42回 問1 / 超幾何分布</span>
+    <span>E(x)=1.111 ・ V(x)=0.6607 ・ C(18,5)=8568</span>
+  </footer>
+
+</div>

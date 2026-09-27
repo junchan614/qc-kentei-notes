@@ -1,0 +1,248 @@
+<title>第42回 問8 品質管理の考え方</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7EDEB;
+  --ink:#16232A; --ink-soft:#4B5D60; --ink-faint:#7C8D8F;
+  --border:#C9D6D2; --border-strong:#AABAB5;
+  --reg:#1C7C8C; --reg-soft:#DCEEF0; --reg-ink:#0F5B68;
+  --res:#C97A2B; --res-soft:#F5E4D0; --res-ink:#8F5116;
+  --wrong:#B04A44; --wrong-soft:#F6E3E1;
+  --shadow: 0 1px 2px rgba(22,35,42,0.06), 0 8px 24px -12px rgba(22,35,42,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+    --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+    --border:#2E3C3A; --border-strong:#3D4E4A;
+    --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+    --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+    --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1517; --surface:#161F1F; --surface-2:#1D2726;
+  --ink:#E7EFEC; --ink-soft:#A9BAB6; --ink-faint:#78908B;
+  --border:#2E3C3A; --border-strong:#3D4E4A;
+  --reg:#57C6D8; --reg-soft:rgba(87,198,216,0.14); --reg-ink:#8FDCE8;
+  --res:#E3A15B; --res-soft:rgba(227,161,91,0.14); --res-ink:#F0C08A;
+  --wrong:#E08A84; --wrong-soft:rgba(224,138,132,0.13);
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Sans',sans-serif;line-height:1.8;font-size:16px;}
+.sheet{max-width:880px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:56px;}
+h1,h2,h3{font-family:'Zen Old Mincho',serif;text-wrap:balance;color:var(--ink);margin:0;}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--reg-ink);font-weight:600;}
+.back-link{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-faint);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--reg-ink);}
+header.hero{display:flex;flex-direction:column;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+header.hero h1{font-size:clamp(28px,4vw,38px);font-weight:600;}
+header.hero p.lede{color:var(--ink-soft);font-size:16px;max-width:60ch;}
+
+section{display:flex;flex-direction:column;gap:18px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--reg-ink);font-weight:600;min-width:52px;}
+.sec-head h2{font-size:22px;font-weight:600;}
+p{margin:0;color:var(--ink-soft);max-width:68ch;}
+p b{color:var(--ink);}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+figure .fig-wrap{overflow-x:auto;}
+svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+figcaption{font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--border);padding-top:10px;}
+figcaption b{color:var(--ink-soft);}
+svg text{font-family:'JetBrains Mono','Zen Kaku Gothic New',monospace,sans-serif;}
+
+.mono{font-family:'JetBrains Mono',monospace;}
+.calc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--reg);border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:6px;}
+.calc .label{font-size:13px;color:var(--ink-faint);}
+.calc .line{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--ink);overflow-x:auto;}
+.calc .result{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--reg-ink);}
+
+.answer{display:inline-flex;align-items:baseline;gap:8px;background:var(--reg-soft);border:1px solid var(--reg);border-radius:8px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.answer .qno{font-size:12px;color:var(--reg-ink);}
+.answer-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--surface);font-variant-numeric:tabular-nums;}
+caption{text-align:left;font-family:'Zen Old Mincho',serif;font-size:15px;padding:14px 18px;color:var(--ink);border-bottom:1px solid var(--border);background:var(--surface-2);}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:14.5px;}
+thead th{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-reg td{border-left:3px solid var(--reg);}
+tbody tr.row-res td{border-left:3px solid var(--res);}
+tbody tr.row-total td{border-left:3px solid var(--border-strong);background:var(--surface-2);font-weight:600;}
+td .num{font-family:'JetBrains Mono',monospace;color:var(--ink);}
+td .sub{font-family:'JetBrains Mono',monospace;color:var(--ink-faint);font-size:12.5px;margin-top:3px;}
+td .hit{color:var(--reg-ink);font-weight:700;}
+.data-table td, .data-table th{text-align:center;}
+.data-table td:first-child, .data-table th:first-child{text-align:left;font-weight:600;}
+.data-table td.sum{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.bad{color:var(--wrong);font-family:'JetBrains Mono',monospace;font-weight:600;}
+.trap-table td.good{color:var(--reg-ink);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+.step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step .mark{font-family:'JetBrains Mono',monospace;color:var(--reg);font-weight:700;}
+.step span{font-size:14.5px;color:var(--ink-soft);}
+.step span b{color:var(--ink);}
+
+.callout{background:var(--res-soft);border:1px solid var(--border);border-left:3px solid var(--res);border-radius:10px;padding:14px 18px;font-size:14.5px;color:var(--ink-soft);}
+.callout b{color:var(--ink);}
+.callout.info{background:var(--reg-soft);border-left-color:var(--reg);}
+.callout.warn{background:var(--wrong-soft);border-left-color:var(--wrong);}
+
+footer{border-top:1px solid var(--border);padding-top:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+
+<div class="sheet">
+
+  <header class="hero">
+    <a class="back-link" href="index.html">← 目次に戻る</a>
+    <span class="kicker">QC検定2級 過去問解説 / 第42回 問8</span>
+    <h1>結果ではなく、狙いとやり方を見る―6つの現場に共通する物差し</h1>
+    <p class="lede">業種も場面もばらばらな6つの短い事例が並ぶが、問われているのは同じ物差し。目の前の結果に一喜一憂せず、<b>何のためにやるか(目的)</b>・<b>どうやるか(プロセス・標準)</b>・<b>何を根拠にするか(事実)</b>・<b>誰が動くか(人)</b>・<b>何を直すか(原因)</b>のどこに手を入れた場面なのかを、事例文の言葉から言い当てる問題。</p>
+  </header>
+
+  <div class="callout info">
+    <b>読む前に:</b> このページは過去問そのものは掲載していない。お手元の問題冊子と合わせて読む前提で書いている。また、基準解答の公開前(2026年9月27日試験当日時点)に作成した暫定の解説であり、基準解答と異なる場合は内容を更新する。
+  </div>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(50)</span><h2>目的志向 ― 要望にすぐ応じず、まず社内で確認した理由</h2></div>
+    <p>金属加工会社の営業部に、新商品について顧客から仕様変更の要望が届いた。営業部はすぐに応じるのではなく、開発部やパートナー企業と、変更の規模や難易度を踏まえて品質評価にどれだけ時間が必要かをすり合わせたうえで、最終的には顧客の要望どおりに納品した。</p>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(50)</span> 目的志向</span></div>
+
+    <div class="callout info"><b>決め手:</b> 「品質評価に必要な時間を確保した」という一節。目の前の要望にそのまま飛びつくのではなく、<b>何のためにこの仕事をするのかという狙いに一度立ち返り</b>、そのために必要な手順(社内調整・時間確保)を踏んでから動いている点が、目的志向という考え方の核になる。</div>
+
+    <div class="callout warn"><b>ここは判断に自信が低い:</b> この場面は「後工程はお客様(次工程や関係者を顧客とみなして応対する考え方)」でも一応の説明がつくため、事例文だけでは決め手に欠ける。ここでは「要望にすぐ応じず、狙いに立ち返って手順を踏んだ」という進め方の側面を重視して目的志向を採用したが、基準解答の公開後に確認したい箇所。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(51)</span><h2>プロセス重視 ― 結果ではなくやり方を調べさせた職長</h2></div>
+    <p>食品加工工程では、ラインによって不適合の発生頻度に差が出ていた。職長は不適合が多い・少ないという結果そのものを叱ったり褒めたりするのではなく、ラインごとの作業のやり方・作業方法を調査・評価するよう指示した。</p>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(51)</span> プロセス重視</span></div>
+
+    <div class="callout info"><b>決め手:</b> 「結果を責めず、作業のやり方を調べさせた」という指示そのもの。良い結果は良い過程(プロセス)から生まれるという前提に立ち、結果でなく過程に着目する考え方。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(52)</span><h2>標準化 ― 増産でばらついた味を土台からそろえる</h2></div>
+    <p>和菓子店で増産に踏み切ったところ、職人ごとに味付けや硬さがばらつくようになった。対策として、基本となる材料の量と配合方法をあらかじめ最適化して統一し、最後の仕上げの部分だけを職人の技に委ねるようにした。</p>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(52)</span> 標準化</span></div>
+
+    <div class="callout info"><b>決め手:</b> 「材料の量と配合方法を最適化」して、誰が作っても同じ土台になるように固定した部分。ばらつきの原因になっていた工程を手順として定め、繰り返し使えるようにするのが標準化。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(53)</span><h2>事実に基づく管理 ― 印象ではなく時間分析で現状を確認</h2></div>
+    <p>保険会社で、外回り営業へのタブレット導入が提案された。営業部は導入の是非を印象だけで判断せず、勤務時間の内訳を分析し、移動が全体の40%以上、説明が30%程度を占めるといった実測データで現状を確認したうえで検討した。</p>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(53)</span> 事実に基づく管理</span></div>
+
+    <div class="callout info"><b>決め手:</b> 「時間分析」という具体的な数値の裏付けで現状を語っている点。勘や経験ではなく、測ったデータをもとに判断する考え方。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(54)</span><h2>人間性尊重 ― 小集団活動が「自己実現の場」になった理由</h2></div>
+    <p>精密加工会社で小集団活動を導入したところ、参加した従業員が自分の能力を発揮できる場、自己実現の機会として活動をとらえるようになり、活動全体が活発化した。</p>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(54)</span> 人間性尊重</span></div>
+
+    <div class="callout info"><b>決め手:</b> 「自己の能力を発揮する場」「自己実現の機会」という表現。人が持っている力を発揮し、自ら成長を実感できる場をつくるという考え方に対応する。</div>
+
+    <div class="callout warn"><b>ここもやや自信が低い:</b> 語群には「全員参加(立場を問わず全員が活動に関わること)」も並んでいて紛らわしい。今回の記述の主眼は「立場に関係なく全員が参加した」ことではなく「参加した個人が自己実現を実感した」ことにあるため人間性尊重を採用しているが、こちらも基準解答での確認が必要な箇所。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">(55)</span><h2>再発防止 ― 異音クレームの原因になった「仕組み」を直す</h2></div>
+    <p>電気モーターで、軸の偏摩耗による異音のクレームが発生した。調査の結果、入熱温度の低下による硬度不足が原因と判明し、対策として、入熱温度が低下してしまう原因になっていた仕事のやり方・仕組み自体を見直す改善を行った。</p>
+
+    <div class="answer-row"><span class="answer"><span class="qno">(55)</span> 再発防止</span></div>
+
+    <div class="callout info"><b>決め手:</b> 「すでに起きたクレームの原因を特定し、その原因を生んだ仕組みを直した」という時系列。まだ起きていない問題を先回りして防ぐ未然防止とは順番が逆になる。</div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">対比</span><h2>取り違えやすい用語の見分け方</h2></div>
+    <p>語群には似た響き・似た場面で使われる言葉が並んでいる。「何を見ているか」で区別すると迷いにくい。</p>
+
+    <div class="table-wrap">
+      <table class="trap-table">
+        <caption>問8の語群にある紛らわしい用語の対比</caption>
+        <thead><tr><th>用語</th><th>ひとことで</th><th>見分けるキーワード</th><th>取り違えやすい相手</th></tr></thead>
+        <tbody>
+          <tr><td class="good">目的志向</td><td>手段が目的化しないよう、常に「何のためか」に立ち返る</td><td>要望への対応を、狙いを確認してから進める場面</td><td>後工程はお客様</td></tr>
+          <tr><td>後工程はお客様</td><td>次の工程や関係者を顧客とみなして対応する</td><td>部門間・工程間の橋渡しが主題の場面</td><td>目的志向</td></tr>
+          <tr><td class="good">プロセス重視</td><td>結果でなく、そこに至る過程・やり方に着目する</td><td>「結果を責めず、やり方を調べよ」という指示</td><td>三現主義</td></tr>
+          <tr><td>三現主義</td><td>現場・現物・現実を自分の目で確かめる</td><td>現地に行って実物・実態を見る場面</td><td>事実に基づく管理</td></tr>
+          <tr><td class="good">事実に基づく管理</td><td>勘や経験ではなく、データ・事実で判断する</td><td>時間分析のような具体的な数値で語る場面</td><td>三現主義</td></tr>
+          <tr><td class="good">標準化</td><td>誰がやっても同じ結果になるよう手順を統一する</td><td>ばらつきの原因を、手順の違いとして固定し直す場面</td><td>見える化</td></tr>
+          <tr><td>見える化</td><td>状態や問題を目に見える形にして共有する</td><td>「見える化」「掲示」「一覧表示」といった表現</td><td>標準化</td></tr>
+          <tr><td class="good">人間性尊重</td><td>従業員の自己実現・能力発揮を重んじる</td><td>「自己実現の機会」「能力を発揮する場」という表現</td><td>全員参加</td></tr>
+          <tr><td>全員参加</td><td>立場や役職に関係なく、全員が改善活動に関わる</td><td>「全部門で」「立場を問わず」という表現</td><td>人間性尊重</td></tr>
+          <tr><td class="good">再発防止</td><td>すでに起きた不具合の原因(仕組み)を直し、二度と起こさない</td><td>「原因が判明した」「仕組みを見直した」という時系列</td><td>未然防止・応急対策</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">図解</span><h2>応急対策・再発防止・未然防止の3段階</h2></div>
+    <p>(55)の再発防止は、この3段階のどこに位置するかを押さえると迷いにくい。</p>
+
+    <figure>
+      <div class="fig-wrap">
+        <svg viewBox="0 0 660 220" role="img" aria-label="不具合対応の3段階。左から応急対策、再発防止、未然防止の順に並び、時間軸は左(すでに起きた不具合への対応)から右(まだ起きていない問題を防ぐ)へ進む。今回の事例は再発防止の段階にあたる">
+          <line x1="40" y1="190" x2="620" y2="190" stroke="currentColor" stroke-width="1.2" opacity="0.4"/>
+          <text x="40" y="208" font-size="11.5" fill="currentColor" opacity="0.6">すでに起きた問題への対応</text>
+          <text x="530" y="208" font-size="11.5" fill="currentColor" opacity="0.6" text-anchor="end">まだ起きていない問題を防ぐ</text>
+
+          <rect x="40" y="60" width="160" height="90" rx="10" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.2" opacity="0.9"/>
+          <text x="120" y="95" text-anchor="middle" font-size="14" fill="currentColor" font-weight="600">応急対策</text>
+          <text x="120" y="118" text-anchor="middle" font-size="11.5" fill="currentColor" opacity="0.75">不適合品をまず取り除く</text>
+          <text x="120" y="135" text-anchor="middle" font-size="11.5" fill="currentColor" opacity="0.75">(原因究明の前段階)</text>
+
+          <rect x="250" y="45" width="170" height="120" rx="10" fill="var(--reg-soft)" stroke="var(--reg)" stroke-width="2"/>
+          <text x="335" y="80" text-anchor="middle" font-size="14" fill="var(--reg-ink)" font-weight="700">再発防止</text>
+          <text x="335" y="103" text-anchor="middle" font-size="11.5" fill="var(--reg-ink)">原因になった仕組み・</text>
+          <text x="335" y="120" text-anchor="middle" font-size="11.5" fill="var(--reg-ink)">やり方そのものを直す</text>
+          <text x="335" y="145" text-anchor="middle" font-size="12" fill="var(--reg-ink)" font-weight="700">…(55)の事例</text>
+
+          <rect x="470" y="60" width="150" height="90" rx="10" fill="var(--surface-2)" stroke="currentColor" stroke-width="1.2" opacity="0.9"/>
+          <text x="545" y="95" text-anchor="middle" font-size="14" fill="currentColor" font-weight="600">未然防止</text>
+          <text x="545" y="118" text-anchor="middle" font-size="11.5" fill="currentColor" opacity="0.75">起きる前に、他の製品・</text>
+          <text x="545" y="135" text-anchor="middle" font-size="11.5" fill="currentColor" opacity="0.75">工程にも先回りして防ぐ</text>
+
+          <line x1="200" y1="105" x2="248" y2="105" stroke="currentColor" stroke-width="1.4" opacity="0.6"/>
+          <line x1="420" y1="105" x2="468" y2="105" stroke="currentColor" stroke-width="1.4" opacity="0.6"/>
+        </svg>
+      </div>
+      <figcaption><b>図1.</b> 電気モーターの事例はクレームという「すでに起きた不具合」を発端に、原因の仕組みを直しているので<b>再発防止</b>にあたる。まだ起きていない不具合を先回りして防ぐ未然防止とは、出発点が違う。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">まとめ</span><h2>覚えること</h2></div>
+    <div class="steps">
+      <div class="step"><span class="mark">1</span><span><b>「何を見ているか」で用語を分類する。</b> 目的か・過程(やり方)か・根拠(事実)か・人か・原因かのどこに事例の重心があるかを最初に見極める。</span></div>
+      <div class="step"><span class="mark">2</span><span><b>結果ではなく過程に着目する指示は、まずプロセス重視を疑う。</b> 「結果を責めない」「やり方を調べる」という言い回しが典型的な合図になる。</span></div>
+      <div class="step"><span class="mark">3</span><span><b>標準化は「土台をそろえ、仕上げは残す」形で出てくることが多い。</b> 全部を画一化するのではなく、ばらつきの原因になる部分だけを固定する事例に注意する。</span></div>
+      <div class="step"><span class="mark">4</span><span><b>再発防止と未然防止は時系列で区別する。</b> すでに起きた不具合の原因を直すのが再発防止、まだ起きていない問題を先回りして防ぐのが未然防止。</span></div>
+      <div class="step"><span class="mark">5</span><span><b>目的志向・後工程はお客様、人間性尊重・全員参加のように、事例文だけでは決め手が弱いペアもある。</b> 自信が持てない場合は根拠になった一文をメモに残し、基準解答が出たら必ず見直す。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>QC検定2級 学習ノート — 第42回 問8 / 品質管理の考え方</span>
+    <span>暫定解説・基準解答公開前</span>
+  </footer>
+
+</div>
